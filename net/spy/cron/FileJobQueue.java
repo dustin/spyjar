@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FileJobQueue.java,v 1.8 2003/04/21 02:57:46 dustin Exp $
+// $Id: FileJobQueue.java,v 1.9 2003/05/01 22:35:19 dustin Exp $
 
 package net.spy.cron;
 
@@ -31,6 +31,17 @@ import net.spy.SpyUtil;
  *   <li>YYYYMMDD-HHMMSS calfield calincrement classname args ...</li>
  *   <li>HHMMSS calfield calincrement classname args ...</li>
  *   <li>MMSS calfield calincrement classname args ...</li>
+ * </ul>
+ *
+ * There are also special times that may be provided for less specific start
+ * times:
+ *
+ * <ul>
+ *   <li>NOW - start immediately (or close to it) after startup, cycle from
+ *   	that time</li>
+ *   <li>NEXT - similar to NOW, but skip the current startup.  Each cycle
+ *   	will be based on the startup time, but the first run will happen after
+ *   	the delay finishes.</li>
  * </ul>
  *
  * In a case where fields are not provided, the current time will be
@@ -83,7 +94,8 @@ public class FileJobQueue extends JobQueue {
 				if(j!=null) {
 					addJob(j);
 					if(getLogger().isInfoEnabled()) {
-						getLogger().info("Added job:  " + j);
+						getLogger().info("Added job:  " + j + " to start at "
+							+ j.getStartTime());
 					}
 				}
 			} catch(Exception e) {
@@ -153,16 +165,29 @@ public class FileJobQueue extends JobQueue {
 	private Date parseStartDate(String in) throws ParseException {
 		Date rv=null;
 
-		// Flip through all of the known formats until we get a match
-		for(Iterator i=getFormats().iterator(); i.hasNext() && rv==null;) {
-			TimeFormat tf=(TimeFormat)i.next();
+		long now=System.currentTimeMillis();
 
-			SimpleDateFormat sdf=tf.getFormat();
-			try {
-				Date d=sdf.parse(in);
-				rv=copyDate(d, tf.getFields());
-			} catch(ParseException e) {
-				// Nope, try the next
+		// Special cases
+		if(in.equals("NOW")) {
+			// Schedule it for a minute from now, which should make it as
+			// close to now as anyone should care about
+			rv=new Date(now+60000);
+		} else if(in.equals("NEXT")) {
+			// Make sure it's in the past.
+			rv=new Date(now-1);
+		} else {
+
+			// Flip through all of the known formats until we get a match
+			for(Iterator i=getFormats().iterator(); i.hasNext() && rv==null;) {
+				TimeFormat tf=(TimeFormat)i.next();
+
+				SimpleDateFormat sdf=tf.getFormat();
+				try {
+					Date d=sdf.parse(in);
+					rv=copyDate(d, tf.getFields());
+				} catch(ParseException e) {
+					// Nope, try the next
+				}
 			}
 		}
 
