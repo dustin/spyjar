@@ -18,9 +18,9 @@ import java.sql.Types;
 
 import java.util.Arrays;
 
-import net.spy.SpyDB;
 import net.spy.SpyObject;
-import net.spy.SpyUtil;
+import net.spy.db.SpyDB;
+import net.spy.util.SpyUtil;
 
 import net.spy.cache.SpyCache;
 

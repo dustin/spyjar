@@ -23,6 +23,7 @@ import java.util.AbstractMap;
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
 
+import net.spy.util.SpyUtil;
 import net.spy.util.NestedRuntimeException;
 
 /**
@@ -85,7 +86,7 @@ public class DiskCache extends AbstractMap {
 			md.update(tmpkey.getBytes());
 		}
 
-		String hashed=net.spy.SpyUtil.byteAToHexString(md.digest());
+		String hashed=SpyUtil.byteAToHexString(md.digest());
 
 		String base=basedir+"/"+hashed.substring(0,2);
 		String path=base+"/"+hashed;

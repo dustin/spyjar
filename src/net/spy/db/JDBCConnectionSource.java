@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 /**
  * Implementation of ConnectionSource that gets connections directly from

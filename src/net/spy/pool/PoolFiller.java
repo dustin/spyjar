@@ -3,7 +3,7 @@
 
 package net.spy.pool;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 /**
  * The PoolFiller class is used to populate entries in a pool.  It's an

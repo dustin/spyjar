@@ -6,12 +6,13 @@ package net.spy.pool;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-import net.spy.SpyConfig;
+import net.spy.SpyObject;
+import net.spy.util.SpyConfig;
 
 /**
  * PoolContainer is the storage for a given pool.
  */
-public class PoolContainer extends Object {
+public class PoolContainer extends SpyObject {
 	private ArrayList pool=null;
 	private SpyConfig conf=null;
 	private String name=null;
@@ -25,8 +26,6 @@ public class PoolContainer extends Object {
 	private int yellowLine=-1;
 
 	private static int objectId=0;
-
-	private PoolDebug pooldebug=null;
 
 	/**
 	 * Create a new PoolContainer for a pool with a given name, and filler.
@@ -128,11 +127,16 @@ public class PoolContainer extends Object {
 				if(poolable==null) {
 
 					try {
-						debug("*** No free entries in pool, sleeping ***");
+						if(getLogger().isDebugEnabled()) {
+							getLogger().debug(
+								"No free entries in pool, sleeping");
+						}
 
 						// We're halfway through, or more!  Desperate measures!
 						if(retry==retries/2) {
-							debug("!!! Trying to force cleanup!");
+							if(getLogger().isDebugEnabled()) {
+								getLogger().debug("Trying to force cleanup!");
+							}
 							GarbageCollector gc=
 								GarbageCollector.getGarbageCollector();
 							gc.collect();
@@ -167,7 +171,9 @@ public class PoolContainer extends Object {
 
 		// Hold it still whlie we do this...
 		synchronized(pool) {
-			debug("Moving " + poolable);
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Moving " + poolable);
+			}
 			pool.remove(poolable);
 			pool.add(poolable);
 		}
@@ -238,7 +244,9 @@ public class PoolContainer extends Object {
 	 * @exception PoolException when something bad happens
 	 */
 	public void prune() throws PoolException {
-		debug("Beginning prune.");
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Beginning prune.");
+		}
 		synchronized (pool) {
 			int i=0;
 			// Get rid of expired things
@@ -246,7 +254,9 @@ public class PoolContainer extends Object {
 				PoolAble p=(PoolAble)it.next();
 				if(p.pruneStatus()>=PoolAble.MUST_CLEAN) {
 					// Tell it that it can go away now.
-					debug("Removing " + p);
+					if(getLogger().isDebugEnabled()) {
+						getLogger().debug("Removing " + p);
+					}
 					p.discard();
 					it.remove();
 				}
@@ -274,9 +284,11 @@ public class PoolContainer extends Object {
 		// Set the hashcode of this pool for consistent debug output.
 		filler.setPoolHash(hashCode());
 
-		debug("Pool " + debugName() + " wants a min of " + minObjects
-			+ " and a max of " + maxObjects
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Pool " + debugName() + " wants a min of "
+			+ minObjects + " and a max of " + maxObjects
 			+ " with a yellow line at " + yellowLine);
+		}
 
 		try {
 			getStartObjects();
@@ -293,7 +305,10 @@ public class PoolContainer extends Object {
 
 	// Populate with the minimum number of objects.
 	private void getMinObjects() throws PoolException{
-		debug("Pool " + name + " wants at least " + minObjects +" objects.");
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Pool " + name + " wants at least "
+				+ minObjects +" objects.");
+		}
 		for(int i=totalObjects(); i<minObjects; i++) {
 			getNewObject();
 		}
@@ -301,7 +316,10 @@ public class PoolContainer extends Object {
 
 	// Populate with the number of objects we need at start.
 	private void getStartObjects() throws PoolException{
-		debug("Pool " + name + " starting with " + initObjects +" objects.");
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Pool " + name + " starting with "
+				+ initObjects +" objects.");
+		}
 		for(int i=totalObjects(); i<initObjects; i++) {
 			getNewObject();
 		}
@@ -320,9 +338,11 @@ public class PoolContainer extends Object {
 
 		// Don't add an object if we're at capacity.
 		if(totalObjects()<maxObjects) {
-			debug("*** Getting a new object in the "
-				+ name + " pool, currently have " + totalObjects()
-				+ "/" + maxObjects + ". ***");
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("*** Getting a new object in the "
+					+ name + " pool, currently have " + totalObjects()
+					+ "/" + maxObjects + ". ***");
+			}
 			p=filler.getObject();
 			p.setObjectID(nextId());
 			p.setPoolName(name);
@@ -332,8 +352,10 @@ public class PoolContainer extends Object {
 			synchronized(pool) {
 				pool.add(p);
 			}
-			debug("Added the object to the pool, now have "
-				+ totalObjects());
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Added the object to the pool, now have "
+					+ totalObjects());
+			}
 		} else {
 			throw new PoolException("Cannot create another object in the pool");
 		}
@@ -390,13 +412,6 @@ public class PoolContainer extends Object {
 	private static synchronized int nextId() {
 		objectId++;
 		return(objectId);
-	}
-
-	private void debug(String msg) {
-		if(pooldebug==null) {
-			pooldebug=new PoolDebug();
-		}
-		pooldebug.debug(msg);
 	}
 
 }

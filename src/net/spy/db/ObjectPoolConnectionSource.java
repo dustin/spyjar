@@ -9,14 +9,15 @@ import java.util.Enumeration;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import net.spy.SpyConfig;
+import net.spy.SpyObject;
+
+import net.spy.util.SpyConfig;
 
 import net.spy.pool.ObjectPool;
 import net.spy.pool.PooledObject;
 import net.spy.pool.PoolException;
 import net.spy.pool.JDBCPoolFiller;
 
-import net.spy.SpyObject;
 import net.spy.db.DBInitException;
 
 /**

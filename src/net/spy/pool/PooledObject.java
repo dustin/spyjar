@@ -3,6 +3,8 @@
 
 package net.spy.pool;
 
+import net.spy.SpyObject;
+
 /**
  * Pooled object return package.  This object primarily exists as a means
  * for having a safe way to have access to PoolAble objects.  Anyone using
@@ -10,11 +12,9 @@ package net.spy.pool;
  * after checking it back in, and it makes it safe to forget to check an
  * object back in on occasion.
  */
-public class PooledObject extends Object {
+public class PooledObject extends SpyObject {
 
 	private PoolAble p=null;
-
-	private PoolDebug pooldebug=null;
 
 	/**
 	 * Get a new PooledObject containing the given PoolAble
@@ -45,7 +45,7 @@ public class PooledObject extends Object {
 
 	/**
 	 * Manually check the object back in.
-	 */ 
+	 */
 	public void checkIn() {
 		p.checkIn();
 		p=null;
@@ -66,16 +66,12 @@ public class PooledObject extends Object {
 	 */
 	protected void finalize() {
 		if(p!=null) {
-			debug("###### Finalization checking in object " + p.getObjectID());
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Finalization checking in object "
+					+ p.getObjectID());
+			}
 			p.checkIn();
 		}
 	}
 
-	private void debug(String what) {
-		if(pooldebug==null) {
-			pooldebug=new PoolDebug();
-		}
-		pooldebug.debug(what);
-	}
 }
-

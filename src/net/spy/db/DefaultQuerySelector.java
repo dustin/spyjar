@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 
 import java.sql.Connection;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 /**
  * Default implementation of query selector.

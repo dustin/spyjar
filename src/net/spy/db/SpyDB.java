@@ -4,7 +4,7 @@
  * arch-tag: 3F2CA2C4-1110-11D9-BBBB-000A957659CC
  */
 
-package net.spy;
+package net.spy.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,10 +18,12 @@ import java.util.StringTokenizer;
 import net.spy.db.ConnectionSource;
 import net.spy.db.DBInitException;
 
+import net.spy.SpyObject;
+import net.spy.util.SpyConfig;
+
 /**
  * SpyDB is an abstraction of both net.spy.pool and java.sql.
  */
-
 public class SpyDB extends SpyObject {
 
 	// The actual database connection from the PooledObject.

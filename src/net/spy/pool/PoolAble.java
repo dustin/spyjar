@@ -16,7 +16,6 @@ import net.spy.SpyObject;
  * The system property net.spy.pool.debug can be set to a file where the
  * debugging output will go.
  */
-
 public abstract class PoolAble extends SpyObject {
 	private int objectId=-1;
 	private boolean checkedOut=false;
@@ -24,7 +23,6 @@ public abstract class PoolAble extends SpyObject {
 	private long maxAge=0;
 	private long startTime=0;
 	private String poolName=null;
-	private PoolDebug pooldebug=null;
 	private int checkouts=0;
 	private int checkins=0;
 	private int poolHash=0;
@@ -262,7 +260,7 @@ public abstract class PoolAble extends SpyObject {
 				ret++;
 			}
 		}
-		
+
 		return(ret);
 	}
 
@@ -280,20 +278,19 @@ public abstract class PoolAble extends SpyObject {
 	 * Debugging info.
 	 */
 	protected final void debug(String msg) {
-		if(pooldebug==null) {
-			pooldebug=new PoolDebug();
+		if(getLogger().isDebugEnabled()) {
+			String classname=getClass().getName();
+			String objectClassname="n/a";
+			if(theObject!=null) {
+				objectClassname=theObject.getClass().getName();
+			}
+
+			String tmsg= "Poolable=" + classname + ", oid=" + objectId
+				+ " in " + poolName + ", object=" + objectClassname
+				+ ":  " + msg;
+
+			getLogger().debug(tmsg);
 		}
-
-		String classname=getClass().getName();
-		String objectClassname="n/a";
-		if(theObject!=null) {
-			objectClassname=theObject.getClass().getName();
-		}
-
-		String tmsg= "Poolable=" + classname + ", oid=" + objectId
-			+ " in " + poolName + ", object=" + objectClassname + ":  " + msg;
-
-		pooldebug.debug(tmsg);
 	}
 
 	/**

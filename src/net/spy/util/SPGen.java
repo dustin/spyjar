@@ -32,7 +32,7 @@ import java.lang.reflect.Field;
 import java.text.NumberFormat;
 
 import net.spy.SpyObject;
-import net.spy.SpyUtil;
+import net.spy.util.SpyUtil;
 import net.spy.db.QuerySelector;
 
 /**
@@ -339,7 +339,7 @@ public class SPGen extends SpyObject {
 			+ "import java.sql.ResultSet;\n"
 			+ "import java.util.Map;\n"
 			+ "import java.util.HashMap;\n"
-			+ "import net.spy.SpyConfig;\n");
+			+ "import net.spy.util.SpyConfig;\n");
 
 		// custom imports
 		for (Iterator it=imports.iterator(); it.hasNext();) {

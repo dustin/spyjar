@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.spy.SpyConfig;
-import net.spy.SpyUtil;
+import net.spy.util.SpyConfig;
+import net.spy.util.SpyUtil;
 
 /**
  * Super class for all stored procedure calls.

@@ -4,7 +4,7 @@
  * arch-tag: 3E827B37-1110-11D9-A386-000A957659CC
  */
 
-package net.spy;
+package net.spy.util;
 
 import java.io.File;
 import java.io.IOException;

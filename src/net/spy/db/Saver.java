@@ -11,9 +11,8 @@ import java.util.Collection;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import net.spy.SpyDB;
-import net.spy.SpyConfig;
 import net.spy.SpyObject;
+import net.spy.util.SpyConfig;
 
 import net.spy.util.IdentityEqualifier;
 

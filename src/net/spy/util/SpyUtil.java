@@ -2,7 +2,7 @@
 //
 // arch-tag: 4303E5D9-1110-11D9-89B7-000A957659CC
 
-package net.spy;
+package net.spy.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -23,9 +23,6 @@ import java.util.Iterator;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
-import net.spy.SpyToker;
-import net.spy.util.Enumeriterator;
 
 /**
  * Miscellaneous utilities.

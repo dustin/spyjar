@@ -2,7 +2,7 @@
 //
 // arch-tag: 4A536336-1110-11D9-B222-000A957659CC
 
-package net.spy;
+package net.spy.log;
 
 import java.io.IOException;
 
@@ -10,6 +10,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
+import net.spy.SpyObject;
 
 /**
  * Send a message via syslog.

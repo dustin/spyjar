@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.spy.SpyObject;
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 import net.spy.util.TimeStampedHashMap;
 

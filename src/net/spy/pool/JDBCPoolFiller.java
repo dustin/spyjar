@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 /**
  * PoolFiller object to fill a pool with JDBC PoolAbles

@@ -18,7 +18,7 @@ import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.spy.SpyUtil;
+import net.spy.util.SpyUtil;
 
 /**
  * Oversimplified HTTP document fetcher.

@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-import net.spy.SpyUtil;
+import net.spy.util.SpyUtil;
 
 /**
  * Get a job queue as defined in a file.  The file will be in one the following

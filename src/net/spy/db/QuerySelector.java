@@ -8,7 +8,7 @@ import java.util.Map;
 
 import java.sql.Connection;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 /**
  * Select the most appropriate query for the given DBSQL instance.

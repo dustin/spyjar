@@ -16,7 +16,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import net.spy.SpyObject;
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 /**
  * Connection source for getting DB connections from JNDI sources.

@@ -17,7 +17,7 @@ import java.sql.Time;
 import java.util.Iterator;
 import java.util.Collection;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 /**
  * Superclass for dynamic SQL calls.

@@ -12,8 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.lang.ref.SoftReference;
 
-import net.spy.SpyConfig;
-import net.spy.SpyDB;
+import net.spy.util.SpyConfig;
 
 import net.spy.cache.SpyCache;
 

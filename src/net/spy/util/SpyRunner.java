@@ -2,11 +2,13 @@
 //
 // arch-tag: 40E1EA0F-1110-11D9-9B23-000A957659CC
 
-package net.spy;
+package net.spy.util;
 
 import java.io.File;
 
 import java.lang.reflect.InvocationTargetException;
+
+import net.spy.SpyThread;
 
 /**
  * SpyRunner - a hack-ass application server.

@@ -7,7 +7,7 @@ package net.spy.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 /**
  * Interface for classes that will create database connections.

@@ -16,13 +16,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import net.spy.SpyUtil;
+import net.spy.SpyObject;
+import net.spy.util.SpyUtil;
 
 /**
  * SNPP client.
  */
-
-public class SNPP extends Object {
+public class SNPP extends SpyObject {
 	private Socket s=null;
 	private InputStream in=null;
 	private OutputStream out=null;
@@ -36,19 +36,15 @@ public class SNPP extends Object {
 	/**
 	 * Current full line received from the SNPP server.
 	 */
-	public String currentline=null;
+	private String currentline=null;
 	/**
 	 * Current message received from the SNPP server.
 	 */
-	public String currentmessage=null;
+	private String currentmessage=null;
 	/**
 	 * Current status received from SNPP server.
 	 */
-	public int currentstatus=-1;
-	/**
-	 * Debug mode on/off.
-	 */
-	public boolean debug = false;
+	private int currentstatus=-1;
 
 	/**
 	 * Get a new SNPP object connected to host:port
@@ -94,6 +90,27 @@ public class SNPP extends Object {
 	public SNPP(String host, int port)
 		throws IOException, UnknownHostException {
 		this(host, port, 0);
+	}
+
+	/**
+	 * Current full line received from the SNPP server.
+	 */
+	public String getCurrentline() {
+		return(currentline);
+	}
+
+	/**
+	 * Current message received from the SNPP server.
+	 */
+	public String getCurrentmessage() {
+		return(currentmessage);
+	}
+
+	/**
+	 * Current status received from SNPP server.
+	 */
+	public int getCurrentstatus() {
+		return(currentstatus);
 	}
 
 	/**
@@ -273,8 +290,8 @@ public class SNPP extends Object {
 	 * status from the SNPP server.
 	 */
 	public void cmd(String command) throws Exception {
-		if(debug) {
-			System.out.println(">> " + command);
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug(">> " + command);
 		}
 		prout.print(command + "\r\n");
 		prout.flush();
@@ -306,8 +323,8 @@ public class SNPP extends Object {
 	}
 
 	protected void finalize() throws Throwable {
-		if(debug) {
-			System.out.println("Finalizing...");
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Finalizing...");
 		}
 		close();
 		super.finalize();
@@ -347,8 +364,8 @@ public class SNPP extends Object {
 			throw new IOException("Read returned null, disconnected?");
 		}
 
-		if(debug) {
-			System.out.println("<< " + currentline);
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("<< " + currentline);
 		}
 
 		// Extract the message
@@ -370,7 +387,6 @@ public class SNPP extends Object {
 	 */
 	public static void main(String args[]) throws Exception {
 		SNPP snpp=new SNPP(args[0], Integer.parseInt(args[1]));
-		// snpp.debug=true;
 		snpp.sendpage(args[2], args[3]);
 		snpp.close();
 	}

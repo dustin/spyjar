@@ -3,7 +3,7 @@
 
 package net.spy.pool;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 import net.spy.net.SNPP;
 

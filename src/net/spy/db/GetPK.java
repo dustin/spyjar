@@ -12,12 +12,10 @@ import java.sql.Connection;
 
 import java.math.BigDecimal;
 
-import net.spy.SpyConfig;
-import net.spy.SpyDB;
+import net.spy.SpyObject;
+import net.spy.util.SpyConfig;
 import net.spy.db.sp.UpdatePrimaryKey;
 import net.spy.db.sp.SelectPrimaryKey;
-
-import net.spy.SpyObject;
 
 /**
  * Primary key generator.  This is an extensible singleton that provides

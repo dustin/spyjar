@@ -19,8 +19,8 @@ import org.apache.tools.ant.BuildException;
 
 import org.apache.tools.ant.Task;
 
-import net.spy.SpyUtil;
-import net.spy.SpyToker;
+import net.spy.util.SpyUtil;
+import net.spy.util.SpyToker;
 
 /**
  * Task to build a build info class for a package.
