@@ -1,0 +1,15 @@
+// Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
+//
+// $Id: graphtest.dot,v 1.1 2002/11/07 18:15:28 dustin Exp $
+
+// This diagram is used in the documented for ShortestPathFinder.
+
+digraph sp {
+	"A" -> "B" [label="10"];
+	"A" -> "C" [label="15"];
+	"B" -> "C" [label="10"];
+	"C" -> "D" [label="10"];
+	"C" -> "E" [label="10"];
+	"D" -> "C" [label="100"];
+	"E" -> "E" [label="10"];
+};
