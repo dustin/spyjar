@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.24 2003/08/11 04:23:24 dustin Exp $
+	$Id: build.xml,v 1.25 2003/09/04 07:18:23 dustin Exp $
 
 	-->
 
@@ -588,6 +588,13 @@
 		<style in="checkstyle_report.xml"
 			out="checkstyle_report.html"
 			style="etc/checkstyle.xsl"/>
+	</target>
+
+	<target name="simian">
+		<taskdef resource="simiantask.properties"/>
+		<simian lineCount="6">
+			<fileset dir="net" includes="**/*.java" />
+		</simian>
 	</target>
 
 </project>

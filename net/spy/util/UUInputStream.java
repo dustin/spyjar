@@ -1,12 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UUInputStream.java,v 1.2 2003/04/18 07:50:16 dustin Exp $
+// $Id: UUInputStream.java,v 1.3 2003/09/04 07:18:26 dustin Exp $
 
 package net.spy.util;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilterInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -18,7 +17,7 @@ import net.spy.log.LoggerFactory;
 /**
  * This class decodes uuencoded files.
  */
-public class UUInputStream extends FilterInputStream {
+public class UUInputStream extends ByteConverionInputStream {
 
 	private static byte[] outputBuffer = null;
 	private int currentOut=0;
@@ -72,35 +71,6 @@ public class UUInputStream extends FilterInputStream {
 		}
 
 		return(rv);
-	}
-
-	/**
-	 * @see FilterInputStream
-	 */
-	public int read(byte data[], int offset, int len) throws IOException {
-		byte tmpbuf[]=new byte[len];
-		int lastread=0;
-		int bytesread=0;
-
-		for(bytesread=0; bytesread<len && lastread>=0; bytesread++) {
-			lastread=read(); 
-			if(lastread>=0) {
-				tmpbuf[bytesread]=(byte)lastread;
-			} else {
-				bytesread--;
-			}
-		}
-
-		System.arraycopy(tmpbuf, 0, data, offset, bytesread);
-
-		return(bytesread);
-	}
-
-	/**
-	 * Marking and resetting are not supported.
-	 */
-	public boolean markSupported() {
-		return(false);
 	}
 
 	/**

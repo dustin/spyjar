@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NestedRuntimeException.java,v 1.3 2003/08/05 09:01:04 dustin Exp $
+// $Id: NestedRuntimeException.java,v 1.4 2003/09/04 07:18:26 dustin Exp $
 
 package net.spy.util;
 
@@ -13,6 +13,13 @@ import java.io.PrintWriter;
 public class NestedRuntimeException extends RuntimeException {
 
 	private Throwable root=null;
+
+	/** 
+	 * Get an instance of NestedRuntimeException with no message.
+	 */
+	protected NestedRuntimeException() {
+		super();
+	}
 
 	/**
 	 * Get an instance of NestedRuntimeException with a given message.

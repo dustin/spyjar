@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SavableHashMap.java,v 1.1 2003/01/20 07:41:37 dustin Exp $
+// $Id: SavableHashMap.java,v 1.2 2003/09/04 07:18:25 dustin Exp $
 
 package net.spy.db.savables;
 
@@ -74,9 +74,9 @@ public class SavableHashMap extends HashMap implements SavableNode {
 	/** 
 	 * Do nothing.
 	 */
-	public void save(Connection conn, SaveContext context) 
+	public void save(Connection conn, SaveContext context)
 		throws SaveException, SQLException {
-		
+
 		// Ignored
 	}
 

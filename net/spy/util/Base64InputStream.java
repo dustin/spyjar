@@ -1,19 +1,18 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Base64InputStream.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: Base64InputStream.java,v 1.2 2003/09/04 07:18:26 dustin Exp $
 
 package net.spy.util;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilterInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
 /**
  * A filter stream for decoding Base64 data on an InputStream.
  */
-public class Base64InputStream extends FilterInputStream {
+public class Base64InputStream extends ByteConverionInputStream {
 
 	private Base64 base64=null;
 	// Properly initialized, this will be zero
@@ -80,39 +79,6 @@ public class Base64InputStream extends FilterInputStream {
 		}
 
 		currentOut=0;
-	}
-
-	/**
-	 * Reads up to len bytes of data from this input stream into an array
-	 * of bytes.  See the FilterInputStream documentation for more details.
-	 *
-	 * @see FilterInputStream
-	 */
-	public int read(byte data[], int offset, int len) throws IOException {
-		byte tmpbuf[]=new byte[len];
-
-		int lastread=0;
-		int bytesread=0;
-
-		for(bytesread=0; bytesread<len && lastread>=0; bytesread++) {
-			lastread=read();
-			if(lastread>=0) {
-				tmpbuf[bytesread]=(byte)lastread;
-			} else {
-				bytesread--;
-			}
-		}
-
-		System.arraycopy(tmpbuf, 0, data, offset, bytesread);
-
-		return(bytesread);
-	}
-
-	/**
-	 * Marking and resetting are not supported in this filter.
-	 */
-	public boolean markSupported() {
-		return(false);
 	}
 
 	/**
