@@ -307,7 +307,7 @@
 		</javac>
 	</target>
 
-	<target name="spgen">
+	<target name="anttasks">
 		<javac srcdir="${SRCDIR}"
 			destdir="${BUILDDIR}"
 			deprecation="${DEPRECATION}"
@@ -315,14 +315,15 @@
 			verbose="${VERBOSE}">
 
 			<classpath refid="myclasses"/>
-			<include name="net/spy/util/SPGen*.java"/>
+			<include name="net/spy/util/SPGen.java"/>
+			<include name="net/spy/ant/*.java"/>
 		</javac>
-		<taskdef name="spgen" classname="net.spy.util.SPGenTask">
+		<taskdef name="spgen" classname="net.spy.ant.SPGenTask">
 			<classpath refid="myclasses"/>
 		</taskdef>
 	</target>
 
-	<target name="test-spfiles" depends="all,spgen">
+	<target name="test-spfiles" depends="all,anttasks">
 		<spgen srcdir="${TSRCDIR}" destdir="${TGENDIR}"/>
 		<javac srcdir="${TGENDIR}" destdir="${TBUILDDIR}"
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
@@ -442,7 +443,7 @@
 		</javac>
 	</target>
 
-	<target name="spfiles" depends="spgen">
+	<target name="spfiles" depends="anttasks">
 		<spgen srcdir="${SRCDIR}" destdir="${GENDIR}"/>
 		<!-- Go ahead and compile the stuff -->
 		<javac
