@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.36 2003/08/05 09:01:05 dustin Exp $
+// $Id: SPGen.java,v 1.37 2003/09/11 07:21:56 dustin Exp $
 
 package net.spy.util;
 
@@ -22,6 +22,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Date;
+import java.util.ResourceBundle;
+import java.util.MissingResourceException;
 
 import java.math.BigDecimal;
 
@@ -54,7 +56,7 @@ public class SPGen extends Object {
 	private String dbspSuperclass=null;
 
 	private String superinterface=null;
-	private String version="$Revision: 1.36 $";
+	private String version="$Revision: 1.37 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -257,52 +259,13 @@ public class SPGen extends Object {
 		String types[]=null;
 		boolean customtype=false;
 
-		// TODO:  Replace this with an extensible Map.
-		if(p.getType().equals("java.sql.Types.BIT")) {
-			String typesTmp[]={"boolean", "java.lang.Boolean"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.DATE")) {
-			String typesTmp[]={"java.sql.Date"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.DOUBLE")) {
-			String typesTmp[]={"double", "java.lang.Double"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.FLOAT")) {
-			String typesTmp[]={"float", "java.lang.Float"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.INTEGER")) {
-			String typesTmp[]={"int", "java.lang.Integer", "short",
-								"java.lang.Short"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.BIGINT")) {
-			String typesTmp[]={"long", "java.lang.Long"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.NUMERIC")) {
-			String typesTmp[]={"java.math.BigDecimal"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.DECIMAL")) {
-			String typesTmp[]={"java.math.BigDecimal"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.SMALLINT")) {
-			String typesTmp[]={"int", "java.lang.Integer",
-								"short", "java.lang.Short"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.TINYINT")) {
-			String typesTmp[]={"short", "java.lang.Short"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.OTHER")) {
-			String typesTmp[]={"java.lang.Object"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.VARCHAR")) {
-			String typesTmp[]={"java.lang.String"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.TIME")) {
-			String typesTmp[]={"java.sql.Time"};
-			types=typesTmp;
-		} else if(p.getType().equals("java.sql.Types.TIMESTAMP")) {
-			String typesTmp[]={"java.sql.Timestamp"};
-			types=typesTmp;
-		} else {
+		// Get the type map entry for this parameter
+		try {
+			ResourceBundle typeMap=
+				ResourceBundle.getBundle("net.spy.db.typemap");
+			String typeString=typeMap.getString(p.getType());
+			types=SpyUtil.split(" ", typeString);
+		} catch(MissingResourceException e) {
 			// XXX This is just a thing to get me over the hump
 			//return("");
 			String typesTmp[]={"java.lang.Object"};
@@ -337,7 +300,7 @@ public class SPGen extends Object {
 				}
 			}
 		}
-	
+
 		return(rv);
 	}
 
