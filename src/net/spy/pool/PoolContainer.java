@@ -26,6 +26,8 @@ public class PoolContainer extends SpyObject {
 	private static final int DEFAULT_YELLOW_LINE=75;
 	private static final float PERCENT=100.0f;
 
+	private static final int PING_ON_CHECKOUT=1;
+
 	// Buffer length for debug strings
 	private static final int DEBUG_NAMELEN=64;
 	// Buffer length for stringification
@@ -44,6 +46,8 @@ public class PoolContainer extends SpyObject {
 	// them new connections.
 	private int yellowLine=-1;
 
+	private int pingConfig=0;
+
 	private static int objectId=0;
 
 	/**
@@ -56,7 +60,9 @@ public class PoolContainer extends SpyObject {
 	 *  <li>&lt;poolname&gt;.yellow - when the pool is this percent full,
 	 *      we hesitate more before giving out connections.</li>
 	 *  <li>&lt;poolname&gt;.max - maximum number of items in the pool</li>
-	 * </li>
+	 *  <li>&lt;poolname&gt;.pingOnCheckout - if true, ping on checkout (true)
+	 *      </li>
+	 * </ul>
 	 *
 	 * @param nm name of the pool
 	 * @param pf the PoolFiller to use
@@ -85,7 +91,9 @@ public class PoolContainer extends SpyObject {
 	 *  <li>&lt;poolname&gt;.yellow - when the pool is this percent full,
 	 *      we hesitate more before giving out connections.</li>
 	 *  <li>&lt;poolname&gt;.max - maximum number of items in the pool</li>
-	 * </li>
+	 *  <li>&lt;poolname&gt;.pingOnCheckout - if true, ping on checkout (true)
+	 *      </li>
+	 * </ul>
 	 *
 	 * @param name name of the pool
 	 * @param pf the PoolFiller to use
@@ -102,6 +110,16 @@ public class PoolContainer extends SpyObject {
 	 */
 	public String getName() {
 		return(name);
+	}
+
+	// Conditionally ping if this is a good time.  Just return true if this
+	// isn't a good time to ping
+	private boolean checkAlive(PoolAble p, int when) {
+		boolean rv=true;
+		if( (pingConfig & when) != 0) {
+			rv=p.isAlive();
+		}
+		return(rv);
 	}
 
 	/**
@@ -129,7 +147,7 @@ public class PoolContainer extends SpyObject {
 					PoolAble p=(PoolAble)e.next();
 
 					// If it's not checked out, and it works, we have our man!
-					if(p.isAvailable() && (p.isAlive())) {
+					if(p.isAvailable() && checkAlive(p, PING_ON_CHECKOUT)) {
 						// Since we got one from the pool, we want to move it
 						// to the end of the vector.
 						poolable=p;
@@ -262,7 +280,7 @@ public class PoolContainer extends SpyObject {
 	 *
 	 * @exception PoolException when something bad happens
 	 */
-	public void prune() throws PoolException {
+	void prune() throws PoolException {
 		if(getLogger().isDebugEnabled()) {
 			getLogger().debug("Beginning prune.");
 		}
@@ -276,6 +294,10 @@ public class PoolContainer extends SpyObject {
 					if(getLogger().isDebugEnabled()) {
 						getLogger().debug("Removing " + p);
 					}
+					p.discard();
+					it.remove();
+				} else if(!p.isAlive()) {
+					// If this poolable isn't alive, remove it
 					p.discard();
 					it.remove();
 				}
@@ -311,6 +333,10 @@ public class PoolContainer extends SpyObject {
 			getLogger().debug("Pool " + debugName() + " wants a min of "
 				+ minObjects + " and a max of " + maxObjects
 				+ " with a yellow line at " + yellowLine);
+		}
+
+		if(getPropertyBool("pingOnCheckout", true)) {
+			pingConfig |= PING_ON_CHECKOUT;
 		}
 
 		try {
@@ -422,6 +448,12 @@ public class PoolContainer extends SpyObject {
 
 	private int getPropertyInt(String what, int def) {
 		return(conf.getInt(name + "." + what, def));
+	}
+
+	private boolean getPropertyBool(String what, boolean def) {
+		String s=getProperty(what, String.valueOf(def));
+		Boolean b=Boolean.valueOf(s);
+		return(b.booleanValue());
 	}
 
 	private String getProperty(String what, String def) {
