@@ -47,6 +47,7 @@
 				<include name="spy/db/TypeNames.java"/>
 				<include name="spy/db/CachePreparedStatement.java"/>
 				<include name="spy/db/CachedResultSet.java"/>
+				<include name="spy/db/ProxyResultSet.java"/>
 				<include name="spy/db/sp/*.java"/>
 				<include name="spy/log/SunLogger.java"/>
 				<include name="spy/log/Log4JLogger.java"/>
@@ -68,6 +69,7 @@
 				<include name="docs.jar"/>
 				<include name="testsuite.jar"/>
 				<include name="checkstyle.txt"/>
+				<include name="build.properties"/>
 			</fileset>
 		</delete>
 	</target>
