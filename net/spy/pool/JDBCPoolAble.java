@@ -1,5 +1,5 @@
 //
-// $Id: JDBCPoolAble.java,v 1.3 2002/12/15 07:26:49 dustin Exp $
+// $Id: JDBCPoolAble.java,v 1.4 2003/03/28 08:30:48 dustin Exp $
 
 package net.spy.pool;
 
@@ -56,6 +56,7 @@ public class JDBCPoolAble extends PoolAble {
 		try {
 			Connection c=(Connection)intGetObject();
 			Statement st=c.createStatement();
+			st.setQueryTimeout(5);
 			ResultSet rs=st.executeQuery("select 7");
 			rs.next();
 			int r=rs.getInt(1);
