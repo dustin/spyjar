@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.15 2002/11/08 06:53:30 dustin Exp $
+	$Id: build.xml,v 1.16 2002/12/06 08:25:57 dustin Exp $
 
 	-->
 
@@ -117,6 +117,8 @@
 			tofile="/afs/.spy.net/misc/web/root/photo/WEB-INF/lib/spy.jar"/>
 		<copy file="spy.jar"
 			tofile="/afs/.spy.net/misc/web/root/beckerphoto/WEB-INF/lib/spy.jar"/>
+		<copy file="spy.jar"
+			tofile="/afs/.spy.net/misc/web/root/jasonphoto/WEB-INF/lib/spy.jar"/>
 		<copy file="spy.jar"
 			tofile="/afs/.spy.net/misc/web/root/photodemo/WEB-INF/lib/spy.jar"/>
 	</target>
