@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.14 2003/04/12 00:59:50 dustin Exp $
+// $Id: ThreadPool.java,v 1.15 2003/04/16 01:04:02 dustin Exp $
 
 package net.spy.util;
 
@@ -473,6 +473,9 @@ public class ThreadPool extends ThreadGroup {
 		boolean wasStarted=false;
 		Task t=new Task(r);
 		addTask(t);
+		// Give it a bit of time to start, which might help us bypass this
+		// whole mess
+		Thread.yield();
 		synchronized(t) {
 			// If it hadn't started by the time we got here, wait for it
 			wasStarted=t.isStarted();
@@ -764,14 +767,15 @@ public class ThreadPool extends ThreadGroup {
 					Runnable r=null;
 					synchronized(t) {
 						r=t.getTask();
+						t.notify();
 					}
 					// Make sure we got something there.
 					if(r!=null) {
-						// Let the monitor know we got one.
+						run(r);
+						// Let the monitor know we finished it
 						synchronized(monitor) {
 							monitor.completedJob(r);
 						}
-						run(r);
 					}
 				} catch(NoSuchElementException e) {
 					// If the stack is empty, wait for something to get added.
