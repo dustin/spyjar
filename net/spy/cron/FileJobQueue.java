@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FileJobQueue.java,v 1.9 2003/05/01 22:35:19 dustin Exp $
+// $Id: FileJobQueue.java,v 1.10 2003/07/26 07:46:51 dustin Exp $
 
 package net.spy.cron;
 
@@ -274,14 +274,14 @@ public class FileJobQueue extends JobQueue {
 		/** 
 		 * Get the format this thing is holding.
 		 */
-		public SimpleDateFormat getFormat() {
+		private SimpleDateFormat getFormat() {
 			return(format);
 		}
 		
 		/** 
 		 * Get the java.util.Calendar fields that should be preserved.
 		 */
-		public int[] getFields() {
+		private int[] getFields() {
 			return(fields);
 		}
 	}

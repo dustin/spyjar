@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Job.java,v 1.5 2003/04/18 20:15:47 dustin Exp $
+// $Id: Job.java,v 1.6 2003/07/26 07:46:51 dustin Exp $
 
 package net.spy.cron;
 
@@ -17,8 +17,6 @@ public abstract class Job extends SpyObject implements Runnable {
 	private Date nextStart=null;
 	// How to increment the time value in the case of recurring jobs.
 	private TimeIncrement ti=null;
-	// Whether or not this job has run.
-	private boolean hasrun=false;
 	// Whether the job is currently running or not
 	private boolean isrunning=false;
 	// The name of ths thing
@@ -135,7 +133,6 @@ public abstract class Job extends SpyObject implements Runnable {
 	 * Mark this job as having been started.
 	 */
 	protected void markStarted() {
-		hasrun=true;
 		isrunning=true;
 	}
 

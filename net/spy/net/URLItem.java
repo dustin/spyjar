@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLItem.java,v 1.5 2003/05/06 17:22:07 dustin Exp $
+// $Id: URLItem.java,v 1.6 2003/07/26 07:46:52 dustin Exp $
 
 package net.spy.net;
 
@@ -87,7 +87,7 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 
 		// Notify listeners that this has been updated.
 		synchronized(this) {
-			notify();
+			notifyAll();
 		}
 	}
 

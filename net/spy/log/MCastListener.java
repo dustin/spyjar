@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MCastListener.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
+// $Id: MCastListener.java,v 1.3 2003/07/26 07:46:52 dustin Exp $
 
 package net.spy.log;
 
@@ -19,8 +19,6 @@ import net.spy.SpyObject;
  */
 public class MCastListener extends SpyObject {
 
-	private InetAddress ia=null;
-	private int port=0;
 	private MulticastSocket socket=null;
 
 	/**
@@ -29,8 +27,6 @@ public class MCastListener extends SpyObject {
 	 */
 	public MCastListener(InetAddress ia, int port) throws IOException {
 		super();
-		this.ia=ia;
-		this.port=port;
 		if(!ia.isMulticastAddress()) {
 			throw new IOException("Not a multicast address.");
 		}

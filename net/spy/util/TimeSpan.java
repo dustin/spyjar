@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TimeSpan.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// $Id: TimeSpan.java,v 1.2 2003/07/26 07:46:54 dustin Exp $
 
 package net.spy.util;
 
@@ -11,18 +11,11 @@ import java.util.Date;
  */
 public class TimeSpan extends Object {
 
-	// From
-	private Date from=null;
-	// To
-	private Date to=null;
-
 	private long days=0;
 	private long hours=0;
 	private long minutes=0;
 	private long seconds=0;
 	private long mseconds=0;
-
-	private boolean future=false;
 
 	/**
 	 * Get an instance of TimeSpan representing the span between the given
@@ -30,14 +23,14 @@ public class TimeSpan extends Object {
 	 */
 	public TimeSpan(Date from, Date to) {
 		super();
-		this.from=from;
-		this.to=to;
 
 		long diff=Math.abs(to.getTime()-from.getTime());
 
+		/*
 		if(diff<=0) {
 			future=false;
 		}
+		*/
 
 		// Days
 		if(diff>86400000L) {

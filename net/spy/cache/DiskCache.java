@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: DiskCache.java,v 1.7 2003/04/18 07:50:13 dustin Exp $
+// $Id: DiskCache.java,v 1.8 2003/07/26 07:46:51 dustin Exp $
 
 package net.spy.cache;
 
@@ -168,9 +168,11 @@ public class DiskCache extends AbstractMap {
 
 		Object rv=null;
 
+		FileInputStream istream=null;
+		ObjectInputStream p=null;
 		try {
-			FileInputStream istream = new FileInputStream(getPath(key));
-			ObjectInputStream p = new ObjectInputStream(istream);
+			istream = new FileInputStream(getPath(key));
+			p = new ObjectInputStream(istream);
 			Object storedKey = p.readObject();
 			Object o = p.readObject();
 
@@ -180,15 +182,27 @@ public class DiskCache extends AbstractMap {
 			}
 
 			rv=o;
-
-			p.close();
-			istream.close();
 		} catch(FileNotFoundException e) {
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("File not found loading disk cache", e);
 			}
 		} catch(Exception e) {
 			getLogger().warn("Error getting " + key + " from disk cache", e);
+		} finally {
+			if(p != null) {
+				try {
+					p.close();
+				} catch(IOException e) {
+					// Nothing
+				}
+			}
+			if(istream != null) {
+				try {
+					istream.close();
+				} catch(IOException e) {
+					// Nothing
+				}
+			}
 		}
 
 		return(rv);
@@ -253,24 +267,22 @@ public class DiskCache extends AbstractMap {
 		 * Get an iterator.
 		 */
 		public Iterator iterator() {
-			return(new I(this, super.iterator()));
+			return(new I(super.iterator()));
 		}
 
 	}
 
 	// Iterator implementation
-	private class I extends Object implements Iterator {
+	private static class I extends Object implements Iterator {
 
-		private Set s=null;
 		private Iterator i=null;
 		private E current=null;
 		private boolean begun=false;
 
 		// Instatiate the iterator over the default iterator implementation
-		public I(Set s, Iterator i) {
+		public I(Iterator i) {
 			super();
 			this.i=i;
-			this.s=s;
 		}
 
 		/** 
@@ -307,7 +319,7 @@ public class DiskCache extends AbstractMap {
 	}
 
 	// Map entry implementation
-	private class E extends Object implements Map.Entry {
+	private static class E extends Object implements Map.Entry {
 
 		File path=null;
 		Object k=null;

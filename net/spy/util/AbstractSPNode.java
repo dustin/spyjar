@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AbstractSPNode.java,v 1.2 2002/10/25 18:19:29 dustin Exp $
+// $Id: AbstractSPNode.java,v 1.3 2003/07/26 07:46:53 dustin Exp $
 
 package net.spy.util;
 
@@ -108,5 +108,10 @@ public abstract class AbstractSPNode extends Object implements SPNode {
 
 		return (rv);
 	}
+
+	/** 
+	 * Must override hashCode along with compareTo();
+	 */
+	public abstract int hashCode();
 
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.29 2003/06/05 23:20:01 dustin Exp $
+// $Id: SPGen.java,v 1.30 2003/07/26 07:46:53 dustin Exp $
 
 package net.spy.util;
 
@@ -50,7 +50,7 @@ public class SPGen extends Object {
 	private String pkg="";
 	private String superclass=null;
 	private String superinterface=null;
-	private String version="$Revision: 1.29 $";
+	private String version="$Revision: 1.30 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -948,7 +948,7 @@ public class SPGen extends Object {
 
 	// Private class for results
 
-	private class Result extends Object {
+	private static class Result extends Object {
 		private String name=null;
 		private String type=null;
 		private String description=null;
@@ -1260,7 +1260,7 @@ public class SPGen extends Object {
 				} else if(type.equals("java.sql.Types.Decimal")) {
 					value=new BigDecimal(input);
 				} else if(type.equals("java.sql.Types.BIT")) {
-					value=new Boolean(input);
+					value=Boolean.valueOf(input);
 				} else if(type.equals("java.sql.Types.DOUBLE")) {
 					value=new Double(input);
 				} else if(type.equals("java.sql.Types.FLOAT")) {

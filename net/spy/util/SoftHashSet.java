@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SoftHashSet.java,v 1.1 2002/10/16 07:20:26 dustin Exp $
+// $Id: SoftHashSet.java,v 1.2 2003/07/26 07:46:54 dustin Exp $
 
 package net.spy.util;
 
@@ -46,7 +46,7 @@ public class SoftHashSet extends ReferenceSet {
 		return(new MySoftReference(o));
 	}
 
-	private class MySoftReference extends SoftReference {
+	private static class MySoftReference extends SoftReference {
 
 		public MySoftReference(Object o) {
 			super(o);

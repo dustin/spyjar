@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TTLMonitor.java,v 1.4 2002/11/26 09:36:12 dustin Exp $
+// $Id: TTLMonitor.java,v 1.5 2003/07/26 07:46:54 dustin Exp $
 
 package net.spy.util;
 
@@ -14,7 +14,7 @@ import net.spy.SpyThread;
  *
  * @see TTL
  */
-public class TTLMonitor extends SpyThread {
+public final class TTLMonitor extends SpyThread {
 
 	private ArrayList ttls=null;
 	private int expiredTTLs=0;

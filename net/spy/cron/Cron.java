@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Cron.java,v 1.9 2003/04/21 02:57:46 dustin Exp $
+// $Id: Cron.java,v 1.10 2003/07/26 07:46:51 dustin Exp $
 
 package net.spy.cron;
 
@@ -16,7 +16,7 @@ import net.spy.util.ThreadPool;
 /**
  * Watches a JobQueue and invokes the Jobs when they're ready.
  */
-public class Cron extends SpyThread {
+public final class Cron extends SpyThread {
 
 	private JobQueue jq=null;
 	private boolean stillRunning=true;
@@ -113,7 +113,7 @@ public class Cron extends SpyThread {
 		threads.shutdown();
 		// XXX:  Write up why I did this.
 		synchronized(jq) {
-			jq.notify();
+			jq.notifyAll();
 		}
 	}
 

@@ -1,5 +1,5 @@
 //
-// $Id: GarbageCollector.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
+// $Id: GarbageCollector.java,v 1.3 2003/07/26 07:46:53 dustin Exp $
 
 package net.spy.pool;
 
@@ -57,7 +57,7 @@ public class GarbageCollector extends SpyObject {
 		}
 	}
 
-	private class GCWarning extends Exception {
+	private static class GCWarning extends Exception {
 		public GCWarning(String msg) {
 			super(msg);
 		}

@@ -1,5 +1,5 @@
 //
-// $Id: PoolAble.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
+// $Id: PoolAble.java,v 1.3 2003/07/26 07:46:53 dustin Exp $
 
 package net.spy.pool;
 
@@ -81,7 +81,7 @@ public abstract class PoolAble extends SpyObject {
 	/**
 	 * Set the maximum age of this PoolAble.
 	 */
-	public void setMaxAge(long to) {
+	public synchronized void setMaxAge(long to) {
 		this.maxAge=to;
 	}
 
@@ -182,7 +182,7 @@ public abstract class PoolAble extends SpyObject {
 	/**
 	 * Mark this object as available.
 	 */
-	protected void setAvailable() {
+	protected synchronized void setAvailable() {
 		available=true;
 	}
 

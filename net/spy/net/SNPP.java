@@ -2,7 +2,7 @@
 //
 // Copyright (c) 1999 Dustin Sallings
 //
-// $Id: SNPP.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: SNPP.java,v 1.2 2003/07/26 07:46:52 dustin Exp $
 
 package net.spy.net;
 
@@ -220,7 +220,7 @@ public class SNPP extends Object {
 		if(goesBothWays) {
 			cmd("msta " + tag);
 			if(currentstatus == 889) {
-				String tmp=new String(currentmessage);
+				String tmp=currentmessage;
 				tmp=tmp.substring(tmp.indexOf(" ")).trim();
 				tmp=tmp.substring(tmp.indexOf(" ")).trim();
 				tmp=tmp.substring(tmp.indexOf(" ")).trim();
@@ -291,9 +291,14 @@ public class SNPP extends Object {
 		if(s!=null) {
 			try {
 				cmd("quit");
-				s.close();
 			} catch(Exception e) {
 				// Don't care, we tried...
+			} finally {
+				try {
+					s.close();
+				} catch(IOException e) {
+					// Don't care anymore
+				}
 			}
 			// Go ahead and set s to null anyway.
 			s=null;

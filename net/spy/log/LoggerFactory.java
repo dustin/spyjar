@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: LoggerFactory.java,v 1.4 2003/02/17 21:02:19 dustin Exp $
+// $Id: LoggerFactory.java,v 1.5 2003/07/26 07:46:52 dustin Exp $
 
 package net.spy.log;
 
@@ -31,7 +31,6 @@ public class LoggerFactory extends Object {
 
 	private Map instances=null;
 	private Constructor instanceConstructor=null;
-	private boolean consTakesName=true;
 
 	private static LoggerFactory instance=null;
 

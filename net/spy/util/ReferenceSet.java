@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ReferenceSet.java,v 1.3 2003/04/16 05:03:57 dustin Exp $
+// $Id: ReferenceSet.java,v 1.4 2003/07/26 07:46:53 dustin Exp $
 
 package net.spy.util;
 
@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * This class aids in implementing sets of references.
@@ -112,7 +113,7 @@ public abstract class ReferenceSet extends AbstractSet {
 	 */
 	protected abstract Reference getReference(Object o);
 
-	private class ReferenceIterator extends Object implements Iterator {
+	private static class ReferenceIterator extends Object implements Iterator {
 
 		private Iterator backIterator=null;
 		boolean hasNext=false;
@@ -130,7 +131,10 @@ public abstract class ReferenceSet extends AbstractSet {
 			return(hasNext);
 		}
 
-		public Object next() {
+		public Object next() throws NoSuchElementException {
+			if(hasNext == false) {
+				throw new NoSuchElementException("All out.");
+			}
 			Object rv=current;
 			findNext();
 			return(rv);

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: RingBuffer.java,v 1.4 2003/07/25 20:12:56 dustin Exp $
+// $Id: RingBuffer.java,v 1.5 2003/07/26 07:46:53 dustin Exp $
 
 package net.spy.util;
 
@@ -26,6 +26,8 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 	private int end=0;
 	private boolean wrapped=false;
 	private int size=0;
+
+	private static final long serialVersionUID=823830283278235l;
 
 	/**
 	 * Get an instance of RingBuffer.

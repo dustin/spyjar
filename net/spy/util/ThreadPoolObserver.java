@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPoolObserver.java,v 1.2 2003/04/18 07:50:16 dustin Exp $
+// $Id: ThreadPoolObserver.java,v 1.3 2003/07/26 07:46:54 dustin Exp $
 
 package net.spy.util;
 
@@ -46,7 +46,7 @@ public class ThreadPoolObserver extends SpyObject {
 	final void completedJob(Runnable r) {
 		jobComplete(r);
 		synchronized(this) {
-			notify();
+			notifyAll();
 		}
 	}
 

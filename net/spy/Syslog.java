@@ -1,6 +1,6 @@
 // Copyright (c) 1999 Dustin Sallings
 //
-// $Id: Syslog.java,v 1.2 2002/11/20 04:32:06 dustin Exp $
+// $Id: Syslog.java,v 1.3 2003/07/26 07:46:51 dustin Exp $
 
 package net.spy;
 
@@ -46,7 +46,6 @@ public class Syslog extends SpyObject {
 	public static final int LOCAL6 = 176;
 	public static final int LOCAL7 = 184;
 
-	private String loghost=null;
 	private InetAddress addr=null;
 
 	/**
@@ -54,7 +53,6 @@ public class Syslog extends SpyObject {
 	 */
 	public Syslog(String loghost) throws UnknownHostException {
 		super();
-		this.loghost=loghost;
 		addr=InetAddress.getByName(loghost);
 	}
 

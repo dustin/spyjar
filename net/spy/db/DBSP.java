@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.19 2003/06/05 23:19:59 dustin Exp $
+// $Id: DBSP.java,v 1.20 2003/07/26 07:46:52 dustin Exp $
 
 package net.spy.db;
 
@@ -594,7 +594,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 */
 	public void set(String which,boolean a1) 
 		throws SQLException {
-		setArg(which, new Boolean(a1), Types.BIT);
+		setArg(which, Boolean.valueOf(a1), Types.BIT);
 	}
 
 	/** 
@@ -1054,7 +1054,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 	// Generic container for named objects.  Ideally, I'd like to use a
 	// LinkedHashMap, but I don't have them before java 1.4, so here we go
-	private class NamedObjectStorage extends Object {
+	private static class NamedObjectStorage extends Object {
 
 		private Map byName=null;
 		private List byPosition=null;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyLog.java,v 1.4 2002/11/20 04:32:08 dustin Exp $
+ * $Id: SpyLog.java,v 1.5 2003/07/26 07:46:52 dustin Exp $
  */
 
 package net.spy.log;
@@ -27,7 +27,6 @@ public class SpyLog extends SpyObject {
 	private SpyLogQueue queue=null;
 	private static boolean initialized = false;
 	private static Vector flushers=null;
-	private String queueName=null;
 
 	/**
 	 * Instantiate a SpyLog interface for the given queue name with the
@@ -35,8 +34,6 @@ public class SpyLog extends SpyObject {
 	 */
 	public SpyLog(String queueName) {
 		super();
-
-		this.queueName=queueName;
 
 		// Important to initialize only once, this sets up all the static
 		// variables including the cleanup thread.
@@ -68,8 +65,6 @@ public class SpyLog extends SpyObject {
 	 */
 	public SpyLog(String queueName, SpyLogFlusher f) {
 		super();
-
-		this.queueName=queueName;
 
 		initialize();
 

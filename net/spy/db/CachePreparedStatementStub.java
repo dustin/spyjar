@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePreparedStatementStub.java,v 1.4 2003/04/02 05:55:02 dustin Exp $
+ * $Id: CachePreparedStatementStub.java,v 1.5 2003/07/26 07:46:51 dustin Exp $
  */
 
 package net.spy.db;
@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
+
+import java.util.Arrays;
 
 import net.spy.SpyDB;
 import net.spy.SpyObject;
@@ -102,17 +104,37 @@ public class CachePreparedStatementStub extends SpyObject {
 		hc+=queryStr.hashCode();
 		StringBuffer sb=new StringBuffer(256);
 		for(int i=0; i<args.length; i++) {
-			try {
-				sb.append(args[i]);
-				sb.append((char)0x00);
-			} catch(Exception e) {
-				// Ignore it, we'll get close.
-			}
+			sb.append(args[i]);
+			sb.append((char)0x00);
 		}
 		// Hashcode of all of the args run together.
 		hc+=sb.toString().hashCode();
 
 		return(hc);
+	}
+
+	/** 
+	 * Equal if two objects have the same hash code, same query, and same
+	 * parameters.
+	 */
+	public boolean equals(Object o) {
+		boolean rv=false;
+
+		int otherHc=o.hashCode();
+		if(otherHc == hashCode()) {
+			if(o instanceof CachePreparedStatementStub) {
+				CachePreparedStatementStub cpss=(CachePreparedStatementStub)o;
+				String oQuery=cpss.queryStr;
+				Object otherArgs[]=cpss.args;
+
+				if(oQuery != null && oQuery.equals(queryStr)) {
+					// Finally, true if the args are equal.
+					rv=Arrays.equals(args, otherArgs);
+				} // query check
+			} // instance check
+		} // hash code check
+
+		return(rv);
 	}
 
 	// Implemented
@@ -217,7 +239,7 @@ public class CachePreparedStatementStub extends SpyObject {
 	// Implemented
 	public void setBoolean(int a0,boolean a1) 
 		throws SQLException {
-		setArg(a0, new Boolean(a1), Types.BIT);
+		setArg(a0, Boolean.valueOf(a1), Types.BIT);
 	}
 
 	// Implemented

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TTL.java,v 1.4 2002/12/30 20:55:29 knitterb Exp $
+// $Id: TTL.java,v 1.5 2003/07/26 07:46:54 dustin Exp $
 
 package net.spy.util;
 
@@ -253,7 +253,7 @@ public class TTL extends Object {
 
 	// This does not extend Exception because it exists primarily for the
 	// message it prints.
-	private class Expired extends Exception {
+	private static class Expired extends Exception {
 		public Expired() {
 			super("Timer has expired.");
 		}

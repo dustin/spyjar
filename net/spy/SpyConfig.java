@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyConfig.java,v 1.4 2002/11/22 02:20:09 dustin Exp $
+ * $Id: SpyConfig.java,v 1.5 2003/07/26 07:46:50 dustin Exp $
  */
 
 package net.spy;
@@ -215,7 +215,7 @@ public class SpyConfig extends Properties {
 	}
 
 	// Inner class for storing configuration information
-	private class ConfigInfo extends Object {
+	private static class ConfigInfo extends Object {
 
 		private long timestamp=0;
 		private Map config=null;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyCache.java,v 1.8 2002/12/13 23:54:20 dustin Exp $
+ * $Id: SpyCache.java,v 1.9 2003/07/26 07:46:51 dustin Exp $
  */
 
 package net.spy.cache;
@@ -297,7 +297,7 @@ public class SpyCache extends SpyObject {
 		}
 	} // Cleaner class
 
-	private class SpyCacheItem extends AbstractCachable {
+	private static class SpyCacheItem extends AbstractCachable {
 		private long exptime=0;
 
 		public SpyCacheItem(Object key, Object value, long cacheTime) {

@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ProgressStats.java,v 1.3 2003/06/11 07:31:18 dustin Exp $
+// $Id: ProgressStats.java,v 1.4 2003/07/26 07:46:53 dustin Exp $
 
 package net.spy.util;
 
@@ -18,7 +18,6 @@ public class ProgressStats extends Object {
 
 	private int done=0;
 	private int todo=0;
-	private long startTime=0;
 	private long totalTime=0;
 	private long lastTime=0;
 	private long lastProcessTime=0;
@@ -30,7 +29,6 @@ public class ProgressStats extends Object {
 	public ProgressStats(int size) {
 		super();
 
-		this.startTime=System.currentTimeMillis();
 		this.todo=size;
 	}
 

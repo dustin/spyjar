@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPool.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
+// $Id: ObjectPool.java,v 1.3 2003/07/26 07:46:53 dustin Exp $
 
 package net.spy.pool;
 
@@ -37,8 +37,6 @@ import net.spy.util.TimeStampedHashMap;
  */
 
 public class ObjectPool extends SpyObject {
-	private Exception objectException=null;
-	private SpyConfig conf=null;
 	// This is static so we can check up on it.
 	private static ObjectPoolCleaner cleaner=null;
 	// This is static because we want everyone to see the same pools, of
@@ -47,7 +45,6 @@ public class ObjectPool extends SpyObject {
 
 	public ObjectPool(SpyConfig conf) {
 		super();
-		this.conf=conf;
 
 		initialize();
 	}

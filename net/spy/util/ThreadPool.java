@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.18 2003/04/18 08:21:44 dustin Exp $
+// $Id: ThreadPool.java,v 1.19 2003/07/26 07:46:54 dustin Exp $
 
 package net.spy.util;
 
@@ -661,7 +661,7 @@ public class ThreadPool extends ThreadGroup {
 	// ability to effectively dequeue something.
 	// //////////////////////////////////////////////////////////////////////
 
-	private class Task extends Object {
+	private static class Task extends Object {
 		Runnable runnable=null;
 		boolean started=false;
 
@@ -716,7 +716,7 @@ public class ThreadPool extends ThreadGroup {
 	// The threads that make up the pool.
 	// //////////////////////////////////////////////////////////////////////
 
-	private class RunThread extends SpyThread {
+	private static class RunThread extends SpyThread {
 		private ThreadPoolObserver monitor=null;
 		private LinkedList tasks=null;
 		private boolean going=true;
@@ -731,7 +731,7 @@ public class ThreadPool extends ThreadGroup {
 
 			super(tg, "RunThread");
 
-			runningMutex=new String("runningMutex");
+			runningMutex="runningMutex";
 			this.tasks=tasks;
 			this.monitor=monitor;
 

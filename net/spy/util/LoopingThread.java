@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoopingThread.java,v 1.3 2003/04/18 07:50:15 dustin Exp $
+// $Id: LoopingThread.java,v 1.4 2003/07/26 07:46:53 dustin Exp $
 
 package net.spy.util;
 
@@ -64,12 +64,10 @@ public abstract class LoopingThread extends SpyThread {
 	/** 
 	 * Request the looping should end.
 	 */
-	public void requestStop() {
-		keepGoing=false;
+	public synchronized void requestStop() {
 		// notify so the wait will finish
-		synchronized(this) {
-			notify();
-		}
+		keepGoing=false;
+		notifyAll();
 	}
 
 	/** 

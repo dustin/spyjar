@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyRunner.java,v 1.4 2002/11/20 06:35:57 dustin Exp $
+// $Id: SpyRunner.java,v 1.5 2003/07/26 07:46:51 dustin Exp $
 
 package net.spy;
 
@@ -36,7 +36,6 @@ import net.spy.log.LoggingOutputStream;
  * </pre>
  */
 public class SpyRunner extends SpyThread {
-	private Class tclass=null;
 	private String args[]=null;
 	private String classname=null;
 
@@ -46,7 +45,7 @@ public class SpyRunner extends SpyThread {
 		super(tg, "main");
 		this.classname=object;
 		try {
-			tclass=Class.forName(object);
+			Class.forName(object);
 			this.args=args;
 		} catch(Exception e) {
 			getLogger().error("Problem loading class " + object, e);

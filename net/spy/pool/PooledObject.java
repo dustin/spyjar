@@ -1,5 +1,5 @@
 //
-// $Id: PooledObject.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: PooledObject.java,v 1.2 2003/07/26 07:46:53 dustin Exp $
 
 package net.spy.pool;
 
@@ -64,7 +64,7 @@ public class PooledObject extends Object {
 	 * Finalization will check-in any checked-out object that has not
 	 * already been checked in.
 	 */
-	public void finalize() {
+	protected void finalize() {
 		if(p!=null) {
 			debug("###### Finalization checking in object " + p.getObjectID());
 			p.checkIn();

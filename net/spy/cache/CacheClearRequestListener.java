@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CacheClearRequestListener.java,v 1.3 2002/11/22 02:20:09 dustin Exp $
+// $Id: CacheClearRequestListener.java,v 1.4 2003/07/26 07:46:51 dustin Exp $
 
 package net.spy.cache;
 
@@ -15,7 +15,7 @@ import net.spy.SpyThread;
 /**
  * Listen for multicast request to clear cache for a given prefix.
  */
-public class CacheClearRequestListener extends SpyThread {
+public final class CacheClearRequestListener extends SpyThread {
 
 	private MulticastSocket s=null;
 	private InetAddress group=null;

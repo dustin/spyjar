@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLWatcher.java,v 1.4 2003/04/18 07:50:15 dustin Exp $
+// $Id: URLWatcher.java,v 1.5 2003/07/26 07:46:52 dustin Exp $
 
 package net.spy.net;
 
@@ -31,11 +31,9 @@ public class URLWatcher extends SpyObject {
 	private static final int NAP_TIME=60000;
 
 	private int numRuns=0;
-	private boolean notdone=true;
 
 	// This lets it know when to give up
 	private int recentTouches=0;
-	private int touchlessRuns=0;
 
 	/**
 	 * Get an instance of URLWatcher.
