@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AbstractSPNode.java,v 1.1 2002/10/25 18:09:46 dustin Exp $
+// $Id: AbstractSPNode.java,v 1.2 2002/10/25 18:19:29 dustin Exp $
 
 package net.spy.util;
 
@@ -80,7 +80,7 @@ public abstract class AbstractSPNode extends Object implements SPNode {
 	 * @see SPNode
 	 */
 	public void addNextHop(SPNode n, SPVertex v) {
-		SPVertex currentHop=(SPVertex)getNextHop(n);
+		SPVertex currentHop=getNextHop(n);
 		if (currentHop == null) {
 			nextHops.put(n, v);
 		} else {
