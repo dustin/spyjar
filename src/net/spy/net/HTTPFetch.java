@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.HttpURLConnection;
 
 import java.util.Map;
 import java.util.List;
@@ -31,6 +32,11 @@ public class HTTPFetch extends Object {
 	private String stripped=null;
 
 	private Map headers=null;
+	private long ifModifiedSince=0;
+
+	private int status=0;
+	private long lastModified=0;
+	private Map responseHeaders=null;
 
 	/** 
 	 * Get an HTTPFetch instance for the given URL.
@@ -53,17 +59,47 @@ public class HTTPFetch extends Object {
 		headers=head;
 	}
 
+	/** 
+	 * Get the response headers from the request (will force a content fetch).
+	 */
+	public Map getResponseHeaders() throws IOException {
+		getData();
+		return(responseHeaders);
+	}
+
+	/** 
+	 * Set the ifModifiedSince value for the request.
+	 */
+	public void setIfModifiedSince(long to) {
+		ifModifiedSince=to;
+	}
+
+	/** 
+	 * Get the HTTP status from this request.
+	 */
+	public int getStatus() throws IOException {
+		getData();
+		return(status);
+	}
+
+	/** 
+	 * Get the last modified date of this response.
+	 */
+	public long getLastModified() throws IOException {
+		getData();
+		return(lastModified);
+	}
+
 	/**
 	 * Get a vector containing the individual lines of the document
 	 * returned from the URL.
 	 *
 	 * @exception Exception thrown when something fails.
 	 */
-	public List getLines() throws Exception {
+	public List getLines() throws IOException {
 		ArrayList a = new ArrayList();
-		getData();
 
-		StringTokenizer st=new StringTokenizer(contents, "\r\n");
+		StringTokenizer st=new StringTokenizer(getData(), "\r\n");
 		while(st.hasMoreTokens()) {
 			a.add(st.nextToken());
 		}
@@ -106,7 +142,7 @@ public class HTTPFetch extends Object {
 
 	// Get a reader for the above routines.
 	private BufferedReader getReader() throws IOException {
-		URLConnection uc = url.openConnection();
+		HttpURLConnection uc = (HttpURLConnection)url.openConnection();
 		if(headers!=null) {
 			for(Iterator i=headers.keySet().iterator(); i.hasNext(); ) {
 				String key=(String)i.next();
@@ -115,7 +151,16 @@ public class HTTPFetch extends Object {
 				uc.setRequestProperty(key, value);
 			}
 		}
+		// Set the ifModifiedSince if we have one
+		if(ifModifiedSince > 0) {
+			uc.setIfModifiedSince(ifModifiedSince);
+		}
 		InputStream i = uc.getInputStream();
+		// Collect some data about this request
+		status=uc.getResponseCode();
+		responseHeaders=uc.getHeaderFields();
+		lastModified=uc.getLastModified();
+
 		BufferedReader br =
 			new BufferedReader( new InputStreamReader(i));
 		return(br);

@@ -57,6 +57,7 @@ public class URLWatcherTest extends TestCase {
 	 */
 	protected void tearDown() {
 		uw.shutdown();
+		uw=null;
 	}
 
 	/** 

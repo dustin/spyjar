@@ -125,7 +125,9 @@ public final class URLWatcher extends SpyObject {
 			// Throw away the instance
 			instance=null;
 			// Shut down the cron
-			cron.shutdown();
+			if(cron.isRunning()) {
+				cron.shutdown();
+			}
 		}
 	}
 

@@ -4,12 +4,15 @@
 
 package net.spy.net;
 
+import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
 
 import java.io.IOException;
 
 import java.net.URL;
+import java.net.HttpURLConnection;
 
 import net.spy.cron.Job;
 import net.spy.cron.TimeIncrement;
@@ -32,7 +35,9 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 
 	private URL url=null;
 
+	private Map lastHeaders=null;
 	private String content=null;
+	private long lastModified=0;
 
 	private IOException lastError=null;
 
@@ -75,12 +80,30 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 		HashMap headers=new HashMap();
 		// make sure the stuff isn't cached
 		headers.put("Pragma", "no-cache");
+		// But don't request something if we know we already have it.
+		if(lastHeaders != null) {
+			List eTags=(List)lastHeaders.get("ETag");
+			if(eTags != null) {
+				// Put the first etag in the none-match
+				headers.put("If-None-Match", eTags.get(0));
+			}
+		}
 
 		numUpdates++;
 
 		try {
 			HTTPFetch hf=new HTTPFetch(url, headers);
-			content=hf.getData();
+			hf.setIfModifiedSince(lastModified);
+
+			System.err.println("Status:  " + hf.getStatus());
+			if(hf.getStatus() == HttpURLConnection.HTTP_OK) {
+				content=hf.getData();
+				lastModified=hf.getLastModified();
+				lastHeaders=hf.getResponseHeaders();
+			} else {
+				getLogger().info("Not saving content due to response status "
+					+ hf.getStatus());
+			}
 		} catch(IOException e) {
 			lastError=e;
 		}
