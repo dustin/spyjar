@@ -203,6 +203,22 @@ public class InterfaceImplementor extends Object {
 		return(ret.trim());
 	}
 
+	private String getDocLink(Method method) {
+		String ret=method.getName();
+		Class types[]=method.getParameterTypes();
+		ret+="(";
+		if(types.length > 0) {
+			for(int i=0; i<types.length; i++) {
+				ret+=decodeType(types[i]);
+				ret+=",";
+			}
+			// Strip off the last ,
+			ret=ret.substring(0, ret.length()-1);
+		}
+		ret+=")";
+		return(ret);
+	}
+
 	private String getExSignature(Method method) {
 		String ret="";
 		// Now flip through the exceptions
@@ -253,11 +269,31 @@ public class InterfaceImplementor extends Object {
 		return(ret);
 	}
 
+	private String getDocLink(Constructor con) {
+		String ret=con.getName();
+		Class types[]=con.getParameterTypes();
+		ret+="(";
+		if(types.length > 0) {
+			for(int i=0; i<types.length; i++) {
+				ret+=decodeType(types[i]);
+				ret+=",";
+			}
+			// Strip off the last ,
+			ret=ret.substring(0, ret.length()-1);
+		}
+		ret+=")";
+		return(ret);
+	}
+
 	// Implement a constructor that tries to error out as best as possible
 	private String implement(Method method) {
 		// Start
-		String ret=null;
-		ret="\t// InterfaceImplementor added " + method.getName() + "\n";
+		String ret="\t/**\n"
+			+ "\t * InterfaceImplementor implementation of "
+				+ method.getName() + "\n"
+			+ "\t * @see " + interfaceClass.getName() + "#"
+				+ getDocLink(method) + "\n"
+			+ "\t */";
 		ret+="\t" + getSignature(method) + " {\n";
 
 		Class e[]=method.getExceptionTypes();
@@ -289,8 +325,13 @@ public class InterfaceImplementor extends Object {
 
 	// Implement a constructor that calls the super constructor
 	private String implementConstructor(Constructor con) {
-		String ret=null;
-		ret="\t// InterfaceImplementor added constructor\n";
+		String ret="\t/**\n"
+			+ "\t * Constructor provided by InterfaceImplementor.\n";
+		if(superClass != null) {
+			ret+="\t * @see " + superClass.getName() + "#"
+				+ getDocLink(con) + "\n";
+		}
+		ret+="\t */\n";
 		ret+="\t" + getSignature(con) + " {\n";
 
 		ret+="\t\tsuper(";
@@ -316,6 +357,11 @@ public class InterfaceImplementor extends Object {
 		if(outpackage!=null) {
 			ret+="package " + outpackage + ";\n\n";
 		}
+
+		ret+="/**\n"
+			+ " * InterfaceImplementor implementation of "
+				+ interfaceClass.getName() + ".\n"
+			+ " */\n";
 
 		ret+="public class " + outclass + " ";
 
