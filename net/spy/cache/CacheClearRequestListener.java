@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CacheClearRequestListener.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: CacheClearRequestListener.java,v 1.2 2002/11/20 04:52:33 dustin Exp $
 
 package net.spy.cache;
 
@@ -10,10 +10,12 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
+import net.spy.SpyThread;
+
 /**
  * Listen for multicast request to clear cache for a given prefix.
  */
-public class CacheClearRequestListener extends Thread {
+public class CacheClearRequestListener extends SpyThread {
 
 	private MulticastSocket s=null;
 	private InetAddress group=null;
@@ -71,7 +73,7 @@ public class CacheClearRequestListener extends Thread {
 			s.leaveGroup(group);
 			s.close();
 		} catch(IOException ioe) {
-			ioe.printStackTrace();
+			getLogger().error("IOException when leaving group", ioe);
 		}
 	}
 
@@ -103,7 +105,7 @@ public class CacheClearRequestListener extends Thread {
 				s.receive(recv);
 				flush(recv);
 			} catch(IOException e) {
-				e.printStackTrace();
+				getLogger().error("IOException processing packet.", e);
 			}
 		}
 	}

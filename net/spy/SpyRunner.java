@@ -1,12 +1,14 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyRunner.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: SpyRunner.java,v 1.2 2002/11/20 04:52:32 dustin Exp $
 
 package net.spy;
 
 import java.io.File;
 
 import java.lang.reflect.InvocationTargetException;
+
+import net.spy.SpyThread;
 
 /**
  * SpyRunner - a hack-ass application server.
@@ -31,8 +33,7 @@ import java.lang.reflect.InvocationTargetException;
  * app2.args    Arguments for app2
  * </pre>
  */
-
-public class SpyRunner extends Thread {
+public class SpyRunner extends SpyThread {
 	private Class tclass=null;
 	private String args[]=null;
 	private String classname=null;
@@ -46,8 +47,7 @@ public class SpyRunner extends Thread {
 			tclass=Class.forName(object);
 			this.args=args;
 		} catch(Exception e) {
-			System.err.println("Error loading class " + object + ":  " + e);
-			e.printStackTrace();
+			getLogger().error("Problem loading class " + object, e);
 		}
 	}
 
@@ -58,16 +58,11 @@ public class SpyRunner extends Thread {
 			SpyUtil.runClass(classname, args);
 
 		} catch(InvocationTargetException ite) {
-			System.err.println("Error invoking method for " + classname
-				+ ":  " + ite);
-			ite.printStackTrace();
+			getLogger().error("Problem invoking main from " + classname, ite);
 			Throwable t = ite.getTargetException();
-			System.err.println("Original:  " + t);
-			t.printStackTrace();
+			getLogger().error("Original exception " + classname, t);
 		} catch(Exception e) {
-			System.err.println("Error invoking method for " + classname
-				+ ":  " + e);
-			e.printStackTrace();
+			getLogger().error("Problem invoking main from " + classname, e);
 		}
 	}
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyLogFlusher.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+ * $Id: SpyLogFlusher.java,v 1.2 2002/11/20 04:52:33 dustin Exp $
  */
 
 package net.spy.log;
@@ -12,6 +12,8 @@ import java.io.FileWriter;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
+
+import net.spy.SpyThread;
 
 /**
  * SpyLogFlusher does the actual work of SpyLog.  This is where the log
@@ -27,8 +29,7 @@ import java.util.Vector;
  * flushed, the following piece of code may be executed:<br>
  * <code>Vector v = log_object.flush();</code>
  */
-
-public class SpyLogFlusher extends Thread {
+public class SpyLogFlusher extends SpyThread {
 
 	// private static BufferedWriter logFile=null;
 	private SpyLogQueue logQueue=null;
@@ -178,8 +179,7 @@ public class SpyLogFlusher extends Thread {
 			} catch(Exception e) {
 				lastError=e;
 				lastErrorTime=new Date();
-				System.err.println("Error flushing logs:  " + e);
-				e.printStackTrace();
+				getLogger().error("Problem flushing logs", e);
 			}
 		}
 	}

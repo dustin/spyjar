@@ -1,21 +1,20 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TTLMonitor.java,v 1.2 2002/11/19 20:41:25 dustin Exp $
+// $Id: TTLMonitor.java,v 1.3 2002/11/20 04:52:34 dustin Exp $
 
 package net.spy.util;
 
 import java.util.Iterator;
 import java.util.ArrayList;
 
-import net.spy.log.Logger;
-import net.spy.log.LoggerFactory;
+import net.spy.SpyThread;
 
 /**
  * Monitor TTLs.
  *
  * @see TTL
  */
-public class TTLMonitor extends Thread {
+public class TTLMonitor extends SpyThread {
 
 	private ArrayList ttls=null;
 
@@ -93,8 +92,7 @@ public class TTLMonitor extends Thread {
 			try {
 				sleep(NAPTIME);
 			} catch(InterruptedException e) {
-				Logger logger=LoggerFactory.getLogger(getClass());
-				logger.warn("Hey!  Someone interrupted my sleep!", e);
+				getLogger().warn("Hey!  Someone interrupted my sleep!", e);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: QuickRun.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: QuickRun.java,v 1.2 2002/11/20 04:52:33 dustin Exp $
 
 package net.spy.util;
 
@@ -13,12 +13,13 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import net.spy.SpyThread;
 import net.spy.SpyUtil;
 
 /**
  * Listens on a socket and lets you run stuff without firing up a new JVM.
  */
-public class QuickRun extends Thread {
+public class QuickRun extends SpyThread {
 
 	// Server stuff
 	private ServerSocket server=null;
@@ -56,23 +57,22 @@ public class QuickRun extends Thread {
 
 			processCmd(cmd);
 		} catch(Exception e) {
-			System.err.println("QuickRun exception:  " +e);
-			e.printStackTrace();
+			getLogger().error("QuickRun exception", e);
 		} finally {
 			try {
 				ostream.close();
 			} catch(Exception e) {
-				e.printStackTrace();
+				getLogger().warn("Problem closing client output stream.", e);
 			}
 			try {
 				out.close();
 			} catch(Exception e) {
-				e.printStackTrace();
+				getLogger().warn("Problem closing output stream.", e);
 			}
 			try {
 				in.close();
 			} catch(Exception e) {
-				e.printStackTrace();
+				getLogger().warn("Problem closing input output stream.", e);
 			}
 		}
 	}

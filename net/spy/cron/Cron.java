@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Cron.java,v 1.2 2002/11/04 21:13:56 dustin Exp $
+// $Id: Cron.java,v 1.3 2002/11/20 04:52:33 dustin Exp $
 
 package net.spy.cron;
 
@@ -10,15 +10,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
-import net.spy.log.Logger;
-import net.spy.log.LoggerFactory;
+import net.spy.SpyThread;
 
 /**
  * Watches a JobQueue and invokes the Jobs when they're ready.
  */
-public class Cron extends Thread {
-
-	private Logger log=null;
+public class Cron extends SpyThread {
 
 	private JobQueue jq=null;
 	private boolean stillRunning=true;
@@ -49,9 +46,6 @@ public class Cron extends Thread {
 		setDaemon(true);
 		setName(name);
 
-		// Get the logger
-		log=LoggerFactory.getLogger(Cron.class);
-
 		start();
 		validJobFound=System.currentTimeMillis();
 	}
@@ -78,7 +72,7 @@ public class Cron extends Thread {
 			// Check all the running jobs.
 			for(Iterator i=jq.getReadyJobs(); i.hasNext(); ) {
 				Job j=(Job)i.next();
-				log.info("Starting job " + j);
+				getLogger().info("Starting job " + j);
 				Thread t=new Thread(j);
 				t.setName(j.getName());
 				t.setDaemon(true);
@@ -98,7 +92,7 @@ public class Cron extends Thread {
 			if(next==null) {
 				// If it's been too long, shut down
 				if( (now-validJobFound) > maxIdleTime) {
-					log.debug("Been a long time "
+					getLogger().debug("Been a long time "
 						+ "since I had a job.  Shutting down.");
 					shutdown();
 				}
@@ -110,10 +104,10 @@ public class Cron extends Thread {
 
 			try {
 				if(next!=null) {
-					log.debug("Sleeping "
+					getLogger().debug("Sleeping "
 						+ soonestJob + "ms (next job at " + next + ").");
 				} else {
-					log.debug("Sleeping "
+					getLogger().debug("Sleeping "
 						+ soonestJob + "ms (no good date found).");
 				}
 				// If we're still running at this point, wait for a job
@@ -124,23 +118,23 @@ public class Cron extends Thread {
 					if(soonestJob < 1) {
 						soonestJob = 1;
 					}
-					log.debug("Sleeping for " + soonestJob);
+					getLogger().debug("Sleeping for " + soonestJob);
 					// Sleep on the job
 					synchronized(jq) {
 						jq.wait(soonestJob);
 					}
 					// Wait the remaining second
 					sleep(1000);
-					log.debug("Finished sleep.");
+					getLogger().debug("Finished sleep.");
 				} else {
-					log.debug("Not sleeping, game over.");
+					getLogger().debug("Not sleeping, game over.");
 				}
 			} catch(Exception e) {
 				// Don't care, flip faster
 				e.printStackTrace();
 			}
 		} // still running
-		log.debug("shut down");
+		getLogger().debug("shut down");
 	}
 
 	/** 
