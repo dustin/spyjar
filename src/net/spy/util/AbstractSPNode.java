@@ -87,16 +87,7 @@ public abstract class AbstractSPNode extends Object implements SPNode {
 	 * @see SPNode
 	 */
 	public void addNextHop(SPNode n, SPVertex v) {
-		SPVertex currentHop=getNextHop(n);
-		if (currentHop == null) {
-			nextHops.put(n, v);
-		} else {
-			// If we already have a next hop at a lower cost, keep the
-			// current one, else add a new one
-			if(v.getCost() < currentHop.getCost()) {
-				nextHops.put(n, v);
-			}
-		}
+		nextHops.put(n, v);
 	}
 
 	/** 

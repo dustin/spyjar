@@ -5,12 +5,9 @@
 package net.spy.util;
 
 import java.util.Set;
-import java.util.Map;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Collection;
-
-import net.spy.SpyObject;
 
 /**
  * This is a utility class for finding the least costly paths from each node
@@ -83,7 +80,7 @@ import net.spy.SpyObject;
  * </p>
  *
  */
-public class ShortestPathFinder extends SpyObject {
+public class ShortestPathFinder extends Object {
 
 	/**
 	 * Get an instance of ShortestPathFinder.
@@ -98,31 +95,14 @@ public class ShortestPathFinder extends SpyObject {
 	 * @param nodes the nodes to calculate
 	 */
 	public void calculatePaths(Collection nodes) {
-		// First, clear them all
 		for(Iterator i=nodes.iterator(); i.hasNext();) {
-			SPNode sn=(SPNode)i.next();
-			sn.clearNextHops();
-		}
-		// Now, calculate them
-		for(Iterator i=nodes.iterator(); i.hasNext();) {
-			// Only calculate if there are no hops
-			SPNode sn=(SPNode)i.next();
-			if(sn.getNextHops().size() == 0) {
-				if(getLogger().isDebugEnabled()) {
-					getLogger().debug("No hops for " + sn + ", calculating...");
-				}
-				calculatePathsWithoutClearing(sn, new HashSet());
-			} else {
-				if(getLogger().isDebugEnabled()) {
-					getLogger().debug("Not recalculating " + sn);
-				}
-			}
+			calculatePaths((SPNode)i.next());
 		}
 	}
 
+
 	/** 
-	 * Calculate all of the paths for a single node.  Note:  this completely
-	 * recalculates the next hops, so it starts by clearing
+	 * Calculate all of the paths for a single node.
 	 * 
 	 * @param node the node from which to calculate paths
 	 */
@@ -130,43 +110,49 @@ public class ShortestPathFinder extends SpyObject {
 		// Clear the current list
 		node.clearNextHops();
 
-		calculatePathsWithoutClearing(node, new HashSet());
+		for(Iterator i=node.getConnections().iterator(); i.hasNext();) {
+			SPVertex spv=(SPVertex)i.next();
+			recordLink(node, spv.getCost(), spv.getTo(), spv.getTo(),
+				new HashSet());
+		}
 	}
 
-	private void calculatePathsWithoutClearing(SPNode node, Set seen) {
-		if(!seen.contains(node)) {
-			seen.add(node);
-
-			// Add all connections
-			for(Iterator i=node.getConnections().iterator(); i.hasNext();) {
-				SPVertex spv=(SPVertex)i.next();
-				SPNode spn=spv.getTo();
-
-				node.addNextHop(spn, spv);
+	private void addHopFrom(SPNode node, SPNode dest, SPNode next, int cost) {
+		SPVertex currentHop=node.getNextHop(dest);
+		if(currentHop == null) {
+			node.addNextHop(dest, new SPVertex(next, cost));
+		} else {
+			if(cost < currentHop.getCost()) {
+				node.addNextHop(dest, new SPVertex(next, cost));
 			}
+		}
+	}
 
-			// Flip through the list again for recursing
-			for(Iterator i=node.getConnections().iterator(); i.hasNext();) {
+	// Calculate the links in node ``node'' at the given cost, routed over
+	// the given next hop, starting at node ``other'' and maintaining seen
+	// links in s
+	private void recordLink(SPNode node, int cost, SPNode nextHop,
+		SPNode other, Set s) {
+
+		// Make sure we're not looping over a path we've already seen.
+		if(!s.contains(other)) {
+			s.add(other);
+
+			// Add the next hop if there's not already one with an equal or
+			// greater cost
+			addHopFrom(node, other, nextHop, cost);
+
+			// Flip through the connections to other nodes and recurse
+			for(Iterator i=other.getConnections().iterator(); i.hasNext();) {
 				SPVertex spv=(SPVertex)i.next();
-				SPNode spn=spv.getTo();
-				// Make sure the sub's performed his calculations
-				if(spn.getNextHops().size() == 0) {
-					calculatePathsWithoutClearing(spn, seen);
-				}
-
-				// Add all of the stuff from the next hop with the prefix delta
-				for(Iterator hi=spn.getNextHops().entrySet().iterator();
-					hi.hasNext();) {
-					Map.Entry me=(Map.Entry)hi.next();
-
-					SPNode nspn=(SPNode)me.getKey();
-					SPVertex nspv=(SPVertex)me.getValue();
-
-					node.addNextHop(nspn,
-						new SPVertex(spn, spv.getCost() + nspv.getCost()));
-				}
-			} // for children
-			seen.remove(node);
-		} // not seen
-	} // calculatePathsWithoutClearing
+				// The cost to this link is the sum of the costs to this
+				// link and the cost of this link.
+				int nextCost=cost+spv.getCost();
+				// This is the node we've found in this loop
+				SPNode thisNode=spv.getTo();
+				// node.addNextHop(thisNode, new SPVertex(nextHop, nextCost));
+				recordLink(node, nextCost, nextHop, thisNode, s);
+			}
+		}
+	}
 }
