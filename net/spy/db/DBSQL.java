@@ -1,11 +1,12 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSQL.java,v 1.4 2002/11/10 04:01:49 dustin Exp $
+// $Id: DBSQL.java,v 1.5 2003/06/05 23:20:00 dustin Exp $
 
 package net.spy.db;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -65,6 +66,46 @@ public abstract class DBSQL extends DBSP {
 		// Make sure all the arguments are there.
 		checkArgs();
 		applyArgs(getArguments());
+	}
+
+	/** 
+	 * Generate (and set) a new cursor name.
+	 */
+	protected void generateCursorName() {
+		StringBuffer sb=new StringBuffer();
+
+		int totalSize=32;
+
+		// Get the identity hash code.
+		int idhc=System.identityHashCode(this);
+		String idhcs=Integer.toHexString(idhc);
+
+		// subtract this length
+		totalSize-=idhcs.length();
+
+		// Get the name of the class
+		String className=getClass().getName();
+		String shortClassName=null;
+		StringTokenizer st=new StringTokenizer(className, ".");
+		// Get the last token
+		while(st.hasMoreTokens()) {
+			shortClassName=st.nextToken();
+		}
+
+		// totalSize says how many we'll take, figure out what we can do.
+		if(shortClassName.length() < totalSize) {
+			sb.append(shortClassName);
+		} else {
+			// Get just enough characters
+			sb.append(shortClassName.substring(
+							(shortClassName.length() - totalSize))
+						);
+		}
+
+		// Append the hash
+		sb.append(idhcs);
+
+		setCursorName(sb.toString());
 	}
 
 	private void selectQuery() throws SQLException {

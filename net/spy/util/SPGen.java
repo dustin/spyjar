@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.28 2003/05/27 05:10:17 dustin Exp $
+// $Id: SPGen.java,v 1.29 2003/06/05 23:20:01 dustin Exp $
 
 package net.spy.util;
 
@@ -42,6 +42,7 @@ public class SPGen extends Object {
 	private String classname=null;
 	private boolean isInterface=true;
 	private boolean wantsResultSet=false;
+	private boolean wantsCursor=false;
 
 	private String section="";
 	private String description="";
@@ -49,7 +50,7 @@ public class SPGen extends Object {
 	private String pkg="";
 	private String superclass=null;
 	private String superinterface=null;
-	private String version="$Revision: 1.28 $";
+	private String version="$Revision: 1.29 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -338,6 +339,16 @@ public class SPGen extends Object {
 			+ " * <p>\n"
 			+ " *");
 
+		// cursor requested mode.
+		if(wantsCursor) {
+			out.println(" * <b>This query requests a cursor.</b>\n"
+				+ " *\n"
+				+ " * </p>\n"
+				+ " *\n"
+				+ " * <p>\n"
+				+ " *");
+		}
+
 		// Debug mode.
 		if(debug) {
 			out.println(" * <font color=\"red\" size=\"+2\"><b>"
@@ -540,6 +551,12 @@ public class SPGen extends Object {
 			if(debug) {
 				out.println("\t\t// Debug is on for this DBSP\n"
 					+ "\t\tsetDebug(true);\n");
+			}
+
+			// If a cursor was requested, build one
+			if(wantsCursor) {
+				out.println("\t\t// Generate a cursor for this query\n"
+					+ "\t\tgenerateCursorName();\n");
 			}
 
 			// set the timeout variable
@@ -775,10 +792,12 @@ public class SPGen extends Object {
 					// Handlers for things that occur when a section is begun
 					if(section.equals("debug")) {
 						debug=true;
+					} else if (section.equals("genresults")) {
+						wantsResultSet=true;
+					} else if (section.equals("cursor")) {
+						wantsCursor=true;
 					} else if (section.startsWith("loosetyp")) {
 						looseTypes=true;
-					} else if (section.startsWith("genresults")) {
-						wantsResultSet=true;
 					} else if (section.startsWith("sql.")) {
 						currentQuery=section.substring(4);
 						section="sql";

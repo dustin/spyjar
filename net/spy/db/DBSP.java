@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.18 2003/06/05 20:16:27 dustin Exp $
+// $Id: DBSP.java,v 1.19 2003/06/05 23:19:59 dustin Exp $
 
 package net.spy.db;
 
@@ -57,6 +57,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	// My prepared statement
 	private PreparedStatement pst=null;
 
+	// cursor name if cursors are enabled
+	private String cursorName=null;
+
 	/**
 	 * Get a new DBSP object with a given config.
 	 */
@@ -91,6 +94,15 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			getLogger().debug("Setting timeout to: "+timeout);
 		}
 		pst.setQueryTimeout(timeout);
+
+		// Set the cursor name if there is one.
+		if(cursorName != null) {
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Setting the pst cursor name to "
+					+ cursorName);
+			}
+			pst.setCursorName(cursorName);
+		}
 
 		rs=pst.executeQuery();
 
@@ -149,6 +161,15 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 */
 	public SQLWarning getWarnings() throws SQLException {
 		return(pst.getWarnings());
+	}
+
+	/** 
+	 * Set the cursor name to be handed to the underlying Statement.
+	 * 
+	 * @param name cursor name (or null to disable cursor handling)
+	 */
+	public void setCursorName(String name) {
+		cursorName=name;
 	}
 
 	/**
