@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AbstractSavable.java,v 1.4 2003/09/05 08:11:17 dustin Exp $
+// $Id: AbstractSavable.java,v 1.5 2003/09/06 08:54:24 dustin Exp $
 
 package net.spy.db;
 
@@ -62,6 +62,13 @@ public abstract class AbstractSavable extends SpyObject
 	 */
 	protected void setModified(boolean to) {
 		asIsModified=to;
+	}
+
+	/** 
+	 * Mark this AbstractSavable as modified.
+	 */
+	public void modify() {
+		setModified(true);
 	}
 
 	/** 
