@@ -80,6 +80,13 @@ public class InterfaceImplementor extends SpyObject {
 		return(interfaceClass);
 	}
 
+	/** 
+	 * Get the parent class of the generated class.
+	 */
+	protected Class getSuperclass() {
+		return(superclass);
+	}
+
 	/**
 	 * Get the name of the class we'll be generating
 	 */
