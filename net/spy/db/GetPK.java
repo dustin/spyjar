@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetPK.java,v 1.4 2002/11/20 04:32:07 dustin Exp $
+// $Id: GetPK.java,v 1.5 2003/01/03 01:20:48 dustin Exp $
 
 package net.spy.db;
 
@@ -27,7 +27,7 @@ import net.spy.SpyObject;
  * <p>
  *
  * The default implementation assumes you have the following table
- * (<code>primary_keys</code>) in the database the configuration defines:
+ * (<code>primary_key</code>) in the database the configuration defines:
  *
  * </p>
  * <p>
@@ -56,7 +56,7 @@ import net.spy.SpyObject;
  *    <td>The next primary key value issued.</td>
  *  </tr>
  *  <tr>
- *    <td>incr</td>
+ *    <td>incr_value</td>
  *    <td>numeric</td>
  *    <td>The amount to increment the primary key each time.</td>
  * </table>
