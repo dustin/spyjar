@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.37 2003/09/11 07:21:56 dustin Exp $
+// $Id: SPGen.java,v 1.38 2004/02/17 18:44:20 dustin Exp $
 
 package net.spy.util;
 
@@ -56,7 +56,7 @@ public class SPGen extends Object {
 	private String dbspSuperclass=null;
 
 	private String superinterface=null;
-	private String version="$Revision: 1.37 $";
+	private String version="$Revision: 1.38 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -278,7 +278,8 @@ public class SPGen extends Object {
 		rv="";
 		for(int i=0; i<types.length; i++) {
 			String type=types[i];
-			System.out.println("Generating " + p + " for " + type);
+			// Too verbose, need some way to configure this kind of stuff
+			// System.out.println("Generating " + p + " for " + type);
 			rv+="\t/**\n"
 				+ "\t * Set the ``" + p.getName() + "'' parameter.\n"
 				+ "\t * " + p.getDescription() + "\n"
@@ -354,17 +355,6 @@ public class SPGen extends Object {
 		// cursor requested mode.
 		if(wantsCursor) {
 			out.println(" * <b>This query requests a cursor.</b>\n"
-				+ " *\n"
-				+ " * </p>\n"
-				+ " *\n"
-				+ " * <p>\n"
-				+ " *");
-		}
-
-		// Debug mode.
-		if(debug) {
-			out.println(" * <font color=\"red\" size=\"+2\"><b>"
-				+ "Debug is on!</b></font>\n"
 				+ " *\n"
 				+ " * </p>\n"
 				+ " *\n"
@@ -558,12 +548,6 @@ public class SPGen extends Object {
 
 			// Initializer
 			out.println("\tprivate void spinit() throws SQLException {");
-
-			// Set the debug mode if we're supposed to
-			if(debug) {
-				out.println("\t\t// Debug is on for this DBSP\n"
-					+ "\t\tsetDebug(true);\n");
-			}
 
 			// If a cursor was requested, build one
 			if(wantsCursor) {
@@ -820,6 +804,7 @@ public class SPGen extends Object {
 					// Handlers for things that occur when a section is begun
 					if(section.equals("debug")) {
 						debug=true;
+						System.err.println("debug is deprecated");
 					} else if (section.equals("genresults")) {
 						wantsResultSet=true;
 					} else if (section.equals("cursor")) {
@@ -838,9 +823,6 @@ public class SPGen extends Object {
 
 					if(section.equals("description")) {
 						description+=tmp;
-					} else if(section.equals("debug")) {
-						System.err.println("Warning, stuff in debug section:  "
-							+ tmp);
 					} else if(section.equals("sql")) {
 						isInterface=false;
 						if (superclass==null) {

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.27 2003/09/11 07:26:42 dustin Exp $
+// $Id: DBSP.java,v 1.28 2004/02/17 18:44:20 dustin Exp $
 
 package net.spy.db;
 
@@ -68,6 +68,8 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 */
 	public DBSP(SpyConfig conf) throws SQLException {
 		super(conf);
+		// Inherit debug flag from the logger.
+		debug=getLogger().isDebugEnabled();
 		initsp();
 	}
 
