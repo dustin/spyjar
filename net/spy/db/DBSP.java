@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.6 2002/09/19 20:44:38 dustin Exp $
+// $Id: DBSP.java,v 1.7 2002/09/25 19:04:57 knitterb Exp $
 
 package net.spy.db;
 
@@ -671,13 +671,18 @@ public abstract class DBSP extends SpyCacheDB {
 
 	/**
 	 * Set field <i>which</i> to a null of the given type.
+	 * Do not call this directly, instead, if you have an empty String,
+	 * for example, consider:
+	 * <pre><code>
+	 *  set("mycol", (String)null);
+	 * </code></pre>
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void setNull(String which,int a1) 
+	protected void setNull(String which,int a1) 
 		throws SQLException {
 		// This one works a bit different because we have to store the
 		// original type
