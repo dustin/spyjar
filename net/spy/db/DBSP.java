@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.14 2002/11/20 04:32:07 dustin Exp $
+// $Id: DBSP.java,v 1.15 2002/12/24 09:27:35 dustin Exp $
 
 package net.spy.db;
 
@@ -32,7 +32,7 @@ import net.spy.SpyConfig;
 /**
  * Super class for all stored procedure calls.
  */
-public abstract class DBSP extends SpyCacheDB {
+public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 	// The set of parameters available to this DBSP (defined in the subclass)
 	private NamedObjectStorage parameters=null;
