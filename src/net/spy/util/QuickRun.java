@@ -14,7 +14,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import net.spy.SpyThread;
-import net.spy.util.SpyUtil;
 
 /**
  * Listens on a socket and lets you run stuff without firing up a new JVM.

@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 import java.lang.reflect.Method;
 
-import net.spy.util.SpyUtil;
-
 /**
  * Create static proxy implementations of interfaces.
  *

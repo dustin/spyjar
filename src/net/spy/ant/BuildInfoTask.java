@@ -4,12 +4,9 @@
 
 package net.spy.ant;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
@@ -55,7 +52,7 @@ public class BuildInfoTask extends Task {
 
 	private static final String BUILDINFO="net/spy/ant/BuildInfo.txt";
 
-	private String _package=null;
+	private String pkg=null;
 	private String buildProps=null;
 	private String changelog=null;
 	private String destdir=".";
@@ -70,36 +67,36 @@ public class BuildInfoTask extends Task {
 	/** 
 	 * Set the name of the package that will have the buildinfo file.
 	 */
-	public void setPackage(String pkg) {
-		this._package=pkg;
+	public void setPackage(String to) {
+		this.pkg=to;
 	}
 
 	/** 
 	 * Set the path to the build properties.
 	 */
-	public void setBuildprops(String buildProps) {
-		this.buildProps=buildProps;
+	public void setBuildprops(String to) {
+		this.buildProps=to;
 	}
 
 	/** 
 	 * Set the path to the change log.
 	 */
-	public void setChangelog(String changelog) {
-		this.changelog=changelog;
+	public void setChangelog(String to) {
+		this.changelog=to;
 	}
 
 	/** 
 	 * Set the destination directory (top level generated code directory).
 	 */
-	public void setDestdir(String destdir) {
-		this.destdir=destdir;
+	public void setDestdir(String to) {
+		this.destdir=to;
 	}
 
 	/** 
 	 * Create the BuildInfo class.
 	 */
 	public void execute() throws BuildException {
-		if(_package == null) {
+		if(pkg == null) {
 			throw new BuildException("package name required");
 		}
 		if(buildProps == null) {
@@ -117,13 +114,13 @@ public class BuildInfoTask extends Task {
 			ir.close();
 
 			HashMap tokens=new HashMap();
-			tokens.put("PACKAGE", _package);
+			tokens.put("PACKAGE", pkg);
 			tokens.put("CHANGELOG", changelog);
 			tokens.put("BUILDPROPS", buildProps);
 			String output=new SpyToker().tokenizeString(s, tokens);
 
 			String outFileName=destdir + File.separatorChar
-				+ _package.replace('.', File.separatorChar);
+				+ pkg.replace('.', File.separatorChar);
 
 			// Make sure the directories exist for the package
 			new File(outFileName).mkdirs();
@@ -135,7 +132,7 @@ public class BuildInfoTask extends Task {
 			fw.write(output);
 			fw.close();
 
-			System.out.println("Wrote " + _package + ".BuildInfo");
+			System.out.println("Wrote " + pkg + ".BuildInfo");
 		} catch(IOException e) {
 			e.printStackTrace();
 			throw new BuildException("Could not process buildinfo", e);

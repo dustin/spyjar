@@ -10,9 +10,6 @@ import java.text.MessageFormat;
 
 import net.spy.SpyObject;
 
-import net.spy.log.Logger;
-import net.spy.log.LoggerFactory;
-
 /**
  * A TTL object is used to express an intent for a process to finish within
  * a certain amount of time.

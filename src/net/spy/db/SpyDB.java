@@ -15,9 +15,6 @@ import java.sql.Statement;
 
 import java.util.StringTokenizer;
 
-import net.spy.db.ConnectionSource;
-import net.spy.db.DBInitException;
-
 import net.spy.SpyObject;
 import net.spy.util.SpyConfig;
 

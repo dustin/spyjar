@@ -18,8 +18,6 @@ import net.spy.pool.PooledObject;
 import net.spy.pool.PoolException;
 import net.spy.pool.JDBCPoolFiller;
 
-import net.spy.db.DBInitException;
-
 /**
  * Connection source to retrieve connections from an ObjectPool.
  *

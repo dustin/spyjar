@@ -4,19 +4,11 @@
 
 package net.spy.ant;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import java.lang.reflect.Constructor;
 
-import java.util.ArrayList;
-
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 
 import org.apache.tools.ant.Task;
 
@@ -39,20 +31,20 @@ public class InterfaceImplementorTask extends Task {
 		super();
 	}
 
-	public void setSuperClass(String superClass) {
-		this.superClass=superClass;
+	public void setSuperClass(String to) {
+		this.superClass=to;
 	}
 
-	public void setInterfaceName(String interfaceName) {
-		this.interfaceName=interfaceName;
+	public void setInterfaceName(String to) {
+		this.interfaceName=to;
 	}
 
-	public void setOutClass(String outClass) {
-		this.outClass=outClass;
+	public void setOutClass(String to) {
+		this.outClass=to;
 	}
 
-	public void setOutDir(String outDir) {
-		this.outDir=outDir;
+	public void setOutDir(String to) {
+		this.outDir=to;
 	}
 
 	private void validateArg(String val, String name) throws BuildException {
@@ -76,13 +68,13 @@ public class InterfaceImplementorTask extends Task {
 			throw new BuildException("Could not load interface "
 				+ interfaceName, e);
 		}
-		InterfaceImplementor i=null;
+		InterfaceImplementor ii=null;
 		// Instantiate the InterfaceImplementor.
 		try {
 			Class params[]={Class.class};
 			Constructor cons=c.getConstructor(params);
 			Object args[]={theInterface};
-			i=(InterfaceImplementor)cons.newInstance(args);
+			ii=(InterfaceImplementor)cons.newInstance(args);
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new BuildException(
@@ -91,11 +83,11 @@ public class InterfaceImplementorTask extends Task {
 		// Generate
 		try {
 			if(superClass != null) {
-				i.setSuperClass(Class.forName(superClass));
+				ii.setSuperClass(Class.forName(superClass));
 			}
 
-			i.setOutputClass(outClass);
-			i.writeSourceToFile(outDir);
+			ii.setOutputClass(outClass);
+			ii.writeSourceToFile(outDir);
 		} catch(IOException e) {
 			e.printStackTrace();
 			throw new BuildException("Couldn't generate class", e);

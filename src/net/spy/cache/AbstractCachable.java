@@ -4,8 +4,6 @@
 
 package net.spy.cache;
 
-import net.spy.SpyObject;
-
 /**
  * Abstract implementation of Cachable.
  */
