@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.6 2003/01/15 08:08:06 dustin Exp $
+// $Id: Saver.java,v 1.7 2003/01/15 21:04:52 dustin Exp $
 
 package net.spy.db;
 
@@ -112,11 +112,7 @@ public class Saver extends SpyObject {
 	private void rsave(Savable o) throws SaveException, SQLException {
 		rdepth++;
 
-		// watch recursion depth
-		if(rdepth>MAX_RECURSION_DEPTH) {
-			throw new SaveException("Recursing too deep!  Max depth is "
-				+ MAX_RECURSION_DEPTH);
-		}
+		checkRecursionDepth();
 
 		// Only go through the savables if we haven't gone through the
 		// savables for this exact object
@@ -144,21 +140,45 @@ public class Saver extends SpyObject {
 		rdepth--;
 	}
 
+	private void checkRecursionDepth() throws SaveException {
+		if(rdepth>MAX_RECURSION_DEPTH) {
+			throw new SaveException("Recursing too deep!  Max depth is "
+				+ MAX_RECURSION_DEPTH);
+		}
+	}
+
 	// Loop through a Collection of savables, passing each to rsave().  If
 	// only java supported functional programming...
 	private void saveLoop(Savable o, Collection c)
 		throws SaveException, SQLException {
+
+		rdepth++;
+
+		checkRecursionDepth();
+
 		if(c!=null) {
 			for(Iterator i=c.iterator(); i.hasNext(); ) {
-				Savable s=(Savable)i.next();
-				if(s==null) {
+				Object tmpo=i.next();
+				if(tmpo==null) {
 					throw new NullPointerException("Got a null object from "
 						+ o);
 				}
 
-				rsave(s);
+				// Dispatch based on type
+				if(tmpo instanceof Savable) {
+					rsave((Savable)tmpo);
+				} else if(tmpo instanceof Collection) {
+					saveLoop(o, (Collection)tmpo);
+				} else {
+					throw new SaveException(
+						"Invalid object type found in save tree:  "
+						+ tmpo.getClass()
+						+ " from " + o);
+				}
 			} // iterator loop
 		} // got a collection
+
+		rdepth--;
 	} // saveLoop()
 
 	// private class to deal with identity comparisons
