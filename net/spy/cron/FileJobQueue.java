@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FileJobQueue.java,v 1.4 2002/11/20 04:32:07 dustin Exp $
+// $Id: FileJobQueue.java,v 1.5 2002/11/22 00:35:16 dustin Exp $
 
 package net.spy.cron;
 
@@ -15,18 +15,26 @@ import java.text.SimpleDateFormat;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 import net.spy.SpyUtil;
 
 /**
- * Get a job queue as defined in a file.  The file will be in the following
- * format:
+ * Get a job queue as defined in a file.  The file will be in one the following
+ * formats:
  *
  * <p>
  *
- * <pre>
- * YYYYMMDD-HHMMSS calfield calincrement classname args ...
- * </pre>
+ * <ul>
+ *   <li>YYYYMMDD-HHMMSS calfield calincrement classname args ...</li>
+ *   <li>HHMMSS calfield calincrement classname args ...</li>
+ *   <li>MMSS calfield calincrement classname args ...</li>
+ * </ul>
+ *
+ * In a case where fields are not provided, the current time will be
+ * substituted.
  *
  * <p>
  *
@@ -114,8 +122,7 @@ public class FileJobQueue extends JobQueue {
 			System.arraycopy(stuff, 4, args, 0, args.length);
 		}
 
-		SimpleDateFormat df=new SimpleDateFormat("yyyyMMdd-HHmmss");
-		Date startDate=df.parse(dateS);
+		Date startDate=parseStartDate(dateS);
 
 		int cf=parseCalendarField(fieldS);
 		if(cf>=0) {
@@ -137,6 +144,67 @@ public class FileJobQueue extends JobQueue {
 		}
 
 		return(rv);
+	}
+
+	// Parse the date
+	private Date parseStartDate(String in) throws ParseException {
+		Date rv=null;
+
+		// Flip through all of the known formats until we get a match
+		for(Iterator i=getFormats().iterator(); i.hasNext() && rv==null;) {
+			TimeFormat tf=(TimeFormat)i.next();
+
+			SimpleDateFormat sdf=tf.getFormat();
+			try {
+				Date d=sdf.parse(in);
+				rv=copyDate(d, tf.getFields());
+			} catch(ParseException e) {
+				// Nope, try the next
+			}
+		}
+
+		if(rv==null) {
+			throw new ParseException("Could not parse date:  " + in, 0);
+		}
+
+		return (rv);
+	}
+
+	// These are the supported formats, and the fields we should remember
+	// from them.
+	private Collection getFormats() {
+		Collection rv=new ArrayList();
+
+		int f1[]={Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH,
+				 Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};
+		rv.add(new TimeFormat("yyyyMMdd-HHmmss", f1));
+
+		int f2[]={Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};
+		rv.add(new TimeFormat("HHmmss", f2));
+
+		int f3[]={Calendar.MINUTE, Calendar.SECOND};
+		rv.add(new TimeFormat("mmss", f3));
+
+		return (rv);
+	}
+
+	// Create a new Date using the current time, and then copy all of the
+	// fields of the passed in date that are specified in the given fields
+	// array.
+	private Date copyDate(Date d, int fields[]) {
+		Calendar oldc=Calendar.getInstance();
+		oldc.setTime(d);
+		Calendar newc=Calendar.getInstance();
+
+		// First, zero out the milliseconds.
+		newc.set(Calendar.MILLISECOND, 0);
+		// Copy the defined fields.
+		for(int i=0; i<fields.length; i++) {
+			newc.set(fields[i], oldc.get(fields[i]));
+		}
+
+		// Return the new time
+		return(newc.getTime());
 	}
 
 	private int parseCalendarField(String fieldName) {
@@ -163,6 +231,32 @@ public class FileJobQueue extends JobQueue {
 		}
 
 		return(rv);
+	}
+
+	private static class TimeFormat extends Object {
+		private SimpleDateFormat format=null;
+		private int fields[]=null;
+
+		private TimeFormat(String format, int fields[]) {
+			super();
+			this.format=new SimpleDateFormat(format);
+			this.format.setLenient(false);
+			this.fields=fields;
+		}
+
+		/** 
+		 * Get the format this thing is holding.
+		 */
+		public SimpleDateFormat getFormat() {
+			return(format);
+		}
+		
+		/** 
+		 * Get the java.util.Calendar fields that should be preserved.
+		 */
+		public int[] getFields() {
+			return(fields);
+		}
 	}
 
 }
