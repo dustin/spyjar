@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyCache.java,v 1.5 2002/12/07 22:49:12 dustin Exp $
+ * $Id: SpyCache.java,v 1.6 2002/12/08 06:21:25 dustin Exp $
  */
 
 package net.spy.cache;
@@ -12,11 +12,12 @@ import java.io.IOException;
 
 import java.net.InetAddress;
 
+import java.util.Map;
 import java.util.Iterator;
 
 import net.spy.SpyObject;
 import net.spy.SpyThread;
-import net.spy.util.TimeStampedHash;
+import net.spy.util.TimeStampedHashMap;
 
 /**
  * Spy in-memory cache object.
@@ -30,7 +31,7 @@ import net.spy.util.TimeStampedHash;
  */
 public class SpyCache extends SpyObject {
 
-	private TimeStampedHash cacheStore=null;
+	private TimeStampedHashMap cacheStore=null;
 	private SpyCacheCleaner cacheCleaner=null;
 
 	private static SpyCache instance=null;
@@ -46,7 +47,7 @@ public class SpyCache extends SpyObject {
 	}
 
 	private void init() {
-		cacheStore=new TimeStampedHash();
+		cacheStore=new TimeStampedHashMap();
 	}
 
 	private synchronized void checkThread() {
@@ -70,6 +71,20 @@ public class SpyCache extends SpyObject {
 		return(instance);
 	}
 
+	/** 
+	 * Store a Cachable object in the cache.
+	 * 
+	 * @param key the key for storing this object
+	 * @param value the object to store
+	 */
+	public void store(String key, Cachable value) {
+		synchronized(cacheStore) {
+			// Send the cached event notify to the cachable itself
+			value.cachedEvent(key);
+			cacheStore.put(key, value);
+		}
+	}
+
 	/**
 	 * Store an object in the cache with the specified timeout.
 	 *
@@ -78,10 +93,8 @@ public class SpyCache extends SpyObject {
 	 * @param cacheTime Amount of time (in milliseconds) to store object.
 	 */
 	public void store(String key, Object value, long cacheTime) {
-		SpyCacheItem i=new SpyCacheItem(key, value, cacheTime);
-		synchronized(cacheStore) {
-			cacheStore.put(key, i);
-		}
+		Cachable i=new SpyCacheItem(key, value, cacheTime);
+		store(key, i);
 	}
 
 	/**
@@ -93,13 +106,17 @@ public class SpyCache extends SpyObject {
 	 */
 	public Object get(String key) {
 		Object ret=null;
+		long t=System.currentTimeMillis();
 		synchronized(cacheStore) {
-			SpyCacheItem i=(SpyCacheItem)cacheStore.get(key);
-			if(i!=null && (!i.expired())) {
-				ret=i.getObject();
+			Cachable i=(Cachable)cacheStore.get(key);
+			if(i!=null && (!i.isExpired())) {
+				// mark the object as seen
+				i.setAccessTime(t);
+				// get the object from the cache
+				ret=i.getCachedObject();
 				// If the stored object is a reference, dereference it.
 				if( (ret!=null) && (ret instanceof Reference) ) {
-					Reference ref=(Reference)i.getObject();
+					Reference ref=(Reference)ret;
 					ret=ref.get();
 				} // Object was a reference
 			} // Found object in cache
@@ -114,7 +131,10 @@ public class SpyCache extends SpyObject {
 	 */
 	public void uncache(String key) {
 		synchronized(cacheStore) {
-			cacheStore.remove(key);
+			Cachable unc=(Cachable)cacheStore.remove(key);
+			if(unc!=null) {
+				unc.uncachedEvent(key);
+			}
 		}
 	}
 
@@ -126,12 +146,16 @@ public class SpyCache extends SpyObject {
 	 */
 	public void uncacheLike(String keystart) {
 		synchronized(cacheStore) {
-			for(Iterator i=cacheStore.keySet().iterator(); i.hasNext(); ) {
-				String key=(String)i.next();
+			for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext(); ) {
+				Map.Entry me=(Map.Entry)i.next();
+
+				String key=(String)me.getKey();
 
 				// If this matches, kill it.
 				if(key.startsWith(keystart)) {
 					i.remove();
+					Cachable c=(Cachable)me.getValue();
+					c.uncachedEvent(key);
 				}
 			} // for loop
 		} // lock
@@ -179,8 +203,8 @@ public class SpyCache extends SpyObject {
 			long now=System.currentTimeMillis();
 			synchronized(cacheStore) {
 				for(Iterator i=cacheStore.values().iterator(); i.hasNext();){
-					SpyCacheItem it=(SpyCacheItem)i.next();
-					if(it.expired()) {
+					Cachable it=(Cachable)i.next();
+					if(it.isExpired()) {
 						i.remove();
 					}
 				}
@@ -263,22 +287,17 @@ public class SpyCache extends SpyObject {
 		}
 	} // Cleaner class
 
-	private class SpyCacheItem extends Object {
-		private Object key=null;
-		private Object value=null;
+	private class SpyCacheItem extends AbstractCachable {
 		private long exptime=0;
 
 		public SpyCacheItem(Object key, Object value, long cacheTime) {
-			super();
+			super(key, value);
 
-			this.key=key;
-			this.value=value;
-			long t=System.currentTimeMillis();
-			exptime=t+cacheTime;
+			exptime=getCacheTime()+cacheTime;
 		}
 
 		public String toString() {
-			String out="Cached item:  " + key;
+			String out="Cached item:  " + getCacheKey();
 			if(exptime>0) {
 				out+="\nExpires:  " + new java.util.Date(exptime);
 			}
@@ -286,15 +305,7 @@ public class SpyCache extends SpyObject {
 			return(out);
 		}
 
-		public Object getObject() {
-			return(value);
-		}
-
-		public Object getKey() {
-			return(key);
-		}
-
-		public boolean expired() {
+		public boolean isExpired() {
 			boolean ret=false;
 			if(exptime>0) {
 				long t=System.currentTimeMillis();
@@ -302,14 +313,16 @@ public class SpyCache extends SpyObject {
 			}
 			// If the value is a reference that is no longer valid,
 			// the object has expired
-			if(value instanceof Reference) {
-				Reference rvalue=(Reference)value;
+			Object v=getCachedObject();
+			if(v instanceof Reference) {
+				Reference rvalue=(Reference)v;
 				if(rvalue.get()==null) {
 					ret=false;
 				}
 			}
 			return(ret);
 		}
+
 	} // SpyCacheItem
 
 }
