@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.25 2003/04/07 00:07:38 dustin Exp $
+// $Id: SPGen.java,v 1.26 2003/04/07 08:03:17 dustin Exp $
 
 package net.spy.util;
 
@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Map;
@@ -48,14 +49,10 @@ public class SPGen extends Object {
 	private String pkg="";
 	private String superclass=null;
 	private String superinterface=null;
-	private String version="$Revision: 1.25 $";
+	private String version="$Revision: 1.26 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
-	private List required=null;
-	private List optional=null;
-	private List defaults=null;
-	private List output=null;
 	private List results=null;
 	private List args=null;
 	private Set interfaces=null;
@@ -77,10 +74,6 @@ public class SPGen extends Object {
 		this.out=out;
 		this.classname=classname;
 		queries=new TreeMap();
-		required=new ArrayList();
-		optional=new ArrayList();
-		output=new ArrayList();
-		defaults=new ArrayList();
 		results=new ArrayList();
 		args=new ArrayList();
 		interfaces=new HashSet();
@@ -383,10 +376,10 @@ public class SPGen extends Object {
 		out.println(" *\n"
 			+ " * <b>Required Parameters</b>\n"
 			+ " * <ul>");
-		if(required.size()==0) {
+		if(getRequiredArgs(false).size()==0) {
 			out.println(" *  <li><i>none</i></li>");
 		} else {
-			for(Iterator i=required.iterator(); i.hasNext(); ) {
+			for(Iterator i=getRequiredArgs(false).iterator(); i.hasNext(); ) {
 				Parameter p=(Parameter)i.next();
 				out.println(" * <li>" + p.getName() + " - "
 					+ "{@link java.sql.Types#" + p.getType() + " "
@@ -404,10 +397,10 @@ public class SPGen extends Object {
 		out.println(" *\n"
 			+ " * <b>Optional Parameters</b>\n"
 			+ " * <ul>");
-		if(optional.size()==0) {
+		if(getOptionalArgs().size()==0) {
 			out.println(" *  <li><i>none</i></li>");
 		} else {
-			for(Iterator i=optional.iterator(); i.hasNext(); ) {
+			for(Iterator i=getOptionalArgs().iterator(); i.hasNext(); ) {
 				Parameter p=(Parameter)i.next();
 				out.println(" * <li>" + p.getName() + " - "
 					+ "{@link java.sql.Types#" + p.getType() + " "
@@ -426,10 +419,10 @@ public class SPGen extends Object {
 			out.println(" *\n"
 				+ " * <b>Output Parameters</b>\n"
 				+ " * <ul>");
-			if(output.size()==0) {
+			if(getOutputParameters().size()==0) {
 				out.println(" *  <li><i>none</i></li>");
 			} else {
-				for(Iterator i=output.iterator(); i.hasNext(); ) {
+				for(Iterator i=getOutputParameters().iterator(); i.hasNext();) {
 					Parameter p=(Parameter)i.next();
 					out.println(" * <li>" + p.getName() + " - "
 						+ "{@link java.sql.Types#" + p.getType() + " "
@@ -572,14 +565,10 @@ public class SPGen extends Object {
 						out.println("\t\tsetOptional(\"" + p.getName()
 							+ "\", " + p.getType() + ");");
 					}
-				}
 
-				// Fill in the default values for those parameters
-				if(defaults.size()>0) {
-					out.println("\n\t\t// Defaults");
-					for(Iterator i=defaults.iterator(); i.hasNext(); ) {
-						Default d=(Default)i.next();
-
+					Default d=p.getDefaultValue();
+					if(d!=null) {
+						out.println("\t\t// Default for " + d.getName() + "\n");
 						out.println("\t\tset(\"" + d.getName() + "\", "
 							+ d.getPrintValue() + ");");
 					}
@@ -824,19 +813,10 @@ public class SPGen extends Object {
 						}
 					} else if(section.equals("defaults")) {
 						Default d=new Default(tmp);
-						defaults.add(d);
+						registerDefault(d);
 					} else if(section.equals("params")) {
 						Parameter param=new Parameter(tmp);
 						args.add(param);
-						if(param.isRequired()) {
-							if (!param.isOutput()) {
-								required.add(param);
-							} else {
-								output.add(param);
-							}
-						} else {
-							optional.add(param);
-						}
 					} else if(section.equals("results")) {
 						try {
 							results.add(new Result(tmp));
@@ -879,6 +859,65 @@ public class SPGen extends Object {
 			}
 		}
 
+	}
+
+	private void registerDefault(Default d) {
+		boolean done=false;
+		for(Iterator i=args.iterator(); done==false && i.hasNext(); ) {
+			Parameter p=(Parameter)i.next();
+			if(p.getName().equals(d.getName())) {
+				p.setDefaultValue(d);
+				done=true;
+			}
+		}
+		if(done==false) {
+			throw new IllegalArgumentException("Didn't find parameter "
+				+ d.getName() + " when registering");
+		}
+	}
+
+	// get all of the required arguments
+	// If evenOutput is true, then we even get the output parameters
+	private Collection getRequiredArgs(boolean evenOutput) {
+		Collection rv=new ArrayList(args.size());
+		for(Iterator i=args.iterator(); i.hasNext();) {
+			Parameter p=(Parameter)i.next();
+			if(p.isRequired()) {
+				// Deal with output parameters
+				if(p.isOutput()) {
+					if(evenOutput) {
+						rv.add(p);
+					}
+				} else {
+					rv.add(p);
+				}
+			}
+		}
+		return(rv);
+	}
+
+	// get all of the required arguments
+	private Collection getOptionalArgs() {
+		Collection rv=new ArrayList(args.size());
+		for(Iterator i=args.iterator(); i.hasNext();) {
+			Parameter p=(Parameter)i.next();
+			if(!p.isRequired()) {
+				rv.add(p);
+			}
+		}
+		return(rv);
+	}
+
+	// Get the output parameters
+	private Collection getOutputParameters() {
+		Collection rv=new ArrayList(args.size());
+		for(Iterator i=args.iterator(); i.hasNext();) {
+			Parameter p=(Parameter)i.next();
+			if(!p.isOutput()) {
+				rv.add(p);
+			}
+		}
+		return(rv);
 	}
 
 	// Private class for results
@@ -958,6 +997,7 @@ public class SPGen extends Object {
 		private String type=null;
 		private String description=null;
 		private boolean output=false;
+		private Default defaultValue=null;
 
 		public Parameter(String line) {
 			super();
@@ -1033,6 +1073,27 @@ public class SPGen extends Object {
 			return("{Parameter " + name + "}");
 		}
 
+		/** 
+		 * Get the hash code of the name of this parameter.
+		 */
+		public int hashCode() {
+			return(name.hashCode());
+		}
+
+		/** 
+		 * True if the given objet is an instance of Parameter with the
+		 * same name.
+		 */
+		public boolean equals(Object o) {
+			boolean rv=false;
+			if(o instanceof Parameter) {
+				Parameter p=(Parameter)o;
+				rv=name.equals(p.name);
+			}
+
+			return(rv);
+		}
+
 		public String getName() {
 			return(name);
 		}
@@ -1051,6 +1112,14 @@ public class SPGen extends Object {
 
 		public boolean isOutput() {
 			return(output);
+		}
+
+		public Default getDefaultValue() {
+			return(defaultValue);
+		}
+
+		public void setDefaultValue(Default d) {
+			defaultValue=d;
 		}
 	}
 
@@ -1094,7 +1163,10 @@ public class SPGen extends Object {
 			boolean needsCast=false;
 
 			// Figure out if we need a cast
-			if(value instanceof Integer) {
+			if(value == null) {
+				// If the value was null, cast it
+				needsCast=true;
+			} else if(value instanceof Integer) {
 				// Nothing
 			} else if(value instanceof Float) {
 				// Nothing
@@ -1109,7 +1181,7 @@ public class SPGen extends Object {
 			}
 
 			if(needsCast) {
-				rv="(" + javaTypes.get(type) + ")" + value;
+				rv="(" + javaResultTypes.get(type) + ")" + value;
 			} else {
 				rv=value.toString();
 			}
@@ -1129,27 +1201,32 @@ public class SPGen extends Object {
 					"Can't parse nothin'");
 			}
 
-			if(type.equals("java.sql.Types.INTEGER")) {
-				value=new Integer(input);
-			} else if(type.equals("java.sql.Types.SMALLINT")) {
-				value=new Short(input);
-			} else if(type.equals("java.sql.Types.TINYINT")) {
-				value=new Short(input);
-			} else if(type.equals("java.sql.Types.BIGINT")) {
-				value=new BigDecimal(input);
-			} else if(type.equals("java.sql.Types.Decimal")) {
-				value=new BigDecimal(input);
-			} else if(type.equals("java.sql.Types.BIT")) {
-				value=new Boolean(input);
-			} else if(type.equals("java.sql.Types.DOUBLE")) {
-				value=new Double(input);
-			} else if(type.equals("java.sql.Types.FLOAT")) {
-				value=new Float(input);
-			} else if(type.equals("java.sql.Types.VARCHAR")) {
-				value=input;
+			if(input.equals("NULL")) {
+				value=null;
 			} else {
-				throw new IllegalArgumentException(
-					"I don't know how to parse a default for " + type);
+
+				if(type.equals("java.sql.Types.INTEGER")) {
+					value=new Integer(input);
+				} else if(type.equals("java.sql.Types.SMALLINT")) {
+					value=new Short(input);
+				} else if(type.equals("java.sql.Types.TINYINT")) {
+					value=new Short(input);
+				} else if(type.equals("java.sql.Types.BIGINT")) {
+					value=new BigDecimal(input);
+				} else if(type.equals("java.sql.Types.Decimal")) {
+					value=new BigDecimal(input);
+				} else if(type.equals("java.sql.Types.BIT")) {
+					value=new Boolean(input);
+				} else if(type.equals("java.sql.Types.DOUBLE")) {
+					value=new Double(input);
+				} else if(type.equals("java.sql.Types.FLOAT")) {
+					value=new Float(input);
+				} else if(type.equals("java.sql.Types.VARCHAR")) {
+					value=input;
+				} else {
+					throw new IllegalArgumentException(
+						"I don't know how to parse a default for " + type);
+				}
 			}
 		}
 
@@ -1157,24 +1234,15 @@ public class SPGen extends Object {
 		private String findType() {
 			String rv=null;
 
-			// Check the required parameters first
-			for(Iterator i=required.iterator(); rv==null && i.hasNext(); ) {
+			// Look for the parameter
+			for(Iterator i=args.iterator(); rv==null && i.hasNext(); ) {
 				Parameter p=(Parameter)i.next();
 				if(p.getName().equals(name)) {
 					rv=p.getType();
 				}
 			}
 
-			// If we didn't find anything, check the optional parameters
-			if(rv==null) {
-				for(Iterator i=optional.iterator(); rv==null && i.hasNext(); ) {
-					Parameter p=(Parameter)i.next();
-					if(p.getName().equals(name)) {
-						rv=p.getType();
-					}
-				}
-			}
-
+			// Make sure we got some
 			if(rv==null) {
 				throw new IllegalArgumentException(
 					"No parameter for this default:  " + name);
