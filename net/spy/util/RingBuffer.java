@@ -1,8 +1,10 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: RingBuffer.java,v 1.3 2002/10/31 08:19:07 dustin Exp $
+// $Id: RingBuffer.java,v 1.4 2003/07/25 20:12:56 dustin Exp $
 
 package net.spy.util;
+
+import java.io.Serializable;
 
 import java.util.AbstractCollection;
 import java.util.Iterator;
@@ -17,7 +19,7 @@ import java.util.ConcurrentModificationException;
  * but may not otherwise be modified.  Individual entries may not be
  * accessed directly, only via the iterator.
  */
-public class RingBuffer extends AbstractCollection {
+public class RingBuffer extends AbstractCollection implements Serializable {
 
 	private Object buf[]=null;
 	private int start=0;
@@ -159,7 +161,8 @@ public class RingBuffer extends AbstractCollection {
 
 	// Iterator implementation
 
-	private class RingBufferIterator extends Object implements Iterator {
+	private class RingBufferIterator extends Object
+		implements Iterator, Serializable {
 
 		private int pos=0;
 		private int startPos=0;
