@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// $Id: SPGen.java,v 1.2 2002/08/28 03:01:16 dustin Exp $
 
 package net.spy.util;
 
@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
  * Generator for .spt-&gt;.java.
@@ -28,7 +29,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.1 $";
+	private String version="$Revision: 1.2 $";
 	private long cachetime=0;
 	private ArrayList sqlquery=null;
 	private ArrayList required=null;
@@ -167,6 +168,25 @@ public class SPGen extends Object {
 			out.println(" * </ul>\n"
 				+ " *\n"
 				+ " * <p>\n"
+				+ " *");
+		}
+
+		// Results
+		if(results.size() > 0) {
+			out.println(" * <b>Results</b>\n"
+				+ " * <ul>");
+
+			for(Iterator i=results.iterator(); i.hasNext(); ) {
+				Result r=(Result)i.next();
+
+				out.println(" *  <li>"
+					+ r.getName() + " - "
+					+ "{@link java.sql.Types#" + r.getType() + " "
+						+ r.getType() + "}\n * "
+					+ "   - " + r.getDescription() + "</li>");
+			}
+
+			out.println(" * </ul>\n"
 				+ " *");
 		}
 
@@ -339,6 +359,12 @@ public class SPGen extends Object {
 							optional.add(param);
 						}
 					} else if(section.equals("results")) {
+						try {
+							results.add(new Result(tmp));
+						} catch(IllegalArgumentException e) {
+							System.err.println("Warning in " + classname
+								+ ":  " + e.getMessage());
+						}
 					} else if(section.equals("package")) {
 						pkg+=tmp;
 					} else if(section.equals("cachetime")) {
@@ -354,6 +380,52 @@ public class SPGen extends Object {
 		}
 	}
 
+	// Private class for results
+
+	private class Result extends Object {
+		private String name=null;
+		private String type=null;
+		private String description=null;
+
+		public Result(String line) {
+			super();
+
+			StringTokenizer st=new StringTokenizer(line, " \t");
+			try {
+				name=st.nextToken();
+			} catch(NoSuchElementException e) {
+				throw new IllegalArgumentException("No name given for result");
+			}
+
+			try {
+				type=st.nextToken();
+			} catch(NoSuchElementException e) {
+				throw new IllegalArgumentException(
+					"No type given for result ``" + name + "''");
+			}
+
+			try {
+				description=st.nextToken("\n");
+			} catch(NoSuchElementException e) {
+				throw new IllegalArgumentException(
+					"No description given for result ``" + name + "''");
+			}
+		}
+
+		public String getName() {
+			return(name);
+		}
+
+		public String getType() {
+			return(type);
+		}
+
+		public String getDescription() {
+			return(description);
+		}
+
+	}
+
 	// Private class for parameters
 
 	private class Parameter extends Object {
@@ -363,29 +435,29 @@ public class SPGen extends Object {
 		private String description=null;
 		private boolean output=false;
 
-		public Parameter(String line) throws Exception {
+		public Parameter(String line) {
 			super();
 
 			StringTokenizer st=new StringTokenizer(line, " \t");
 			try {
 				name=st.nextToken();
-			} catch (java.util.NoSuchElementException ex) {
+			} catch (NoSuchElementException ex) {
 				// ASSERT: this theoretically should never happen,
 				// otherwise how did we end up here in the first place?
-				throw new Exception ("Missing parameter name! "
+				throw new IllegalArgumentException("Missing parameter name! "
 					+ex.toString());
 			}
 
 			String tmp=null;
 			try {
 				tmp=st.nextToken();
-			} catch (java.util.NoSuchElementException ex) {
+			} catch (NoSuchElementException ex) {
 				// at this point you have forgotten to add in the parameter
 				// of whether or not the parameter is required/optional.  I
 				// guess a default could be applied here, but I'm just
 				// gonna throw an Exception.
-				throw new Exception ("Missing parameter requirement! "
-					+ex.toString());
+				throw new IllegalArgumentException(
+					"Missing parameter requirement! " +ex.toString());
 			}
 
 			if(tmp.equals("required")) {
@@ -398,24 +470,24 @@ public class SPGen extends Object {
 				required=true;
 				output=true;
 			} else {
-				throw new Exception(
+				throw new IllegalArgumentException(
 					"Parameter must be required or optional, not "
 					+ tmp + " like in " + line);
 			}
 
 			try {
 				type=st.nextToken();
-			} catch (java.util.NoSuchElementException ex) {
+			} catch (NoSuchElementException ex) {
 				// now the variable type is missing  That's no good, you
 				// need a speficic type ya know.
-				throw new Exception ("Missing parameter type! "
+				throw new IllegalArgumentException("Missing parameter type! "
 					+ex.toString());
 			}
 
 			try {
 				// This character pretty much can't be in the line.
 				description=st.nextToken("\n");
-			} catch (java.util.NoSuchElementException ex) {
+			} catch (NoSuchElementException ex) {
 				// I don't think we cre if it's documented or not!  But
 				// honestly I don't think this should ever happen cause you
 				// need a newline.  Well, I guess if you ended the file odd
