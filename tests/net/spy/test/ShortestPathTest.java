@@ -103,8 +103,9 @@ public class ShortestPathTest extends TestCase {
 		// Link e to itself
 		e.linkTo(e, 10);
 
-		// And f links to g
+		// And f links to g and b
 		f.linkTo(g, 10);
+		f.linkTo(b, 200);
 
 		// calculate the paths
 		ShortestPathFinder spf=new ShortestPathFinder();
@@ -162,7 +163,7 @@ public class ShortestPathTest extends TestCase {
 		// B -> A -- doesn't exist
 		assertLinkMatch(b, a, null, 0);
 		// B -> B -- doesn't exist
-		assertLinkMatch(b, b, null, 0);
+		assertLinkMatch(b, b, c, 220);
 		// B -> C == 10 via C
 		assertLinkMatch(b, c, c, 10);
 		// B -> D == 20 via C
@@ -177,7 +178,7 @@ public class ShortestPathTest extends TestCase {
 		// C -> A won't go
 		assertLinkMatch(c, a, null, 0);
 		// C -> B won't go
-		assertLinkMatch(c, b, null, 0);
+		assertLinkMatch(c, b, f, 210);
 		// C -> C via D?
 		assertLinkMatch(c, c, d, 110);
 		// C -> D == 10 via D
@@ -192,7 +193,7 @@ public class ShortestPathTest extends TestCase {
 		// D -> A won't go
 		assertLinkMatch(d, a, null, 0);
 		// D -> B won't go
-		assertLinkMatch(d, b, null, 0);
+		assertLinkMatch(d, b, c, 310);
 		// D -> C via C
 		assertLinkMatch(d, c, c, 100);
 		// D -> D via C
@@ -212,6 +213,24 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(e, e, e, 10);
 		assertLinkMatch(e, f, null, 0);
 		assertLinkMatch(e, g, null, 0);
+
+		// F Goes to G and B
+		assertLinkMatch(f, a, null, 0);
+		assertLinkMatch(f, b, b, 200);
+		assertLinkMatch(f, c, b, 210);
+		assertLinkMatch(f, d, b, 220);
+		assertLinkMatch(f, e, b, 220);
+		assertLinkMatch(f, f, b, 220);
+		assertLinkMatch(f, g, g, 10);
+
+		// G Goes to nowhere
+		assertLinkMatch(g, a, null, 0);
+		assertLinkMatch(g, b, null, 0);
+		assertLinkMatch(g, c, null, 0);
+		assertLinkMatch(g, d, null, 0);
+		assertLinkMatch(g, e, null, 0);
+		assertLinkMatch(g, f, null, 0);
+		assertLinkMatch(g, g, null, 0);
 	}
 
 	/** 
