@@ -84,29 +84,8 @@
 	</target>
 
 	<!-- install everywhere -->
-	<target name="full-install" depends="install,spy-install,install-docs"
-		description="Full install (install, spy-install, install-docs)"/>
-
-	<!-- Install various locations I use the jar around the house. -->
-	<target name="spy-install" depends="spy.jar">
-		<copy file="spy.jar" tofile="/afs/.spy.net/misc/web/java/jar/spy.jar"/>
-		<copy file="spy.jar"
-			tofile="/afs/.spy.net/misc/web/root/money/WEB-INF/lib/spy.jar"/>
-		<copy file="spy.jar"
-			tofile="/afs/.spy.net/misc/web/root/therm/WEB-INF/lib/spy.jar"/>
-		<copy file="spy.jar"
-			tofile="/afs/.spy.net/misc/web/root/photo/WEB-INF/lib/spy.jar"/>
-		<copy file="spy.jar"
-			tofile="/afs/.spy.net/misc/web/root/beckerphoto/WEB-INF/lib/spy.jar"/>
-		<copy file="spy.jar"
-			tofile="/afs/.spy.net/misc/web/root/wisephoto/WEB-INF/lib/spy.jar"/>
-		<copy file="spy.jar"
-			tofile="/afs/.spy.net/misc/web/root/jasonphoto/WEB-INF/lib/spy.jar"/>
-		<copy file="spy.jar"
-			tofile="/afs/.spy.net/misc/web/root/photodemo/WEB-INF/lib/spy.jar"/>
-		<copy file="spy.jar"
-			tofile="/afs/.spy.net/misc/web/root/init/WEB-INF/lib/spy.jar"/>
-	</target>
+	<target name="full-install" depends="install,install-docs"
+		description="Full install (install, install-docs)"/>
 
 	<!-- Regular install -->
 	<target name="install" depends="install-jars,install-docs"
