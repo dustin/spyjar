@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.7 2003/01/15 21:04:52 dustin Exp $
+// $Id: Saver.java,v 1.8 2003/03/13 20:35:46 dustin Exp $
 
 package net.spy.db;
 
@@ -134,6 +134,17 @@ public class Saver extends SpyObject {
 
 			// Get the post savables
 			saveLoop(o, o.getSavables(context));
+			// This is a kind of ugly hack, but he identity equalifier
+			// should prevent the same object from being saved more than
+			// once, even though the tree is walked twice.  Perhaps
+			// getPostSavables was a mistake to wedge in for backwards
+			// compatibility.  Maybe I should go for a one or the other
+			// type implementation.  In the meantime, this scared the shit
+			// out of me.
+			if(o instanceof SavableNode) {
+				SavableNode sn=(SavableNode)o;
+				saveLoop(o, sn.getPostSavables(context));
+			}
 
 		} // Haven't seen this object
 
