@@ -1,5 +1,5 @@
 //
-// $Id: PoolContainer.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: PoolContainer.java,v 1.2 2002/09/05 00:05:21 dustin Exp $
 
 package net.spy.pool;
 
@@ -76,12 +76,7 @@ public class PoolContainer extends Object {
 	 */
 	public PoolContainer(String name, PoolFiller pf)
 		throws PoolException {
-		super();
-		this.name=name;
-		this.filler=pf;
-		this.conf=pf.getConfig();
-
-		initialize();
+		this(name, pf, pf.getConfig());
 	}
 
 	/**

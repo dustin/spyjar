@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpySecurityManager.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: SpySecurityManager.java,v 1.2 2002/09/05 00:05:20 dustin Exp $
 
 package net.spy.aaa;
 
@@ -9,19 +9,21 @@ import java.security.PermissionCollection;
 
 import java.util.Enumeration;
 
-import net.spy.util.TimeStampedHash;
+import java.util.Collections;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * A flexible SecurityManager type thing for use within applications.
  */
 public class SpySecurityManager extends Object {
 
-	private static final String MARKER=null;
-
-	private static TimeStampedHash managers=null;
+	private static Map managers=null;
 
 	private Authenticator auther=null;
-	private TimeStampedHash tokens=null;
+	private Set tokens=null;
 
 	private SpyPolicy policy=null;
 
@@ -30,16 +32,14 @@ public class SpySecurityManager extends Object {
 	 */
 	public SpySecurityManager() {
 		super();
-		if(managers==null) {
-			initManagers();
-		}
+		initManagers();
 
-		tokens=new TimeStampedHash();
+		tokens=new HashSet();
 	}
 
 	private static synchronized void initManagers() {
 		if(managers==null) {
-			managers=new TimeStampedHash();
+			managers=Collections.synchronizedMap(new HashMap());
 		}
 	}
 
@@ -83,7 +83,7 @@ public class SpySecurityManager extends Object {
 	private void checkToken(Token tok) {
 		if(tok!=null) {
 			synchronized(tokens) {
-				if(!tokens.containsKey(tok)) {
+				if(!tokens.contains(tok)) {
 					throw new SpySecurityException("Fraudulent token: " + tok);
 				}
 			}
@@ -133,15 +133,9 @@ public class SpySecurityManager extends Object {
 		Token t=auther.authUser(a, password);
 		// Save a copy in our stash
 		synchronized(tokens) {
-			tokens.put(t, MARKER);
+			tokens.add(t);
 		}
 		return(t);
-	}
-
-	/**
-	 * Testing and what not.
-	 */
-	public static void main(String args[]) throws Exception {
 	}
 
 }

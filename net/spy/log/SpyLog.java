@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyLog.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+ * $Id: SpyLog.java,v 1.2 2002/09/05 00:05:21 dustin Exp $
  */
 
 package net.spy.log;
@@ -38,16 +38,19 @@ public class SpyLog extends Object {
 
 		// Important to initialize only once, this sets up all the static
 		// variables including the cleanup thread.
-		if(initialized == false) {
-			initialize();
+		// XXX:  This is ugly.
+		synchronized(getClass()) {
+			if(initialized == false) {
+				initialize();
 
-			// If this is initialization, and we don't have a flusher, make
-			// one.
-			synchronized(flushers) {
-				// Default flusher.
-				if(flushers.size()==0) {
-					SpyLogFlusher flusher = new SpyLogFlusher(queueName);
-					addFlusher(flusher);
+				// If this is initialization, and we don't have a flusher, make
+				// one.
+				synchronized(flushers) {
+					// Default flusher.
+					if(flushers.size()==0) {
+						SpyLogFlusher flusher = new SpyLogFlusher(queueName);
+						addFlusher(flusher);
+					}
 				}
 			}
 		}
@@ -66,11 +69,7 @@ public class SpyLog extends Object {
 
 		this.queueName=queueName;
 
-		// Important to initialize only once, this sets up all the static
-		// variables including the cleanup thread.
-		if(initialized == false) {
-			initialize();
-		}
+		initialize();
 
 		// The log flusher object.
 		addFlusher(f);
@@ -112,11 +111,11 @@ public class SpyLog extends Object {
 	}
 
 	private static synchronized void initialize() {
-		// Do this soon, we don't want anything else causing this to happen.
-		initialized = true;
-
-		if(flushers==null) {
-			flushers=new Vector();
+		if(initialized==false) {
+			if(flushers==null) {
+				flushers=new Vector();
+			}
+			initialized = true;
 		}
 	}
 }
