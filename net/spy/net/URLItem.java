@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLItem.java,v 1.2 2003/04/14 04:00:28 dustin Exp $
+// $Id: URLItem.java,v 1.3 2003/04/18 08:28:54 dustin Exp $
 
 package net.spy.net;
 
@@ -81,6 +81,11 @@ public class URLItem extends Job {
 			content=hf.getData();
 		} catch(IOException e) {
 			lastError=e;
+		}
+
+		// Notify listeners that this has been updated.
+		synchronized(this) {
+			notify();
 		}
 	}
 
