@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyLog.java,v 1.2 2002/09/05 00:05:21 dustin Exp $
+ * $Id: SpyLog.java,v 1.3 2002/11/05 08:56:05 dustin Exp $
  */
 
 package net.spy.log;
@@ -9,7 +9,7 @@ package net.spy.log;
 import java.util.Vector;
 
 /**
- * The Spy Asyncrhonous logger.
+ * The Spy Asynchronous logger.
  * <p>
  * SpyLog is an implementation of an asynchronous logger that allows one to
  * have multiple points of input into a single queueing system that runs in
