@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Savable.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: Savable.java,v 1.2 2002/10/03 18:39:54 dustin Exp $
 
 package net.spy.db;
 
@@ -35,6 +35,10 @@ public interface Savable {
 	/**
 	 * Get a list of all of the Savables this Savable is holding that will
 	 * need to be saved after this object.
+	 *
+	 * @param context SaveContext being used in this Saver session
+	 * @return a collection of dependent objects to save, or null if there
+	 * 			are no dependent objects
 	 */
 	Collection getSavables(SaveContext context);
 
