@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPoolObserver.java,v 1.3 2003/07/26 07:46:54 dustin Exp $
+// $Id: ThreadPoolObserver.java,v 1.4 2003/09/11 03:53:36 dustin Exp $
 
 package net.spy.util;
 
@@ -26,12 +26,15 @@ public class ThreadPoolObserver extends SpyObject {
 	 * After jobComplete(Runnable) is called, a notifyAll will be sent
 	 * letting anyone watching this thing know that something has occurred.
 	 * jobComplete should be quick as to not get in the way of threads
-	 * recycling.  It will be called by multiple threads simultaneously, so
-	 * whatever it does, it must do thread safely.
+	 * recycling.  It will be called inside the ThreadPool's worker thread,
+	 * but it is a synchronized call, so if it doesn't return quickly, it
+	 * will prevent multiple threads from recycling.
+	 *
+	 * </p>
 	 * 
 	 * @param r the job that finished
 	 */
-	public void jobComplete(Runnable r) {
+	protected void jobComplete(Runnable r) {
 		// Nothing.
 	}
 
