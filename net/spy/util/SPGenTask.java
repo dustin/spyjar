@@ -2,7 +2,7 @@
  * Copyright (c) 2002 Scott Lamb <slamb@slamb.org>
  * This code is released under the MIT license; see the file LICENSE.
  *
- * $Id: SPGenTask.java,v 1.3 2002/12/19 22:10:48 knitterb Exp $
+ * $Id: SPGenTask.java,v 1.4 2002/12/19 22:11:23 knitterb Exp $
  */
 
 package net.spy.util;
@@ -37,14 +37,14 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  *			<classpath refid="compile.classpath"/>
  *		</taskdef>
  *		<spgen srcdir="${spt.dir}" destdir="${spt.dir}"
- *			superclass="com.tivo.db.TivoDbsp"/>
+ *			superclass="com.foo.MyDbsp"/>
  *	</target>
  *
  * </pre></code>
  * </p>
  *
  * @author Scott Lamb
- * @version $Revision: 1.3 $ $Date: 2002/12/19 22:10:48 $
+ * @version $Revision: 1.4 $ $Date: 2002/12/19 22:11:23 $
  **/
 public class SPGenTask extends MatchingTask {
 
