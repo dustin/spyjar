@@ -32,6 +32,7 @@ public class TransactionPipeline extends SpyObject {
 	 */
 	public TransactionPipeline() {
 		super();
+		pool=new ThreadPool(POOL_NAME, DEFAULT_POOL_SIZE);
 	}
 
 	/** 
