@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ShortestPathFinder.java,v 1.5 2002/11/07 18:22:45 dustin Exp $
+// $Id: ShortestPathFinder.java,v 1.6 2002/11/07 18:31:22 dustin Exp $
 
 package net.spy.util;
 
@@ -32,7 +32,7 @@ import java.util.Collection;
  *    <table border="1">
  *     <tr><th>From</th><th>To</th><th>Next Hop</th><th>Cost</th></tr>
  *
- *     <tr><td>A</td><td>A</td><td><i>n/a></i></td><td><i>n/a></i></td></tr>
+ *     <tr><td>A</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>A</td><td>B</td><td>B</td><td>10</td></tr>
  *     <tr><td>A</td><td>C</td><td>C</td><td>15</td></tr>
  *     <tr><td>A</td><td>D</td><td>C</td><td>25</td></tr>
@@ -60,7 +60,7 @@ import java.util.Collection;
  *     <tr><td>E</td><td>B</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>E</td><td>C</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>E</td><td>D</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
- *     <tr><td>E</td><td>E</td>E</td><td>110</td></tr>
+ *     <tr><td>E</td><td>E</td><td>E</td><td>10</td></tr>
  *
  *    </table>
  *   </td>
