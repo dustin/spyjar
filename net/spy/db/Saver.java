@@ -1,12 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.4 2003/01/07 07:04:21 dustin Exp $
+// $Id: Saver.java,v 1.5 2003/01/07 07:15:25 dustin Exp $
 
 package net.spy.db;
 
 import java.util.Iterator;
-import java.util.Map;
-import java.util.IdentityHashMap;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Collection;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,7 +27,7 @@ public class Saver extends SpyObject {
 	private int rdepth=0;
 
 	// Make sure we don't deal with the same object more than once
-	private Map listedObjects=null;
+	private Set listedObjects=null;
 
 	private SpyDB db=null;
 	private Connection conn=null;
@@ -46,7 +46,7 @@ public class Saver extends SpyObject {
 		super();
 		this.context=context;
 		this.config=config;
-		this.listedObjects=new IdentityHashMap();
+		this.listedObjects=new HashSet();
 	}
 
 	/**
@@ -101,10 +101,10 @@ public class Saver extends SpyObject {
 
 		// Inform all of the TransactionListener objects that the
 		// transaction is complete.
-		for(Iterator i=listedObjects.values().iterator(); i.hasNext(); ) {
-			Object otmp=i.next();
-			if(otmp instanceof TransactionListener) {
-				TransactionListener tl=(TransactionListener)otmp;
+		for(Iterator i=listedObjects.iterator(); i.hasNext(); ) {
+			IdentityEqualifier ie=(IdentityEqualifier)i.next();
+			if(ie.get() instanceof TransactionListener) {
+				TransactionListener tl=(TransactionListener)ie.get();
 				tl.transactionCommited();
 			}
 		} // end looking at all the listeners.
@@ -127,9 +127,10 @@ public class Saver extends SpyObject {
 
 		// Only go through the savables if we haven't gone through the
 		// savables for this exact object
-		if(!listedObjects.containsKey(o)) {
+		IdentityEqualifier ie=new IdentityEqualifier(o);
+		if(!listedObjects.contains(ie)) {
 			// Add this to the set to keep us from doing it again
-			listedObjects.put(o, null);
+			listedObjects.add(ie);
 
 			// Get the savables
 			Collection c=o.getSavables(context);
@@ -151,6 +152,29 @@ public class Saver extends SpyObject {
 		} // Haven't seen this object
 
 		rdepth--;
+	}
+
+	// private class to deal with identity comparisons
+	private class IdentityEqualifier {
+
+		private Object o=null;
+
+		// Get an IdentityEqualifier
+		public IdentityEqualifier(Object o) {
+			super();
+			this.o=o;
+		}
+
+		// Get the object
+		public Object get() {
+			return(o);
+		}
+
+		// Identity comparison
+		public boolean equals(Object other) {
+			return(o == other);
+		}
+
 	}
 
 }
