@@ -47,6 +47,8 @@ import net.spy.pool.JDBCPoolFiller;
 public class ObjectPoolConnectionSource extends SpyObject
 	implements ConnectionSource {
 
+	private static final int DEFAULT_MAX_CONNS=5;
+
 	// This is the object pool from which connections will be retrieved
 	private static ObjectPool pool=null;
 
@@ -86,11 +88,11 @@ public class ObjectPoolConnectionSource extends SpyObject
 	}
 
 	// Do the pool work.
-	private Connection getConn(String poolName)
+	private Connection getConn(String name)
 		throws SQLException, PoolException {
 
 		Connection rv=null;
-		object=pool.getObject(poolName);
+		object=pool.getObject(name);
 		rv=(Connection)object.getObject();
 
 		return(rv);
@@ -180,7 +182,7 @@ public class ObjectPoolConnectionSource extends SpyObject
 		}
 
 		// Maximum number of connections in the pool.
-		int maxConns=conf.getInt("dbMaxConns", 5);
+		int maxConns=conf.getInt("dbMaxConns", DEFAULT_MAX_CONNS);
 		rv.put(prefix + "max", "" + maxConns);
 
 		// Maximum age of any item in the pool

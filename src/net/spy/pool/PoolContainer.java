@@ -13,6 +13,24 @@ import net.spy.util.SpyConfig;
  * PoolContainer is the storage for a given pool.
  */
 public class PoolContainer extends SpyObject {
+
+	private static final int MAX_RETRIES=6;
+	// Amount of time to wait for a connection to become available.
+	private static final int AVAILABILITY_WAIT=500;
+	// The minimum allowable value for maximum age.
+	private static final int MIN_MAX_AGE=5000;
+
+	// Default maximum number of objects for a pool
+	private static final int DEFAULT_MAX_OBJECTS=5;
+
+	private static final int DEFAULT_YELLOW_LINE=75;
+	private static final float PERCENT=100.0f;
+
+	// Buffer length for debug strings
+	private static final int DEBUG_NAMELEN=64;
+	// Buffer length for stringification
+	private static final int TOSTRING_LEN=256;
+
 	private ArrayList pool=null;
 	private SpyConfig conf=null;
 	private String name=null;
@@ -39,18 +57,18 @@ public class PoolContainer extends SpyObject {
 	 *  <li>&lt;poolname&gt;.max - maximum number of items in the pool</li>
 	 * </li>
 	 *
-	 * @param name name of the pool
+	 * @param nm name of the pool
 	 * @param pf the PoolFiller to use
-	 * @param conf a SpyConfig object that should describe the pool
+	 * @param cnf a SpyConfig object that should describe the pool
 	 * parameters.
 	 *
 	 * @exception PoolException when something bad happens
 	 */
-	public PoolContainer(String name, PoolFiller pf, SpyConfig conf)
+	public PoolContainer(String nm, PoolFiller pf, SpyConfig cnf)
 		throws PoolException {
 		super();
-		this.conf=conf;
-		this.name=name;
+		this.conf=cnf;
+		this.name=nm;
 		this.filler=pf;
 
 		initialize();
@@ -73,9 +91,9 @@ public class PoolContainer extends SpyObject {
 	 *
 	 * @exception PoolException when something bad happens
 	 */
-	public PoolContainer(String name, PoolFiller pf)
+	public PoolContainer(String nm, PoolFiller pf)
 		throws PoolException {
-		this(name, pf, pf.getConfig());
+		this(nm, pf, pf.getConfig());
 	}
 
 	/**
@@ -96,7 +114,7 @@ public class PoolContainer extends SpyObject {
 		PoolAble poolable=null;
 
 		// How many times we're flipping through the object pool
-		int retries=6;
+		int retries=MAX_RETRIES;
 
 		// Synchronize on the pool object.
 		synchronized(pool) {
@@ -105,7 +123,7 @@ public class PoolContainer extends SpyObject {
 
 				// Find the next available object.
 				for(Iterator e=pool.iterator();
-					poolable==null && e.hasNext(); ) {
+					poolable==null && e.hasNext();) {
 
 					PoolAble p=(PoolAble)e.next();
 
@@ -143,9 +161,9 @@ public class PoolContainer extends SpyObject {
 						}
 						// Wait a half a second if the pool is full, in case
 						// something gets checked in
-						Thread.sleep(500);
-					} catch(Exception e) {
-						// Things just go faster.
+						Thread.sleep(AVAILABILITY_WAIT);
+					} catch(InterruptedException e) {
+						getLogger().debug("Interrupted");
 					}
 				}
 			}// Retries for an object in the existing pool.
@@ -183,7 +201,7 @@ public class PoolContainer extends SpyObject {
 
 	// Name to print in debuggy type things.
 	private String debugName() {
-		StringBuffer rv=new StringBuffer(64);
+		StringBuffer rv=new StringBuffer(DEBUG_NAMELEN);
 		rv.append(name);
 		rv.append(" @");
 		rv.append(Integer.toHexString(hashCode()));
@@ -195,7 +213,7 @@ public class PoolContainer extends SpyObject {
 	 * debugging tool, dump out the current state of the pool
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(256);
+		StringBuffer sb=new StringBuffer(TOSTRING_LEN);
 		sb.append("Pool ");
 		sb.append(debugName());
 		sb.append(" - total Objects:  ");
@@ -275,19 +293,20 @@ public class PoolContainer extends SpyObject {
 		// Get the min and max args.
 		minObjects=getPropertyInt("min", 0);
 		initObjects=getPropertyInt("start", minObjects);
-		maxObjects=getPropertyInt("max", 5);
+		maxObjects=getPropertyInt("max", DEFAULT_MAX_OBJECTS);
 		// The yellow line is the number of connections before we start to
 		// slow it down...
 		yellowLine=(int)((float)maxObjects
-			* (float)getPropertyInt("yellow_line", 75)/100.0);
+			* (float)getPropertyInt("yellow_line",
+				DEFAULT_YELLOW_LINE)/PERCENT);
 
 		// Set the hashcode of this pool for consistent debug output.
 		filler.setPoolHash(hashCode());
 
 		if(getLogger().isDebugEnabled()) {
 			getLogger().debug("Pool " + debugName() + " wants a min of "
-			+ minObjects + " and a max of " + maxObjects
-			+ " with a yellow line at " + yellowLine);
+				+ minObjects + " and a max of " + maxObjects
+				+ " with a yellow line at " + yellowLine);
 		}
 
 		try {
@@ -295,7 +314,7 @@ public class PoolContainer extends SpyObject {
 		} catch(PoolException e) {
 			// If there was a problem initializing the pool, throw away
 			// what we've got.
-			for(Iterator i=pool.iterator(); i.hasNext(); ) {
+			for(Iterator i=pool.iterator(); i.hasNext();) {
 				PoolAble p=(PoolAble)i.next();
 				p.discard();
 			}
@@ -328,7 +347,7 @@ public class PoolContainer extends SpyObject {
 	// Fetch a new object from the poolfiller, the pool is exhausted and we
 	// need more objects.
 	private PoolAble getNewObject() throws PoolException {
-		PoolAble p=null;
+		PoolAble po=null;
 
 		// First, if we're at capacity, do a prune and see if we can shrink
 		// it down a bit.
@@ -343,14 +362,14 @@ public class PoolContainer extends SpyObject {
 					+ name + " pool, currently have " + totalObjects()
 					+ "/" + maxObjects + ". ***");
 			}
-			p=filler.getObject();
-			p.setObjectID(nextId());
-			p.setPoolName(name);
+			po=filler.getObject();
+			po.setObjectID(nextId());
+			po.setPoolName(name);
 			// Calculate a lifetime and set it
-			p.setMaxAge(calculateMaxAge());
-			p.activate();
+			po.setMaxAge(calculateMaxAge());
+			po.activate();
 			synchronized(pool) {
-				pool.add(p);
+				pool.add(po);
 			}
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Added the object to the pool, now have "
@@ -359,7 +378,7 @@ public class PoolContainer extends SpyObject {
 		} else {
 			throw new PoolException("Cannot create another object in the pool");
 		}
-		return(p);
+		return(po);
 	}
 
 	// Calculate the maximum age of the ``next'' object based on the number
@@ -377,8 +396,8 @@ public class PoolContainer extends SpyObject {
 				float factor=1-percentFull;
 				rv=(long)((double)rv*factor);
 				// All connections should be available for at least 5 seconds
-				if(rv<5000) {
-					rv=5000;
+				if(rv<MIN_MAX_AGE) {
+					rv=MIN_MAX_AGE;
 				}
 			}
 		}

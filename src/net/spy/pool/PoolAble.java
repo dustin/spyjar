@@ -17,6 +17,10 @@ import net.spy.SpyObject;
  * debugging output will go.
  */
 public abstract class PoolAble extends SpyObject {
+
+	private static final int DEBUG_LEN=64;
+	private static final int TOSTRING_LEN=128;
+
 	private int objectId=-1;
 	private boolean checkedOut=false;
 	private Object theObject=null;
@@ -41,10 +45,10 @@ public abstract class PoolAble extends SpyObject {
 	/**
 	 * Get a PoolAble representation for an object.
 	 */
-	public PoolAble(Object theObject, int poolHash) {
+	public PoolAble(Object o, int h) {
 		super(); // thanks for asking.
-		this.theObject=theObject;
-		this.poolHash=poolHash;
+		this.theObject=o;
+		this.poolHash=h;
 		startTime=System.currentTimeMillis();
 		debug("New object");
 	}
@@ -57,18 +61,18 @@ public abstract class PoolAble extends SpyObject {
 	 * will be valid.  Objects will not be checked out if they are older
 	 * than their maximum lifetime.
 	 */
-	public PoolAble(Object theObject, long maxAge, int poolHash) {
+	public PoolAble(Object o, long a, int h) {
 		super(); // thanks for asking.
-		this.theObject=theObject;
-		this.maxAge=maxAge;
-		this.poolHash=poolHash;
+		this.theObject=o;
+		this.maxAge=a;
+		this.poolHash=h;
 		startTime=System.currentTimeMillis();
 		debug("New object.");
 	}
 
 	// Get the debug name
 	private String debugName() {
-		StringBuffer sb=new StringBuffer(64);
+		StringBuffer sb=new StringBuffer(DEBUG_LEN);
 		sb.append("PoolAble ");
 		sb.append(objectId);
 		sb.append(" for ");
@@ -299,7 +303,7 @@ public abstract class PoolAble extends SpyObject {
 	 * @return a string representation of this object.
 	 */
 	public synchronized String toString() {
-		StringBuffer out=new StringBuffer(128);
+		StringBuffer out=new StringBuffer(TOSTRING_LEN);
 		out.append(debugName());
 		if(isCheckedOut()) {
 			out.append(" is checked out");

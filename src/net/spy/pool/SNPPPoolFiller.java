@@ -34,17 +34,17 @@ public class SNPPPoolFiller extends PoolFiller {
 	 * @exception PoolException if a new connection could not be made.
 	 */
 	public PoolAble getObject() throws PoolException {
-		SNPPPoolAble p = null;
+		SNPPPoolAble sp = null;
 		try {
 			String hostname=null;
-			int port=444;
+			int port=SNPP.SNPP_PORT;
 
 			hostname=getProperty("snppHost");
 			if(hostname==null) {
 				throw new Exception("No snppHost property given");
 			}
 
-			port=getPropertyInt("snppPort", 444);
+			port=getPropertyInt("snppPort", SNPP.SNPP_PORT);
 
 			int timeout=getPropertyInt("snppTimeout", 0);
 
@@ -53,7 +53,7 @@ public class SNPPPoolFiller extends PoolFiller {
 			// Grab a connection.
 			SNPP snpp = new SNPP(hostname, port, timeout);
 			// Create the PoolAble object
-			p=new SNPPPoolAble(snpp, maxAge, getPoolHash());
+			sp=new SNPPPoolAble(snpp, maxAge, getPoolHash());
 		} catch(Exception e) {
 			throw new PoolException(
 				"Error getting new SNPP object for the "
@@ -61,6 +61,6 @@ public class SNPPPoolFiller extends PoolFiller {
 				);
 		}
 
-		return(p);
+		return(sp);
 	}
 }

@@ -14,15 +14,15 @@ import net.spy.SpyObject;
  */
 public class PooledObject extends SpyObject {
 
-	private PoolAble p=null;
+	private PoolAble poolAble=null;
 
 	/**
 	 * Get a new PooledObject containing the given PoolAble
 	 */
 	public PooledObject(PoolAble p) {
 		super();
-		this.p=p;
-		p.checkOut();
+		this.poolAble=p;
+		poolAble.checkOut();
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class PooledObject extends SpyObject {
 	 * @exception PoolException if a problem occurs
 	 */
 	public Object getObject() throws PoolException {
-		return(p.getObject());
+		return(poolAble.getObject());
 	}
 
 	/**
@@ -40,15 +40,15 @@ public class PooledObject extends SpyObject {
 	 * @return true if the object is alive
 	 */
 	public boolean isAlive() {
-		return(p.isAlive());
+		return(poolAble.isAlive());
 	}
 
 	/**
 	 * Manually check the object back in.
 	 */
 	public void checkIn() {
-		p.checkIn();
-		p=null;
+		poolAble.checkIn();
+		poolAble=null;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class PooledObject extends SpyObject {
 	 * @return the object ID
 	 */
 	public int getObjectID() {
-		return(p.getObjectID());
+		return(poolAble.getObjectID());
 	}
 
 	/**
@@ -65,12 +65,12 @@ public class PooledObject extends SpyObject {
 	 * already been checked in.
 	 */
 	protected void finalize() {
-		if(p!=null) {
+		if(poolAble!=null) {
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Finalization checking in object "
-					+ p.getObjectID());
+					+ poolAble.getObjectID());
 			}
-			p.checkIn();
+			poolAble.checkIn();
 		}
 	}
 

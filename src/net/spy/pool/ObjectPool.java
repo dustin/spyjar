@@ -36,6 +36,14 @@ import net.spy.util.TimeStampedHashMap;
  */
 
 public class ObjectPool extends SpyObject {
+
+	// toString buffer length
+	private static final int TOSTRING_LEN=256;
+
+	// Number of cleans to run
+	private static final int NUM_CLEANS=6;
+	private static final int TIME_BETWEEN_CLEANS=300000;
+
 	// This is static so we can check up on it.
 	private static ObjectPoolCleaner cleaner=null;
 	// This is static because we want everyone to see the same pools, of
@@ -128,18 +136,18 @@ public class ObjectPool extends SpyObject {
 	 * Get a count of the number of object pools.
 	 */
 	public int numPools() {
-		int n=0;
+		int rv=0;
 		synchronized (pools) {
-			n=pools.size();
+			rv=pools.size();
 		}
-		return(n);
+		return(rv);
 	}
 
 	/**
 	 * Dump out the object pools.
 	 */
 	public String toString() {
-		StringBuffer out=new StringBuffer(256);
+		StringBuffer out=new StringBuffer(TOSTRING_LEN);
 		ArrayList a=new ArrayList();
 		synchronized (pools) {
 			for(Iterator i=pools.values().iterator(); i.hasNext();) {
@@ -160,21 +168,23 @@ public class ObjectPool extends SpyObject {
 	 * @exception PoolException if something bad happens
 	 */
 	public void prune() throws PoolException {
-		ArrayList a=new ArrayList();
+		ArrayList a=new ArrayList(pools.size());
+		// Clean up any pools that are empty
 		synchronized (pools) {
 			for(Iterator i=pools.values().iterator(); i.hasNext();) {
 				PoolContainer pc=(PoolContainer)i.next();
 
 				// If it's empty, remove it.
 				if(pc.totalObjects()==0) {
-					// XXX:  It may be required to do something else with
-					// this at some later point.
+					// Remove the pool from our collection of pools
 					i.remove();
 				} else {
 					a.add(pc);
 				}
 			}
 		}
+		// A second loop (out of the synchronized block) to ask each individual
+		// pool to clean itself.
 		for(Iterator i=a.iterator(); i.hasNext();) {
 			PoolContainer pc=(PoolContainer)i.next();
 			pc.prune();
@@ -227,10 +237,10 @@ public class ObjectPool extends SpyObject {
 		// Last time we cleaned.
 		private Date lastClean=null;
 
-	 	// Create (and start) the ObjectPoolCleaner.
-		public ObjectPoolCleaner(ObjectPool op) {
+		// Create (and start) the ObjectPoolCleaner.
+		public ObjectPoolCleaner(ObjectPool o) {
 			super();
-			this.op=op;
+			this.op=o;
 			setDaemon(true);
 			setName("ObjectPoolCleaner");
 			start();
@@ -239,7 +249,7 @@ public class ObjectPool extends SpyObject {
 		// Look like a normal thread, but report number of times the thing's
 		// cleaned.
 		public String toString() {
-			StringBuffer sb=new StringBuffer(256);
+			StringBuffer sb=new StringBuffer(TOSTRING_LEN);
 			sb.append(super.toString());
 			sb.append(" - ");
 			sb.append(numCleans);
@@ -266,10 +276,10 @@ public class ObjectPool extends SpyObject {
 
 		public void run() {
 			// Only do six cleans (sleeping ten minutes, that's an hour!)
-			while(numCleans<6) {
+			while(numCleans<NUM_CLEANS) {
 				try {
 					// Prune every once in a while.
-					sleep(5*60*1000);
+					sleep(TIME_BETWEEN_CLEANS);
 					lastClean=new Date();
 					doPrune();
 				} catch(Exception e) {

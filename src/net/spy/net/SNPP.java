@@ -28,6 +28,11 @@ public class SNPP extends SpyObject {
 	private static final int STATUS_LENGTH=3;
 
 	/** 
+	 * SNPP default port.
+	 */
+	public static final int SNPP_PORT=444;
+
+	/** 
 	 * Response code indicating a line of multiline help.
 	 */
 	public static final int MULTILINE_HELP=214;

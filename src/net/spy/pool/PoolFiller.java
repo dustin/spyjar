@@ -11,6 +11,9 @@ import net.spy.util.SpyConfig;
  * build the PoolAbles for whatever types of objects you're pooling.
  */
 public abstract class PoolFiller extends Object {
+
+	private static final int TOSTRING_LEN=64;
+
 	private SpyConfig conf=null;
 	private String name=null;
 	private int poolHash=0;
@@ -30,10 +33,10 @@ public abstract class PoolFiller extends Object {
 	 * @param name the name to be used for config lookups
 	 * @param conf the config to use
 	 */
-	public PoolFiller(String name, SpyConfig conf) {
+	public PoolFiller(String nm, SpyConfig cnf) {
 		super();
-		this.conf=conf;
-		this.name=name;
+		this.conf=cnf;
+		this.name=nm;
 	}
 
 	/**
@@ -54,7 +57,7 @@ public abstract class PoolFiller extends Object {
 	 * Get the debug name (including the pool's hash).
 	 */
 	protected String debugName() {
-		StringBuffer sb=new StringBuffer(64);
+		StringBuffer sb=new StringBuffer(TOSTRING_LEN);
 
 		sb.append(name);
 		sb.append(" @");
@@ -66,8 +69,8 @@ public abstract class PoolFiller extends Object {
 	/**
 	 * Set the name to be used for config lookups.
 	 */
-	public void setName(String name) {
-		this.name=name;
+	public void setName(String nm) {
+		this.name=nm;
 	}
 
 	/**
@@ -80,8 +83,8 @@ public abstract class PoolFiller extends Object {
 	/**
 	 * Set the config file to use.
 	 */
-	public void setConfig(SpyConfig conf) {
-		this.conf=conf;
+	public void setConfig(SpyConfig cnf) {
+		this.conf=cnf;
 	}
 
 	/**
