@@ -32,7 +32,6 @@ import java.lang.reflect.Field;
 import java.text.NumberFormat;
 
 import net.spy.SpyObject;
-import net.spy.util.SpyUtil;
 import net.spy.db.QuerySelector;
 
 /**
@@ -57,7 +56,6 @@ public class SPGen extends SpyObject {
 	private String dbspSuperclass=null;
 
 	private String superinterface=null;
-	private String version="$Revision: 1.39 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -140,57 +138,60 @@ public class SPGen extends SpyObject {
 			javaTypes=new HashMap();
 			javaResultTypes=new HashMap();
 
+			String jstypes="java.sql.Types.";
+			int jstypeslen=jstypes.length();
+
 			// Map the jdbc types to useful java types
-			String t="java.sql.Types.BIT";
-			javaTypes.put(t, "Boolean");
-			javaResultTypes.put(t, "boolean");
-			t="java.sql.Types.DATE";
-			javaTypes.put(t, "Date");
-			javaResultTypes.put(t, "java.sql.Date");
-			t="java.sql.Types.DOUBLE";
-			javaTypes.put(t, "Double");
-			javaResultTypes.put(t, "double");
-			t="java.sql.Types.FLOAT";
-			javaTypes.put(t, "Float");
-			javaResultTypes.put(t, "float");
-			t="java.sql.Types.INTEGER";
-			javaTypes.put(t, "Int");
-			javaResultTypes.put(t, "int");
-			t="java.sql.Types.BIGINT";
-			javaTypes.put(t, "BigDecimal");
-			javaResultTypes.put(t, "java.math.BigDecimal");
-			t="java.sql.Types.NUMERIC";
-			javaTypes.put(t, "BigDecimal");
-			javaResultTypes.put(t, "java.math.BigDecimal");
-			t="java.sql.Types.DECIMAL";
-			javaTypes.put(t, "BigDecimal");
-			javaResultTypes.put(t, "java.math.BigDecimal");
-			t="java.sql.Types.SMALLINT";
-			javaTypes.put(t, "Int");
-			javaResultTypes.put(t, "int");
-			t="java.sql.Types.TINYINT";
-			javaTypes.put(t, "Int");
-			javaResultTypes.put(t, "int");
-			t="java.sql.Types.OTHER";
-			javaTypes.put(t, "Object");
-			javaResultTypes.put(t, "Object");
-			t="java.sql.Types.VARCHAR";
-			javaTypes.put(t, "String");
-			javaResultTypes.put(t, "String");
-			t="java.sql.Types.TIME";
-			javaTypes.put(t, "Time");
-			javaResultTypes.put(t, "java.sql.Time");
-			t="java.sql.Types.TIMESTAMP";
-			javaTypes.put(t, "Timestamp");
-			javaResultTypes.put(t, "java.sql.Timestamp");
+			String typ="java.sql.Types.BIT";
+			javaTypes.put(typ, "Boolean");
+			javaResultTypes.put(typ, "boolean");
+			typ="java.sql.Types.DATE";
+			javaTypes.put(typ, "Date");
+			javaResultTypes.put(typ, "java.sql.Date");
+			typ="java.sql.Types.DOUBLE";
+			javaTypes.put(typ, "Double");
+			javaResultTypes.put(typ, "double");
+			typ="java.sql.Types.FLOAT";
+			javaTypes.put(typ, "Float");
+			javaResultTypes.put(typ, "float");
+			typ="java.sql.Types.INTEGER";
+			javaTypes.put(typ, "Int");
+			javaResultTypes.put(typ, "int");
+			typ="java.sql.Types.BIGINT";
+			javaTypes.put(typ, "BigDecimal");
+			javaResultTypes.put(typ, "java.math.BigDecimal");
+			typ="java.sql.Types.NUMERIC";
+			javaTypes.put(typ, "BigDecimal");
+			javaResultTypes.put(typ, "java.math.BigDecimal");
+			typ="java.sql.Types.DECIMAL";
+			javaTypes.put(typ, "BigDecimal");
+			javaResultTypes.put(typ, "java.math.BigDecimal");
+			typ="java.sql.Types.SMALLINT";
+			javaTypes.put(typ, "Int");
+			javaResultTypes.put(typ, "int");
+			typ="java.sql.Types.TINYINT";
+			javaTypes.put(typ, "Int");
+			javaResultTypes.put(typ, "int");
+			typ="java.sql.Types.OTHER";
+			javaTypes.put(typ, "Object");
+			javaResultTypes.put(typ, "Object");
+			typ="java.sql.Types.VARCHAR";
+			javaTypes.put(typ, "String");
+			javaResultTypes.put(typ, "String");
+			typ="java.sql.Types.TIME";
+			javaTypes.put(typ, "Time");
+			javaResultTypes.put(typ, "java.sql.Time");
+			typ="java.sql.Types.TIMESTAMP";
+			javaTypes.put(typ, "Timestamp");
+			javaResultTypes.put(typ, "java.sql.Timestamp");
 
 			// Same as above, without the java.sql. part
 			Map tmp=new HashMap();
 			for(Iterator i=javaTypes.entrySet().iterator(); i.hasNext();) {
 				Map.Entry me=(Map.Entry)i.next();
 				String k=(String)me.getKey();
-				if(k.startsWith("java.sql.Types.")) {
-					tmp.put(k.substring(15), me.getValue());
+				if(k.startsWith(jstypes)) {
+					tmp.put(k.substring(jstypeslen), me.getValue());
 				}
 			}
 			javaTypes.putAll(tmp);
@@ -199,8 +200,8 @@ public class SPGen extends SpyObject {
 				i.hasNext();) {
 				Map.Entry me=(Map.Entry)i.next();
 				String k=(String)me.getKey();
-				if(k.startsWith("java.sql.Types.")) {
-					tmp.put(k.substring(15), me.getValue());
+				if(k.startsWith(jstypeslen)) {
+					tmp.put(k.substring(jstypeslen), me.getValue());
 				}
 			}
 			javaResultTypes.putAll(tmp);
@@ -265,7 +266,7 @@ public class SPGen extends SpyObject {
 	// Create a specific set method for a given parameter.
 	private String createSetMethod(Parameter p) throws Exception {
 		String rv=null;
-		String types[]=null;
+		String atypes[]=null;
 		boolean customtype=false;
 
 		// Get the type map entry for this parameter
@@ -273,21 +274,19 @@ public class SPGen extends SpyObject {
 			ResourceBundle typeMap=
 				ResourceBundle.getBundle("net.spy.db.typemap");
 			String typeString=typeMap.getString(p.getType());
-			types=SpyUtil.split(" ", typeString);
+			atypes=SpyUtil.split(" ", typeString);
 		} catch(MissingResourceException e) {
 			getLogger().warn("Can't set all types for " + p, e);
-			// XXX This is just a thing to get me over the hump
-			//return("");
 			String typesTmp[]={"java.lang.Object"};
-			types=typesTmp;
+			atypes=typesTmp;
 			customtype=true;
 		}
 
 		String methodName=methodify(p.getName());
 
 		rv="";
-		for(int i=0; i<types.length; i++) {
-			String type=types[i];
+		for(int i=0; i<atypes.length; i++) {
+			String type=atypes[i];
 			// Too verbose, need some way to configure this kind of stuff
 			getLogger().debug("Generating " + p + " for " + type);
 			rv+="\t/**\n"
@@ -319,12 +318,10 @@ public class SPGen extends SpyObject {
 		if(verbose) {
 			System.out.println("Writing out " + pkg + "." + classname);
 		}
-		// Extract the version from the version var.
-		String v=version.substring(11, version.length()-2);
 		// Copyright info
 		out.println(
 			"// Copyright (c) 2001  SPY internetworking <dustin@spy.net>\n"
-		    + "// Written by Dustin's SQL generator version " + v +"\n"
+		    + "// Written by Dustin's SQL generator\n"
 			+ "//\n"
 			+ "// $" + "Id" + "$\n");
 		out.flush();
@@ -896,7 +893,7 @@ public class SPGen extends SpyObject {
 
 				}
 			}
-			
+
 			tmp=in.readLine();
 		}
 
@@ -925,7 +922,7 @@ public class SPGen extends SpyObject {
 				done=true;
 			}
 		}
-		if(done==false) {
+		if(!done) {
 			throw new IllegalArgumentException("Didn't find parameter "
 				+ d.getName() + " when registering");
 		}
@@ -1240,15 +1237,15 @@ public class SPGen extends SpyObject {
 				// If the value was null, cast it
 				needsCast=true;
 			} else if(value instanceof Integer) {
-				// Nothing
+				needsCast=false;
 			} else if(value instanceof Float) {
-				// Nothing
+				needsCast=false;
 			} else if(value instanceof String) {
-				// Nothing
+				needsCast=false;
 			} else if(value instanceof Double) {
-				// Nothing
+				needsCast=false;
 			} else if(value instanceof Boolean) {
-				// Nothing
+				needsCast=false;
 			} else {
 				needsCast=true;
 			}
@@ -1333,25 +1330,25 @@ public class SPGen extends SpyObject {
 	/**
 	 * Usage:  SPGen filename
 	 */
-	public static void main(String args[]) throws Exception {
+	public static void main(String argv[]) throws Exception {
 
-		String infile=args[0];
+		String infile=argv[0];
 		// Get rid of the .spt
 		int lastslash=infile.lastIndexOf(File.separatorChar);
 		String basename=infile.substring(0, infile.indexOf(".spt"));
 		// If it matches, start at the next character, if it didn't, it's
 		// -1 and start at 0
-		String classname=basename.substring(lastslash+1);
+		String cname=basename.substring(lastslash+1);
 		String outfile=basename + ".java";
 
-		BufferedReader in=new BufferedReader(new FileReader(infile));
-		PrintWriter out=new PrintWriter(new FileWriter(outfile));
-		SPGen spg=new SPGen(classname, in, out);
+		BufferedReader ireader=new BufferedReader(new FileReader(infile));
+		PrintWriter owriter=new PrintWriter(new FileWriter(outfile));
+		SPGen spg=new SPGen(cname, ireader, owriter);
 
 		spg.generate();
 
-		in.close();
-		out.close();
+		ireader.close();
+		owriter.close();
 	}
 
 }
