@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyCache.java,v 1.7 2002/12/08 07:28:05 dustin Exp $
+ * $Id: SpyCache.java,v 1.8 2002/12/13 23:54:20 dustin Exp $
  */
 
 package net.spy.cache;
@@ -284,6 +284,8 @@ public class SpyCache extends SpyObject {
 
 				keepgoing=shouldIContinue();
 			}
+
+			getLogger().info("Shutting down.");
 
 			// OK, we're about to bail, let's dump the cache and go.
 			cacheStore.clear();
