@@ -65,6 +65,13 @@ public abstract class AbstractSPNode extends Object implements SPNode {
 	/** 
 	 * @see SPNode
 	 */
+	public Map getNextHops() {
+		return(Collections.unmodifiableMap(nextHops));
+	}
+
+	/** 
+	 * @see SPNode
+	 */
 	public void clearNextHops() {
 		nextHops.clear();
 	}
