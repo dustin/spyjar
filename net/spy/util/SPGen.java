@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.31 2003/08/01 03:34:11 dustin Exp $
+// $Id: SPGen.java,v 1.32 2003/08/01 19:10:23 knitterb Exp $
 
 package net.spy.util;
 
@@ -50,7 +50,7 @@ public class SPGen extends Object {
 	private String pkg="";
 	private String superclass=null;
 	private String superinterface=null;
-	private String version="$Revision: 1.31 $";
+	private String version="$Revision: 1.32 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -271,8 +271,8 @@ public class SPGen extends Object {
 			String typesTmp[]={"java.sql.Timestamp"};
 			types=typesTmp;
 		} else {
-			throw new Exception("Whoops, type " + p.getType() 
-				+ " seems to have been overlooked.");
+			String typesTmp[]={"java.lang.Object"};
+			types=typesTmp;
 		}
 
 		String methodName=methodify(p.getName());
@@ -293,7 +293,7 @@ public class SPGen extends Object {
 				rv+=";\n";
 			} else {
 				rv+=" {\n\n"
-					+ "\t\tset(\"" + p.getName() + "\", to);\n"
+					+ "\t\tsetArg(\"" + p.getName() + "\", to, "+p.getType()+");\n"
 					+ "\t}\n";
 			}
 		}

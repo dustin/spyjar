@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.22 2003/08/01 03:34:11 dustin Exp $
+// $Id: DBSP.java,v 1.23 2003/08/01 19:10:23 knitterb Exp $
 
 package net.spy.db;
 
@@ -107,7 +107,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 		rs=pst.executeQuery();
 
-		if (debug) {
+		if (debug && !(this instanceof DBCP)) {
 			getLogger().debug("Returned: ");
 			ResultSetMetaData rsmd=rs.getMetaData();
 			String cols="";
@@ -287,10 +287,13 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			Parameter p=(Parameter)i.next();
 
 			Argument arg=(Argument)arguments.get(p.getName());
-			if(arg==null) {
+			if(arg==null && p.getParamType()==Parameter.REQUIRED) {
 				throw new NullPointerException("Missing argument for " + p);
 			}
-			al.add(arg);
+
+			if(arg!=null) {
+				al.add(arg);
+			}
 		}
 		return(Collections.unmodifiableList(al));
 	}
@@ -817,6 +820,11 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	public void set(String which,Timestamp a1) 
 		throws SQLException {
 		setArg(which, a1, Types.TIMESTAMP);
+	}
+
+	public void set(String which,Object obj) 
+		throws SQLException {
+		setArg(which, obj, Types.OTHER);
 	}
 
 	/** 
