@@ -135,9 +135,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		int rv=0;
 		prepare();
 
-		if (debug) {
-			System.out.println("Setting timeout to: "+timeout);
-		}
+		getLogger().debug("Setting timeout to: " + timeout);
 		pst.setQueryTimeout(timeout);
 
 		rv=pst.executeUpdate();
@@ -463,7 +461,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		if (debug) {
-			System.out.println("Query: "+query);
+			getLogger().debug("Query: "+query);
 		}
 
 		// Fill in the arguments.
