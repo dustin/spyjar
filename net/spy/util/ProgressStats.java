@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ProgressStats.java,v 1.1 2003/06/11 03:00:50 dustin Exp $
+// $Id: ProgressStats.java,v 1.2 2003/06/11 03:08:19 dustin Exp $
 
 package net.spy.util;
 
@@ -13,7 +13,7 @@ import java.text.MessageFormat;
 public class ProgressStats extends Object {
 
 	private static final String DEFAULT_FORMAT=
-		"{3} remaining.  Avg={0,number,#.##}s, Estimate={1,number,#.##}s "
+		"{5} remaining.  Avg={0,number,#.##}s, Estimate={1,number,#.##}s "
 			+ "({2,date,EEE MMMdd HH:mm:ss})";
 
 	private int done=0;
