@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTest.java,v 1.6 2002/09/17 22:49:35 dustin Exp $
+// $Id: DBTest.java,v 1.7 2002/09/24 17:44:07 dustin Exp $
 
 package net.spy.test;
 
@@ -212,9 +212,22 @@ public class DBTest extends TestCase {
 	 */
 	public void testDBCache() throws SQLException {
 		SpyCacheDB db=new SpyCacheDB(conf);
-
 		ResultSet rs=db.executeQuery("select * from testtable", 30);
 		assertTrue(rs instanceof net.spy.db.CachedResultSet);
+		net.spy.db.CachedResultSet crs=(net.spy.db.CachedResultSet)rs;
+		assertEquals("Unexpected number of copies", crs.numCopies(), 1);
+		while(rs.next()) {
+			checkRow(rs);
+		}
+		rs.close();
+		db.close();
+
+		// Do it all again, 'cept this time numCopies should return 2
+		db=new SpyCacheDB(conf);
+		rs=db.executeQuery("select * from testtable", 30);
+		assertTrue(rs instanceof net.spy.db.CachedResultSet);
+		crs=(net.spy.db.CachedResultSet)rs;
+		assertEquals("Unexpected number of copies", crs.numCopies(), 2);
 		while(rs.next()) {
 			checkRow(rs);
 		}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000 Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyCacheDB.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+ * $Id: SpyCacheDB.java,v 1.2 2002/09/24 17:44:07 dustin Exp $
  */
 
 package net.spy.db;
@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.lang.ref.SoftReference;
 
 import net.spy.SpyConfig;
 import net.spy.SpyDB;
@@ -58,7 +59,7 @@ public class SpyCacheDB extends SpyDB {
 		if(crs==null) {
 			ResultSet rs=executeQuery(query);
 			crs=new CachedResultSet(rs);
-			cache.store(key, crs, lifetime*1000);
+			cache.store(key, new SoftReference(crs), lifetime*1000);
 		}
 
 		ResultSet crsret=(ResultSet)crs.newCopy();

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachedResultSetStub.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+ * $Id: CachedResultSetStub.java,v 1.2 2002/09/24 17:44:07 dustin Exp $
  */
 
 package net.spy.db;
@@ -24,6 +24,8 @@ import java.util.ArrayList;
  */
 public class CachedResultSetStub extends GenericResultSetStub {
 
+	private int copies=0;
+
 	/**
 	 * Magically transform the passed in ResultSet to a CachedResultSet
 	 *
@@ -39,12 +41,23 @@ public class CachedResultSetStub extends GenericResultSetStub {
 	 * Make a copy of this object.
 	 */
 	public CachedResultSetStub newCopy() {
+		CachedResultSetStub rv=null;
 		try {
-			return((CachedResultSetStub)clone());
+			copies++;
+			rv=(CachedResultSetStub)clone();
 		} catch(CloneNotSupportedException e) {
 			// The exceptions this thing throws, well, aren't
 			e.printStackTrace();
 		}
-		return(null);
+		return(rv);
+	}
+
+	/** 
+	 * How many copies have been made of this result set?
+	 * 
+	 * @return the number of copies
+	 */
+	public int numCopies() {
+		return(copies);
 	}
 }
