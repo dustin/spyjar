@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.3 2002/08/28 03:52:06 dustin Exp $
+// $Id: SPGen.java,v 1.4 2002/08/28 05:49:42 dustin Exp $
 
 package net.spy.util;
 
@@ -14,6 +14,9 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.HashSet;
+
+import java.lang.reflect.Field;
 
 import java.text.NumberFormat;
 
@@ -33,13 +36,15 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.3 $";
+	private String version="$Revision: 1.4 $";
 	private long cachetime=0;
 	private ArrayList sqlquery=null;
 	private ArrayList required=null;
 	private ArrayList optional=null;
 	private ArrayList output=null;
 	private ArrayList results=null;
+
+	private static HashSet types=null;
 
 	/**
 	 * Get a new SPGen from the given BufferedReader.
@@ -54,6 +59,31 @@ public class SPGen extends Object {
 		optional=new ArrayList();
 		output=new ArrayList();
 		results=new ArrayList();
+
+		if(types==null) {
+			initTypes();
+		}
+	}
+
+	private static synchronized void initTypes() {
+		if(types==null) {
+			Field fields[]=java.sql.Types.class.getDeclaredFields();
+			types=new HashSet();
+
+			for(int i=0; i<fields.length; i++) {
+				types.add(fields[i].getName());
+			}
+		}
+	}
+
+	/** 
+	 * Return true if this is a valid JDBC type.
+	 * 
+	 * @param name the name of the field to test
+	 * @return true if the field is valid
+	 */
+	public static boolean isValidJDBCType(String name) {
+		return(types.contains(name));
 	}
 
 	public void generate() throws Exception {
@@ -110,13 +140,16 @@ public class SPGen extends Object {
 			rva.add(msb.toString());
 		}
 
-		StringBuffer ssb=new StringBuffer();
-		ssb.append(seconds);
-		ssb.append(" second");
-		if(seconds != 1) {
-			ssb.append("s");
+		// Don't add the seconds unless there is one.
+		if(seconds > 0) {
+			StringBuffer ssb=new StringBuffer();
+			ssb.append(seconds);
+			ssb.append(" second");
+			if(seconds != 1) {
+				ssb.append("s");
+			}
+			rva.add(ssb.toString());
 		}
-		rva.add(ssb.toString());
 
 		return(SpyUtil.join(rva, ", "));
 	}
@@ -475,6 +508,11 @@ public class SPGen extends Object {
 
 			try {
 				type=st.nextToken();
+
+				if(!isValidJDBCType(type)) {
+					throw new IllegalArgumentException("Invalid JDBC type:  "
+						+ type);
+				}
 			} catch(NoSuchElementException e) {
 				throw new IllegalArgumentException(
 					"No type given for result ``" + name + "''");
@@ -553,6 +591,11 @@ public class SPGen extends Object {
 
 			try {
 				type=st.nextToken();
+
+				if(!isValidJDBCType(type)) {
+					throw new IllegalArgumentException("Invalid JDBC type: "
+						+ type);
+				}
 			} catch (NoSuchElementException ex) {
 				// now the variable type is missing  That's no good, you
 				// need a speficic type ya know.
