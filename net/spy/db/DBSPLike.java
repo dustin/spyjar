@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBSPLike.java,v 1.1 2002/12/24 09:27:35 dustin Exp $
+// $Id: DBSPLike.java,v 1.2 2003/01/03 22:20:24 dustin Exp $
 
 package net.spy.db;
 
@@ -57,5 +57,10 @@ public interface DBSPLike {
 	 * @see Statement#getQueryTimeout()
 	 */
 	int getQueryTimeout();
+
+	/** 
+	 * Get rid of this object.
+	 */
+	void close();
 
 }
