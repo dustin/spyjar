@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TTL.java,v 1.1 2002/11/07 07:43:55 dustin Exp $
+// $Id: TTL.java,v 1.2 2002/11/19 19:27:05 dustin Exp $
 
 package net.spy.util;
 
@@ -40,6 +40,7 @@ public class TTL extends Object {
 
 	/**
 	 * Get an instance of TTL.
+	 * @param ttl Number of milliseconds until the TTL fires
 	 */
 	public TTL(long ttl) {
 		this(ttl, null);
@@ -47,6 +48,8 @@ public class TTL extends Object {
 
 	/** 
 	 * Get an instance of TTL with the given ttl and extra object.
+	 * @param ttl Number of milliseconds until the TTL fires
+	 * @param extraInfo Extra info that will be toString()ed in the log
 	 */
 	public TTL(long ttl, Object extraInfo) {
 		this.ttl=ttl;
