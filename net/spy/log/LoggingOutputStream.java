@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoggingOutputStream.java,v 1.1 2002/11/20 06:20:01 dustin Exp $
+// $Id: LoggingOutputStream.java,v 1.2 2002/11/20 06:25:08 dustin Exp $
 
 package net.spy.log;
 
@@ -46,11 +46,20 @@ public class LoggingOutputStream extends LineGettingOutputStream {
 	public static void redefineOutputs() {
 		LoggingOutputStream out=new LoggingOutputStream(STDOUT_NAME,
 			Level.INFO);
-		LoggingOutputStream err=new LoggingOutputStream(STDOUT_NAME,
+		LoggingOutputStream err=new LoggingOutputStream(STDERR_NAME,
 			Level.ERROR);
 
 		out.setOut();
 		err.setErr();
+	}
+
+	/** 
+	 * Redefine the outputs to use the logger.
+	 * 
+	 * @param String args[] 
+	 */
+	public static void main(String args[]) {
+		redefineOutputs();
 	}
 
 }

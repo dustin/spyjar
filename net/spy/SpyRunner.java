@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyRunner.java,v 1.2 2002/11/20 04:52:32 dustin Exp $
+// $Id: SpyRunner.java,v 1.3 2002/11/20 06:25:07 dustin Exp $
 
 package net.spy;
 
@@ -9,6 +9,8 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import net.spy.SpyThread;
+
+import net.spy.log.LoggingOutputStream;
 
 /**
  * SpyRunner - a hack-ass application server.
@@ -70,6 +72,9 @@ public class SpyRunner extends SpyThread {
 	 * The main portion of SpyRunner.
 	 */
 	public static void main(String args[]) throws Exception {
+		// Start by redefining the outputs to a logger.
+		LoggingOutputStream.redefineOutputs();
+
 		conf=new SpyConfig(new File(args[0]));
 		String apps=conf.get("apps");
 
