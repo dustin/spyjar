@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SQLRunner.java,v 1.2 2003/07/21 19:46:03 dustin Exp $
+// $Id: SQLRunner.java,v 1.3 2003/07/22 07:44:02 dustin Exp $
 
 package net.spy.db;
 
@@ -14,23 +14,34 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import net.spy.SpyDB;
 import net.spy.SpyObject;
 
 /**
  * Run a SQL script from an InputStream.
+ *
+ * <p>
+ *  SQL scripts run by this class are slightly special over normal SQL
+ *  scripts in that they require a particular structure.
+ * </p>
+ * <p>
+ *  Lines beginning with a SQL comment (--) are logged at info level.
+ *  Queries are executed when a semicolon is encountered on a line all by
+ *  itself.  Empty lines are ignored.  Everything else is concatenated to
+ *  form the next query to execute.  Queries that return a result set will
+ *  throw a SQLException.
+ * </p>
  */
 public class SQLRunner extends SpyObject {
 
-	private SpyDB db=null;
+	private Connection conn=null;
 	private int timeout=0;
 
 	/**
 	 * Get an instance of SQLRunner.
 	 */
-	public SQLRunner(SpyDB db) {
+	public SQLRunner(Connection conn) {
 		super();
-		this.db=db;
+		this.conn=conn;
 	}
 
 	/** 
@@ -67,16 +78,13 @@ public class SQLRunner extends SpyObject {
 		// line at a time
 		LineNumberReader lr=new LineNumberReader(new InputStreamReader(is));
 
-		Connection conn=null;
 		boolean successful=false;
 		try {
-			// Get the connection
-			conn=db.getConn();
 			// Set the autocommit setting
 			conn.setAutoCommit(autocommit);
 
 			// Execute the script
-			executeScript(conn, lr, errok);
+			executeScript(lr, errok);
 
 			// We're finished, commit
 			if(!autocommit) {
@@ -111,8 +119,8 @@ public class SQLRunner extends SpyObject {
 		} // finally block
 	}
 
-	private void executeScript(Connection conn, LineNumberReader lr,
-		boolean errok) throws SQLException, IOException {
+	private void executeScript(LineNumberReader lr, boolean errok)
+		throws SQLException, IOException {
 
 		String curline=null;
 		StringBuffer query=new StringBuffer(1024);
