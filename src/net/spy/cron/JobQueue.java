@@ -18,9 +18,6 @@ public class JobQueue extends ArrayList {
 
 	private Logger logger=null;
 
-	// Loop at least this frequently (twenty-four hours)
-	private static final long MAX_SLEEP_TIME=86400000;
-
 	/**
 	 * Get a new job queue.
 	 */
@@ -78,9 +75,9 @@ public class JobQueue extends ArrayList {
 	/**
 	 * Get the time the next job will start.
 	 */
-	public Date getNextStartDate() {
+	public synchronized Date getNextStartDate() {
 		Date next=null;
-		long soonestJob=MAX_SLEEP_TIME;
+		long soonestJob=Long.MAX_VALUE;
 		long now=System.currentTimeMillis();
 		for(Iterator i=iterator(); i.hasNext();) {
 			Job j=(Job)i.next();
