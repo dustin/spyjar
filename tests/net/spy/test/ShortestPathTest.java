@@ -162,7 +162,7 @@ public class ShortestPathTest extends TestCase {
 
 		// B -> A -- doesn't exist
 		assertLinkMatch(b, a, null, 0);
-		// B -> B -- doesn't exist
+		// B -> B -- via C
 		assertLinkMatch(b, b, c, 220);
 		// B -> C == 10 via C
 		assertLinkMatch(b, c, c, 10);
@@ -177,7 +177,7 @@ public class ShortestPathTest extends TestCase {
 
 		// C -> A won't go
 		assertLinkMatch(c, a, null, 0);
-		// C -> B won't go
+		// C -> B via F
 		assertLinkMatch(c, b, f, 210);
 		// C -> C via D?
 		assertLinkMatch(c, c, d, 110);
@@ -192,7 +192,7 @@ public class ShortestPathTest extends TestCase {
 
 		// D -> A won't go
 		assertLinkMatch(d, a, null, 0);
-		// D -> B won't go
+		// D -> B via C
 		assertLinkMatch(d, b, c, 310);
 		// D -> C via C
 		assertLinkMatch(d, c, c, 100);

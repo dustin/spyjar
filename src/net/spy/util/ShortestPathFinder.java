@@ -22,11 +22,11 @@ import java.util.Collection;
  * </p>
  *
  * <p>
- * <table>
- *  <tr width="100%">
- *   <td>
  *    For example, consider the graph to the right.   The following will be
  *    true (this is actually my test case):
+ * <table>
+ *  <tr width="100%">
+ *   <td valign="top">
  *    <table border="1">
  *     <tr><th>From</th><th>To</th><th>Next Hop</th><th>Cost</th></tr>
  *
@@ -39,7 +39,7 @@ import java.util.Collection;
  *     <tr><td>A</td><td>G</td><td>C</td><td>35</td></tr>
  *
  *     <tr><td>B</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
- *     <tr><td>B</td><td>B</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>B</td><td>B</td><td>C</td><td>220</td></tr>
  *     <tr><td>B</td><td>C</td><td>C</td><td>10</td></tr>
  *     <tr><td>B</td><td>D</td><td>C</td><td>20</td></tr>
  *     <tr><td>B</td><td>E</td><td>C</td><td>20</td></tr>
@@ -47,7 +47,7 @@ import java.util.Collection;
  *     <tr><td>B</td><td>G</td><td>C</td><td>30</td></tr>
  *
  *     <tr><td>C</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
- *     <tr><td>C</td><td>B</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>C</td><td>B</td><td>F</td><td>210</td></tr>
  *     <tr><td>C</td><td>C</td><td>D</td><td>110</td></tr>
  *     <tr><td>C</td><td>D</td><td>D</td><td>10</td></tr>
  *     <tr><td>C</td><td>E</td><td>E</td><td>10</td></tr>
@@ -55,13 +55,18 @@ import java.util.Collection;
  *     <tr><td>C</td><td>G</td><td>F</td><td>20</td></tr>
  *
  *     <tr><td>D</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
- *     <tr><td>D</td><td>B</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>D</td><td>B</td><td>C</td><td>310</td></tr>
  *     <tr><td>D</td><td>C</td><td>C</td><td>100</td></tr>
  *     <tr><td>D</td><td>D</td><td>C</td><td>110</td></tr>
  *     <tr><td>D</td><td>E</td><td>C</td><td>110</td></tr>
  *     <tr><td>D</td><td>F</td><td>C</td><td>110</td></tr>
  *     <tr><td>D</td><td>G</td><td>C</td><td>120</td></tr>
+ *    </table>
+ *   </td>
  *
+ *   <td valign="top">
+ *    <table border="1">
+ *     <tr><th>From</th><th>To</th><th>Next Hop</th><th>Cost</th></tr>
  *     <tr><td>E</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>E</td><td>B</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>E</td><td>C</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
@@ -70,9 +75,25 @@ import java.util.Collection;
  *     <tr><td>E</td><td>F</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>E</td><td>G</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *
+ *     <tr><td>F</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>F</td><td>B</td><td>B</td><td>200</td></tr>
+ *     <tr><td>F</td><td>C</td><td>B</td><td>210</td></tr>
+ *     <tr><td>F</td><td>D</td><td>B</td><td>220</td></tr>
+ *     <tr><td>F</td><td>E</td><td>B</td><td>220</td></tr>
+ *     <tr><td>F</td><td>F</td><td>B</td><td>220</td></tr>
+ *     <tr><td>F</td><td>G</td><td>G</td><td>10</td></tr>
+ *
+ *     <tr><td>G</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>G</td><td>B</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>G</td><td>C</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>G</td><td>D</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>G</td><td>E</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>G</td><td>F</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>G</td><td>G</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *
  *    </table>
  *   </td>
- *   <td>
+ *   <td valign="top">
  *     <img src="../../../images/graphtest.png">
  *   </td>
  *  </tr>
@@ -117,6 +138,8 @@ public class ShortestPathFinder extends Object {
 		}
 	}
 
+	// Add a hop if the path doesn't exist, or the new path will be less costly
+	// than the existing path
 	private void addHopFrom(SPNode node, SPNode dest, SPNode next, int cost) {
 		SPVertex currentHop=node.getNextHop(dest);
 		if(currentHop == null) {
@@ -150,7 +173,7 @@ public class ShortestPathFinder extends Object {
 				int nextCost=cost+spv.getCost();
 				// This is the node we've found in this loop
 				SPNode thisNode=spv.getTo();
-				// node.addNextHop(thisNode, new SPVertex(nextHop, nextCost));
+				// recurse
 				recordLink(node, nextCost, nextHop, thisNode, s);
 			}
 		}
