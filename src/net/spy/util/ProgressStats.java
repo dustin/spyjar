@@ -22,6 +22,8 @@ public class ProgressStats extends Object {
 	private long lastTime=0;
 	private long lastProcessTime=0;
 
+	private double avg=0.0;
+
 	/**
 	 * Get an instance of ProgressStats to process the given number of
 	 * things.
@@ -47,6 +49,19 @@ public class ProgressStats extends Object {
 		lastProcessTime=thistime-lastTime;
 		done++;
 		totalTime+=lastProcessTime;
+
+		double df=(double)done;
+		double v=(double)lastProcessTime / 1000.0;
+
+		avg = ((avg * df) + v) / (df + 1);
+	}
+
+	/** 
+	 * Get the running average of the number of seconds spent processing.
+	 * @return ((avg * df) + v) / (df + 1)
+	 */
+	public double getRunningAverage() {
+		return(avg);
 	}
 
 	/** 
@@ -71,7 +86,7 @@ public class ProgressStats extends Object {
 	 * average.
 	 */
 	public double getEstimatedTimeRemaining() {
-		return(getEstimatedTimeRemaining(getOverallAverage()));
+		return(getEstimatedTimeRemaining(getRunningAverage()));
 	}
 
 	/** 
@@ -99,7 +114,7 @@ public class ProgressStats extends Object {
 	 *
 	 */
 	public String getStats(String format) {
-		double average=getOverallAverage();
+		double average=getRunningAverage();
 		// Estimated number of seconds left
 		double estimate=getEstimatedTimeRemaining(average);
 		// Estimated time of completion
