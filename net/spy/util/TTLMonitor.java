@@ -1,16 +1,18 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTTLMonitor.java,v 1.2 2002/11/06 18:05:06 dustin Exp $
+// $Id: TTLMonitor.java,v 1.1 2002/11/07 07:43:56 dustin Exp $
 
-package net.spy.db;
+package net.spy.util;
 
 import java.util.Iterator;
 import java.util.ArrayList;
 
 /**
- * Monitors TTLs.
+ * Monitor TTLs.
+ *
+ * @see TTL
  */
-public class DBTTLMonitor extends Thread {
+public class TTLMonitor extends Thread {
 
 	private ArrayList ttls=null;
 
@@ -18,12 +20,12 @@ public class DBTTLMonitor extends Thread {
 	private long lastAddition=0;
 	private static final long MAX_QUIESCENCE=300000;
 
-	private static DBTTLMonitor instance=null;
+	private static TTLMonitor instance=null;
 
 	/**
-	 * Get an instance of DBTTLMonitor.
+	 * Get an instance of TTLMonitor.
 	 */
-	private DBTTLMonitor() {
+	private TTLMonitor() {
 		super();
 		ttls=new ArrayList();
 		lastAddition=System.currentTimeMillis();
@@ -33,13 +35,13 @@ public class DBTTLMonitor extends Thread {
 	}
 
 	/** 
-	 * Get the singleton instance of the DBTTLMonitor.
+	 * Get the singleton instance of the TTLMonitor.
 	 * 
-	 * @return the DBTTLMonitor instance.
+	 * @return the TTLMonitor instance.
 	 */
-	public static synchronized DBTTLMonitor getInstance() {
-		if(instance==null) {
-			instance=new DBTTLMonitor();
+	public static synchronized TTLMonitor getTTLMonitor() {
+		if(instance==null || (!instance.isAlive())) {
+			instance=new TTLMonitor();
 		}
 		return(instance);
 	}
@@ -47,7 +49,7 @@ public class DBTTLMonitor extends Thread {
 	/**
 	 * Add a new TTL to the list we're monitoring.
 	 */
-	public void addTTL(DBTTL ttl) {
+	public void add(TTL ttl) {
 		lastAddition=System.currentTimeMillis();
 		synchronized(ttls) {
 			ttls.add(ttl);
@@ -77,7 +79,7 @@ public class DBTTLMonitor extends Thread {
 		while(shouldIKeepRunning()) {
 			synchronized(ttls) {
 				for(Iterator i=ttls.iterator(); i.hasNext(); ) {
-					DBTTL ttl=(DBTTL)i.next();
+					TTL ttl=(TTL)i.next();
 					ttl.report();
 					if(ttl.isClosed()) {
 						i.remove();
