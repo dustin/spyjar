@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.14 2002/11/04 20:26:57 knitterb Exp $
+// $Id: SPGen.java,v 1.15 2002/11/05 23:19:16 knitterb Exp $
 
 package net.spy.util;
 
@@ -41,8 +41,8 @@ public class SPGen extends Object {
 	private String description="";
 	private String procname="";
 	private String pkg="";
-	private String superclass="DBSP";
-	private String version="$Revision: 1.14 $";
+	private String superclass="net.spy.db.DBSP";
+	private String version="$Revision: 1.15 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -229,7 +229,7 @@ public class SPGen extends Object {
 		out.println("import java.sql.Types;\n"
 			+ "import java.sql.Connection;\n"
 			+ "import java.sql.SQLException;\n"
-			+ "import net.spy.db." + superclass + ";\n"
+			+ "import " + superclass + ";\n"
 			+ "import net.spy.SpyConfig;\n");
 
 		// Generate the documentation.
@@ -258,13 +258,13 @@ public class SPGen extends Object {
 		}
 
 		// Different stuff for different classes
-		if(superclass.equals("DBSP")) {
+		if(superclass.equals("net.spy.db.DBSP")) {
 			out.println(" * <b>Procedure Name</b>\n"
 				+ " *\n"
 				+ " * <ul>\n"
 				+ " *  <li>" + procname + "</li>\n"
 				+ " * </ul>");
-		} else if (superclass.equals("DBCP")) {
+		} else if (superclass.equals("net.spy.db.DBCP")) {
 			out.println(" * <b>Callable Name</b>\n"
 				+ " *\n"
 				+ " * <ul>\n"
@@ -320,7 +320,7 @@ public class SPGen extends Object {
 			+ " * <p>\n"
 			+ " *");
 
-		if (superclass.equals("DBCP")) {
+		if (superclass.equals("net.spy.db.DBCP")) {
 			// Output parameters
 			out.println(" *\n"
 				+ " * <b>Output Parameters</b>\n"
@@ -432,7 +432,8 @@ public class SPGen extends Object {
 		}
 
 		// Figure out whether we're a DBSP or a DBSQL
-		if(superclass.equals("DBSP") || superclass.equals("DBCP")) {
+		if(superclass.equals("net.spy.db.DBSP") ||
+				superclass.equals("net.spy.db.DBCP")) {
 			out.println("\t\t// Set the stored procedure name\n"
 				+ "\t\tsetSPName(\"" + procname + "\");");
 		} else {
@@ -551,6 +552,9 @@ public class SPGen extends Object {
 
 	private void parse() throws Exception {
 
+		// this is for when a user overrides the superclass
+		StringBuffer user_superclass=null;
+
 		System.out.println("Parsing " + classname + ".spt");
 
 		String tmp=in.readLine();
@@ -559,6 +563,7 @@ public class SPGen extends Object {
 			// Don't do anything if the line is empty
 			if(tmp.length() > 0) {
 				if(tmp.charAt(0) == '@') {
+					// lower case and trim before we begin...RAP WITH ME!!
 					section=tmp.substring(1).trim().toLowerCase();
 					// System.out.println("Working on section " + section);
 
@@ -583,7 +588,7 @@ public class SPGen extends Object {
 						System.err.println("Warning, stuff in debug section:  "
 							+ tmp);
 					} else if(section.equals("sql")) {
-						superclass="DBSQL";
+						superclass="net.spy.db.DBSQL";
 
 						List sqlquery=(List)queries.get(currentQuery);
 						if(sqlquery == null) {
@@ -593,10 +598,10 @@ public class SPGen extends Object {
 						sqlquery.add(tmp);
 					} else if(section.equals("procname")) {
 						procname+=tmp;
-						superclass="DBSP";
+						superclass="net.spy.db.DBSP";
 					} else if(section.equals("callable")) {
 						procname+=tmp;
-						superclass="DBCP";
+						superclass="net.spy.db.DBCP";
 					} else if(section.equals("params")) {
 						Parameter param=new Parameter(tmp);
 						args.add(param);
@@ -620,6 +625,9 @@ public class SPGen extends Object {
 						pkg+=tmp;
 					} else if(section.equals("cachetime")) {
 						cachetime=Long.parseLong(tmp);
+					} else if(section.equals("superclass")) {
+						user_superclass=new StringBuffer(96);
+						user_superclass.append(tmp);
 					} else {
 						throw new Exception("Unknown section: ``"+section+"''");
 					}
@@ -629,6 +637,12 @@ public class SPGen extends Object {
 			
 			tmp=in.readLine();
 		}
+		
+		// if the user over-rode (like your mom) the superclass, use it!!
+		if (user_superclass!=null) {
+			superclass=user_superclass.toString();
+		}
+
 	}
 
 	// Private class for results
