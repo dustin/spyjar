@@ -1,11 +1,12 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPoolFiller.java,v 1.1 2003/03/28 07:30:53 dustin Exp $
+// $Id: ThreadPoolFiller.java,v 1.2 2003/03/28 08:00:29 dustin Exp $
 
 package net.spy.pool;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.lang.ref.WeakReference;
 
 import net.spy.SpyConfig;
 
@@ -28,10 +29,17 @@ public class ThreadPoolFiller extends PoolFiller {
 		if(groups==null) {
 			groups=new HashMap();
 		}
-		ThreadGroup rv=(ThreadGroup)groups.get(getName());
+		// Get the reference
+		WeakReference wr=(WeakReference)groups.get(getName());
+		ThreadGroup rv=null;
+		// If the reference worked, try to get the object from the reference
+		if(wr!=null) {
+			rv=(ThreadGroup)wr.get();
+		}
+		// If we didn't get an object, make one.
 		if(rv==null) {
 			rv=new ThreadGroup("ThreadPool - " + getName());
-			groups.put(getName(), rv);
+			groups.put(getName(), new WeakReference(rv));
 		}
 		return(rv);
 	}
