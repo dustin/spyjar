@@ -2,7 +2,7 @@
 //
 // $Id: BuildInfo.java,v 1.2 2003/08/05 09:01:02 dustin Exp $
 
-package net.spy;
+package %PACKAGE%;
 
 import java.net.URL;
 import java.util.Properties;
@@ -35,7 +35,7 @@ public class BuildInfo extends Properties {
 	 * Get an instance of BuildInfo that describes the spy.jar build.
 	 */
 	public BuildInfo() throws IOException {
-		this("net/spy/build.properties");
+		this("%BUILDPROPS%");
 	}
 
 	/**
@@ -92,8 +92,10 @@ public class BuildInfo extends Properties {
 	public String toString() {
 		StringBuffer sb=new StringBuffer(256);
 
-		sb.append("build ");
-		sb.append(getProperty("build.number"));
+		if(getProperty("build.number") != null) {
+			sb.append("build ");
+			sb.append(getProperty("build.number"));
+		}
 		sb.append(" on ");
 		sb.append(getBuildDate());
 		sb.append("\nBuild platform:  java ");
@@ -117,25 +119,29 @@ public class BuildInfo extends Properties {
 	 */
 	public static void main(String args[]) throws Exception {
 		BuildInfo bi=new BuildInfo();
+		String cl="%" + "CHANGELOG" + "%";
 
 		System.out.println("spy.jar " + bi);
 
-		if(args.length > 0 && args[0].equals("-c")) {
-			System.out.println(" -- Changelog:\n");
+		// If there was a changelog, let it be shown.
+		if(!cl.equals("%CHANGELOG%")) {
+			if(args.length > 0 && args[0].equals("-c")) {
+				System.out.println(" -- Changelog:\n");
 
-			URL u=bi.getFile("net/spy/changelog.txt");
-			InputStream is=u.openStream();
-			byte data[]=new byte[8192];
-			int bread=0;
-			do {
-				bread=is.read(data);
-				if(bread > 0) {
-					System.out.write(data, 0, bread);
-				}
-			} while(bread != -1);
-			is.close();
-		} else {
-			System.out.println("(add -c to see the recent changelog)");
+				URL u=bi.getFile("%CHANGELOG%");
+				InputStream is=u.openStream();
+				byte data[]=new byte[8192];
+				int bread=0;
+				do {
+					bread=is.read(data);
+					if(bread > 0) {
+						System.out.write(data, 0, bread);
+					}
+				} while(bread != -1);
+				is.close();
+			} else {
+				System.out.println("(add -c to see the recent changelog)");
+			}
 		}
 	}
 

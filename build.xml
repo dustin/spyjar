@@ -141,6 +141,10 @@
 				<include name="net/spy/**/*.properties"/>
 				<include name="net/spy/**/*.txt"/>
 			</fileset>
+			<fileset dir="${SRCDIR}">
+				<include name="net/spy/**/*.properties"/>
+				<include name="net/spy/**/*.txt"/>
+			</fileset>
 			<fileset dir=".">
 				<include name="etc/license.txt"/>
 			</fileset>
@@ -168,6 +172,10 @@
 			<fileset dir="${SRCDIR}/../">
 				<include name="src/net/spy/**/*.java"/>
 			</fileset>
+			<fileset dir="${SRCDIR}">
+				<include name="net/spy/**/*.properties"/>
+				<include name="net/spy/**/*.txt"/>
+			</fileset>
 			<fileset dir=".">
 				<include name="build.xml"/>
 				<include name="testsuite.jar"/>
@@ -189,7 +197,6 @@
 	<!-- Build properties, memorabilia, etc... -->
 	<target name="properties" unless="properties.upToDate">
 		<delete file="${BUILDDIR}/net/spy/build.properties"/>
-		<buildnumber file="etc/build.number"/>
 		<!-- Find the current patch level of this tree -->
 		<exec executable="./etc/tree-version" outputproperty="tree.version"/>
 		<exec executable="./etc/version-num" outputproperty="tree.version.short"/>
@@ -200,7 +207,6 @@
 			<entry key="java.version" value="${java.version}"/>
 			<entry key="os.name" value="${os.name}"/>
 			<entry key="os.version" value="${os.version}"/>
-			<entry key="build.number" value="${build.number}"/>
 			<entry key="build.date" type="date" value="now"/>
 			<entry key="tree.version" value="${tree.version}"/>
 		</propertyfile>
@@ -286,9 +292,15 @@
 
 	<target name="optional" depends="optional-sunlog,optional-log4j"/>
 
+	<target name="generate" depends="optional,anttasks">
+		<buildinfo package="net.spy" buildprops="net/spy/build.properties"
+			changelog="net/spy/changelog.txt"
+			destdir="${GENDIR}"/>
+	</target>
+
 	<!-- End optional components -->
 
-	<target name="compile" depends="optional,rmic,dbstuff">
+	<target name="compile" depends="generate,rmic,dbstuff">
 		<javac
 			srcdir="${SRCDIR}"
 			destdir="${BUILDDIR}"
@@ -320,6 +332,8 @@
 			<include name="net/spy/util/SPGen.java"/>
 			<include name="net/spy/util/InterfaceImplementor.java"/>
 			<include name="net/spy/util/ProxyInterfaceImplementor.java"/>
+			<include name="net/spy/SpyUtil.java"/>
+			<include name="net/spy/SpyToker.java"/>
 			<include name="net/spy/ant/*.java"/>
 		</javac>
 		<taskdef classpathref="myclasses" resource="net/spy/ant/tasks.properties"/>
@@ -421,8 +435,7 @@
     </java>
   </target>
 
-	<target name="dbstuff" depends="types,resultsets,preparedstatement,spfiles">
-	</target>
+	<target name="dbstuff" depends="types,resultsets,preparedstatement,spfiles"/>
 
 	<!-- type name map -->
 	<target name="types">

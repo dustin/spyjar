@@ -6,9 +6,12 @@ package net.spy;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,6 +24,7 @@ import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import net.spy.SpyToker;
 import net.spy.util.Enumeriterator;
 
 /**
@@ -87,6 +91,27 @@ public class SpyUtil {
 		return(getFileData(new File(file)));
 	}
 
+	/** 
+	 * Load the contents of the given reader as a String.
+	 * 
+	 * @param r a reader
+	 * @return a String with the contents of the reader
+	 */
+	public static String getReaderAsString(Reader r) throws IOException {
+		char c[]=new char[8192];
+		StringBuffer rv=new StringBuffer(8192);
+
+		int size;
+		while((size=r.read(c)) >=0) {
+			String tmp = new String(c);
+			// Substring to get rid of all the damned nulls
+			rv.append(tmp.substring(0, size));
+
+		}
+
+		return(rv.toString());
+	}
+
 	/**
 	 * Return the contents of a file as a string.
 	 *
@@ -95,20 +120,10 @@ public class SpyUtil {
 	 * @exception IOException Thrown if the file cannot be opened.
 	 */
 	public static String getFileData(File file) throws IOException {
-	 	byte b[]=new byte[8192];
-		FileInputStream f = new FileInputStream(file);
-		StringBuffer rv=new StringBuffer((int)file.length());
-		int size;
-
-		while((size=f.read(b)) >=0) {
-			String tmp = new String(b);
-			// Substring to get rid of all the damned nulls
-			rv.append(tmp.substring(0, size));
-
-		}
-
+		FileReader f = new FileReader(file);
+		String rv=getReaderAsString(f);
 		f.close();
-		return(rv.toString());
+		return(rv);
 	}
 
 	/**
