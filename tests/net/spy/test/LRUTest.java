@@ -4,6 +4,8 @@
 
 package net.spy.test;
 
+import java.lang.ref.SoftReference;
+
 import java.util.Map;
 import java.util.List;
 
@@ -78,6 +80,33 @@ public class LRUTest extends TestCase {
 			Integer ii=new Integer(i);
 			assertNull(cache.get(ii));
 			cache.put(ii, ii);
+			assertNotNull(cache.get(zero));
+			assertNotNull(cache.get(ii));
+
+			if(i>10) {
+				assertNull(cache.get(new Integer(i-10)));
+			}
+		}
+	}
+
+	/** 
+	 * Perform reference LRU testing.
+	 */
+	public void testReferenceLRU() {
+		Integer zero=new Integer(0);
+		LRUCache cache=new LRUCache(10);
+
+		assertNull("Zero shouldn't be there.", cache.get(zero));
+
+		// Keep this value up-to-date
+		cache.put(zero, new SoftReference(zero));
+		assertNotNull("Zero should be there.", cache.get(zero));
+
+		for(int i=1; i<100; i++) {
+			validateCacheSize(cache);
+			Integer ii=new Integer(i);
+			assertNull(cache.get(ii));
+			cache.put(ii, new SoftReference(ii));
 			assertNotNull(cache.get(zero));
 			assertNotNull(cache.get(ii));
 

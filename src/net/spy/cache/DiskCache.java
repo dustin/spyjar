@@ -3,6 +3,8 @@
 
 package net.spy.cache;
 
+import java.lang.ref.SoftReference;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -140,7 +142,7 @@ public class DiskCache extends AbstractMap {
 		rv=lruCache.get(key);
 		if(rv==null) {
 			rv=getFromDiskCache(key);
-			lruCache.put(key, rv);
+			lruCache.put(key, new SoftReference(rv));
 		}
 
 		return(rv);

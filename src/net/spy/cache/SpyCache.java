@@ -213,6 +213,9 @@ public class SpyCache extends SpyObject {
 				for(Iterator i=cacheStore.values().iterator(); i.hasNext();){
 					Cachable it=(Cachable)i.next();
 					if(it.isExpired()) {
+						if(getLogger().isDebugEnabled()) {
+							getLogger().debug(it.getCacheKey() + " expired");
+						}
 						i.remove();
 					}
 				}

@@ -4,6 +4,8 @@
 
 package net.spy.cache;
 
+import java.lang.ref.Reference;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -38,7 +40,12 @@ public class LRUCache extends SpyObject {
 	 */
 	public synchronized Object get(Object key) {
 		updateLRU(key);
-		return(map.get(key));
+		Object rv=map.get(key);
+		if(rv instanceof Reference) {
+			Reference ref=(Reference)rv;
+			rv=ref.get();
+		}
+		return(rv);
 	}
 
 	private void updateLRU(Object key) {
