@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePreparedStatementStub.java,v 1.7 2003/08/01 03:34:11 dustin Exp $
+ * $Id: CachePreparedStatementStub.java,v 1.8 2003/09/05 08:11:17 dustin Exp $
  */
 
 package net.spy.db;
@@ -45,6 +45,8 @@ public class CachePreparedStatementStub extends SpyObject {
 
 	// Query timeout
 	private int timeout=0;
+	// Max rows
+	private int maxRows=0;
 
 	/**
 	 * Create a CachePreparedStatement object for the given query (you
@@ -161,7 +163,23 @@ public class CachePreparedStatementStub extends SpyObject {
 	 * @throws SQLException if the number is not greater than or equal to 0
 	 */
 	public void setQueryTimeout(int to) throws SQLException {
+		if(to < 0) {
+			throw new SQLException("Invalid value for query timeout:  " + to);
+		}
 		timeout=to;
+	}
+
+	/** 
+	 * Set the max rows for the query return.
+	 * 
+	 * @param to the maximum number of rows to return
+	 * @throws SQLException if the value is not greater than or equal to 0
+	 */
+	public void setMaxRows(int to) throws SQLException {
+		if(to < 0) {
+			throw new SQLException("Invalid value for max rows:  " + to);
+		}
+		maxRows=to;
 	}
 
 	// OK, here's what happens when we determine that we really don't have
@@ -169,6 +187,7 @@ public class CachePreparedStatementStub extends SpyObject {
 	private CachedResultSet realExecuteQuery() throws SQLException {
 		PreparedStatement pst=db.prepareStatement(queryStr);
 		pst.setQueryTimeout(timeout);
+		pst.setMaxRows(maxRows);
 
 		// Set allllllll the types
 		for(int i=0; i<args.length; i++) {

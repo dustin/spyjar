@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AbstractSavable.java,v 1.3 2003/08/05 09:01:03 dustin Exp $
+// $Id: AbstractSavable.java,v 1.4 2003/09/05 08:11:17 dustin Exp $
 
 package net.spy.db;
 
@@ -17,6 +17,8 @@ public abstract class AbstractSavable extends SpyObject
 	private boolean asIsNew=false;
 	private boolean asIsModified=false;
 
+	private Exception createdHere=null;
+
 	/**
 	 * Get an instance of AbstractSavable.
 	 *
@@ -25,6 +27,8 @@ public abstract class AbstractSavable extends SpyObject
 	 */
 	protected AbstractSavable() {
 		super();
+		createdHere=new UnsavedObjectWarning();
+		createdHere.fillInStackTrace();
 		asIsNew=true;
 	}
 
@@ -95,4 +99,19 @@ public abstract class AbstractSavable extends SpyObject
 		setModified(false);
 	}
 
+	/** 
+	 * If this object is still <q>dirty</q> during finalization, log it.
+	 */
+	protected void finalize() throws Throwable {
+		if(isNew() || isModified()) {
+			getLogger().debug("Finalizing and object that needs saving",
+				createdHere);
+		}
+	}
+
+	private static final class UnsavedObjectWarning extends Exception {
+		public UnsavedObjectWarning() {
+			super("CREATED HERE");
+		}
+	}
 }
