@@ -1,13 +1,14 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Log4JLogger.ojava,v 1.1 2002/11/08 06:53:31 dustin Exp $
+// $Id: Log4JLogger.ojava,v 1.2 2002/11/08 06:55:32 dustin Exp $
 
 package net.spy.log;
 
 import org.apache.log4j.Level;
 
 /**
- * Logging implementation using the sun logger.
+ * Logging implementation using
+ * <a href="http://jakarta.apache.org/log4j/docs/">log4j</a>.
  */
 public class Log4JLogger extends AbstractLogger {
 
@@ -40,7 +41,7 @@ public class Log4JLogger extends AbstractLogger {
 	}
 
 	/** 
-	 * Wrapper around sun logger.
+	 * Wrapper around log4j.
 	 * 
 	 * @param level net.spy.log.AbstractLogger level.
 	 * @param message object message
