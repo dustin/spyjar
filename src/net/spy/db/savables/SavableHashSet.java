@@ -90,13 +90,6 @@ public class SavableHashSet extends HashSet implements Savable {
 	 * @return this
 	 */
 	public Collection getPostSavables(SaveContext context) {
-		return(null);
-	}
-
-	/** 
-	 * @return this
-	 */
-	public Collection getSavables(SaveContext context) {
 		return(this);
 	}
 }

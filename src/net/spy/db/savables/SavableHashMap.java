@@ -94,10 +94,4 @@ public class SavableHashMap extends HashMap implements Savable {
 		return(values());
 	}
 
-	/** 
-	 * @return values()
-	 */
-	public Collection getSavables(SaveContext context) {
-		return(values());
-	}
 }
