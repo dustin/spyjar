@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Beyond.com <dustin@beyond.com>
 //
-// $Id: Debug.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: Debug.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
 
 package net.spy.util;
 
@@ -13,6 +13,8 @@ import java.util.Hashtable;
 /**
  * Generic Debug logger.  Logs to a file that's listed in a System
  * property, or does not log if the System property is not set.
+ *
+ * @deprecated use {@link net.spy.log.Logger} instead
  */
 public class Debug extends Object {
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MainJob.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: MainJob.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.cron;
 
@@ -43,7 +43,7 @@ public class MainJob extends Job {
 		try {
 			SpyUtil.runClass(classname, args);
 		} catch(Exception e) {
-			e.printStackTrace();
+			getLogger().error("Problem invoking main class " + classname, e);
 		}
 	}
 

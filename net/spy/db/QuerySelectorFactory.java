@@ -1,8 +1,12 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: QuerySelectorFactory.java,v 1.1 2002/10/30 08:16:34 dustin Exp $
+// $Id: QuerySelectorFactory.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.db;
+
+import net.spy.SpyObject;
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
 
 /**
  * Factory for finding a QuerySelector instance.
@@ -11,7 +15,7 @@ package net.spy.db;
  * will point to the QuerySelector implementation to use, otherwise
  * {@link net.spy.db.DefaultQuerySelector} is used.
  */
-public class QuerySelectorFactory extends Object {
+public class QuerySelectorFactory extends SpyObject {
 
 	private static QuerySelector qs=null;
 
@@ -37,8 +41,9 @@ public class QuerySelectorFactory extends Object {
 				Class c=Class.forName(selectorClassName);
 				qs=(QuerySelector)c.newInstance();
 			} catch(Exception e) {
-				e.printStackTrace();
-				System.err.println("Using " + DEFAULT_SELECTOR);
+				Logger l=LoggerFactory.getLogger(QuerySelectorFactory.class);
+				l.warn("Couldn't make a " + selectorClassName
+					+ ", using " + DEFAULT_SELECTOR, e);
 				qs=new DefaultQuerySelector();
 			}
 		}

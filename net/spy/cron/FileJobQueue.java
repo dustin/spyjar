@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FileJobQueue.java,v 1.2 2002/10/08 21:44:47 dustin Exp $
+// $Id: FileJobQueue.java,v 1.4 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.cron;
 
@@ -76,9 +76,8 @@ public class FileJobQueue extends JobQueue {
 					addJob(j);
 				}
 			} catch(Exception e) {
-				System.err.println("Error parsing line "
-					+ lnr.getLineNumber() + ":  " + e);
-				e.printStackTrace();
+				getLogger().warn("Error parsing line "
+					+ lnr.getLineNumber(), e);
 			}
 
 			line=lnr.readLine();
@@ -115,7 +114,7 @@ public class FileJobQueue extends JobQueue {
 			System.arraycopy(stuff, 4, args, 0, args.length);
 		}
 
-		SimpleDateFormat df=new SimpleDateFormat("yyyyMMdd-hhmmss");
+		SimpleDateFormat df=new SimpleDateFormat("yyyyMMdd-HHmmss");
 		Date startDate=df.parse(dateS);
 
 		int cf=parseCalendarField(fieldS);

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.2 2002/10/03 18:38:41 dustin Exp $
+// $Id: Saver.java,v 1.3 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.db;
 
@@ -12,11 +12,12 @@ import java.sql.SQLException;
 
 import net.spy.SpyDB;
 import net.spy.SpyConfig;
+import net.spy.SpyObject;
 
 /**
  * Transactional object saver.
  */
-public class Saver extends Object {
+public class Saver extends SpyObject {
 
 	private static final int MAX_RECURSION_DEPTH=100;
 
@@ -73,7 +74,7 @@ public class Saver extends Object {
 					try {
 						conn.rollback();
 					} catch(SQLException se) {
-						se.printStackTrace();
+						getLogger().warn("Problem rolling back.", se);
 					}
 				} else {
 					try {
@@ -87,7 +88,7 @@ public class Saver extends Object {
 				try {
 					conn.setAutoCommit(true);
 				} catch(SQLException sqe) {
-					sqe.printStackTrace();
+					getLogger().warn("Problem resetting autocommit.", sqe);
 				}
 			} // Dealt with opened connection
 

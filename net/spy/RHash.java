@@ -1,11 +1,17 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: RHash.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: RHash.java,v 1.2 2002/11/20 04:32:06 dustin Exp $
 
 package net.spy;
 
 import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.NotBoundException;
+import java.net.MalformedURLException;
 
 import net.spy.rmi.RObject;
+
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
 
 import net.spy.util.NestedException;
 
@@ -13,7 +19,7 @@ import net.spy.util.NestedException;
  * Abstract client for Remote Hash service.
  */
 
-public class RHash { 
+public class RHash extends SpyObject {
 
 	private String rhashserver=null;
 	private RObject obj=null;
@@ -44,8 +50,10 @@ public class RHash {
 		Object o;
 		try {
 			o = obj.getObject(name);
-		} catch(Exception e) {
-			e.printStackTrace();
+		} catch(RemoteException e) {
+			getLogger().warn(
+				"Exception while trying to find remote object named "
+				+ name, e);
 			o = null;
 		}
 		return(o);
@@ -60,8 +68,10 @@ public class RHash {
 	public void put(String name, Object o) {
 		try {
 			obj.storeObject(name, o);
-		} catch(Exception e) {
-			e.printStackTrace();
+		} catch(RemoteException e) {
+			getLogger().warn(
+				"Exception while trying to store object named "
+				+ name, e);
 		}
 	}
 
@@ -74,8 +84,11 @@ public class RHash {
 		boolean ret=false;
 		try {
 			ret=obj.ping();
-		} catch(Exception e) {
+		} catch(RemoteException e) {
 			// Doesn't matter
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Remote object ping failed", e);
+			}
 		}
 		return(ret);
 	}
@@ -90,7 +103,11 @@ public class RHash {
 		
 		try {
 			o=(RObject)Naming.lookup(rhashserver);
-		} catch(Exception e) {
+		} catch(NotBoundException e) {
+			throw new NestedException("Error getting rhash server", e);
+		} catch(MalformedURLException e) {
+			throw new NestedException("Error getting rhash server", e);
+		} catch(RemoteException e) {
 			throw new NestedException("Error getting rhash server", e);
 		}
 		return(o);

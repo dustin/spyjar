@@ -1,5 +1,5 @@
 //
-// $Id: JDBCPoolAble.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: JDBCPoolAble.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
 
 package net.spy.pool;
 
@@ -37,9 +37,8 @@ public class JDBCPoolAble extends PoolAble {
 				c.close();
 			}
 		} catch(Exception e) {
-			System.err.println("Error on finalize!  ObjectID="
-				+ getObjectID() + ":  " + e);
-			e.printStackTrace();
+			getLogger().error("Error on finalize!  ObjectID="
+				+ getObjectID() + ":  ", e);
 		}
 		// Tell the parent to do the same.
 		super.discard();
@@ -82,17 +81,15 @@ public class JDBCPoolAble extends PoolAble {
 			if(c!=null) {
 				SQLWarning sw=c.getWarnings();
 				if(sw!=null) {
-					System.err.println(
-						"The following warnings were on the DB Connection:");
 					while(sw!=null) {
-						sw.printStackTrace();
+						getLogger().warn(sw);
 						sw=sw.getNextWarning();
 					}
 					c.clearWarnings();
 				}
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			getLogger().error("Error checking in DB connection", e);
 		}
 		// Perform the normal checkIn
 		super.checkIn();

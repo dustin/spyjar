@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyCache.java,v 1.2 2002/09/04 23:27:57 dustin Exp $
+ * $Id: SpyCache.java,v 1.3 2002/11/20 04:32:07 dustin Exp $
  */
 
 package net.spy.cache;
@@ -14,6 +14,7 @@ import java.net.InetAddress;
 
 import java.util.Iterator;
 
+import net.spy.SpyObject;
 import net.spy.util.TimeStampedHash;
 
 /**
@@ -26,7 +27,7 @@ import net.spy.util.TimeStampedHash;
  * ASCII strings on that multicast group and port to clear cache entries
  * based on prefix.
  */
-public class SpyCache extends Object {
+public class SpyCache extends SpyObject {
 
 	private TimeStampedHash cacheStore=null;
 	private SpyCacheCleaner cacheCleaner=null;
@@ -212,11 +213,11 @@ public class SpyCache extends Object {
 			} catch(SecurityException se) {
 				// Only do this the first time.
 				if(!reportedMulticastSE) {
-					se.printStackTrace();
+					getLogger().error("Couldn't create multicast listener", se);
 					reportedMulticastSE=true;
 				}
 			} catch(IOException ioe) {
-				ioe.printStackTrace();
+				getLogger().error("Couldn't create multicast listener", ioe);
 			}
 		}
 

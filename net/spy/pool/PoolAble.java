@@ -1,9 +1,11 @@
 //
-// $Id: PoolAble.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: PoolAble.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
 
 package net.spy.pool;
 
 import java.util.Date;
+
+import net.spy.SpyObject;
 
 /**
  * PoolAble is the object container that is used to store objects in the
@@ -15,7 +17,7 @@ import java.util.Date;
  * debugging output will go.
  */
 
-public abstract class PoolAble extends Object {
+public abstract class PoolAble extends SpyObject {
 	private int objectId=-1;
 	private boolean checkedOut=false;
 	private Object theObject=null;

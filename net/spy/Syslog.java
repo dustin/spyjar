@@ -1,8 +1,10 @@
 // Copyright (c) 1999 Dustin Sallings
 //
-// $Id: Syslog.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: Syslog.java,v 1.2 2002/11/20 04:32:06 dustin Exp $
 
 package net.spy;
+
+import java.io.IOException;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -12,7 +14,7 @@ import java.net.UnknownHostException;
 /**
  * Send a message via syslog.
  */
-public class Syslog extends Object {
+public class Syslog extends SpyObject {
 
 	public static final int EMERG=0;
 	public static final int ALERT=1;
@@ -70,9 +72,8 @@ public class Syslog extends Object {
 				what.length(), addr, 514);
 			DatagramSocket s = new DatagramSocket();
 			s.send(dp);
-		} catch(Exception e) {
-			System.err.println("Error sending syslog packet: " + e);
-			e.printStackTrace();
+		} catch(IOException e) {
+			getLogger().error("Error sending syslog packet", e);
 		}
 	}
 

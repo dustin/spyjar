@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetPK.java,v 1.3 2002/11/18 20:59:34 knitterb Exp $
+// $Id: GetPK.java,v 1.4 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.db;
 
@@ -16,6 +16,8 @@ import net.spy.SpyConfig;
 import net.spy.SpyDB;
 import net.spy.db.sp.UpdatePrimaryKey;
 import net.spy.db.sp.SelectPrimaryKey;
+
+import net.spy.SpyObject;
 
 /**
  * Primary key generator.  This is an extensible singleton that provides
@@ -67,7 +69,7 @@ import net.spy.db.sp.SelectPrimaryKey;
  *
  * </p>
  */
-public class GetPK extends Object {
+public class GetPK extends SpyObject {
 
 	private static GetPK instance=null;
 
@@ -288,13 +290,13 @@ public class GetPK extends Object {
 					try {
 						conn.commit();
 					} catch(SQLException e) {
-						e.printStackTrace();
+						getLogger().error("Problem committing", e);
 					}
 				} else {
 					try {
 						conn.rollback();
 					} catch(SQLException e) {
-						e.printStackTrace();
+						getLogger().error("Problem rolling back", e);
 					}
 				}
 
@@ -302,7 +304,7 @@ public class GetPK extends Object {
 				try {
 					conn.setAutoCommit(true);
 				} catch(SQLException e) {
-					e.printStackTrace();
+					getLogger().error("Problem resetting autocommit", e);
 				}
 			} // got a connection
 		} // finally block

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: GenericResultSetStub.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+ * $Id: GenericResultSetStub.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
  */
 
 package net.spy.db;
@@ -19,11 +19,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+import net.spy.SpyObject;
+
 /**
  * This object contains all the common stuff required to stub a ResultSet
  * implementation.
  */
-public abstract class GenericResultSetStub extends Object implements Cloneable {
+public abstract class GenericResultSetStub extends SpyObject
+	implements Cloneable {
 
 	// Here is where the ResultSet data gets stored.
 	private List results=null;
@@ -202,7 +205,7 @@ public abstract class GenericResultSetStub extends Object implements Cloneable {
 				}
 			} catch(SQLException e) {
 				// Ignore these columns, it's apparently broken
-				e.printStackTrace();
+				getLogger().info("Error with column " + i, e);
 			}
 		}
 		return(sb.toString());

@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Weather.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: Weather.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.info;
 
@@ -47,10 +47,9 @@ public class Weather extends Info {
 			// Deal with not getting our data.
 			if(error) {
 				ret+=get("ERROR", "An unknown error has occurred");
-			} else {
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			getLogger().error("Problem in Weather.toString()", e);
 			// Just let it return null
 		}
 		// return(ret);

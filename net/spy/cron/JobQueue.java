@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: JobQueue.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: JobQueue.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.cron;
 
@@ -8,16 +8,33 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.ArrayList;
 
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
+
 /**
  * This is where all the jobs go.
  */
 public class JobQueue extends ArrayList {
+
+	private Logger logger=null;
 
 	/**
 	 * Get a new job queue.
 	 */
 	public JobQueue() {
 		super();
+	}
+
+	/** 
+	 * Get the logger for this instance.
+	 * 
+	 * @return the appropriate logger for this object
+	 */
+	protected Logger getLogger() {
+		if(logger==null) {
+			logger=LoggerFactory.getLogger(getClass());
+		}
+		return(logger);
 	}
 
 	/**

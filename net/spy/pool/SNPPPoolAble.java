@@ -1,5 +1,5 @@
 //
-// $Id: SNPPPoolAble.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: SNPPPoolAble.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
 
 package net.spy.pool;
 
@@ -34,8 +34,7 @@ public class SNPPPoolAble extends PoolAble {
 				snpp.close();
 			}
 		} catch(Exception e) {
-			System.err.println("Error discarding SNPP object:  " + e);
-			e.printStackTrace();
+			getLogger().warn("Problem discarding SNPP object", e);
 		}
 		super.discard();
 	}

@@ -1,18 +1,14 @@
 //
-// $Id: GarbageCollector.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: GarbageCollector.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
 
 package net.spy.pool;
 
+import net.spy.SpyObject;
+
 /**
  * Perform garbage collection with rate control.
- *
- * Debug messages may be printed if the following system property is set:<br/>
- * <code>net.spy.pool.GarbageCollector.debug</code><br/>
- * The value of the property must be either <code>message</code> for simple
- * messages or <code>stack</code> for stack traces whenever two things try
- * to request a stack trace with too little time between them.
  */
-public class GarbageCollector extends Object {
+public class GarbageCollector extends SpyObject {
 
 	private static GarbageCollector gcInstance=null;
 
@@ -22,21 +18,8 @@ public class GarbageCollector extends Object {
 
 	private boolean inProgress=false;
 
-	private boolean debugStack=false;
-	private boolean debugMessage=false;
-
 	private GarbageCollector() {
 		super();
-
-		String ds=System.getProperty("net.spy.pool.GarbageCollector.debug");
-		if(ds!=null) {
-			if(ds.equals("stack")) {
-				debugStack=true;
-			}
-			if(ds.equals("message")) {
-				debugMessage=true;
-			}
-		}
 	}
 
 	/**
@@ -58,6 +41,7 @@ public class GarbageCollector extends Object {
 		if( (!inProgress) && (now - lastRun) > MIN_SLEEP ) {
 			inProgress=true;
 			try {
+				getLogger().debug("Running gc and finalization");
 				System.gc();
 				System.runFinalization();
 			} finally {
@@ -66,12 +50,9 @@ public class GarbageCollector extends Object {
 			}
 			lastRun=now;
 		} else {
-			if(debugMessage) {
-				System.err.println("Too soon for a garbage collection!");
-			}
-			if(debugStack) {
-				new GCWarning(
-					"Too soon for a garbage collection!").printStackTrace();
+			if(getLogger().isDebugEnabled()) {
+				GCWarning gw=new GCWarning("Too soon for a garbage collection");
+				getLogger().debug(gw);
 			}
 		}
 	}

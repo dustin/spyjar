@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBCP.java,v 1.4 2002/09/04 02:02:13 dustin Exp $
+// $Id: DBCP.java,v 1.5 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.db;
 
@@ -171,7 +171,7 @@ public abstract class DBCP extends DBSP {
 			} catch(SQLException se) {
 				throw se;
 			} catch (Exception applyException) {
-				applyException.printStackTrace();
+				getLogger().warn("Exception while applying", applyException);
 				String msg="Problem setting " + arg
 					+ " in prepared statement for type "
 					+ TypeNames.getTypeName(type) + " "

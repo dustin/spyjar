@@ -1,8 +1,10 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: BigWords.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: BigWords.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.info;
+
+import java.net.URL;
 
 import java.util.Hashtable;
 
@@ -13,7 +15,6 @@ import net.spy.net.HTTPFetch;
 /**
  * Look up a book by ISBN from BigWords.com.
  */
-
 public class BigWords extends Info {
 
 	/**
@@ -48,8 +49,7 @@ public class BigWords extends Info {
 						+ " (" + get("new_availability") + ")";
 			}
 		} catch(Exception e) {
-			System.err.println("Exception on BigWords.toString():  " + e);
-			e.printStackTrace();
+			getLogger().warn("BigWords.toString() exception", e);
 		}
 		return(ret);
 	}
@@ -111,7 +111,8 @@ public class BigWords extends Info {
 					+ "BIGVERB=book%20zoom&ISBN="
 					+ arg;
 			hinfo.put("URL", url);
-			HTTPFetch f = new HTTPFetch(url);
+			URL u=new URL(url);
+			HTTPFetch f = new HTTPFetch(u);
 			info=f.getStrippedData();
 		}
 	}

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: JNDIConnectionSource.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: JNDIConnectionSource.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.db;
 
@@ -15,12 +15,14 @@ import javax.naming.NamingException;
 
 import javax.sql.DataSource;
 
+import net.spy.SpyObject;
 import net.spy.SpyConfig;
 
 /**
  * Connection source for getting DB connections from JNDI sources.
  */
-public class JNDIConnectionSource extends Object implements ConnectionSource {
+public class JNDIConnectionSource extends SpyObject
+	implements ConnectionSource {
 
 	/**
 	 * Get an instance of JNDIConnectionSource.
@@ -64,7 +66,7 @@ public class JNDIConnectionSource extends Object implements ConnectionSource {
 			DataSource dsrc = (DataSource)initial.lookup(source);
 			conn = dsrc.getConnection();
 		} catch(NamingException e) {
-			e.printStackTrace();
+			getLogger().warn("Error getting connection from JNDI", e);
 			throw new SQLException("Error getting connection from JNDI:  " + e);
 		}
 

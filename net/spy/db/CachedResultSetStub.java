@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachedResultSetStub.java,v 1.2 2002/09/24 17:44:07 dustin Exp $
+ * $Id: CachedResultSetStub.java,v 1.3 2002/11/20 04:32:07 dustin Exp $
  */
 
 package net.spy.db;
@@ -47,7 +47,8 @@ public class CachedResultSetStub extends GenericResultSetStub {
 			rv=(CachedResultSetStub)clone();
 		} catch(CloneNotSupportedException e) {
 			// The exceptions this thing throws, well, aren't
-			e.printStackTrace();
+			getLogger().error("So, " + getClass().getName()
+				+ " seems to think that clone isn't supported.", e);
 		}
 		return(rv);
 	}

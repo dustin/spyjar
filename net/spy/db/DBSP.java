@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.13 2002/11/19 20:41:16 dustin Exp $
+// $Id: DBSP.java,v 1.14 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.db;
 
@@ -537,7 +537,7 @@ public abstract class DBSP extends SpyCacheDB {
 			} catch(SQLException se) {
 				throw se;
 			} catch (Exception applyException) {
-				applyException.printStackTrace();
+				getLogger().warn("Exception while applying", applyException);
 				String msg="Problem setting " + arg
 					+ " in prepared statement for type "
 					+ TypeNames.getTypeName(type) + " "

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLWatcher.java,v 1.2 2002/08/28 07:24:13 dustin Exp $
+// $Id: URLWatcher.java,v 1.3 2002/11/20 04:32:08 dustin Exp $
 
 package net.spy.net;
 
@@ -15,11 +15,13 @@ import java.io.IOException;
 import net.spy.cron.JobQueue;
 import net.spy.cron.Cron;
 
+import net.spy.SpyObject;
+
 /**
  * URLWatcher watches URLs and provides access to the most recent data from
  * the URL.
  */
-public class URLWatcher extends Object {
+public class URLWatcher extends SpyObject {
 
 	private static URLWatcher instance=null;
 
@@ -113,7 +115,7 @@ public class URLWatcher extends Object {
 			try {
 				u.wait(5000);
 			} catch(InterruptedException e) {
-				e.printStackTrace();
+				getLogger().info("Someone interrupted my sleep", e);
 			}
 		}
 	}

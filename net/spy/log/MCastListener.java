@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MCastListener.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: MCastListener.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.log;
 
@@ -12,10 +12,12 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
+import net.spy.SpyObject;
+
 /**
  * Listen for multicast messages.
  */
-public class MCastListener extends Object {
+public class MCastListener extends SpyObject {
 
 	private InetAddress ia=null;
 	private int port=0;
@@ -49,7 +51,7 @@ public class MCastListener extends Object {
 		try {
 			sm=(SpyMessage)is.readObject();
 		} catch(ClassNotFoundException cnfe) {
-			cnfe.printStackTrace();
+			getLogger().error("Problem deserializing message", cnfe);
 		}
 		is.close();
 		bis.close();

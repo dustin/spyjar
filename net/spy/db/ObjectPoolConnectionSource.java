@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPoolConnectionSource.java,v 1.5 2002/09/06 20:39:01 dustin Exp $
+// $Id: ObjectPoolConnectionSource.java,v 1.6 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.db;
 
@@ -16,6 +16,8 @@ import net.spy.pool.PooledObject;
 import net.spy.pool.PoolException;
 import net.spy.pool.JDBCPoolFiller;
 import net.spy.pool.NoSuchPoolException;
+
+import net.spy.SpyObject;
 
 /**
  * Connection source to retrieve connections from an ObjectPool.
@@ -43,7 +45,7 @@ import net.spy.pool.NoSuchPoolException;
  *      default 6 hours</li>
  * </ul>
  */
-public class ObjectPoolConnectionSource extends Object
+public class ObjectPoolConnectionSource extends SpyObject
 	implements ConnectionSource {
 
 	// This is the object pool from which connections will be retrieved
@@ -78,7 +80,7 @@ public class ObjectPoolConnectionSource extends Object
 			// Snatch the pebble from my hand.
 			conn=getConn(poolName);
 		} catch(PoolException pe) {
-			pe.printStackTrace();
+			getLogger().warn("Could not get a DB connection", pe);
 			throw new SQLException("Could not get a DB connection:  " + pe);
 		}
 		return(conn);
@@ -129,7 +131,7 @@ public class ObjectPoolConnectionSource extends Object
 				try {
 					createPool(conf);
 				} catch(PoolException pe) {
-					pe.printStackTrace();
+					getLogger().error("Problem initializing pool", pe);
 					throw new SQLException("Error initializing pool:  "
 						+ pe);
 				} // Catch the PoolException

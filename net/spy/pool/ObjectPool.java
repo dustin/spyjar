@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPool.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: ObjectPool.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
 
 package net.spy.pool;
 
@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.spy.SpyObject;
 import net.spy.SpyConfig;
 
 import net.spy.util.TimeStampedHashMap;
@@ -35,7 +36,7 @@ import net.spy.util.TimeStampedHashMap;
  * </pre>
  */
 
-public class ObjectPool extends Object {
+public class ObjectPool extends SpyObject {
 	private Exception objectException=null;
 	private SpyConfig conf=null;
 	// This is static so we can check up on it.
@@ -257,11 +258,14 @@ public class ObjectPool extends Object {
 		}
 
 		private void doPrune() throws Exception {
-			PoolDebug debug=new PoolDebug();
-			debug.debug("Cleaning at " + new Date() + ":\n" + op);
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Cleaning pool:  " + op);
+			}
 			op.prune();
 			numCleans++;
-			debug.debug("Now looks like this:\n" + op);
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Finished cleaning, looks like this:  " + op);
+			}
 		}
 
 		public void run() {
@@ -273,9 +277,7 @@ public class ObjectPool extends Object {
 					lastClean=new Date();
 					doPrune();
 				} catch(Exception e) {
-					System.err.println("***\nCleaner got an exception:  "
-						+ e + "\n***");
-					e.printStackTrace();
+					getLogger().error("Cleaner got an exception", e);
 				}
 			}
 		}

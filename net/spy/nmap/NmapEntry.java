@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NmapEntry.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: NmapEntry.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
 
 package net.spy.nmap;
 
@@ -9,7 +9,9 @@ import java.util.Hashtable;
 
 import net.spy.SpyUtil;
 
-public class NmapEntry extends Object {
+import net.spy.SpyObject;
+
+public class NmapEntry extends SpyObject {
 	// The actual line of data
 	private String inputLine=null;
 
@@ -107,7 +109,7 @@ public class NmapEntry extends Object {
 				ports.put(pn, p);
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			getLogger().warn("Problem parsing ports", e);
 		}
 	}
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.2 2002/10/15 06:42:21 dustin Exp $
+// $Id: ThreadPool.java,v 1.3 2002/11/20 04:32:08 dustin Exp $
 
 package net.spy.util;
 
@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Stack;
 import java.util.List;
+
+import net.spy.SpyObject;
 
 /**
  * A thread pool for easy parallelism.
@@ -35,7 +37,7 @@ import java.util.List;
  * </p>
  *
  */
-public class ThreadPool extends Object {
+public class ThreadPool extends SpyObject {
 
 	// The threads we're managing.
 	private List threads=null;
@@ -221,7 +223,7 @@ public class ThreadPool extends Object {
 	 */
 	protected void finalize() throws Throwable {
 		if(!shutdown) {
-			System.err.println(
+			getLogger().error(
 				"********** Shutting down abandoned thread pool **********");
 		}
 		shutdown();
@@ -319,7 +321,7 @@ public class ThreadPool extends Object {
 				// Run the runnable.
 				r.run();
 			} catch(Throwable t) {
-				t.printStackTrace();
+				getLogger().error("Problem running your runnable", t);
 			}
 			synchronized(runningMutex) {
 				running=null;

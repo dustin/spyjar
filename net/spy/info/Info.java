@@ -1,17 +1,19 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Info.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: Info.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.info;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import net.spy.SpyObject;
+
 /**
  * net.spy.info.* superclass -- extend this to provide info services
  */
 
-public abstract class Info extends Object {
+public abstract class Info extends SpyObject {
 
 	// Error if the thing doesn't believe it did what it should.
 	protected boolean error=true;
@@ -50,7 +52,7 @@ public abstract class Info extends Object {
 				ret+=info;
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			getLogger().warn("Info.toString() error", e);
 			// Null will be returned
 		}
 		return(ret);
@@ -88,7 +90,7 @@ public abstract class Info extends Object {
 					+ "</" + safekey + ">\n";
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			getLogger().error("Error in Info.toXML()", e);
 			// Just return an empty string
 		}
 		return(ret);
@@ -157,8 +159,9 @@ public abstract class Info extends Object {
 						sb.append(" ");
 						i+=term;
 					} else {
-						new Exception(
-							"Unhandled entity: " + entity).printStackTrace();
+						Exception e=
+							new Exception("Unhandled entity: " + entity);
+						getLogger().warn(e);
 						sb.append("&");
 					}
 				}

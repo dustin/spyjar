@@ -1,15 +1,17 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Job.java,v 1.2 2002/08/28 07:24:13 dustin Exp $
+// $Id: Job.java,v 1.3 2002/11/20 04:32:07 dustin Exp $
 
 package net.spy.cron;
 
 import java.util.Date;
 
+import net.spy.SpyObject;
+
 /**
  * All Jobs should implement this interface.
  */
-public abstract class Job extends Object implements Runnable {
+public abstract class Job extends SpyObject implements Runnable {
 
 	// The next time the job is due to start.
 	private Date nextStart=null;

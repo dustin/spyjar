@@ -1,12 +1,14 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyLog.java,v 1.3 2002/11/05 08:56:05 dustin Exp $
+ * $Id: SpyLog.java,v 1.4 2002/11/20 04:32:08 dustin Exp $
  */
 
 package net.spy.log;
 
 import java.util.Vector;
+
+import net.spy.SpyObject;
 
 /**
  * The Spy Asynchronous logger.
@@ -21,7 +23,7 @@ import java.util.Vector;
  * way quickly, to be permanently recorded later.
  */
 
-public class SpyLog extends Object {
+public class SpyLog extends SpyObject {
 	private SpyLogQueue queue=null;
 	private static boolean initialized = false;
 	private static Vector flushers=null;
@@ -86,7 +88,7 @@ public class SpyLog extends Object {
 			try {
 				f.start();
 			} catch(IllegalThreadStateException e) {
-				e.printStackTrace();
+				getLogger().error("Problem starting flusher.", e);
 			}
 			flushers.addElement(f);
 		}
