@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPoolManager.java,v 1.4 2003/04/18 08:21:44 dustin Exp $
+// $Id: ThreadPoolManager.java,v 1.5 2003/04/18 21:23:13 dustin Exp $
 
 package net.spy.util;
 
@@ -74,6 +74,10 @@ public class ThreadPoolManager extends LoopingThread {
 		// Don't bother unless there are fewer idle threads than we want
 		if(idleThreads < minIdle) {
 			need=(minIdle - idleThreads);
+		}
+		// Add another one if there are any tasks queued
+		if(tp.getTaskCount() > 0) {
+			need++;
 		}
 		// If that would give us more than we are supposed to have, just
 		// get as many as we're supposed to have.
