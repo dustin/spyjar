@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPoolTest.java,v 1.2 2003/04/11 23:24:21 dustin Exp $
+// $Id: ThreadPoolTest.java,v 1.3 2003/04/12 00:52:29 dustin Exp $
 
 package net.spy.test;
 
@@ -123,7 +123,14 @@ public class ThreadPoolTest extends TestCase {
 		}
 
 		public void run() {
-			wasRun=true;
+			// Make sure this wasn't run more than once.
+			synchronized(this) {
+				if(wasRun) {
+					throw new IllegalStateException(
+						"This task has already been run.");
+				}
+				wasRun=true;
+			}
 			try {
 				Random rand=new Random();
 				// Get things that sleep between 1 and 5 seconds.
