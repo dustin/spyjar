@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.23 2003/08/05 09:01:01 dustin Exp $
+	$Id: build.xml,v 1.24 2003/08/11 04:23:24 dustin Exp $
 
 	-->
 
@@ -119,10 +119,8 @@
 			tofile="/afs/.spy.net/misc/web/root/beckerphoto/WEB-INF/lib/spy.jar"/>
 		<copy file="spy.jar"
 			tofile="/afs/.spy.net/misc/web/root/wisephoto/WEB-INF/lib/spy.jar"/>
-		<!-- Wait until Jason's photoservlet is new enough to receive this
 		<copy file="spy.jar"
 			tofile="/afs/.spy.net/misc/web/root/jasonphoto/WEB-INF/lib/spy.jar"/>
-		-->
 		<copy file="spy.jar"
 			tofile="/afs/.spy.net/misc/web/root/photodemo/WEB-INF/lib/spy.jar"/>
 		<copy file="spy.jar"
