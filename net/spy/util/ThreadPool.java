@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.22 2003/08/05 09:01:05 dustin Exp $
+// $Id: ThreadPool.java,v 1.23 2003/09/28 08:53:13 dustin Exp $
 
 package net.spy.util;
 
@@ -292,7 +292,9 @@ public class ThreadPool extends ThreadGroup {
 			sb.append(" - no queue");
 		} else {
 			sb.append(" - ");
-			sb.append(tasks.size());
+			synchronized(tasks) {
+				sb.append(tasks.size());
+			}
 			sb.append(" tasks queued");
 		}
 
@@ -748,7 +750,10 @@ public class ThreadPool extends ThreadGroup {
 			StringBuffer sb=new StringBuffer(128);
 			sb.append(super.toString());
 
-			int size=tasks.size();
+			int size=0;
+			synchronized(tasks) {
+				size=tasks.size();
+			}
 
 			synchronized(runningMutex) {
 				if(running==null) {
@@ -804,7 +809,10 @@ public class ThreadPool extends ThreadGroup {
 		public void run() {
 			while(going) {
 				try {
-					Task t=(Task)tasks.removeFirst();
+					Task t=null;
+					synchronized(tasks) {
+						t=(Task)tasks.removeFirst();
+					}
 					// Get the runnable from the task (in a specific lock)
 					Runnable r=null;
 					synchronized(t) {
