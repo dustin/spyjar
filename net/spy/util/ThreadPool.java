@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.13 2003/04/11 23:24:20 dustin Exp $
+// $Id: ThreadPool.java,v 1.14 2003/04/12 00:59:50 dustin Exp $
 
 package net.spy.util;
 
@@ -16,10 +16,10 @@ import net.spy.log.LoggerFactory;
 import net.spy.SpyThread;
 
 /**
- * A thread pool for easy parallelism.
+ * A producer/consumer thread pool for easy parallelism.
  *
  * <p>
- * Example (assuming you want to do a million tasks, 15 at time):
+ * Quick start example (assuming you want to do a million tasks, 15 at time):
  *
  * <pre>
  * // Get a thread pool that will perform 15 tasks at a time
@@ -38,6 +38,27 @@ import net.spy.SpyThread;
  * 
  * </pre>
  *
+ * </p>
+ *
+ * <p>
+ * The ThreadPoolManager instance is responsible for sizing and resizing
+ * the pool.  On start(), the ThreadPoolManager will size the pool to the
+ * start size configured in the ThreadPool.  The manager will receive a
+ * notification after any task is added to the pool and may choose to take
+ * action at that point.  Otherwise, it will sleep for a certain amount of
+ * time (one minute by default) and then begin its main loop verifying the
+ * number of idle threads satisfies the configuration.
+ * </p>
+ * 
+ * <p>
+ * If the number of idle threads is too low, it will create as many as is
+ * required to have the appropriate number of idle threads as long as the
+ * total number of threads will not exceed the configured maximum.
+ * </p>
+ *
+ * <p>
+ *  If the number of idle threads is too high, it will reduce the total
+ *  number of threads by one (for each loop).
  * </p>
  *
  */
