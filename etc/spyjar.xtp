@@ -94,5 +94,17 @@
 		<note>*big*: source, documentation, and test suite included</note>
 	</dist>
 
+	<dist>
+		<disturl>../soft/spy-1.0.35.jar</disturl>
+		<distversion>1.0.35</distversion>
+	</dist>
+
+	<dist>
+		<disturl>../soft/spy-big-1.0.35.jar</disturl>
+		<distversion>1.0.35</distversion>
+		<note>*big*: source, documentation, and test suite included</note>
+	</dist>
+
+
 </project>
 <!-- arch-tag: EDEB8BAD-110F-11D9-A577-000A957659CC -->
