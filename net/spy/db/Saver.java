@@ -1,11 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.3 2002/11/20 04:32:07 dustin Exp $
+// $Id: Saver.java,v 1.4 2003/01/07 07:04:21 dustin Exp $
 
 package net.spy.db;
 
 import java.util.Iterator;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.IdentityHashMap;
 import java.util.Collection;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,7 +27,7 @@ public class Saver extends SpyObject {
 	private int rdepth=0;
 
 	// Make sure we don't deal with the same object more than once
-	private HashSet listedObjects=null;
+	private Map listedObjects=null;
 
 	private SpyDB db=null;
 	private Connection conn=null;
@@ -45,7 +46,7 @@ public class Saver extends SpyObject {
 		super();
 		this.context=context;
 		this.config=config;
-		this.listedObjects=new HashSet();
+		this.listedObjects=new IdentityHashMap();
 	}
 
 	/**
@@ -97,6 +98,16 @@ public class Saver extends SpyObject {
 				db.close();
 			}
 		}
+
+		// Inform all of the TransactionListener objects that the
+		// transaction is complete.
+		for(Iterator i=listedObjects.values().iterator(); i.hasNext(); ) {
+			Object otmp=i.next();
+			if(otmp instanceof TransactionListener) {
+				TransactionListener tl=(TransactionListener)otmp;
+				tl.transactionCommited();
+			}
+		} // end looking at all the listeners.
 	}
 
 	// Deal with individual saves.
@@ -116,9 +127,9 @@ public class Saver extends SpyObject {
 
 		// Only go through the savables if we haven't gone through the
 		// savables for this exact object
-		if(!listedObjects.contains(o)) {
+		if(!listedObjects.containsKey(o)) {
 			// Add this to the set to keep us from doing it again
-			listedObjects.add(o);
+			listedObjects.put(o, null);
 
 			// Get the savables
 			Collection c=o.getSavables(context);
