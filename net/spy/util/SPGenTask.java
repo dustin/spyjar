@@ -2,7 +2,7 @@
  * Copyright (c) 2002 Scott Lamb <slamb@slamb.org>
  * This code is released under the MIT license; see the file LICENSE.
  *
- * $Id: SPGenTask.java,v 1.5 2002/12/20 00:54:21 dustin Exp $
+ * $Id: SPGenTask.java,v 1.6 2003/08/04 22:01:12 knitterb Exp $
  */
 
 package net.spy.util;
@@ -43,13 +43,15 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  * </p>
  *
  * @author Scott Lamb
- * @version $Revision: 1.5 $ $Date: 2002/12/20 00:54:21 $
+ * @version $Revision: 1.6 $ $Date: 2003/08/04 22:01:12 $
  **/
 public class SPGenTask extends MatchingTask {
 
 	private File srcDir;
 	private File destDir;
 	private String superclass=null;
+	private String dbcp_superclass=null;
+	private String dbsp_superclass=null;
 
 	/**
 	 * Sets the source directory to search for .spt files.
@@ -71,6 +73,20 @@ public class SPGenTask extends MatchingTask {
 	 */
 	public void setSuperclass(String sc) {
 		this.superclass=sc;
+	}
+
+	/** 
+	 * Set the DBCP superclass for the generated class.
+	 */
+	public void setDbcpSuperclass(String sc) {
+		this.dbcp_superclass=sc;
+	}
+
+	/** 
+	 * Set the DBSP superclass for the generated class.
+	 */
+	public void setDbspSuperclass(String sc) {
+		this.dbsp_superclass=sc;
 	}
 
 	/**
@@ -184,6 +200,12 @@ public class SPGenTask extends MatchingTask {
 			SPGen spg = new SPGen(name.substring(0, name.length()-4), in, out);
 			if (this.superclass!=null) {
 				spg.setSuperclass(this.superclass);
+			}
+			if (this.dbcp_superclass!=null) {
+				spg.setDbcpSuperclass(this.dbcp_superclass);
+			}
+			if (this.dbsp_superclass!=null) {
+				spg.setDbspSuperclass(this.dbsp_superclass);
 			}
 			try {
 				spg.generate();

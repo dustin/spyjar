@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.34 2003/08/04 19:57:39 knitterb Exp $
+// $Id: SPGen.java,v 1.35 2003/08/04 22:01:12 knitterb Exp $
 
 package net.spy.util;
 
@@ -48,9 +48,13 @@ public class SPGen extends Object {
 	private String description="";
 	private String procname="";
 	private String pkg="";
+
 	private String superclass=null;
+	private String dbcp_superclass=null;
+	private String dbsp_superclass=null;
+
 	private String superinterface=null;
-	private String version="$Revision: 1.34 $";
+	private String version="$Revision: 1.35 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -66,6 +70,9 @@ public class SPGen extends Object {
 	private static Map javaResultTypes=null;
 
 	private boolean looseTypes=false;
+
+	private boolean type_dbsp=false;
+	private boolean type_dbcp=false;
 
 	/**
 	 * Get a new SPGen from the given BufferedReader.
@@ -92,6 +99,24 @@ public class SPGen extends Object {
 	public void setSuperclass(String sc) {
 		if (sc!=null) {
 			this.superclass=sc;
+		}
+	}
+
+	/** 
+	 * Set the DBCP superclass of the generated java class.
+	 */
+	public void setDbcpSuperclass(String sc) {
+		if (sc!=null) {
+			this.dbcp_superclass=sc;
+		}
+	}
+
+	/** 
+	 * Set the DBSP superclass of the generated java class.
+	 */
+	public void setDbspSuperclass(String sc) {
+		if (sc!=null) {
+			this.dbsp_superclass=sc;
 		}
 	}
 
@@ -381,13 +406,13 @@ public class SPGen extends Object {
 		}
 
 		// Different stuff for different classes
-		if("net.spy.db.DBSP".equals(superclass)) {
+		if(type_dbsp) {
 			out.println(" * <b>Procedure Name</b>\n"
 				+ " *\n"
 				+ " * <ul>\n"
 				+ " *  <li>" + procname + "</li>\n"
 				+ " * </ul>");
-		} else if ("net.spy.db.DBCP".equals(superclass)) {
+		} else if (type_dbcp) {
 			out.println(" * <b>Callable Name</b>\n"
 				+ " *\n"
 				+ " * <ul>\n"
@@ -452,7 +477,7 @@ public class SPGen extends Object {
 			+ " * <p>\n"
 			+ " *");
 
-		if ("net.spy.db.DBCP".equals(superclass)) {
+		if (type_dbcp) {
 			// Output parameters
 			out.println(" *\n"
 				+ " * <b>Output Parameters</b>\n"
@@ -583,8 +608,7 @@ public class SPGen extends Object {
 			out.println("\t\tsetQueryTimeout("+timeout+");\n");
 
 			// Figure out whether we're a DBSP or a DBSQL
-			if("net.spy.db.DBSP".equals(superclass) ||
-					"net.spy.db.DBCP".equals(superclass)) {
+			if(type_dbsp || type_dbcp) {
 				out.println("\t\t// Set the stored procedure name\n"
 					+ "\t\tsetSPName(\"" + procname + "\");");
 			} else {
@@ -865,15 +889,21 @@ public class SPGen extends Object {
 					} else if(section.equals("procname")) {
 						isInterface=false;
 						procname+=tmp;
-						if (superclass==null) {
+						if (dbsp_superclass==null) {
 							superclass="net.spy.db.DBSP";
+						} else {
+							superclass=dbsp_superclass;
 						}
+						type_dbsp=true;
 					} else if(section.equals("callable")) {
 						isInterface=false;
 						procname+=tmp;
-						if (superclass==null) {
+						if (dbcp_superclass==null) {
 							superclass="net.spy.db.DBCP";
+						} else {
+							superclass=dbcp_superclass;
 						}
+						type_dbcp=true;
 					} else if(section.equals("defaults")) {
 						Default d=new Default(tmp);
 						registerDefault(d);
