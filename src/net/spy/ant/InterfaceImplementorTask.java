@@ -66,23 +66,25 @@ public class InterfaceImplementorTask extends Task {
 	}
 
 	protected void generateWith(Class c) throws BuildException {
-		// Load the superclass
-		Class theSuperClass=null;
+		// Load the interface
+		Class theInterface=null;
 		try {
-			theSuperClass=Class.forName(superClass);
+			theInterface=Class.forName(interfaceName);
 		} catch(ClassNotFoundException e) {
-			throw new BuildException("Could not load class " + superClass, e);
+			throw new BuildException("Could not load interface "
+				+ interfaceName, e);
 		}
 		InterfaceImplementor i=null;
 		// Instantiate the InterfaceImplementor.
 		try {
 			Class params[]={Class.class};
 			Constructor cons=c.getConstructor(params);
-			Object args[]={theSuperClass};
+			Object args[]={theInterface};
 			i=(InterfaceImplementor)cons.newInstance(args);
 		} catch(Exception e) {
+			e.printStackTrace();
 			throw new BuildException(
-				"Could not instantiate InterfaceImplementor", e);
+				"Could not instantiate " + c + " with " + theInterface, e);
 		}
 		// Generate
 		try {

@@ -475,24 +475,17 @@
 
 	<!-- real target for the result set -->
 	<target name="cachers" unless="crs.uptodate"
-		depends="checkrsupdate,interfaceimplementor">
+		depends="anttasks,checkrsupdate,interfaceimplementor">
 		<javac
 			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
 			<classpath refid="myclasses"/>
 			<include name="net/spy/db/CachedResultSetStub.java"/>
 		</javac>
-		<java classname="net.spy.util.InterfaceImplementor" >
-			<arg value="-interface"/>
-				<arg value="java.sql.ResultSet"/>
-			<arg value="-superclass"/>
-				<arg value="net.spy.db.CachedResultSetStub"/>
-			<arg value="-outputclass"/>
-				<arg value="net.spy.db.CachedResultSet"/>
-			<arg value="-outputdir"/>
-				<arg value="${GENDIR}"/>
-			<classpath refid="myclasses"/>
-		</java>
+		<implement interfaceName="java.sql.ResultSet"
+			superClass="net.spy.db.CachedResultSetStub"
+			outClass="net.spy.db.CachedResultSet"
+			outDir="${GENDIR}"/>
 		<javac
 			srcdir="${GENDIR}" destdir="${BUILDDIR}"
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
@@ -502,18 +495,11 @@
 	</target>
 
 	<target name="proxyrs" unless="prs.uptodate"
-		depends="checkrsupdate,proxyii">
-		<java classname="net.spy.util.ProxyInterfaceImplementor" >
-			<arg value="-interface"/>
-				<arg value="java.sql.ResultSet"/>
-			<arg value="-superclass"/>
-				<arg value="net.spy.SpyObject"/>
-			<arg value="-outputclass"/>
-				<arg value="net.spy.db.ProxyResultSet"/>
-			<arg value="-outputdir"/>
-				<arg value="${GENDIR}"/>
-			<classpath refid="myclasses"/>
-		</java>
+		depends="anttasks,checkrsupdate,proxyii">
+		<implementproxy interfaceName="java.sql.ResultSet"
+			superClass="net.spy.SpyObject"
+			outClass="net.spy.db.ProxyResultSet"
+			outDir="${GENDIR}"/>
 		<javac
 			srcdir="${GENDIR}" destdir="${BUILDDIR}"
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
@@ -531,24 +517,17 @@
 
 	<!-- The real target for prepared statements -->
 	<target name="preparedstatement" unless="pst.uptodate"
-		depends="checkpstupdate,resultsets,interfaceimplementor">
+		depends="anttasks,checkpstupdate,resultsets,interfaceimplementor">
 		<javac
 			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
 			<classpath refid="myclasses"/>
 			<include name="net/spy/db/CachePreparedStatementStub.java"/>
 		</javac>
-		<java classname="net.spy.util.InterfaceImplementor" >
-			<arg value="-interface"/>
-				<arg value="java.sql.PreparedStatement"/>
-			<arg value="-superclass"/>
-				<arg value="net.spy.db.CachePreparedStatementStub"/>
-			<arg value="-outputclass"/>
-				<arg value="net.spy.db.CachePreparedStatement"/>
-			<arg value="-outputdir"/>
-				<arg value="${GENDIR}"/>
-			<classpath refid="myclasses"/>
-		</java>
+		<implement interfaceName="java.sql.PreparedStatement"
+			superClass="net.spy.db.CachePreparedStatementStub"
+			outClass="net.spy.db.CachePreparedStatement"
+			outDir="${GENDIR}"/>
 		<javac
 			srcdir="${GENDIR}" destdir="${BUILDDIR}"
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
