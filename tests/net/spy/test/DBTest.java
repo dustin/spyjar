@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTest.java,v 1.3 2002/09/04 02:02:14 dustin Exp $
+// $Id: DBTest.java,v 1.4 2002/09/06 20:39:01 dustin Exp $
 
 package net.spy.test;
 
@@ -12,13 +12,19 @@ import java.sql.Timestamp;
 
 import java.math.BigDecimal;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import net.spy.SpyConfig;
-import net.spy.db.SpyCacheDB;
+import net.spy.db.ConnectionSource;
 import net.spy.db.DBSP;
+import net.spy.db.ObjectPoolConnectionSource;
+import net.spy.db.SpyCacheDB;
+import net.spy.SpyConfig;
+import net.spy.SpyDB;
 
 import net.spy.test.db.DumpTestTable;
 import net.spy.test.db.GetTestByNumber;
@@ -118,6 +124,87 @@ public class DBTest extends TestCase {
 		}
 		rs.close();
 		db.close();
+	}
+
+	/**
+	 * Test a DB connection over multiple pools.
+	 */
+	public void testMultiplePools() throws SQLException {
+		SpyCacheDB db=new SpyCacheDB(conf);
+
+		// Do the query
+		ResultSet rs=db.executeQuery("select * from testtable");
+		// Verify the pool name
+		assertEquals("TestPool", getPoolName(db));
+		assertTrue(! (rs instanceof net.spy.db.CachedResultSet));
+		while(rs.next()) {
+			checkRow(rs);
+		}
+		rs.close();
+		db.close();
+
+		// Do the same thing on a different pool.
+		SpyConfig conf2=(SpyConfig)conf.clone();
+		conf2.setProperty("dbPoolName", "TestPoolTwo");
+		db=new SpyCacheDB(conf2);
+		// Do the query
+		rs=db.executeQuery("select * from testtable");
+		// Verify the pool name
+		assertEquals("TestPoolTwo", getPoolName(db));
+		assertTrue(! (rs instanceof net.spy.db.CachedResultSet));
+		while(rs.next()) {
+			checkRow(rs);
+		}
+		rs.close();
+		db.close();
+
+		// Do the it on the first pool again
+		db=new SpyCacheDB(conf);
+
+		// Do the query
+		rs=db.executeQuery("select * from testtable");
+		// Verify the pool name
+		assertEquals("TestPool", getPoolName(db));
+		assertTrue(! (rs instanceof net.spy.db.CachedResultSet));
+		while(rs.next()) {
+			checkRow(rs);
+		}
+		rs.close();
+		db.close();
+	}
+
+	// Deterine the pool name for a given pool.
+	private String getPoolName(SpyDB db)
+	{
+		String rv=null;
+
+		try {
+			// Arg types for the method
+			Class argTypes[]=new Class[0];
+			Object args[]=new Object[0];
+			// Find the source
+			Method sm=SpyDB.class.getDeclaredMethod("getSource", argTypes);
+			// Grant ourselves access to it
+			sm.setAccessible(true);
+			// Get the connection source from the field
+			ConnectionSource source=(ConnectionSource)sm.invoke(db, args);
+			assertTrue(source instanceof ObjectPoolConnectionSource);
+
+			ObjectPoolConnectionSource opcs=(ObjectPoolConnectionSource)source;
+			// Find the field
+			Field pnf=opcs.getClass().getDeclaredField("poolName");
+			// Grant ourselves access to it
+			pnf.setAccessible(true);
+			// Get the value
+			rv=(String)pnf.get(opcs);
+
+			System.err.println("poolName is " + rv);
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Couldn't get pool name for DB object:  " + e);
+		}
+
+		return(rv);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyDB.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+ * $Id: SpyDB.java,v 1.2 2002/09/06 20:39:01 dustin Exp $
  */
 
 package net.spy;
@@ -280,6 +280,15 @@ public class SpyDB extends Object {
 	 */
 	public boolean isClosed() {
 		return(isClosed);
+	}
+
+	/** 
+	 * Get the source of connections.
+	 * 
+	 * @return a ConnectionSource instance
+	 */
+	protected ConnectionSource getSource() {
+		return(source);
 	}
 
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPoolConnectionSource.java,v 1.4 2002/09/05 17:40:18 dustin Exp $
+// $Id: ObjectPoolConnectionSource.java,v 1.5 2002/09/06 20:39:01 dustin Exp $
 
 package net.spy.db;
 
@@ -77,15 +77,6 @@ public class ObjectPoolConnectionSource extends Object
 		try {
 			// Snatch the pebble from my hand.
 			conn=getConn(poolName);
-		} catch(NoSuchPoolException pe) {
-			// If the pool we're looking for doesn't exist, initialize.
-			initialize(conf);
-			try {
-				conn=getConn(poolName);
-			} catch(PoolException e) {
-				e.printStackTrace();
-				throw new SQLException("Could not get a DB connection:  " + pe);
-			}
 		} catch(PoolException pe) {
 			pe.printStackTrace();
 			throw new SQLException("Could not get a DB connection:  " + pe);
