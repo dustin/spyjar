@@ -1,8 +1,10 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: QuerySelector.java,v 1.1 2002/10/29 08:18:51 dustin Exp $
+// $Id: QuerySelector.java,v 1.2 2002/10/30 08:16:34 dustin Exp $
 
 package net.spy.db;
+
+import java.util.Map;
 
 import java.sql.Connection;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.12 2002/10/02 16:43:31 dustin Exp $
+// $Id: SPGen.java,v 1.13 2002/10/30 08:16:34 dustin Exp $
 
 package net.spy.util;
 
@@ -12,8 +12,12 @@ import java.io.PrintWriter;
 
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.HashSet;
 import java.util.Date;
 
@@ -22,6 +26,7 @@ import java.lang.reflect.Field;
 import java.text.NumberFormat;
 
 import net.spy.SpyUtil;
+import net.spy.db.QuerySelector;
 
 /**
  * Generator for .spt-&gt;.java.
@@ -37,17 +42,18 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.12 $";
+	private String version="$Revision: 1.13 $";
 	private long cachetime=0;
-	private ArrayList sqlquery=null;
-	private ArrayList required=null;
-	private ArrayList optional=null;
-	private ArrayList output=null;
-	private ArrayList results=null;
-	private ArrayList args=null;
+	private Map queries=null;
+	private String currentQuery=QuerySelector.DEFAULT_QUERY;
+	private List required=null;
+	private List optional=null;
+	private List output=null;
+	private List results=null;
+	private List args=null;
 	private boolean debug=false;
 
-	private static HashSet types=null;
+	private static Set types=null;
 
 	private boolean looseTypes=false;
 
@@ -59,7 +65,7 @@ public class SPGen extends Object {
 		this.in=in;
 		this.out=out;
 		this.classname=classname;
-		sqlquery=new ArrayList();
+		queries=new HashMap();
 		required=new ArrayList();
 		optional=new ArrayList();
 		output=new ArrayList();
@@ -430,9 +436,8 @@ public class SPGen extends Object {
 			out.println("\t\t// Set the stored procedure name\n"
 				+ "\t\tsetSPName(\"" + procname + "\");");
 		} else {
-			out.println("\t\t// Set the SQL\n"
-				+ "\t\t" + getJavaQuery()
-				+ "\n\t\tsetQuery(query.toString());");
+			out.println("\t\t// Register the SQL queries\n");
+			out.println("\t\t" + getJavaQueries());
 		}
 
 		if (args.size()>0) {
@@ -476,38 +481,69 @@ public class SPGen extends Object {
 	private String getDocQuery() {
 		StringBuffer sb=new StringBuffer(1024);
 
-		sb.append(" * <pre>\n");
-		for(Iterator i=sqlquery.iterator(); i.hasNext(); ) {
-			String part=(String)i.next();
-			sb.append(" * ");
-			sb.append(part);
+		sb.append(" * <li>\n");
+
+		for(Iterator i=queries.entrySet().iterator(); i.hasNext();) {
+
+			Map.Entry me=(Map.Entry)i.next();
+			List sqlquery=(List)me.getValue();
+
+			sb.append(" * <li>\n");
+			sb.append(" *  <b>\n");
+			sb.append(" *   ");
+			sb.append(me.getKey());
 			sb.append("\n");
+			sb.append(" *  </b>\n");
+			sb.append(" *  <pre>\n");
+			for(Iterator i2=sqlquery.iterator(); i2.hasNext(); ) {
+				String part=(String)i2.next();
+				sb.append(" * ");
+				sb.append(part);
+				sb.append("\n");
+			}
+			sb.append(" *  </pre>\n * </li>\n");
+
 		}
-		sb.append(" * </pre>\n");
+
+		sb.append(" * </li>\n");
 
 		return(sb.toString().trim());
 	}
 
-	private String getJavaQuery() {
+	private String getJavaQueries() {
 		StringBuffer sb=new StringBuffer(1024);
 
-		sb.append("\n\t\tStringBuffer query=new StringBuffer(1024);");
+		sb.append("StringBuffer query=null;");
 
-		for(Iterator i=sqlquery.iterator(); i.hasNext(); ) {
-			String part=(String)i.next();
-			sb.append("\n\t\tquery.append(\"");
+		for(Iterator i=queries.entrySet().iterator(); i.hasNext();) {
 
-			for(StringTokenizer st=new StringTokenizer(part, "\"", true);
-				st.hasMoreTokens(); ) {
+			Map.Entry me=(Map.Entry)i.next();
+			List sqlquery=(List)me.getValue();
 
-				String tmp=st.nextToken();
-				if(tmp.equals("\"")) {
-					tmp="\\\"";
+			sb.append("\n\t\tquery=new StringBuffer(1024);");
+
+			for(Iterator i2=sqlquery.iterator(); i2.hasNext(); ) {
+				String part=(String)i2.next();
+				sb.append("\n\t\tquery.append(\"");
+
+				for(StringTokenizer st=new StringTokenizer(part, "\"", true);
+					st.hasMoreTokens(); ) {
+
+					String tmp=st.nextToken();
+					if(tmp.equals("\"")) {
+						tmp="\\\"";
+					}
+					sb.append(tmp);
 				}
-				sb.append(tmp);
+
+				sb.append("\\n\");");
 			}
 
-			sb.append("\\n\");");
+			sb.append("\n\t\tregisterQuery(\"");
+			sb.append(me.getKey());
+			sb.append("\", ");
+			sb.append("query.toString());\n");
+
 		}
 
 		return(sb.toString().trim());
@@ -531,6 +567,11 @@ public class SPGen extends Object {
 						debug=true;
 					} else if (section.startsWith("loosetyp")) {
 						looseTypes=true;
+					} else if (section.startsWith("sql.")) {
+						currentQuery=section.substring(4);
+						section="sql";
+					} else if (section.equals("sql")) {
+						currentQuery=QuerySelector.DEFAULT_QUERY;
 					}
 				} else if(tmp.charAt(0) == '#') {
 					// Comment, ignore
@@ -542,8 +583,14 @@ public class SPGen extends Object {
 						System.err.println("Warning, stuff in debug section:  "
 							+ tmp);
 					} else if(section.equals("sql")) {
-						sqlquery.add(tmp);
 						superclass="DBSQL";
+
+						List sqlquery=(List)queries.get(currentQuery);
+						if(sqlquery == null) {
+							sqlquery=new ArrayList();
+							queries.put(currentQuery, sqlquery);
+						}
+						sqlquery.add(tmp);
 					} else if(section.equals("procname")) {
 						procname+=tmp;
 						superclass="DBSP";

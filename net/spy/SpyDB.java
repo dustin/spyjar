@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyDB.java,v 1.2 2002/09/06 20:39:01 dustin Exp $
+ * $Id: SpyDB.java,v 1.3 2002/10/30 08:16:33 dustin Exp $
  */
 
 package net.spy;
@@ -38,6 +38,18 @@ public class SpyDB extends Object {
 	// Exceptions that occur during initialization.
 	private Exception initializationException=null;
 
+	/** 
+	 * Initialization type for SpyDB initialized from a config.
+	 */
+	protected static final int INIT_FROM_CONFIG=1;
+
+	/** 
+	 * Initialization type for SpyDB initialized from a Connection.
+	 */
+	protected static final int INIT_FROM_CONN=2;
+
+	private int initType=0;
+
 	/**
 	 * Create a SpyDB object based on the description found in the passed
 	 * in SpyConfig object.
@@ -60,6 +72,7 @@ public class SpyDB extends Object {
 		super();
 		this.conf=conf;
 
+		initType=INIT_FROM_CONFIG;
 		initialize();
 	}
 
@@ -71,6 +84,16 @@ public class SpyDB extends Object {
 	public SpyDB(Connection conn) {
 		super();
 		this.conn=conn;
+		initType=INIT_FROM_CONN;
+	}
+
+	/** 
+	 * Get the type of initialization that created this object.
+	 * 
+	 * @return either INIT_FROM_CONFIG or INIT_FROM_CONN
+	 */
+	public int getInitType() {
+		return(initType);
 	}
 
 	/**
@@ -285,10 +308,21 @@ public class SpyDB extends Object {
 	/** 
 	 * Get the source of connections.
 	 * 
-	 * @return a ConnectionSource instance
+	 * @return a ConnectionSource instance, or null if this SpyDB instance
+	 * 			was created from a config
 	 */
 	protected ConnectionSource getSource() {
 		return(source);
+	}
+
+	/** 
+	 * Get the configuration from which this SpyDB was instatiated.
+	 * 
+	 * @return the config, or null if the SpyDB was created from a
+	 * 			connection
+	 */
+	protected SpyConfig getConfig() {
+		return(conf);
 	}
 
 }

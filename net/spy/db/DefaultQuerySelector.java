@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DefaultQuerySelector.java,v 1.1 2002/10/29 08:18:51 dustin Exp $
+// $Id: DefaultQuerySelector.java,v 1.2 2002/10/30 08:16:34 dustin Exp $
 
 package net.spy.db;
 
@@ -32,6 +32,25 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 	 */
 	public DefaultQuerySelector() {
 		super();
+		nameMap=new TreeMap();
+		initNameMap();
+	}
+
+	/** 
+	 * Initialize the prefix to name map.
+	 */
+	protected void initNameMap() {
+		registerNameMapping("org.postgresql.", "pgsql");
+	}
+
+	/** 
+	 * Register a prefix -&gt; name mapping.
+	 * 
+	 * @param prefix the prefix to match for a name
+	 * @param name the name
+	 */
+	protected void registerNameMapping(String prefix, String name) {
+		nameMap.put(prefix, name);
 	}
 
 	/** 
@@ -88,9 +107,16 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 				}
 			} // not in the name map
 
-			// If we have a key, try to get the query using it
-			if(tmp != null) {
-				rv=(String)queryMap.get(name);
+			// If we still don't have a key, use the default key
+			if(tmp == null) {
+				tmp=DEFAULT_QUERY;
+			}
+			rv=(String)queryMap.get(tmp);
+
+			// If there wasn't a match, try default
+			if(rv == null) {
+				tmp=DEFAULT_QUERY;
+				rv=(String)queryMap.get(tmp);
 			}
 		} // not in query Map
 
