@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTTLMonitor.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: DBTTLMonitor.java,v 1.2 2002/11/06 18:05:06 dustin Exp $
 
 package net.spy.db;
 
@@ -18,16 +18,30 @@ public class DBTTLMonitor extends Thread {
 	private long lastAddition=0;
 	private static final long MAX_QUIESCENCE=300000;
 
+	private static DBTTLMonitor instance=null;
+
 	/**
 	 * Get an instance of DBTTLMonitor.
 	 */
-	public DBTTLMonitor() {
+	private DBTTLMonitor() {
 		super();
 		ttls=new ArrayList();
 		lastAddition=System.currentTimeMillis();
 		setName("DB TTL Monitor");
 		setDaemon(true);
 		start();
+	}
+
+	/** 
+	 * Get the singleton instance of the DBTTLMonitor.
+	 * 
+	 * @return the DBTTLMonitor instance.
+	 */
+	public static synchronized DBTTLMonitor getInstance() {
+		if(instance==null) {
+			instance=new DBTTLMonitor();
+		}
+		return(instance);
 	}
 
 	/**
