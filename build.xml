@@ -128,14 +128,14 @@
 	</target>
 
 	<target name="install-docs" depends="docs">
-		<copy todir="${DOCINSTDIR}">
+		<sync todir="${DOCINSTDIR}">
 			<fileset dir="${DOCDEST}">
 				<include name="**/*.html"/>
 				<include name="**/*.css"/>
 				<include name="**/*.png"/>
 				<include name="package-list"/>
 			</fileset>
-		</copy>
+		</sync>
 	</target>
 
 	<target name="spy.jar" depends="all,properties"
