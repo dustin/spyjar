@@ -203,7 +203,8 @@
 			<entry key="BUILDDIR" value="${BUILDTOP}/classes"/>
 			<entry key="GENDIR" value="${BUILDTOP}/gen"/>
 			<entry key="TSRCDIR" value="tests"/>
-			<entry key="TBUILDDIR" value="tests"/>
+			<entry key="TBUILDDIR" value="${BUILDTOP}/tests"/>
+			<entry key="TGENDIR" value="${BUILDTOP}/tests-gen"/>
 			<entry key="DOCDEST" value="${BUILDDIR}/docs"/>
 			<entry key="DEPRECATION" value="on"/>
 			<entry key="DEBUG" value="on"/>
@@ -224,6 +225,8 @@
 	<target name="prepare">
 		<mkdir dir="${BUILDTOP}"/>
 		<mkdir dir="${BUILDDIR}"/>
+		<mkdir dir="${TBUILDDIR}"/>
+		<mkdir dir="${TGENDIR}"/>
 		<mkdir dir="${GENDIR}"/>
 	</target>
 
@@ -287,7 +290,16 @@
 	</target>
 
 	<target name="test-spfiles" depends="all,spgen">
-		<spgen srcdir="${TSRCDIR}" destdir="${TBUILDDIR}"/>
+		<spgen srcdir="${TSRCDIR}" destdir="${TGENDIR}"/>
+		<javac srcdir="${TGENDIR}" destdir="${TBUILDDIR}"
+			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
+			<classpath refid="myclasses"/>
+			<classpath refid="junitclasses"/>
+      <classpath>
+        <pathelement path="${TBUILDDIR}"/>
+			</classpath>
+			<include name="net/spy/**/*.java"/>
+		</javac>
 	</target>
 
 	<target name="test-classes" depends="all,test-spfiles">
