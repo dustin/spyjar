@@ -128,6 +128,7 @@ public final class Cron extends SpyThread {
 	 * Do the run thing.
 	 */
 	public void run() {
+		getLogger().info("Starting cron services");
 		while(stillRunning) {
 			// Check all the running jobs.
 			for(Iterator i=jq.getReadyJobs(); i.hasNext(); ) {
@@ -146,7 +147,7 @@ public final class Cron extends SpyThread {
 			if(next==null) {
 				// If it's been too long, shut down
 				if( (now-validJobFound) > maxIdleTime) {
-					getLogger().debug("Been a long time "
+					getLogger().info("Been a long time "
 						+ "since I had a job.  Shutting down.");
 					getLogger().debug("now: "+now);
 					getLogger().debug("validJobFound: "+validJobFound);
@@ -191,7 +192,7 @@ public final class Cron extends SpyThread {
 				e.printStackTrace();
 			}
 		} // still running
-		getLogger().debug("shut down");
+		getLogger().info("shut down at");
 	}
 
 	/** 
