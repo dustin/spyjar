@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SunLogger.ojava,v 1.2 2002/11/05 05:10:11 dustin Exp $
+// $Id: SunLogger.ojava,v 1.3 2002/11/07 08:17:32 dustin Exp $
 
 package net.spy.log;
 
@@ -65,10 +65,36 @@ public class SunLogger extends AbstractLogger {
 				sLevel=Level.SEVERE;
 				break;
 		}
-		if(e != null) {
-			sunLogger.log(sLevel, message.toString(), e);
+
+		// Figure out who was logging.
+		Throwable t=new Throwable();
+		StackTraceElement ste[]=t.getStackTrace();
+		StackTraceElement logRequestor=null;
+		for(int i=0; i<ste.length && logRequestor==null; i++) {
+			if(ste[i].getClassName().equals("net.spy.log.AbstractLogger")) {
+				// Make sure there's another stack frame.
+				if(i+1<ste.length) {
+					logRequestor=ste[i+1];
+				}
+			}
+		}
+
+		// See if we could figure out who was doing the original logging,
+		// if we could, we want to include a useful class and method name
+		if(logRequestor!=null) {
+			if(e != null) {
+				sunLogger.logp(sLevel, logRequestor.getClassName(),
+					logRequestor.getMethodName(), message.toString(), e);
+			} else {
+				sunLogger.logp(sLevel, logRequestor.getClassName(),
+					logRequestor.getMethodName(), message.toString());
+			}
 		} else {
-			sunLogger.log(sLevel, message.toString());
+			if(e != null) {
+				sunLogger.log(sLevel, message.toString(), e);
+			} else {
+				sunLogger.log(sLevel, message.toString());
+			}
 		}
 	}
 
