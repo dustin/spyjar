@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: DiskCache.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: DiskCache.java,v 1.2 2002/09/13 05:54:33 dustin Exp $
 
 package net.spy.cache;
 
@@ -73,6 +73,7 @@ public class DiskCache extends Object {
 
 		FileOutputStream ostream = new FileOutputStream(pathto);
 		ObjectOutputStream p = new ObjectOutputStream(ostream);
+		p.writeObject(name);
 		p.writeObject(o);
 		p.flush();
 		ostream.close();
@@ -85,13 +86,22 @@ public class DiskCache extends Object {
 	 */
     public Object getObject(String name) {
 		Object rv=null;
-		String pathto=getPath(name);
+
+		if(name==null) {
+			throw new NullPointerException("Name not provided");
+		}
 
 		try {
-			Object o;
-			FileInputStream istream = new FileInputStream(pathto);
+			FileInputStream istream = new FileInputStream(getPath(name));
 			ObjectInputStream p = new ObjectInputStream(istream);
-			o = p.readObject();
+			String storedName = (String)p.readObject();
+			Object o = p.readObject();
+
+			if(!name.equals(storedName)) {
+				throw new Exception("Key value did not match ("
+					+ storedName + " != " + name + ")");
+			}
+
 			rv=o;
 		} catch(FileNotFoundException e) {
             // If it's file not found, just print the path, no need for a
