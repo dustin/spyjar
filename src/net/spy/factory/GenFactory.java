@@ -84,6 +84,18 @@ public abstract class GenFactory extends SpyObject {
 	protected abstract Collection getInstances();
 
 	/** 
+	 * This method is called whenever getObject would return null.  The result
+	 * of this object will be used instead.  Alternatively, one may throw a
+	 * RuntimeException indicating a failure.
+	 * 
+	 * @param id the ID of the object that was requested.
+	 * @return null
+	 */
+	protected Object handleNullLookup(int id) {
+		return(null);
+	}
+
+	/** 
 	 * Get an object by ID.
 	 * 
 	 * @param id the object ID
@@ -91,7 +103,11 @@ public abstract class GenFactory extends SpyObject {
 	 */
 	public Object getObject(int id) {
 		CacheEntry ce=getCache();
-		return(ce.getById(id));
+		Object rv=ce.getById(id);
+		if(rv == null) {
+			rv=handleNullLookup(id);
+		}
+		return(rv);
 	}
 
 	/** 
