@@ -280,6 +280,15 @@
 
 			<classpath refid="myclasses"/>
 		</javac>
+		<javac
+			srcdir="${GENDIR}"
+			destdir="${BUILDDIR}"
+			deprecation="${DEPRECATION}"
+			debug="${DEBUG}"
+			verbose="${VERBOSE}">
+
+			<classpath refid="myclasses"/>
+		</javac>
 	</target>
 
 	<target name="spgen">
