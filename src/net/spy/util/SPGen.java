@@ -76,6 +76,8 @@ public class SPGen extends SpyObject {
 	private boolean typeDbsp=false;
 	private boolean typeDbcp=false;
 
+	private boolean verbose=true;
+
 	/**
 	 * Get a new SPGen from the given BufferedReader.
 	 *
@@ -97,6 +99,13 @@ public class SPGen extends SpyObject {
 		if(types==null) {
 			initTypes();
 		}
+	}
+
+	/** 
+	 * Set the verbosity flag.
+	 */
+	public void setVerbose(boolean to) {
+		this.verbose=to;
 	}
 
 	/** 
@@ -307,7 +316,9 @@ public class SPGen extends SpyObject {
 	}
 
 	private void write() throws Exception {
-		System.out.println("Writing out " + pkg + "." + classname);
+		if(verbose) {
+			System.out.println("Writing out " + pkg + "." + classname);
+		}
 		// Extract the version from the version var.
 		String v=version.substring(11, version.length()-2);
 		// Copyright info
@@ -790,7 +801,9 @@ public class SPGen extends SpyObject {
 		// this is for when a user overrides the superclass
 		StringBuffer userSuperclass=null;
 
-		System.out.println("Parsing " + classname + ".spt");
+		if(verbose) {
+			System.out.println("Parsing " + classname + ".spt");
+		}
 
 		String tmp=in.readLine();
 		while(tmp!=null) {

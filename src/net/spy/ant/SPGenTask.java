@@ -54,6 +54,7 @@ public class SPGenTask extends MatchingTask {
 	private String superclass=null;
 	private String dbcpSuperclass=null;
 	private String dbspSuperclass=null;
+	private boolean verbose=false;
 
 	/**
 	 * Sets the source directory to search for .spt files.
@@ -89,6 +90,13 @@ public class SPGenTask extends MatchingTask {
 	 */
 	public void setDbspSuperclass(String sc) {
 		this.dbspSuperclass=sc;
+	}
+
+	/** 
+	 * True if we want verbose transformations.
+	 */
+	public void setVerbose(boolean to) {
+		this.verbose=to;
 	}
 
 	/**
@@ -209,6 +217,7 @@ public class SPGenTask extends MatchingTask {
 			if (this.dbspSuperclass!=null) {
 				spg.setDbspSuperclass(this.dbspSuperclass);
 			}
+			spg.setVerbose(verbose);
 			try {
 				spg.generate();
 				in.close();
