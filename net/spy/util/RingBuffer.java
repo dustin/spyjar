@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: RingBuffer.java,v 1.2 2002/10/31 08:12:17 dustin Exp $
+// $Id: RingBuffer.java,v 1.3 2002/10/31 08:19:07 dustin Exp $
 
 package net.spy.util;
 
@@ -147,6 +147,14 @@ public class RingBuffer extends AbstractCollection {
 	 */
 	public Iterator iterator() {
 		return (new RingBufferIterator());
+	}
+
+	/** 
+	 * Get the collection of data in this list.
+	 * @deprecated this is a Collection now.
+	 */
+	public Collection getData() {
+		return(this);
 	}
 
 	// Iterator implementation
