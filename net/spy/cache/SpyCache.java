@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyCache.java,v 1.4 2002/12/07 22:41:22 dustin Exp $
+ * $Id: SpyCache.java,v 1.5 2002/12/07 22:49:12 dustin Exp $
  */
 
 package net.spy.cache;
@@ -178,7 +178,7 @@ public class SpyCache extends SpyObject {
 		private void cleanup() throws Exception {
 			long now=System.currentTimeMillis();
 			synchronized(cacheStore) {
-				for(Iterator i=cacheStore.keySet().iterator(); i.hasNext();){
+				for(Iterator i=cacheStore.values().iterator(); i.hasNext();){
 					SpyCacheItem it=(SpyCacheItem)i.next();
 					if(it.expired()) {
 						i.remove();
