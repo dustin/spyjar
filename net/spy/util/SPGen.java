@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.19 2002/12/19 22:07:32 knitterb Exp $
+// $Id: SPGen.java,v 1.20 2002/12/20 00:54:21 dustin Exp $
 
 package net.spy.util;
 
@@ -43,7 +43,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass=null;
-	private String version="$Revision: 1.19 $";
+	private String version="$Revision: 1.20 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -79,6 +79,9 @@ public class SPGen extends Object {
 		}
 	}
 
+	/** 
+	 * Set the superclass of the generated java class.
+	 */
 	public void setSuperclass(String sc) {
 		if (sc!=null) {
 			this.superclass=sc;

@@ -2,7 +2,7 @@
  * Copyright (c) 2002 Scott Lamb <slamb@slamb.org>
  * This code is released under the MIT license; see the file LICENSE.
  *
- * $Id: SPGenTask.java,v 1.4 2002/12/19 22:11:23 knitterb Exp $
+ * $Id: SPGenTask.java,v 1.5 2002/12/20 00:54:21 dustin Exp $
  */
 
 package net.spy.util;
@@ -32,19 +32,18 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  *
  * <p>Example ant build entry:
  * <pre><code>
- *	<target name="spfiles">
- *		<taskdef name="spgen" classname="net.spy.util.SPGenTask">
- *			<classpath refid="compile.classpath"/>
- *		</taskdef>
- *		<spgen srcdir="${spt.dir}" destdir="${spt.dir}"
- *			superclass="com.foo.MyDbsp"/>
- *	</target>
- *
+ *	&lt;target name="spfiles"&gt;
+ *		&lt;taskdef name="spgen" classname="net.spy.util.SPGenTask"&gt;
+ *			&lt;classpath refid="compile.classpath"/&gt;
+ *		&lt;/taskdef&gt;
+ *		&lt;spgen srcdir="${spt.dir}" destdir="${spt.dir}"
+ *			superclass="com.foo.MyDbsp"/&gt;
+ *	&lt;/target&gt;
  * </pre></code>
  * </p>
  *
  * @author Scott Lamb
- * @version $Revision: 1.4 $ $Date: 2002/12/19 22:11:23 $
+ * @version $Revision: 1.5 $ $Date: 2002/12/20 00:54:21 $
  **/
 public class SPGenTask extends MatchingTask {
 
@@ -67,6 +66,9 @@ public class SPGenTask extends MatchingTask {
 		this.destDir = destDir;
 	}
 
+	/** 
+	 * Set the superclass for the generated class.
+	 */
 	public void setSuperclass(String sc) {
 		this.superclass=sc;
 	}
