@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.4 2002/12/05 08:07:03 dustin Exp $
+// $Id: ThreadPool.java,v 1.5 2002/12/06 08:12:26 dustin Exp $
 
 package net.spy.util;
 
@@ -9,7 +9,8 @@ import java.util.Random;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import net.spy.SpyObject;
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
 
 /**
  * A thread pool for easy parallelism.
@@ -36,7 +37,7 @@ import net.spy.SpyObject;
  * </p>
  *
  */
-public class ThreadPool extends SpyObject {
+public class ThreadPool extends ThreadGroup {
 
 	// The threads we're managing.
 	private List threads=null;
@@ -64,7 +65,8 @@ public class ThreadPool extends SpyObject {
 	 * @param prio Priority of the child threads.
 	 */
 	public ThreadPool(String name, int n, int priority) {
-		super();
+		super(name);
+		setDaemon(true);
 
 		if(priority<Thread.MIN_PRIORITY || priority>Thread.MAX_PRIORITY) {
 			throw new IllegalArgumentException(priority
@@ -75,13 +77,9 @@ public class ThreadPool extends SpyObject {
 		threads=new java.util.ArrayList(n);
 		monitor=new Object();
 
-		// Get the group for this threadpool.
-		ThreadGroup tg=new ThreadGroup(name);
-		tg.setDaemon(true);
-
 		// Initialize all of the threads.
 		for(int i=0; i<n; i++) {
-			RunThread rt=new RunThread(tg, tasks, monitor);
+			RunThread rt=new RunThread(this, tasks, monitor);
 			rt.setPriority(priority);
 			threads.add(rt);
 		}
@@ -95,6 +93,18 @@ public class ThreadPool extends SpyObject {
 	 */
 	public ThreadPool(String name, int n) {
 		this(name, n, Thread.NORM_PRIORITY);
+	}
+
+	/** 
+	 * String me.
+	 */
+	public String toString() {
+		StringBuffer sb=new StringBuffer(128);
+		sb.append(super.toString());
+		sb.append(" - ");
+		sb.append(tasks.size());
+
+		return(sb.toString());
 	}
 
 	/**
@@ -225,8 +235,8 @@ public class ThreadPool extends SpyObject {
 	 */
 	protected void finalize() throws Throwable {
 		if(!shutdown) {
-			getLogger().error(
-				"********** Shutting down abandoned thread pool **********");
+			Logger l=LoggerFactory.getLogger(getClass());
+			l.error("********* Shutting down abandoned thread pool *********");
 		}
 		shutdown();
 	}
@@ -298,15 +308,11 @@ public class ThreadPool extends SpyObject {
 
 			int size=tasks.size();
 
-			sb.append(" - ");
-			sb.append(size);
-			sb.append(" queued, ");
-
 			synchronized(runningMutex) {
 				if(running==null) {
-					sb.append(" idle");
+					sb.append(" - idle");
 				} else {
-					sb.append(" running ");
+					sb.append(" - running ");
 					sb.append(running.getClass().getName());
 					sb.append(" for ");
 					sb.append(System.currentTimeMillis() - start);
@@ -329,7 +335,8 @@ public class ThreadPool extends SpyObject {
 				// Run the runnable.
 				r.run();
 			} catch(Throwable t) {
-				getLogger().error("Problem running your runnable", t);
+				Logger l=LoggerFactory.getLogger(getClass());
+				l.error("Problem running your runnable", t);
 			}
 			synchronized(runningMutex) {
 				running=null;
