@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.8 2002/10/28 23:42:37 dustin Exp $
+// $Id: DBSP.java,v 1.9 2002/11/05 23:18:51 knitterb Exp $
 
 package net.spy.db;
 
@@ -1213,6 +1213,20 @@ public abstract class DBSP extends SpyCacheDB {
 			return(javaType);
 		}
 
+		public String toString() {
+			StringBuffer rc=new StringBuffer(100);
+			rc.append("{ Param: type=");
+			rc.append(TypeNames.getTypeName(javaType));
+			rc.append("(");
+			rc.append(javaType);
+			rc.append(")");
+			rc.append(", name=");
+			rc.append(getName().toString());
+			rc.append(", required=");
+			rc.append(paramType);
+			rc.append("}");
+			return(rc.toString());
+		}
 	}
 	
 	/** 
@@ -1262,6 +1276,21 @@ public abstract class DBSP extends SpyCacheDB {
 				rv=new DBNull(javaType);
 			}
 			return(rv);
+		}
+
+		public String toString() {
+			StringBuffer rc=new StringBuffer(100);
+			rc.append("{ Arg: type=");
+			rc.append(TypeNames.getTypeName(javaType));
+			rc.append("(");
+			rc.append(javaType);
+			rc.append(")");
+			rc.append(", name=");
+			rc.append(getName().toString());
+			rc.append(", value=");
+			rc.append(value.toString());
+			rc.append("}");
+			return(rc.toString());
 		}
 
 	}
