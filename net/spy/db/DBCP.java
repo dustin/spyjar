@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBCP.java,v 1.2 2002/08/28 06:41:10 dustin Exp $
+// $Id: DBCP.java,v 1.3 2002/08/30 16:44:40 knitterb Exp $
 
 package net.spy.db;
 
@@ -81,7 +81,7 @@ public abstract class DBCP extends DBSP {
 	 * @param query the query we'll be calling
 	 * @param v the list of named parameters we need to add, in order
 	 */
-	protected void applyArgs(Collection v, boolean output_args)
+	protected void applyArgs(Collection v)
 			throws SQLException {
 
 		PreparedStatement pst=getPreparedStatement();
@@ -116,7 +116,7 @@ public abstract class DBCP extends DBSP {
 			int type=typeInt.intValue();
 
 			try {
-				if(output_args) {
+				if(getOutputArgs().contains(key)) {
 					if (isDebugEnabled()) {
 						System.err.println("OUT -> Setting column "
 							+key+"("+i+") type "+type);
@@ -206,10 +206,11 @@ public abstract class DBCP extends DBSP {
 
 		// Get ready to build our query.
 		StringBuffer querySb=new StringBuffer(256);
-		querySb.append("{call ");
+		//querySb.append("{call ");
 		querySb.append(getSPName());
-		querySb.append(" (");
+		//querySb.append(" (");
 
+		/*
 		// input vars
 		for(Iterator e=getRequiredArgs().iterator(); e.hasNext(); ) {
 			String param=(String)e.next();
@@ -232,6 +233,9 @@ public abstract class DBCP extends DBSP {
 
 		// finish out
 		querySb.append(")}");
+		*/
+
+
 		String query=querySb.toString().trim();
 
 		PreparedStatement pst=getPreparedStatement();
@@ -247,10 +251,13 @@ public abstract class DBCP extends DBSP {
 			setPreparedStatement(pst);
 		}
 
+		if (isDebugEnabled()) {
+			System.out.println("Query: "+query);
+		}
+
 		// Fill in the arguments.
 		setQuery(query);
-		applyArgs(getRequiredArgs(), false);
-		applyArgs(getOutputArgs(), true);
+		applyArgs(getParamsInorder());
 	}
 
 }
