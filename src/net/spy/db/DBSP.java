@@ -35,6 +35,12 @@ import net.spy.util.SpyUtil;
  */
 public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
+	// Size for buffer for to stringing
+	private static final int TOSTRING_SB_SIZE=128;
+
+	// BigDecimal scale for doing data conversions
+	private static final int BD_SCALE=4;
+
 	// The set of parameters available to this DBSP (defined in the subclass)
 	private NamedObjectStorage parameters=null;
 
@@ -201,8 +207,8 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 *
 	 * @param pst the prepared statement
 	 */
-	protected void setPreparedStatement(PreparedStatement pst) {
-		this.pst=pst;
+	protected void setPreparedStatement(PreparedStatement to) {
+		this.pst=to;
 	}
 
 	/**
@@ -283,7 +289,8 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 * @param type type of variable this is
 	 */
 	protected void setArg(String which, Object what, int type)
-			throws SQLException {
+		throws SQLException {
+
 		arguments.add(new Argument(type, which, what));
 	}
 
@@ -329,16 +336,16 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	/**
 	 * Set the timeout for this query.  See JDCB Statement documentation.
 	 */
-	public void setQueryTimeout(int timeout) {
-		this.timeout=timeout;
+	public void setQueryTimeout(int to) {
+		this.timeout=to;
 	}
 
 	/**
 	 * Set the maximum number of rows that should be returned from this
 	 * query.  See JDBC Statement documentation.
 	 */
-	public void setMaxRows(int maxRows) {
-		this.maxRows=maxRows;
+	public void setMaxRows(int to) {
+		this.maxRows=to;
 	}
 
 	/**
@@ -376,7 +383,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		// Now, verify all of the arguments we have are correctly typed.
-		for(Iterator i=arguments.getObjectList().iterator(); i.hasNext(); ) {
+		for(Iterator i=arguments.getObjectList().iterator(); i.hasNext();) {
 			Argument arg=(Argument)i.next();
 
 			// Find the matching parameter.
@@ -407,7 +414,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		// Next, verify all of the required arguments are there.
-		for(Iterator i=parameters.getObjectList().iterator(); i.hasNext(); ) {
+		for(Iterator i=parameters.getObjectList().iterator(); i.hasNext();) {
 			Parameter p=(Parameter)i.next();
 
 			if(p.getParamType() == Parameter.REQUIRED) {
@@ -430,13 +437,13 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		checkArgs();
 
 		// Get ready to build our query.
-		StringBuffer querySb=new StringBuffer(256);
+		StringBuffer querySb=new StringBuffer(TOSTRING_SB_SIZE);
 		querySb.append("exec ");
 		querySb.append(spname);
 		querySb.append(" ");
 
 		int nargs=0;
-		for(Iterator e=getArguments().iterator(); e.hasNext(); ) {
+		for(Iterator e=getArguments().iterator(); e.hasNext();) {
 			Argument arg=(Argument)e.next();
 
 			querySb.append("\t@");
@@ -450,22 +457,22 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			querySb=new StringBuffer(querySb.toString().substring(0,
 										querySb.length()-2));
 		}
-		String query=querySb.toString().trim();
+		String tmpQuery=querySb.toString().trim();
 
 		// Get a prepared statement, varies whether it's cachable or not.
 		// XXX: This duplicates what goes on in applyArgs()
 		if(getCacheTime()>0) {
-			pst=prepareStatement(query, getCacheTime());
+			pst=prepareStatement(tmpQuery, getCacheTime());
 		} else {
-			pst=prepareStatement(query);
+			pst=prepareStatement(tmpQuery);
 		}
 
 		if (debug) {
-			getLogger().debug("Query: "+query);
+			getLogger().debug("Query: "+tmpQuery);
 		}
 
 		// Fill in the arguments.
-		setQuery(query);
+		setQuery(tmpQuery);
 		applyArgs(getArguments());
 	}
 
@@ -490,8 +497,8 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	/**
 	 * Set the SQL query to call
 	 */
-	protected void setQuery(String query) {
-		this.query=query;
+	protected void setQuery(String to) {
+		this.query=to;
 	}
 
 	/**
@@ -518,7 +525,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 		// Use this iterator for the now positional arguments
 		int i=1;
-		for(Iterator e=v.iterator(); e.hasNext(); ) {
+		for(Iterator e=v.iterator(); e.hasNext();) {
 			Argument arg=(Argument)e.next();
 			Object o=arg.getValue();
 			int type=arg.getJavaType();
@@ -549,7 +556,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 						break;
 					case Types.NUMERIC:
 					case Types.DECIMAL:
-						BigDecimal bd=((BigDecimal)o).setScale(4,
+						BigDecimal bd=((BigDecimal)o).setScale(BD_SCALE,
 													BigDecimal.ROUND_HALF_UP);
 						pst.setBigDecimal(i, bd);
 						break;
@@ -863,7 +870,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	public List getParameters(int type) {
 		ArrayList al=new ArrayList();
 
-		for(Iterator i=getParameters().iterator(); i.hasNext(); ) {
+		for(Iterator i=getParameters().iterator(); i.hasNext();) {
 			Parameter p=(Parameter)i.next();
 			if(p.getJavaType() == type) {
 				al.add(p);
@@ -1086,7 +1093,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			if(byName.containsKey(no.getName())) {
 				byName.remove(no.getName());
 
-				for(Iterator i=byPosition.iterator(); i.hasNext(); ) {
+				for(Iterator i=byPosition.iterator(); i.hasNext();) {
 					NamedObject sno=(NamedObject)i.next();
 					if(no.getName().equals(sno.getName())) {
 						i.remove();
@@ -1159,14 +1166,14 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		 *
 		 * @param name
 		 */
-		protected NamedObject(String name) {
+		protected NamedObject(String nm) {
 			super();
 
-			if(name==null) {
+			if(nm==null) {
 				throw new NullPointerException("name not given");
 			}
 
-			this.name=name;
+			this.name=nm;
 		}
 
 		/**
@@ -1180,7 +1187,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		 * String me.
 		 */
 		public String toString() {
-			StringBuffer sb=new StringBuffer(32);
+			StringBuffer sb=new StringBuffer(TOSTRING_SB_SIZE);
 
 			sb.append("{");
 			sb.append(getClass().getName());
@@ -1250,17 +1257,17 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		 * @param javaType the {@link java.sql.Types} type
 		 * @param name name of the parametr
 		 */
-		public Parameter(int paramType, int javaType, String name) {
+		public Parameter(int pType, int jType, String name) {
 
 			super(name);
 
-			this.paramType=paramType;
-			this.javaType=javaType;
+			this.paramType=pType;
+			this.javaType=jType;
 
 			validateParamType();
 		}
 		private void validateParamType() {
-			if( (paramType != REQUIRED)
+			if((paramType != REQUIRED)
 				&& (paramType != OPTIONAL)
 				&& (paramType != OUTPUT)) {
 
@@ -1285,7 +1292,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		public String toString() {
-			StringBuffer rc=new StringBuffer(100);
+			StringBuffer rc=new StringBuffer(TOSTRING_SB_SIZE);
 			rc.append("{ Param: type=");
 			rc.append(TypeNames.getTypeName(javaType));
 			rc.append("(");
@@ -1314,12 +1321,12 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		 * @param javaType the {@link java.sql.Types} type
 		 * @param name name of the parametr
 		 */
-		public Argument(int javaType, String name, Object value) {
+		public Argument(int jType, String name, Object v) {
 
 			super(name);
 
-			this.javaType=javaType;
-			this.value=value;
+			this.javaType=jType;
+			this.value=v;
 		}
 
 		/**
@@ -1350,7 +1357,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		public String toString() {
-			StringBuffer rc=new StringBuffer(100);
+			StringBuffer rc=new StringBuffer(TOSTRING_SB_SIZE);
 			rc.append("{ Arg: type=");
 			rc.append(javaType);
 			rc.append("(");
