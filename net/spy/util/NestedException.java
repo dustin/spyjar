@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NestedException.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: NestedException.java,v 1.2 2003/01/14 18:11:34 dustin Exp $
 
 package net.spy.util;
 
@@ -33,6 +33,13 @@ public class NestedException extends Exception {
 	 * Get the root cause of this problem.
 	 */
 	public Throwable getRootCause() {
+		return(root);
+	}
+
+	/**
+	 * Get the root cause of this problem.
+	 */
+	public Throwable getCause() {
 		return(root);
 	}
 
