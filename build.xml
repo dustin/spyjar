@@ -225,7 +225,7 @@
 			<entry key="TSRCDIR" value="tests"/>
 			<entry key="TBUILDDIR" value="${BUILDTOP}/tests"/>
 			<entry key="TGENDIR" value="${BUILDTOP}/tests-gen"/>
-			<entry key="DOCDEST" value="${BUILDDIR}/docs"/>
+			<entry key="DOCDEST" value="${BUILDTOP}/docs"/>
 			<entry key="DEPRECATION" value="on"/>
 			<entry key="DEBUG" value="on"/>
 			<entry key="VERBOSE" value="off"/>
