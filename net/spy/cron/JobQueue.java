@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: JobQueue.java,v 1.3 2003/04/18 07:50:14 dustin Exp $
+// $Id: JobQueue.java,v 1.4 2003/04/18 20:15:47 dustin Exp $
 
 package net.spy.cron;
 
@@ -17,6 +17,9 @@ import net.spy.log.LoggerFactory;
 public class JobQueue extends ArrayList {
 
 	private Logger logger=null;
+
+	// Loop at least this frequently (half hour)
+	private static final long MAX_SLEEP_TIME=1800*1000;
 
 	/**
 	 * Get a new job queue.
@@ -60,6 +63,8 @@ public class JobQueue extends ArrayList {
 			// Add a job if it's ready.
 			if(j.isReady()) {
 				v.add(j);
+				// Reschedule the job
+				j.findNextRun();
 			} else if(j.isTrash()) {
 				getLogger().info("JobQueue: Removing " + j);
 				i.remove();
@@ -74,7 +79,7 @@ public class JobQueue extends ArrayList {
 	 */
 	public Date getNextStartDate() {
 		Date next=null;
-		long soonestJob=86400*1000;
+		long soonestJob=MAX_SLEEP_TIME;
 		long now=System.currentTimeMillis();
 		for(Iterator i=iterator(); i.hasNext(); ) {
 			Job j=(Job)i.next();

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Cron.java,v 1.6 2003/04/18 08:02:05 dustin Exp $
+// $Id: Cron.java,v 1.7 2003/04/18 20:15:45 dustin Exp $
 
 package net.spy.cron;
 
@@ -119,12 +119,9 @@ public class Cron extends SpyThread {
 				threads.addTask(j);
 			}
 
-			// Just to slow things down a bit.
-			yield();
-
 			// Find the soonest job less than a day out.
 			long now=System.currentTimeMillis();
-			Date next=jq.getNextStartDate();;
+			Date next=jq.getNextStartDate();
 			long soonestJob=0;
 
 			// If we didn't get a next job start date, the queue is likely

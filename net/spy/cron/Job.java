@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Job.java,v 1.4 2003/04/18 07:50:14 dustin Exp $
+// $Id: Job.java,v 1.5 2003/04/18 20:15:47 dustin Exp $
 
 package net.spy.cron;
 
@@ -66,7 +66,7 @@ public abstract class Job extends SpyObject implements Runnable {
 	/**
 	 * Get the time this job was requested to start.
 	 */
-	public Date getStartTime() {
+	public synchronized Date getStartTime() {
 		return(nextStart);
 	}
 
@@ -134,14 +134,30 @@ public abstract class Job extends SpyObject implements Runnable {
 	/**
 	 * Mark this job as having been started.
 	 */
-	protected synchronized void markStarted() {
+	protected void markStarted() {
 		hasrun=true;
-		if(ti==null) {
-			nextStart=null;
-		} else {
-			nextStart=ti.nextDate(nextStart);
-		}
 		isrunning=true;
+	}
+
+	/** 
+	 * Find the next time this Job should be run and adjust the start date
+	 * accordingly.
+	 *
+	 * This method will be called by JobQueue when looking for tasks to
+	 * run.
+	 */
+	public final synchronized void findNextRun() {
+		if(ti == null)  {
+			nextStart = null;
+		} else {
+			Date now=new Date();
+			while(nextStart.before(now)) {
+				nextStart=ti.nextDate(nextStart);
+			}
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Rescheduled " + this + " for " + nextStart);
+			}
+		}
 	}
 
 	/** 
@@ -164,8 +180,5 @@ public abstract class Job extends SpyObject implements Runnable {
 	 */
 	protected void markFinished() {
 		isrunning=false;
-		// Not sure, but if I don't slow down here, I start running into
-		// problems.
-		Thread.yield();
 	}
 }

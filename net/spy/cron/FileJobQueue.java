@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FileJobQueue.java,v 1.6 2002/11/22 02:20:09 dustin Exp $
+// $Id: FileJobQueue.java,v 1.7 2003/04/18 20:15:46 dustin Exp $
 
 package net.spy.cron;
 
@@ -81,6 +81,9 @@ public class FileJobQueue extends JobQueue {
 			try {
 				Job j=parseJob(line, lnr.getLineNumber());
 				if(j!=null) {
+					if(getLogger().isInfoEnabled()) {
+						getLogger().info("Added job:  " + j);
+					}
 					addJob(j);
 				}
 			} catch(Exception e) {
