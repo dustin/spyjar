@@ -83,6 +83,16 @@ public class ThreadPool extends ThreadGroup {
 	// 16,384 should be enough for anybody.
 	private static final int DEFAULT_LIST_LIMIT=16384;
 
+	// Default number of threads for a thread pool
+	private static final int DEFAULT_NUM_THREADS=5;
+
+	// Maximum amount of time to wait for an object notification while waiting
+	// for jobs to finish
+	private static final int WAIT_TIMEOUT=5000;
+
+	// StringBuffer default size for toString methods
+	private static final int TOSTRING_BUFFER_SIZE=128;
+
 	private boolean started=false;
 
 	// The priority for all threads we create
@@ -107,7 +117,7 @@ public class ThreadPool extends ThreadGroup {
 	 * @param n Number of threads.
 	 * @param prio Priority of the child threads.
 	 */
-	public ThreadPool(String name, int n, int priority) {
+	public ThreadPool(String name, int n, int prio) {
 		super(name);
 		setDaemon(true);
 
@@ -115,7 +125,7 @@ public class ThreadPool extends ThreadGroup {
 			throw new IllegalArgumentException(priority
 				+ " is an invalid priority.");
 		}
-		setPriority(priority);
+		setPriority(prio);
 
 		minIdleThreads=n;
 		maxTotalThreads=n;
@@ -138,7 +148,7 @@ public class ThreadPool extends ThreadGroup {
 	 * @param name Name of the pool.
 	 */
 	public ThreadPool(String name) {
-		this(name, 5, Thread.NORM_PRIORITY);
+		this(name, DEFAULT_NUM_THREADS, Thread.NORM_PRIORITY);
 	}
 
 	// Make sure the thread parameters are within reason
@@ -237,8 +247,7 @@ public class ThreadPool extends ThreadGroup {
 		boolean shutOneDown=false;
 		// Try to shut down something that doesn't appear to be running
 		// anything (although it may start as we go)
-		for(Iterator i=threads.iterator();
-			shutOneDown == false && i.hasNext(); ) {
+		for(Iterator i=threads.iterator(); !shutOneDown && i.hasNext();) {
 
 			RunThread rt=(RunThread)i.next();
 			if(!rt.isRunning()) {
@@ -267,7 +276,7 @@ public class ThreadPool extends ThreadGroup {
 	 */
 	public synchronized int getIdleThreadCount() {
 		int rv=0;
-		for(Iterator i=threads.iterator(); i.hasNext(); ) {
+		for(Iterator i=threads.iterator(); i.hasNext();) {
 			RunThread rt=(RunThread)i.next();
 			if(!rt.isRunning()) {
 				rv++;
@@ -290,7 +299,7 @@ public class ThreadPool extends ThreadGroup {
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(128);
+		StringBuffer sb=new StringBuffer(TOSTRING_BUFFER_SIZE);
 		sb.append(super.toString());
 		if(tasks==null) {
 			sb.append(" - no queue");
@@ -309,15 +318,15 @@ public class ThreadPool extends ThreadGroup {
 	 * Set the PoolManager class.  This class will be instantiated when the
 	 * ThreadPool is started.
 	 * 
-	 * @param poolManagerClass a subclass of ThreadPoolManager
+	 * @param pmc a subclass of ThreadPoolManager
 	 */
-	public void setPoolManagerClass(Class poolManagerClass) {
-		if(ThreadPoolManager.class.isAssignableFrom(poolManagerClass)) {
+	public void setPoolManagerClass(Class pmc) {
+		if(ThreadPoolManager.class.isAssignableFrom(pmc)) {
 			throw new IllegalArgumentException(
 				"PoolManagerClass must be a subclass of "
 				+ "ThreadPoolManager");
 		}
-		this.poolManagerClass=poolManagerClass;
+		this.poolManagerClass=pmc;
 	}
 
 	/** 
@@ -334,12 +343,12 @@ public class ThreadPool extends ThreadGroup {
 	 * 
 	 * @param maxTaskQueueSize a value &gt; 0
 	 */
-	public void setMaxTaskQueueSize(int maxTaskQueueSize) {
-		if(maxTaskQueueSize <= 0) {
+	public void setMaxTaskQueueSize(int mtqs) {
+		if(mtqs <= 0) {
 			throw new IllegalArgumentException(
 				"Value must be greater than or equal to zero.");
 		}
-		this.maxTaskQueueSize=maxTaskQueueSize;
+		this.maxTaskQueueSize=mtqs;
 	}
 
 	/** 
@@ -356,12 +365,12 @@ public class ThreadPool extends ThreadGroup {
 	 * 
 	 * @param minTotalThreads a value &ge; 0
 	 */
-	public void setMinTotalThreads(int minTotalThreads) {
-		if(minTotalThreads < 0) {
+	public void setMinTotalThreads(int mtt) {
+		if(mtt < 0) {
 			throw new IllegalArgumentException(
 				"Value must be greater than or equal to zero.");
 		}
-		this.minTotalThreads=minTotalThreads;
+		this.minTotalThreads=mtt;
 	}
 
 	/** 
@@ -376,12 +385,12 @@ public class ThreadPool extends ThreadGroup {
 	 * 
 	 * @param minIdleThreads a value &ge; 0
 	 */
-	public void setMinIdleThreads(int minIdleThreads) {
-		if(minIdleThreads < 0) {
+	public void setMinIdleThreads(int mit) {
+		if(mit < 0) {
 			throw new IllegalArgumentException(
 				"Value must be greater than or equal to zero.");
 		}
-		this.minIdleThreads=minIdleThreads;
+		this.minIdleThreads=mit;
 	}
 
 	/** 
@@ -396,12 +405,12 @@ public class ThreadPool extends ThreadGroup {
 	 * 
 	 * @param maxTotalThreads a value &ge; 0
 	 */
-	public void setMaxTotalThreads(int maxTotalThreads) {
-		if(maxTotalThreads < 0) {
+	public void setMaxTotalThreads(int mtt) {
+		if(mtt < 0) {
 			throw new IllegalArgumentException(
 				"Value must be greater than or equal to zero.");
 		}
-		this.maxTotalThreads=maxTotalThreads;
+		this.maxTotalThreads=mtt;
 	}
 
 	/** 
@@ -417,12 +426,12 @@ public class ThreadPool extends ThreadGroup {
 	 * 
 	 * @param startThreads a value &ge; 0
 	 */
-	public void setStartThreads(int startThreads) {
-		if(startThreads < 0) {
+	public void setStartThreads(int st) {
+		if(st < 0) {
 			throw new IllegalArgumentException(
 				"Value must be greater than or equal to zero.");
 		}
-		this.startThreads=startThreads;
+		this.startThreads=st;
 	}
 
 	/** 
@@ -437,20 +446,20 @@ public class ThreadPool extends ThreadGroup {
 	 * Set the priority to be used for any new threads within this threaad
 	 * group.
 	 */
-	public void setPriority(int priority) {
-		this.priority=priority;
+	public void setPriority(int p) {
+		this.priority=p;
 	}
 
 	/** 
 	 * Set the LinkedList to contain the tasks on which this ThreadPool
 	 * will be listening.
 	 */
-	public void setTasks(LinkedList tasks) {
+	public void setTasks(LinkedList t) {
 		if(started) {
 			throw new IllegalStateException("Can't set tasks after the "
 				+ "pool has started.");
 		}
-		this.tasks=tasks;
+		this.tasks=t;
 	}
 
 	/** 
@@ -465,8 +474,8 @@ public class ThreadPool extends ThreadGroup {
 	 * Set the observer who will receive notification whenever a task is
 	 * completed.
 	 */
-	public void setMonitor(ThreadPoolObserver monitor) {
-		this.monitor=monitor;
+	public void setMonitor(ThreadPoolObserver m) {
+		this.monitor=m;
 	}
 
 	// Make sure the thing's started
@@ -574,7 +583,7 @@ public class ThreadPool extends ThreadGroup {
 	 */
 	public synchronized int getActiveThreadCount() {
 		int rv=0;
-		for(Iterator i=threads.iterator(); i.hasNext(); ) {
+		for(Iterator i=threads.iterator(); i.hasNext();) {
 			RunThread t=(RunThread)i.next();
 			if(t.isAlive()) {
 				rv++;
@@ -596,7 +605,7 @@ public class ThreadPool extends ThreadGroup {
 		// threads
 		poolManager.requestStop();
 		// Now, tell all of the known threads that we don't need them anymore
-		for(Iterator i=threads.iterator(); i.hasNext(); ) {
+		for(Iterator i=threads.iterator(); i.hasNext();) {
 			RunThread t=(RunThread)i.next();
 			t.shutdown();
 		}
@@ -631,7 +640,7 @@ public class ThreadPool extends ThreadGroup {
 	public void waitForTaskCount(int num) throws InterruptedException {
 		while(getTaskCount() > num) {
 			synchronized(monitor) {
-				monitor.wait(5000);
+				monitor.wait(WAIT_TIMEOUT);
 			}
 		}
 	}
@@ -670,8 +679,8 @@ public class ThreadPool extends ThreadGroup {
 	// //////////////////////////////////////////////////////////////////////
 
 	private static class Task extends Object {
-		Runnable runnable=null;
-		boolean started=false;
+		private Runnable runnable=null;
+		private boolean started=false;
 
 		public Task(Runnable r) {
 			super();
@@ -734,14 +743,14 @@ public class ThreadPool extends ThreadGroup {
 		private Runnable running=null;
 		private long start=0;
 
-		public RunThread(ThreadGroup tg, LinkedList tasks,
-			ThreadPoolObserver monitor) {
+		public RunThread(ThreadGroup tg, LinkedList tsks,
+			ThreadPoolObserver mntr) {
 
 			super(tg, "RunThread");
 
 			runningMutex="runningMutex";
-			this.tasks=tasks;
-			this.monitor=monitor;
+			this.tasks=tsks;
+			this.monitor=mntr;
 
 			threadId=threadIds++;
 
@@ -754,7 +763,7 @@ public class ThreadPool extends ThreadGroup {
 		}
 
 		public String toString() {
-			StringBuffer sb=new StringBuffer(128);
+			StringBuffer sb=new StringBuffer(TOSTRING_BUFFER_SIZE);
 			sb.append(super.toString());
 
 			int size=0;
@@ -816,32 +825,34 @@ public class ThreadPool extends ThreadGroup {
 		public void run() {
 			while(going) {
 				try {
-					Task t=null;
+					Task tsk=null;
 					synchronized(tasks) {
-						t=(Task)tasks.removeFirst();
+						tsk=(Task)tasks.removeFirst();
 					}
 					// Get the runnable from the task (in a specific lock)
-					Runnable r=null;
-					synchronized(t) {
-						r=t.getTask();
-						t.notify();
+					Runnable rn=null;
+					synchronized(tsk) {
+						rn=tsk.getTask();
+						tsk.notify();
 					}
 					// Make sure we got something there.
-					if(r!=null) {
-						run(r);
+					if(rn!=null) {
+						run(rn);
 						// Let the monitor know we finished it
 						synchronized(monitor) {
-							monitor.completedJob(r);
+							monitor.completedJob(rn);
 						}
 					}
 				} catch(NoSuchElementException e) {
 					// If the stack is empty, wait for something to get added.
 					synchronized(tasks) {
 						try {
-							// Wait up to ten seconds
-							tasks.wait(10000);
+							// Wait for an object to show up
+							tasks.wait(WAIT_TIMEOUT);
 						} catch(InterruptedException ie) {
 							// That's OK, we'll try again.
+							getLogger().debug(
+								"Interrupted while waiting for task");
 						}
 					}
 				} // empty stack

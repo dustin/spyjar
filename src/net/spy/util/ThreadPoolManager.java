@@ -4,8 +4,6 @@
 
 package net.spy.util;
 
-import java.util.List;
-
 /**
  * Management thread for managing a ThreadPool.
  *
@@ -17,6 +15,11 @@ public class ThreadPoolManager extends LoopingThread {
 
 	private ThreadPool tp=null;
 
+	// How long to wait between runs
+	private static final int MS_PER_LOOP=60000;
+	// How long to wait after a notify before checking threads
+	private static final int SLEEP_TIME=1000;
+
 	/**
 	 * Get an instance of ThreadPoolManager.
 	 * @param tg the thread group in which the pool manager will exist
@@ -24,7 +27,7 @@ public class ThreadPoolManager extends LoopingThread {
 	public ThreadPoolManager(ThreadGroup tg) {
 		super(tg, "ThreadPoolManager");
 		setDaemon(true);
-		setMsPerLoop(60000);
+		setMsPerLoop(MS_PER_LOOP);
 	}
 
 	/** 
@@ -111,7 +114,7 @@ public class ThreadPoolManager extends LoopingThread {
 		int totalThreads=tp.getActiveThreadCount();
 
 		// Figure out if we can kill any off.
-		if( (idleThreads > minIdle) && (totalThreads > minThreads)) {
+		if((idleThreads > minIdle) && (totalThreads > minThreads)) {
 			getLogger().info("Shutting down a thread (bring us down to "
 				+ (totalThreads - 1) + ")");
 			tp.destroyThread();
@@ -126,7 +129,7 @@ public class ThreadPoolManager extends LoopingThread {
 		// a task is added so we can deal with it), but we don't want to go
 		// crazy processingt these things, so let's try to sleep
 		try {
-			sleep(1000);
+			sleep(SLEEP_TIME);
 		} catch(InterruptedException e) {
 			getLogger().warn("Interrutped", e);
 		}
