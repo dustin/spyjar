@@ -42,6 +42,8 @@ import net.spy.pool.JDBCPoolFiller;
  *  <li>dbMaxConns - maximum number of connections - default 5</li>
  *  <li>dbMaxLifeTime - maximum connection lifetime in milliseconds -
  *      default 6 hours</li>
+ *  <li>dbPingOnCheckout - if true, ping on object pool checkout
+ *      default: true</li>
  * </ul>
  */
 public class ObjectPoolConnectionSource extends SpyObject
@@ -191,6 +193,10 @@ public class ObjectPoolConnectionSource extends SpyObject
 			tmp="86400";
 		}
 		rv.put(prefix+"max_age", tmp);
+
+		// ping on checkout flag
+		tmp=conf.get("dbPingOnCheckout", "true");
+		rv.put(prefix + "pingOnCheckout", tmp);
 
 		// Driver name
 		tmp=conf.get("dbDriverName");
