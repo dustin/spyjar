@@ -16,7 +16,6 @@ directly from a pool.  Much less code is required for using the DBSP
 classes.
 
 
-
 * Saver/Savable
 
 Saver takes the DBSPs and turns multiples of DBSP calls into a single
@@ -40,4 +39,82 @@ each dependent object.  Saver works well in saving object that have
 associations which much be saved at once.  A good example would be an order
 in an order processing system, where the header and line item details much
 be saved atomically, or not at all.
+
+
+* Config
+
+SpyConfig allows for a simple configuration file to be read and processed,
+and used in a simple fashion.  It contains similar functionality to the
+Properties object, but adds in extra functionality.
+
+SpyConfig can read from a File object, simplifying the need to create a
+File stream of some sort.  Another feature is the ability to put a value
+into place, but only if it doesn't already exist (orput), this makes for
+nice value overloading.
+
+When telling SpyConfig about file locations, a set of files can be passed
+to SpyConfig for search path loading.  This makes default config locations
+a bit more flexible during development.  For instance a config search path
+could include looking for a file first as /usr/local/etc/config.properties,
+and then /etc/config.properties.  If the first is not found, it will
+continue onto the search File in the search path.
+
+
+* Cron/JobQueue
+
+The SpyJar adds Cron functionality to its list of features.  Although not
+much different that a typical scheduling system, SpyJar's Cron allows for a
+persistent Java JVM.  This means that 4 jobs running simultaneously would
+not each require its own JVM.
+
+Scheduling can occur down to the millisecond level, which allows for finer
+granularity than a typical minute level cron.  Jobs can also be scheduled for
+"run once" scenarios, where a job would run at a specific time and date, much
+like an at job.
+
+
+* Logging
+
+SpyJar includes a queued logging mechanism used for heavy flow, or burting
+of log messages.  This log queueing mechanism takes a log entry, and adds
+it to a queue, returning immediately, allow applications to log, but
+without the requirement of a blocking call.  Implemented in the SpyJar
+logging is the actualy queue, a persistent flushing thread, message
+wrappers, and the ability to broadcast message multicast senders and
+receivers.
+
+
+* Object Pooling
+
+An object pooling mechanism is included in SpyJar which allows for a pool
+of objects to be loaded, cached, and cleared (optional) at specific decay
+intervals.  Implementations include object caching and connection pooling,
+with the connection pooling being similar to commercial database connection
+pools available on the market.
+
+Also included is a GarbageCollection object which maintains reference
+listings, allowing for objects to be returned or cleared from the pool when
+they are no longer reference, is if not unreferenced explicitly.  This
+helps in the database connection pooling example in that many times a
+programmer can forget to explicitly return a connection to the database
+pool, and is return for them.  This feature is notably missing from many
+commercial connection/object pool implementations.
+
+
+* Utility Classes
+
+Implementations include utility classes and object which are specifically
+missing from earlier JDKs (1.1, 1.2), and in some cases are no longer
+required do to their inclusion in later JDKs (1.3, 1.4).  One key benefit
+of using the provided SpyJar utility classes is that their usage removes
+JVM version specific runtime requirements.
+
+- Base64: This class allows for Base64 convesion of string and file data
+- Debug: A general debugging class for putting debug messages into a file
+- Digest: A simple hashing mechanism, allows for salted hashes as well
+- Password Generator: Generates smart passwords with random seeds
+- RingBuffer: A ring buffer storage class implementation
+- LDIF processor: This class will read and write records in LDIF format
+- Thread pool: Assists with running parallel tasks, allows names and priority
+- UUDecode: allows for UUDecoding data streams, good for file transfers
 
