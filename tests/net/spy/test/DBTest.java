@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTest.java,v 1.2 2002/08/28 06:41:10 dustin Exp $
+// $Id: DBTest.java,v 1.3 2002/09/04 02:02:14 dustin Exp $
 
 package net.spy.test;
 
@@ -18,10 +18,12 @@ import junit.framework.TestSuite;
 
 import net.spy.SpyConfig;
 import net.spy.db.SpyCacheDB;
+import net.spy.db.DBSP;
 
 import net.spy.test.db.DumpTestTable;
 import net.spy.test.db.GetTestByNumber;
 import net.spy.test.db.CallTestFunc;
+import net.spy.test.db.ThreeColumnTest;
 
 /**
  * Test various DB functionality.
@@ -163,6 +165,29 @@ public class DBTest extends TestCase {
 	}
 
 	/** 
+	 * Test an SPT with early-binding numeric parameters.
+	 */
+	public void testSPTNoCacheWithEarlyBindingNumberParam()
+		throws SQLException {
+
+		GetTestByNumber db=new GetTestByNumber(conf);
+		db.setTestN(new BigDecimal(1234567));
+		ResultSet rs=db.executeQuery();
+		assertTrue(! (rs instanceof net.spy.db.CachedResultSet));
+		int nrows=0;
+		while(rs.next()) {
+			nrows++;
+			checkRow(rs);
+		}
+		rs.close();
+		db.close();
+
+		assertEquals("Incorrect number of rows returned for number match",
+			nrows, 2);
+	}
+
+
+	/** 
 	 * Test an SPT with numeric parameters.
 	 */
 	public void testSPTNoCacheWithNumberParam() throws SQLException {
@@ -216,5 +241,117 @@ public class DBTest extends TestCase {
 		rs.close();
 		gtf.close();
 	}
+
+	// Common stuff for testThreeColumns
+	private void threeColumnTester(
+		DBSP db, int first, int second, String third) throws SQLException {
 	
+		db.set("first", first);
+		db.set("second", second);
+		db.set("third", third);
+
+		ResultSet rs=db.executeQuery();
+		if(!rs.next()) {
+			fail("No results returned");
+		}
+
+		assertEquals("first", rs.getInt("first"), first);
+		assertEquals("second", rs.getInt("second"), second);
+		assertEquals("third", rs.getString("third"), third);
+
+		if(rs.next()) {
+			fail("Too many results returned.");
+		}
+
+		rs.close();
+	}
+
+	/** 
+	 * Test a DBSP call with three columns.
+	 */
+	public void testThreeColumns() throws SQLException {
+		ThreeColumnTest db=new ThreeColumnTest(conf);
+
+		threeColumnTester(db, 24, 7, "three sixty-five");
+		threeColumnTester(db, 8, 10, "or wallet sized");
+		threeColumnTester(db, 9, 5, "what a way to make a livin'");
+
+		db.close();
+	}
+
+	// Common stuff for testThreeColumnsShuffled
+	private void threeColumnTesterShuffled(
+		DBSP db, int first, int second, String third) throws SQLException {
+	
+		db.set("third", third);
+		db.set("second", second);
+		db.set("first", first);
+
+		ResultSet rs=db.executeQuery();
+		if(!rs.next()) {
+			fail("No results returned");
+		}
+
+		assertEquals("first", rs.getInt("first"), first);
+		assertEquals("second", rs.getInt("second"), second);
+		assertEquals("third", rs.getString("third"), third);
+
+		if(rs.next()) {
+			fail("Too many results returned.");
+		}
+
+		rs.close();
+	}
+
+	/** 
+	 * Test a DBSP call with three columns with out of sequence parameters.
+	 */
+	public void testThreeColumnsShuffled() throws SQLException {
+		ThreeColumnTest db=new ThreeColumnTest(conf);
+
+		threeColumnTesterShuffled(db, 24, 7, "three sixty-five");
+		threeColumnTesterShuffled(db, 8, 10, "or wallet sized");
+		threeColumnTesterShuffled(db, 9, 5, "what a way to make a livin'");
+
+		db.close();
+	}
+	
+	// Common stuff for testThreeColumnsEarlyBinding
+	private void threeColumnTesterEarlyBinding(
+		ThreeColumnTest db, int first, int second, String third)
+		throws SQLException {
+	
+		db.setFirst(first);
+		db.setSecond(second);
+		db.setThird(third);
+
+		ResultSet rs=db.executeQuery();
+		if(!rs.next()) {
+			fail("No results returned");
+		}
+
+		assertEquals("first", rs.getInt("first"), first);
+		assertEquals("second", rs.getInt("second"), second);
+		assertEquals("third", rs.getString("third"), third);
+
+		if(rs.next()) {
+			fail("Too many results returned.");
+		}
+
+		rs.close();
+	}
+
+	/** 
+	 * Test a DBSP call with three columns with early-binding parameters.
+	 */
+	public void testThreeColumnsEarlyBinding() throws SQLException {
+		ThreeColumnTest db=new ThreeColumnTest(conf);
+
+		threeColumnTesterEarlyBinding(db, 24, 7, "three sixty-five");
+		threeColumnTesterEarlyBinding(db, 8, 10, "or wallet sized");
+		threeColumnTesterEarlyBinding(db, 9, 5, "what a way to make a livin'");
+
+		db.close();
+	}
+
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.2 2002/08/30 16:45:54 knitterb Exp $
+// $Id: DBSP.java,v 1.3 2002/09/04 02:02:13 dustin Exp $
 
 package net.spy.db;
 
@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,41 +34,11 @@ import net.spy.SpyConfig;
  */
 public abstract class DBSP extends SpyCacheDB {
 
-	// The arguments themselves
-	private HashMap args=null;
-	
-	// the args in the order we got them
-	private ArrayList argsInorder=null;
+	// The set of parameters available to this DBSP (defined in the subclass)
+	private NamedObjectStorage parameters=null;
 
-	// The data type of this argument
-	private HashMap types=null;
-
-	private ArrayList paramsInorder=null;
-
-	/**
-	 * Required fields and their types.
-	 */
-	private HashMap required=null;
-	/**
-	 * Required fields in order.
-	 */
-	private ArrayList requiredInorder=null;
-	/**
-	 * Optional fields and their types.
-	 */
-	private HashMap optional=null;
-	/**
-	 * Optional fields in order.
-	 */
-	private ArrayList optionalInorder=null;
-	/**
-	 * Output fields and their types.
-	 */
-	private HashMap output=null;
-	/**
-	 * Output fields in order.
-	 */
-	private ArrayList outputInorder=null;
+	// The set of arguments provided to this DBSP at runtime
+	private NamedObjectStorage arguments=null;
 
 	// SP name
 	private String spname=null;
@@ -75,7 +46,7 @@ public abstract class DBSP extends SpyCacheDB {
 	// Caching info
 	private long cachetime=0;
 
-	private boolean debug=true;
+	private boolean debug=false;
 
 	// The query
 	private String query=null;
@@ -101,16 +72,8 @@ public abstract class DBSP extends SpyCacheDB {
 
 	// Initialize hashtables
 	private void initsp() {
-		this.args=new HashMap();
-		this.argsInorder=new ArrayList();
-		this.types=new HashMap();
-		this.required=new HashMap();
-		this.optional=new HashMap();
-		this.output=new HashMap();
-		this.requiredInorder=new ArrayList();
-		this.optionalInorder=new ArrayList();
-		this.outputInorder=new ArrayList();
-		this.paramsInorder=new ArrayList();
+		this.parameters=new NamedObjectStorage();
+		this.arguments=new NamedObjectStorage();
 	}
 
 	/**
@@ -211,6 +174,22 @@ public abstract class DBSP extends SpyCacheDB {
 		return(pst);
 	}
 
+	/** 
+	 * Define a parameter.
+	 * 
+	 * @param p the parameter
+	 * @throws SQLException if the parameter has already been added
+	 */
+	protected void addParameter(Parameter p) throws SQLException {
+		if(parameters.contains(p.getName())) {
+			throw new SQLException(
+				"parameter ``" + p + "'' already provided.");
+		}
+
+		// Save it.
+		parameters.add(p);
+	}
+
 	/**
 	 * Define a field to be required.
 	 *
@@ -220,13 +199,7 @@ public abstract class DBSP extends SpyCacheDB {
 	 * @see java.sql.Types
 	 */
 	protected void setRequired(String name, int type) throws SQLException {
-		Object tmp=required.put(name, new Integer(type));
-		if(tmp!=null) {
-			throw new SQLException("required parameter ``"
-				+ name + "'' already provided.");
-		}
-		requiredInorder.add(name);
-		paramsInorder.add(name);
+		addParameter(new Parameter(Parameter.REQUIRED, type, name));
 	}
 
 	/**
@@ -238,13 +211,7 @@ public abstract class DBSP extends SpyCacheDB {
 	 * @see java.sql.Types
 	 */
 	protected void setOptional(String name, int type) throws SQLException {
-		Object tmp=optional.put(name, new Integer(type));
-		if(tmp!=null) {
-			throw new SQLException("optional parameter ``"
-				+ name + "'' already provided.");
-		}
-		optionalInorder.add(name);
-		paramsInorder.add(name);
+		addParameter(new Parameter(Parameter.OPTIONAL, type, name));
 	}
 
 	/**
@@ -256,13 +223,7 @@ public abstract class DBSP extends SpyCacheDB {
 	 * @see java.sql.Types
 	 */
 	protected void setOutput(String name, int type) throws SQLException {
-		Object tmp=output.put(name, new Integer(type));
-		if(tmp!=null) {
-			throw new SQLException("output parameter ``"
-				+ name + "'' already provided.");
-		}
-		outputInorder.add(name);
-		paramsInorder.add(name);
+		addParameter(new Parameter(Parameter.OUTPUT, type, name));
 	}
 
 	/**
@@ -275,53 +236,43 @@ public abstract class DBSP extends SpyCacheDB {
 	 */
 	protected void setArg(String which, Object what, int type)
 			throws SQLException {
-		if (what!=null) {
-			args.put(which, what);
-			argsInorder.add(which);
-			types.put(which, new Integer(type));
-		} else { // it was a null object
-			if (debug) {
-				System.err.println("Adding a null type for ``"+which+"''");
+		arguments.add(new Argument(type, which, what));
+	}
+
+	/** 
+	 * Get the arguments in parameter order.
+	 * 
+	 * @return an unmodifiable list of {@link Argument} objects
+	 */
+	protected List getArguments() {
+		ArrayList al=new ArrayList(arguments.size());
+		for(Iterator i=getParameters().iterator(); i.hasNext();) {
+			Parameter p=(Parameter)i.next();
+
+			Argument arg=(Argument)arguments.get(p.getName());
+			if(arg==null) {
+				throw new NullPointerException("Missing argument for " + p);
 			}
-			DBNull n=new DBNull(type);
-			args.put(which, n);
-			argsInorder.add(which);
-			types.put(which, new Integer(Types.NULL));
+			al.add(arg);
 		}
+		return(al);
 	}
 
 	/** 
-	 * Get the arguments as passed in.
+	 * Get a List of all of the parameters in the order in which they were
+	 * defined.
 	 * 
-	 * @return an unmodifiable view of the current arguments.
+	 * @return a List of {@link Parameter} objects.
 	 */
-	protected Map getArgs() {
-		return(Collections.unmodifiableMap(args));
-	}
-
-	protected List getArgsInorder() {
-		return(Collections.unmodifiableList(argsInorder));
-	}
-
-	protected List getParamsInorder() {
-		return(Collections.unmodifiableList(paramsInorder));
-	}
-
-	/** 
-	 * Get the types for all the arguments.
-	 * 
-	 * @return a mapping of arg name -&gt; Integer type
-	 */
-	protected Map getTypes() {
-		return(Collections.unmodifiableMap(types));
+	protected List getParams() {
+		return(parameters.getObjectList());
 	}
 
 	/** 
 	 * Reset all arguments.
 	 */
 	protected void resetArgs() {
-		args.clear();
-		types.clear();
+		arguments.clear();
 	}
 
 	/**
@@ -347,73 +298,45 @@ public abstract class DBSP extends SpyCacheDB {
 
 		if(debug) {
 			System.err.println("Checking");
-			System.err.println("Required:  "+ required);
-			System.err.println("Optional:  "+ optional);
-			System.err.println("Output:  "+ output);
-			System.err.println("Args:  "+ args);
-			System.err.println("Types:  "+ types);
+			System.err.println("Parameters:  "+ parameters);
+			System.err.println("Args:  "+ arguments);
 		}
 
-		// First, verify all of the arguments we have are correctly typed.
-		for(Iterator e=args.keySet().iterator(); e.hasNext(); ) {
-			String key=(String)e.next();
+		// Now, verify all of the arguments we have are correctly typed.
+		for(Iterator i=arguments.getObjectList().iterator(); i.hasNext(); ) {
+			Argument arg=(Argument)i.next();
 
-			boolean checked=false;
+			// Find the matching parameter.
+			Parameter p=(Parameter)parameters.get(arg.getName());
 
-			// Check required type
-			Integer typei=(Integer)required.get(key);
-			if(typei!=null) {
-				Integer mytype=(Integer)types.get(key);
-
-				// Check if the type is set right, or is null
-				if(! mytype.equals(typei)
-					&& ! mytype.equals(new Integer(Types.NULL))) {
-					throw new SQLException("Invalid type for arg " + key
-						+ " type was "
-						+ mytype + " ("
-							+ TypeNames.getTypeName(mytype.intValue()) + ")"
-						+ " should be "
-						+ typei
-							+ " (" + TypeNames.getTypeName(typei.intValue())
-							+ ")"
-					);
-				}
-				checked=true;
+			// Verify the argument exists
+			if(p==null) {
+				throw new SQLException("Invalid argument " + arg);
 			}
 
-			// Check optional type
-			typei=(Integer)optional.get(key);
-			if(typei!=null) {
-				Integer mytype=(Integer)types.get(key);
-				if(! typei.equals(mytype)) {
-					throw new SQLException("Invalid type for arg " + key);
-				}
-				checked=true;
-			}
-
-			// Check output type
-			typei=(Integer)output.get(key);
-			if(typei!=null) {
-				Integer mytype=(Integer)types.get(key);
-				if(! typei.equals(mytype)) {
-					throw new SQLException("Invalid type for arg " + key);
-				}
-				checked=true;
-			}
-
-			// If it's not required or optional, it's invalid.
-			if(!checked) {
-				throw new SQLException("Invalid argument:  " + key);
+			// Check the type
+			if(p.getJavaType() != arg.getJavaType()) {
+				throw new SQLException("Invalid type for arg " + arg
+					+ " type was "
+					+ arg.getJavaType() + " ("
+						+ TypeNames.getTypeName(arg.getJavaType()) + ")"
+					+ " should be "
+					+ p.getJavaType()
+						+ " (" + TypeNames.getTypeName(p.getJavaType())
+						+ ")"
+				);
 			}
 		}
 
 		// Next, verify all of the required arguments are there.
-		for(Iterator e=required.keySet().iterator(); e.hasNext(); ) {
-			String key=(String)e.next();
+		for(Iterator i=parameters.getObjectList().iterator(); i.hasNext(); ) {
+			Parameter p=(Parameter)i.next();
 
-			if(args.get(key) == null) {
-				throw new SQLException("Required argument "
-					+ key + " missing.");
+			if(p.getParamType() == Parameter.REQUIRED) {
+				if(arguments.get(p.getName()) == null) {
+					throw new SQLException("Required argument "
+						+ p + " missing.");
+				}
 			}
 		}
 
@@ -434,20 +357,18 @@ public abstract class DBSP extends SpyCacheDB {
 		querySb.append(spname);
 		querySb.append(" ");
 
-		// Get the keys in a vector so we can make sure they come out in
-		// the right order.
-		ArrayList v=new ArrayList();
-		for(Iterator e=getParamsInorder().iterator(); e.hasNext(); ) {
-			String param=(String)e.next();
-			v.add(param);
+		int nargs=0;
+		for(Iterator e=getArguments().iterator(); e.hasNext(); ) {
+			Argument arg=(Argument)e.next();
 
 			querySb.append("\t@");
-			querySb.append(param);
+			querySb.append(arg.getName());
 			querySb.append("=?,\n");
+			nargs++;
 		}
 
 		// Remove the last comma if we had params
-		if(v.size()>0) {
+		if(nargs>0) {
 			querySb=new StringBuffer(querySb.toString().substring(0,
 										querySb.length()-2));
 		}
@@ -467,7 +388,7 @@ public abstract class DBSP extends SpyCacheDB {
 
 		// Fill in the arguments.
 		setQuery(query);
-		applyArgs(v);
+		applyArgs(getArguments());
 	}
 
 	/**
@@ -494,12 +415,13 @@ public abstract class DBSP extends SpyCacheDB {
 	protected void setQuery(String query) {
 		this.query=query;
 
+		/* XXX:  This is currently broken as I'm redoing args and params
 		if(debug) {
 			System.err.println("DBSP Query:  " + query);
 			System.err.println("\t-");
 
-			for(Iterator e=requiredInorder.iterator(); e.hasNext(); ) {
-				String key=(String)e.next();
+			for(Iterator i=parameters.iterator(); i.hasNext(); ) {
+				Parameter p=(String)e.next();
 				String val=args.get(key).toString();
 				System.err.println("\t" + key + "=" + val);
 			}
@@ -521,8 +443,8 @@ public abstract class DBSP extends SpyCacheDB {
 					System.err.println("\t" + key + "=" + val + " output");
 				}
 			}
-
 		}
+		*/
 	}
 
 	/** 
@@ -536,7 +458,7 @@ public abstract class DBSP extends SpyCacheDB {
 	 * Fill in the arguments (with types) for the given list of parameters.
 	 *
 	 * @param query the query we'll be calling
-	 * @param v the list of named parameters we need to add, in order
+	 * @param v the list of Parameters we need to add, in order
 	 */
 	protected void applyArgs(Collection v) throws SQLException {
 
@@ -550,18 +472,13 @@ public abstract class DBSP extends SpyCacheDB {
 		// Use this iterator for the now positional arguments
 		int i=1;
 		for(Iterator e=v.iterator(); e.hasNext(); ) {
-			String key=(String)e.next();
-			Object o=args.get(key);
+			Argument arg=(Argument)e.next();
+			Object o=arg.getValue();
+			int type=arg.getJavaType();
 
-			Integer typeInt=(Integer)types.get(key);
-
-			// Check the type
-			if(typeInt == null) {
-				throw new SQLException ("No argument given for " + key);
+			if(isDebugEnabled()) {
+				System.err.println("arg[" + i + "] = " + arg);
 			}
-
-			// Get it as an int so we can switch it
-			int type=typeInt.intValue();
 
 			try {
 				switch(type) {
@@ -617,7 +534,7 @@ public abstract class DBSP extends SpyCacheDB {
 				throw se;
 			} catch (Exception applyException) {
 				applyException.printStackTrace();
-				String msg="Problem setting " + key
+				String msg="Problem setting " + arg
 					+ " in prepared statement for type "
 					+ TypeNames.getTypeName(type) + " "
 					+ o.toString() + " : " + applyException;
@@ -836,51 +753,98 @@ public abstract class DBSP extends SpyCacheDB {
 	}
 
 	/** 
-	 * Get the names of all required arguments.
+	 * Get a List containing all parameters.
 	 * 
-	 * @return a List of Strings representing the required arguments in the
-	 * order in which they will be passed into the query
+	 * @return an umodifiable List of {@link Parameter} objects.
+	 */
+	public List getParameters() {
+		return(parameters.getObjectList());
+	}
+
+	/** 
+	 * Get a List of parameters of a specific type.
+	 * 
+	 * @param type the Parameter type.
+	 * @return a list of {@link Parameter}s of the specified type.
+	 */
+	public List getParameters(int type) {
+		ArrayList al=new ArrayList();
+
+		for(Iterator i=getParameters().iterator(); i.hasNext(); ) {
+			Parameter p=(Parameter)i.next();
+			if(p.getJavaType() == type) {
+				al.add(p);
+			}
+		}
+
+		return(al);
+	}
+
+	/** 
+	 * Get the required arguments.
+	 *
+	 * @deprecated use getParameters() or getParameters(int) instead
+	 * 
+	 * @return a List of {@link Parameter}s representing the required
+	 * 	arguments in the order in which they will be passed into the query
 	 */
 	public List getRequiredArgs() {
-		return(Collections.unmodifiableList(requiredInorder));
+		return(getParameters(Parameter.REQUIRED));
 	}
 
 	/** 
-	 * Get the names of all optional arguments.
+	 * Get the optional arguments.
+	 *
+	 * @deprecated use getParameters() or getParameters(int) instead
 	 * 
-	 * @return a List of Strings representing the optional arguments in the
-	 * order in which they will be passed into the query
+	 * @return a List of {@link Parameter}s representing the optional
+	 * 	arguments in the order in which they will be passed into the query
 	 */
 	public List getOptionalArgs() {
-		return(Collections.unmodifiableList(optionalInorder));
+		return(getParameters(Parameter.OPTIONAL));
 	}
 
 	/** 
-	 * Get the names of all output arguments.
+	 * Get the output arguments.
+	 *
+	 * @deprecated use getParameters() or getParameters(int) instead
 	 * 
-	 * @return a List of Strings representing the output arguments in the
-	 * order in which they will be passed into the query
+	 * @return a List of {@link Parameter}s representing the output
+	 * 	arguments in the order in which they will be passed into the query
 	 */
 	public List getOutputArgs() {
-		return(Collections.unmodifiableList(outputInorder));
+		return(getParameters(Parameter.OUTPUT));
 	}
 
 	/**
-	 * Get the type (java.sql.Types) of the given variable.
+	 * Get the {@link java.sql.Types} type of the given parameter.
 	 *
 	 * @return the type, or -1 if there's no such variable
 	 */
 	public int getType(String var) {
 		int rv=-1;
 
-		Integer i=(Integer)required.get(var);
-		if(i!=null) {
-			rv=i.intValue();
-		} else {
-			i=(Integer)optional.get(var);
-			if(i!=null) {
-				rv=i.intValue();
-			}
+		Parameter p=(Parameter)parameters.get(var);
+		if(p!=null) {
+			rv=p.getJavaType();
+		}
+
+		return(rv);
+	}
+
+	/** 
+	 * Get the {@link Parameter} type.
+	 * 
+	 * @param var the name of the parameter
+	 * @return the {@link Parameter} type, or -1 if there's no such
+	 * 			parameter
+	 */
+	public int getParameterType(String var) {
+		int rv=-1;
+
+		Parameter p=(Parameter)parameters.get(var);
+		if(p!=null) {
+			rv=p.getParamType();
 		}
 
 		return(rv);
@@ -1006,5 +970,292 @@ public abstract class DBSP extends SpyCacheDB {
 			System.out.println("Warning:  " + warn);
 			warn=warn.getNextWarning();
 		}
+	}
+
+	// Generic container for named objects.  Ideally, I'd like to use a
+	// LinkedHashMap, but I don't have them before java 1.4, so here we go
+	private class NamedObjectStorage extends Object {
+
+		private Map byName=null;
+		private List byPosition=null;
+
+		/** 
+		 * Get a NamedObjectStorage instance.
+		 */
+		public NamedObjectStorage() {
+			super();
+			byName=new HashMap();
+			byPosition=new LinkedList();
+		}
+
+		/** 
+		 * String me.
+		 */
+		public String toString() {
+			return(byPosition.toString());
+		}
+
+		/** 
+		 * Get the number of objects stored in this object.
+		 * 
+		 * @return number of objects
+		 */
+		public int size() {
+			return(byPosition.size());
+		}
+
+		/** 
+		 * Add the object to the list.
+		 * 
+		 * @param no the NamedObject to add
+		 */
+		public void add(NamedObject no) {
+			// First, get rid of an existing one if there is one.
+			if(byName.containsKey(no.getName())) {
+				byName.remove(no.getName());
+
+				for(Iterator i=byPosition.iterator(); i.hasNext(); ) {
+					NamedObject sno=(NamedObject)i.next();
+					if(no.getName().equals(sno.getName())) {
+						i.remove();
+					}
+				}
+			}
+			// Now add the new one
+			byName.put(no.getName(), no);
+			byPosition.add(no);
+		}
+
+		/** 
+		 * Get the named object.
+		 * 
+		 * @param name the name of the object to get
+		 * @return the NamedObject with that name, or null if there isn't one
+		 */
+		public NamedObject get(String name) {
+			return((NamedObject)byName.get(name));
+		}
+
+		/** 
+		 * Determine whether the storage contains an object with the given
+		 * name.
+		 * 
+		 * @param name the name of the object we're looking for
+		 * @return true if the object is here
+		 */
+		public boolean contains(String name) {
+			return(byName.containsKey(name));
+		}
+
+		/** 
+		 * Get a Map of object names to objects.
+		 * 
+		 * @return an unmodifable map mapping object names to objects
+		 */
+		public Map getObjectMap() {
+			return(Collections.unmodifiableMap(byName));
+		}
+
+		/** 
+		 * Get a List of objects in insert order.
+		 * 
+		 * @return an unmodifiable list of objects in insert order
+		 */
+		public List getObjectList() {
+			return(Collections.unmodifiableList(byPosition));
+		}
+
+		/** 
+		 * Get rid of all objects.
+		 */
+		public void clear() {
+			byName.clear();
+			byPosition.clear();
+		}
+
+	}
+
+	/** 
+	 * Objects with names.
+	 */
+	public abstract class NamedObject extends Object {
+
+		private String name=null;
+
+		/** 
+		 * Get an instance of a named object with the given name.
+		 * 
+		 * @param name 
+		 */
+		protected NamedObject(String name) {
+			super();
+
+			if(name==null) {
+				throw new NullPointerException("name not given");
+			}
+
+			this.name=name;
+		}
+
+		/** 
+		 * Get the name of this object.
+		 */
+		public String getName() {
+			return(name);
+		}
+
+		/** 
+		 * String me.
+		 */
+		public String toString() {
+			StringBuffer sb=new StringBuffer(32);
+
+			sb.append("{");
+			sb.append(getClass().getName());
+			sb.append(" ");
+			sb.append(getName());
+			sb.append("}");
+
+			return(sb.toString());
+		}
+
+		/** 
+		 * Get the hash code of the name of this object.
+		 * 
+		 * @return getName().hashCode()
+		 */
+		public int hashCode() {
+			return(name.hashCode());
+		}
+
+		/** 
+		 * Test for equality.
+		 * 
+		 * @param o object to test against
+		 * @return true if <code>o</code> is a NamedObject object with the
+		 * 			same name
+		 */
+		public boolean equals(Object o) {
+			boolean rv=false;
+
+			if(o instanceof NamedObject) {
+				NamedObject no=(NamedObject)o;
+
+				rv=name.equals(no.name);
+			}
+
+			return(rv);
+		}
+
+
+	}
+
+	/** 
+	 * Parameters for DBSPs.
+	 */
+	public class Parameter extends NamedObject {
+
+		/** 
+		 * Parameter type indicating this is a required parameter.
+		 */
+		public static final int REQUIRED=1;
+		/** 
+		 * Parameter type indicating this is an optional parameter.
+		 */
+		public static final int OPTIONAL=2;
+		/** 
+		 * Parameter type indicating this is an output parameter.
+		 */
+		public static final int OUTPUT=2;
+
+		private int paramType=0;
+		private int javaType=0;
+
+		/** 
+		 * Construct a new Parameter.
+		 * 
+		 * @param paramType the parameter type (REQUIRED, etc...)
+		 * @param javaType the {@link java.sql.Types} type
+		 * @param name name of the parametr
+		 */
+		public Parameter(int paramType, int javaType, String name) {
+
+			super(name);
+
+			this.paramType=paramType;
+			this.javaType=javaType;
+
+			validateParamType();
+		}
+		private void validateParamType() {
+			if( (paramType != REQUIRED)
+				&& (paramType != OPTIONAL)
+				&& (paramType != OUTPUT)) {
+
+				throw new IllegalArgumentException(paramType
+					+ " is not a valid " + getClass().getName()
+					+ " type.");
+			}
+		} // validateParamType
+
+		/** 
+		 * Get the type of this parameter.
+		 */
+		public int getParamType() {
+			return(paramType);
+		}
+
+		/** 
+		 * Get the {@link java.sql.Types} type of this parameter.
+		 */
+		public int getJavaType() {
+			return(javaType);
+		}
+
+	}
+	
+	/** 
+	 * Arguments for DBSPs.
+	 */
+	public class Argument extends NamedObject {
+
+		private int javaType=0;
+		private Object value=null;
+
+		/** 
+		 * Construct a new Argument.
+		 * 
+		 * @param javaType the {@link java.sql.Types} type
+		 * @param name name of the parametr
+		 */
+		public Argument(int javaType, String name, Object value) {
+
+			super(name);
+
+			this.javaType=javaType;
+			this.value=value;
+		}
+
+		/** 
+		 * Get the {@link java.sql.Types} type of this parameter.
+		 */
+		public int getJavaType() {
+			return(javaType);
+		}
+
+		/** 
+		 * Get the value of this argument.
+		 * @return the object passed in at construct time unless it was
+		 * 			null, in which case it will be an appropriate
+		 *			{@link DBNull} object 
+		 */
+		public Object getValue() {
+			Object rv=value;
+			if(rv==null) {
+				rv=new DBNull(javaType);
+			}
+			return(rv);
+		}
+
 	}
 }

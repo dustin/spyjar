@@ -1,0 +1,24 @@
+#
+# Copyright (c) 2002  2wire, Inc.
+#
+# $Id
+#
+
+@package
+net.spy.test.db
+
+@description
+Test SPT with three columns.
+
+@sql
+select ? as first, ? as second, ? as third
+
+@params
+first required INTEGER First argument.
+second required INTEGER Second argument.
+third required VARCHAR Third argument.
+
+@results
+first INTEGER First argument.
+second INTEGER Second argument.
+third VARCHAR Third argument.

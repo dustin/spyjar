@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBCP.java,v 1.3 2002/08/30 16:44:40 knitterb Exp $
+// $Id: DBCP.java,v 1.4 2002/09/04 02:02:13 dustin Exp $
 
 package net.spy.db;
 
@@ -79,7 +79,7 @@ public abstract class DBCP extends DBSP {
 	 * Fill in the arguments (with types) for the given list of parameters.
 	 *
 	 * @param query the query we'll be calling
-	 * @param v the list of named parameters we need to add, in order
+	 * @param v the list of Argument objects we need to add, in order
 	 */
 	protected void applyArgs(Collection v)
 			throws SQLException {
@@ -95,38 +95,28 @@ public abstract class DBCP extends DBSP {
 			}
 		}
 
-		// Get the arguments and types
-		Map args=getArgs();
-		Map types=getTypes();
-
 		// Use this iterator for the now positional arguments
-		for(Iterator e=v.iterator(); e.hasNext(); ) {
+		for(Iterator e=getArguments().iterator(); e.hasNext(); ) {
 			int i=argument_index;
-			String key=(String)e.next();
-			Object o=args.get(key);
 
-			Integer typeInt=(Integer)types.get(key);
-
-			// Check the type
-			if(typeInt == null) {
-				throw new SQLException ("No argument given for " + key);
-			}
+			Argument arg=(Argument)e.next();
+			Object o=arg.getValue();
 
 			// Get it as an int so we can switch it
-			int type=typeInt.intValue();
+			int type=arg.getJavaType();
 
 			try {
-				if(getOutputArgs().contains(key)) {
+				if(getParameterType(arg.getName()) == Parameter.OUTPUT) {
 					if (isDebugEnabled()) {
 						System.err.println("OUT -> Setting column "
-							+key+"("+i+") type "+type);
+							+arg+"("+i+") type "+type);
 					}
 					CallableStatement cst=(CallableStatement)pst;
 					cst.registerOutParameter(i, type);
 				} else {
 					if (isDebugEnabled()) {
 						System.err.println("IN -> Setting column "
-							+key+"("+i+") type "+type);
+							+arg+"("+i+") type "+type);
 					}
 					switch(type) {
 						case Types.BIT:
@@ -182,7 +172,7 @@ public abstract class DBCP extends DBSP {
 				throw se;
 			} catch (Exception applyException) {
 				applyException.printStackTrace();
-				String msg="Problem setting " + key
+				String msg="Problem setting " + arg
 					+ " in prepared statement for type "
 					+ TypeNames.getTypeName(type) + " "
 					+ o.toString() + " : " + applyException;
@@ -202,41 +192,33 @@ public abstract class DBCP extends DBSP {
 		// Make sure all the arguments are there.
 		checkArgs();
 
-		ArrayList alist=new ArrayList();
-
 		// Get ready to build our query.
 		StringBuffer querySb=new StringBuffer(256);
-		//querySb.append("{call ");
+		querySb.append("{call ");
 		querySb.append(getSPName());
-		//querySb.append(" (");
+		querySb.append(" (");
 
-		/*
-		// input vars
-		for(Iterator e=getRequiredArgs().iterator(); e.hasNext(); ) {
-			String param=(String)e.next();
-			alist.add(param);
+		int nargs=0;
+		for(Iterator i=getArguments().iterator(); i.hasNext(); ) {
+			Argument arg=(Argument)i.next();
 			querySb.append("?,");
-		}
-
-		// output vars
-		for(Iterator e=getOutputArgs().iterator(); e.hasNext(); ) {
-			String param=(String)e.next();
-			alist.add(param);
-			querySb.append("?,");
+			nargs++;
 		}
 
 		// Remove the last comma if we had params
-		if(alist.size()>0) {
+		if(nargs>0) {
 			querySb=new StringBuffer(querySb.toString().substring(0,
 										querySb.length()-1));
 		}
 
 		// finish out
 		querySb.append(")}");
-		*/
-
 
 		String query=querySb.toString().trim();
+
+		if (isDebugEnabled()) {
+			System.err.println("Query: "+query);
+		}
 
 		PreparedStatement pst=getPreparedStatement();
 
@@ -251,13 +233,9 @@ public abstract class DBCP extends DBSP {
 			setPreparedStatement(pst);
 		}
 
-		if (isDebugEnabled()) {
-			System.out.println("Query: "+query);
-		}
-
 		// Fill in the arguments.
 		setQuery(query);
-		applyArgs(getParamsInorder());
+		applyArgs(getArguments());
 	}
 
 }

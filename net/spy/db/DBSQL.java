@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSQL.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: DBSQL.java,v 1.2 2002/09/04 02:02:13 dustin Exp $
 
 package net.spy.db;
 
@@ -35,6 +35,6 @@ public abstract class DBSQL extends DBSP {
 		// Make sure all the arguments are there.
 
 		checkArgs();
-		applyArgs(getRequiredArgs());
+		applyArgs(getArguments());
 	}
 }

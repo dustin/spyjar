@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.9 2002/08/30 16:48:05 knitterb Exp $
+// $Id: SPGen.java,v 1.10 2002/09/04 02:02:13 dustin Exp $
 
 package net.spy.util;
 
@@ -37,7 +37,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.9 $";
+	private String version="$Revision: 1.10 $";
 	private long cachetime=0;
 	private ArrayList sqlquery=null;
 	private ArrayList required=null;
@@ -92,6 +92,11 @@ public class SPGen extends Object {
 		return(types.contains(name));
 	}
 
+	/** 
+	 * Perform the actual generation.
+	 * 
+	 * @throws Exception if there's a problem parsing or writing
+	 */
 	public void generate() throws Exception {
 		parse();
 		write();
@@ -105,6 +110,79 @@ public class SPGen extends Object {
 		Date then=new Date(thenT);
 		TimeSpan ts=new TimeSpan(now, then);
 		return(ts.toString());
+	}
+
+	// Create a methodable name (i.e. blah returns Blah so you can make
+	// getBlah.
+	private String methodify(String word) {
+		StringBuffer sb=new StringBuffer(word.length());
+
+		StringTokenizer st=new StringTokenizer(word, "_");
+		while(st.hasMoreTokens()) {
+			String part=st.nextToken();
+			StringBuffer mntmp=new StringBuffer(part);
+			char c=Character.toUpperCase(mntmp.charAt(0));
+			mntmp.setCharAt(0, c);
+
+			sb.append(mntmp.toString());
+		}
+
+		return(sb.toString());
+	}
+
+	// Create a specific set method for a given parameter.
+	private String createSetMethod(Parameter p) throws Exception {
+		String rv=null;
+		String type=null;
+
+		// TODO:  Replace this with an extensible Map.
+		if(p.getType().equals("java.sql.Types.BIT")) {
+			type="boolean";
+		} else if(p.getType().equals("java.sql.Types.DATE")) {
+			type="java.sql.Date";
+		} else if(p.getType().equals("java.sql.Types.DOUBLE")) {
+			type="double";
+		} else if(p.getType().equals("java.sql.Types.FLOAT")) {
+			type="float";
+		} else if(p.getType().equals("java.sql.Types.INTEGER")) {
+			type="int";
+		} else if(p.getType().equals("java.sql.Types.BIGINT")) {
+			type="long";
+		} else if(p.getType().equals("java.sql.Types.NUMERIC")) {
+			type="java.math.BigDecimal";
+		} else if(p.getType().equals("java.sql.Types.DECIMAL")) {
+			type="java.math.BigDecimal";
+		} else if(p.getType().equals("java.sql.Types.SMALLINT")) {
+			type="int";
+		} else if(p.getType().equals("java.sql.Types.TINYINT")) {
+			type="short";
+		} else if(p.getType().equals("java.sql.Types.OTHER")) {
+			type="java.lang.Object";
+		} else if(p.getType().equals("java.sql.Types.VARCHAR")) {
+			type="java.lang.String";
+		} else if(p.getType().equals("java.sql.Types.TIME")) {
+			type="java.sql.Time";
+		} else if(p.getType().equals("java.sql.Types.TIMESTAMP")) {
+			type="java.sql.Timestamp";
+		} else {
+			throw new Exception("Whoops, type " + p.getType() 
+				+ " seems to have been overlooked.");
+		}
+
+		String methodName=methodify(p.getName());
+
+		rv="\t/**\n"
+			+ "\t * Set the ``" + p.getName() + "'' parameter.\n"
+			+ "\t * " + p.getDescription() + "\n"
+			+ "\t *\n"
+			+ "\t * @param to the value to which to set the parameter\n"
+			+ "\t */\n"
+			+ "\tpublic void set" + methodName + "(" + type + " to)\n"
+			+ "\t\tthrows SQLException {\n\n"
+			+ "\t\tset(\"" + p.getName() + "\", to);\n"
+			+ "\t}\n";
+	
+		return(rv);
 	}
 
 	private void write() throws Exception {
@@ -354,40 +432,6 @@ public class SPGen extends Object {
 				}
 			}
 		}
-			
-			
-		/*
-		// Set the required parameters
-		if(required.size() > 0) {
-			out.println("\n\t\t// Set the required parameters.");
-			for(Iterator i=required.iterator(); i.hasNext(); ) {
-				Parameter p=(Parameter)i.next();
-				out.println("\t\tsetRequired(\"" + p.getName() + "\", "
-					+ "Types." + p.getType() + ");");
-			}
-		}
-
-		// Set the optional parameters
-		if(optional.size() > 0) {
-			out.println("\n\t\t// Set the optional parameters.");
-			for(Iterator i=optional.iterator(); i.hasNext(); ) {
-				Parameter p=(Parameter)i.next();
-				out.println("\t\tsetOptional(\"" + p.getName() + "\", "
-					+ "Types." + p.getType() + ");");
-			}
-		}
-
-		// Set the output parameters
-		if(output.size() > 0) {
-			out.println("\n\t\t// Set the output parameters.");
-			for(Iterator i=output.iterator(); i.hasNext(); ) {
-				Parameter p=(Parameter)i.next();
-				out.println("\t\tsetOutput(\"" + p.getName() + "\", "
-					+ "Types." + p.getType() + ");");
-			}
-		}
-
-		*/
 
 		// Set the cachetime, if there is one
 		if(cachetime>0) {
@@ -396,6 +440,14 @@ public class SPGen extends Object {
 		}
 
 		out.println("\t}\n");
+
+		// Create set methods for all the individual parameters
+		for(Iterator i=args.iterator(); i.hasNext(); ) {
+			Parameter p=(Parameter)i.next();
+
+			out.println(createSetMethod(p));
+		}
+
 		out.println("}");
 
 	}
