@@ -228,7 +228,7 @@
 	</target>
 
 	<!-- this is a bit of indirection to allow the compile to require props -->
-	<target name="all" depends="prepare,buildprops" if="hasBuildProps">
+	<target name="all" depends="buildprops,prepare" if="hasBuildProps">
 		<antcall target="compile"/>
 	</target>
 
