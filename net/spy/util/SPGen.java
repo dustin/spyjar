@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.10 2002/09/04 02:02:13 dustin Exp $
+// $Id: SPGen.java,v 1.11 2002/09/17 22:49:35 dustin Exp $
 
 package net.spy.util;
 
@@ -37,7 +37,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.10 $";
+	private String version="$Revision: 1.11 $";
 	private long cachetime=0;
 	private ArrayList sqlquery=null;
 	private ArrayList required=null;
@@ -133,37 +133,53 @@ public class SPGen extends Object {
 	// Create a specific set method for a given parameter.
 	private String createSetMethod(Parameter p) throws Exception {
 		String rv=null;
-		String type=null;
+		String types[]=null;
 
 		// TODO:  Replace this with an extensible Map.
 		if(p.getType().equals("java.sql.Types.BIT")) {
-			type="boolean";
+			String typesTmp[]={"boolean", "java.lang.Boolean"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.DATE")) {
-			type="java.sql.Date";
+			String typesTmp[]={"java.sql.Date"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.DOUBLE")) {
-			type="double";
+			String typesTmp[]={"double", "java.lang.Double"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.FLOAT")) {
-			type="float";
+			String typesTmp[]={"float", "java.lang.Float"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.INTEGER")) {
-			type="int";
+			String typesTmp[]={"int", "java.lang.Integer", "short",
+								"java.lang.Short"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.BIGINT")) {
-			type="long";
+			String typesTmp[]={"long", "java.lang.Long"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.NUMERIC")) {
-			type="java.math.BigDecimal";
+			String typesTmp[]={"java.math.BigDecimal"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.DECIMAL")) {
-			type="java.math.BigDecimal";
+			String typesTmp[]={"java.math.BigDecimal"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.SMALLINT")) {
-			type="int";
+			String typesTmp[]={"int", "java.lang.Integer",
+								"short", "java.lang.Short"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.TINYINT")) {
-			type="short";
+			String typesTmp[]={"short", "java.lang.Short"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.OTHER")) {
-			type="java.lang.Object";
+			String typesTmp[]={"java.lang.Object"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.VARCHAR")) {
-			type="java.lang.String";
+			String typesTmp[]={"java.lang.String"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.TIME")) {
-			type="java.sql.Time";
+			String typesTmp[]={"java.sql.Time"};
+			types=typesTmp;
 		} else if(p.getType().equals("java.sql.Types.TIMESTAMP")) {
-			type="java.sql.Timestamp";
+			String typesTmp[]={"java.sql.Timestamp"};
+			types=typesTmp;
 		} else {
 			throw new Exception("Whoops, type " + p.getType() 
 				+ " seems to have been overlooked.");
@@ -171,16 +187,21 @@ public class SPGen extends Object {
 
 		String methodName=methodify(p.getName());
 
-		rv="\t/**\n"
-			+ "\t * Set the ``" + p.getName() + "'' parameter.\n"
-			+ "\t * " + p.getDescription() + "\n"
-			+ "\t *\n"
-			+ "\t * @param to the value to which to set the parameter\n"
-			+ "\t */\n"
-			+ "\tpublic void set" + methodName + "(" + type + " to)\n"
-			+ "\t\tthrows SQLException {\n\n"
-			+ "\t\tset(\"" + p.getName() + "\", to);\n"
-			+ "\t}\n";
+		rv="";
+		for(int i=0; i<types.length; i++) {
+			String type=types[i];
+			System.out.println("Generating " + p + " for " + type);
+			rv+="\t/**\n"
+				+ "\t * Set the ``" + p.getName() + "'' parameter.\n"
+				+ "\t * " + p.getDescription() + "\n"
+				+ "\t *\n"
+				+ "\t * @param to the value to which to set the parameter\n"
+				+ "\t */\n"
+				+ "\tpublic void set" + methodName + "(" + type + " to)\n"
+				+ "\t\tthrows SQLException {\n\n"
+				+ "\t\tset(\"" + p.getName() + "\", to);\n"
+				+ "\t}\n";
+		}
 	
 		return(rv);
 	}

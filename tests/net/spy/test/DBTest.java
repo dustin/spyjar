@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTest.java,v 1.5 2002/09/13 05:49:09 dustin Exp $
+// $Id: DBTest.java,v 1.6 2002/09/17 22:49:35 dustin Exp $
 
 package net.spy.test;
 
@@ -437,6 +437,83 @@ public class DBTest extends TestCase {
 		threeColumnTesterEarlyBinding(db, 24, 7, "three sixty-five");
 		threeColumnTesterEarlyBinding(db, 8, 10, "or wallet sized");
 		threeColumnTesterEarlyBinding(db, 9, 5, "what a way to make a livin'");
+
+		db.close();
+	}
+
+	/** 
+	 * Test a DBSP with null string values.
+	 */
+	public void testThreeColumnsStringNull() throws SQLException {
+		ThreeColumnTest db=new ThreeColumnTest(conf);
+
+		threeColumnTesterEarlyBinding(db, 24, 7, null);
+		threeColumnTesterEarlyBinding(db, 8, 10, "or wallet sized");
+		threeColumnTesterEarlyBinding(db, 9, 5, null);
+
+		db.close();
+	}
+	
+	// Common stuff for testThreeColumnsEarlyBinding with null strings
+	private void threeColumnTesterEarlyBindingStringNull(
+		ThreeColumnTest db, int first, int second, String third)
+		throws SQLException {
+	
+		db.setFirst(first);
+		db.setSecond(second);
+		db.setThird(third);
+
+		ResultSet rs=db.executeQuery();
+		if(!rs.next()) {
+			fail("No results returned");
+		}
+
+		assertEquals("first", rs.getInt("first"), first);
+		assertEquals("second", rs.getInt("second"), second);
+		assertNull("third", rs.getString("third"));
+
+		if(rs.next()) {
+			fail("Too many results returned.");
+		}
+
+		rs.close();
+	}
+
+	// Common stuff for testThreeColumnsEarlyBinding with null ints
+	private void threeColumnTesterEarlyBindingIntNull(
+		ThreeColumnTest db, Integer first, Integer second, String third)
+		throws SQLException {
+	
+		db.setFirst(first);
+		db.setSecond(second);
+		db.setThird(third);
+
+		ResultSet rs=db.executeQuery();
+		if(!rs.next()) {
+			fail("No results returned");
+		}
+
+		rs.getInt("first");
+		assertTrue(rs.wasNull());
+		assertEquals("second", new Integer(rs.getInt("second")), second);
+		assertEquals("third", third, rs.getString("third"));
+
+		if(rs.next()) {
+			fail("Too many results returned.");
+		}
+
+		rs.close();
+	}
+
+	/** 
+	 * Test a DBSP with null int values.
+	 */
+	public void testThreeColumnsIntNull() throws SQLException {
+		ThreeColumnTest db=new ThreeColumnTest(conf);
+
+		threeColumnTesterEarlyBindingIntNull(db, null, new Integer(7),"first");
+		threeColumnTesterEarlyBinding(db, 8, 10, "or wallet sized");
+		threeColumnTesterEarlyBindingIntNull(db, null, new Integer(7), "third");
 
 		db.close();
 	}

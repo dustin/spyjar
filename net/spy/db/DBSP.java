@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.4 2002/09/17 21:54:18 knitterb Exp $
+// $Id: DBSP.java,v 1.5 2002/09/17 22:49:34 dustin Exp $
 
 package net.spy.db;
 
@@ -713,6 +713,17 @@ public abstract class DBSP extends SpyCacheDB {
 	public void set(String which,short a1) 
 		throws SQLException {
 		setArg(which, new Integer(a1), Types.TINYINT);
+	}
+
+	/** 
+	 * Set the field <i>which</i> to the value s of the type short.
+	 * 
+	 * @param which the field to set (by name)
+	 * @param s the new value
+	 * @throws SQLException if there's a problem setting this value
+	 */
+	public void set(String which, Short s) throws SQLException {
+		setArg(which, new Integer(s.intValue()), Types.TINYINT);
 	}
 
 	/**
