@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.20 2002/12/20 00:54:21 dustin Exp $
+// $Id: SPGen.java,v 1.21 2003/01/03 18:47:11 dustin Exp $
 
 package net.spy.util;
 
@@ -43,7 +43,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass=null;
-	private String version="$Revision: 1.20 $";
+	private String version="$Revision: 1.21 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -52,6 +52,7 @@ public class SPGen extends Object {
 	private List output=null;
 	private List results=null;
 	private List args=null;
+	private Set interfaces=null;
 	private boolean debug=false;
 	private int timeout=0;
 
@@ -73,6 +74,7 @@ public class SPGen extends Object {
 		output=new ArrayList();
 		results=new ArrayList();
 		args=new ArrayList();
+		interfaces=new HashSet();
 
 		if(types==null) {
 			initTypes();
@@ -398,8 +400,11 @@ public class SPGen extends Object {
 			+ " */");
 
 		// Actual code generation
-		out.println("public class " + classname + " extends "
-		+ superclass + " {\n");
+		out.print("public class " + classname + " extends " + superclass);
+		if(interfaces.size() > 0) {
+			out.print("\n\timplements " + SpyUtil.join(interfaces, ", "));
+		}
+		out.println(" {\n");
 
 		// The map (staticially initialized)
 
@@ -685,6 +690,8 @@ public class SPGen extends Object {
 					} else if(section.equals("superclass")) {
 						user_superclass=new StringBuffer(96);
 						user_superclass.append(tmp);
+					} else if(section.equals("implements")) {
+						interfaces.add(tmp);
 					} else {
 						throw new Exception("Unknown section: ``"+section+"''");
 					}
