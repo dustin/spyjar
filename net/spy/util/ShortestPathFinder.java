@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ShortestPathFinder.java,v 1.2 2002/10/19 09:37:16 dustin Exp $
+// $Id: ShortestPathFinder.java,v 1.3 2002/11/04 08:16:07 dustin Exp $
 
 package net.spy.util;
 
@@ -120,7 +120,7 @@ public class ShortestPathFinder extends Object {
 				SPVertex spv=(SPVertex)i.next();
 				int nextCost=cost+spv.getCost();
 				node.addNextHop(spv.getTo(), new SPVertex(nextHop, nextCost));
-				recordLink(node, cost+spv.getCost(), nextHop, spv.getTo(), s);
+				recordLink(node, nextCost, nextHop, spv.getTo(), s);
 			}
 
 			s.remove(other);
