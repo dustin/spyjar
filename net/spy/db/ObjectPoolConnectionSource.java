@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPoolConnectionSource.java,v 1.3 2002/09/05 17:28:24 dustin Exp $
+// $Id: ObjectPoolConnectionSource.java,v 1.4 2002/09/05 17:40:18 dustin Exp $
 
 package net.spy.db;
 
@@ -120,15 +120,21 @@ public class ObjectPoolConnectionSource extends Object
 		throws SQLException {
 
 		synchronized(ObjectPoolConnectionSource.class) {
+			// Get a copy of the config, we'll be mangling it a bit
+			SpyConfig conf = null;
 			if(pool==null) {
-				// Get a copy of the config, we'll be mangling it a bit
-				SpyConfig conf = (SpyConfig)gConf.clone();
+				// Clone the config
+				conf=(SpyConfig)gConf.clone();
 				// Create the ObjectPool
 				pool=new ObjectPool(conf);
 			} // No pools exist
 
 			// Make sure the ObjectPool has the pool we seek
 			if(!pool.hasPool(poolName)) {
+				// if we don't have a config yet, clone it
+				if(conf==null) {
+					conf=(SpyConfig)gConf.clone();
+				}
 				try {
 					createPool(conf);
 				} catch(PoolException pe) {
