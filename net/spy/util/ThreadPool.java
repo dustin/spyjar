@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.5 2002/12/06 08:12:26 dustin Exp $
+// $Id: ThreadPool.java,v 1.6 2002/12/06 08:25:11 dustin Exp $
 
 package net.spy.util;
 
@@ -103,6 +103,7 @@ public class ThreadPool extends ThreadGroup {
 		sb.append(super.toString());
 		sb.append(" - ");
 		sb.append(tasks.size());
+		sb.append(" tasks queued");
 
 		return(sb.toString());
 	}
