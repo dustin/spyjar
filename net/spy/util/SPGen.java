@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.33 2003/08/04 18:30:08 knitterb Exp $
+// $Id: SPGen.java,v 1.34 2003/08/04 19:57:39 knitterb Exp $
 
 package net.spy.util;
 
@@ -50,7 +50,7 @@ public class SPGen extends Object {
 	private String pkg="";
 	private String superclass=null;
 	private String superinterface=null;
-	private String version="$Revision: 1.33 $";
+	private String version="$Revision: 1.34 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -637,12 +637,17 @@ public class SPGen extends Object {
 		}
 
 		// Create set methods for all the individual parameters
+		int count=1;
 		for(Iterator i=args.iterator(); i.hasNext(); ) {
 			Parameter p=(Parameter)i.next();
 
 			if (!p.isOutput()) {
 				out.println(createSetMethod(p));
+			} else {
+				// output param
+				out.println(createGetOutputMethod(p, count));
 			}
+			count++;
 		}
 
 		// If we want result sets, add them.
@@ -676,6 +681,16 @@ public class SPGen extends Object {
 			+ "\t\t\treturn(get" + r.getJavaType()
 				+ "(\"" + r.getName() + "\"));\n"
 			+ "\t\t}\n\n";
+
+		return(rv);
+	}
+
+	private String createGetOutputMethod(Parameter p, int index) {
+		String rv="\tpublic Object get"+methodify(p.getName())
+			+"() throws SQLException {\n"
+			+"\t\treturn(getCallableStatement().getObject("+index
+				+"));\n"
+			+"\t}\n\n";
 
 		return(rv);
 	}
