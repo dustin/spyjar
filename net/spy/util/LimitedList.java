@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LimitedList.java,v 1.1 2002/12/05 08:07:02 dustin Exp $
+// $Id: LimitedList.java,v 1.2 2002/12/06 09:05:41 dustin Exp $
 
 package net.spy.util;
 
@@ -34,6 +34,13 @@ public class LimitedList extends LinkedList {
 	 */
 	public void setLimit(int to) {
 		limit=to;
+	}
+
+	/** 
+	 * Get the maximum number of elements that may be stored in this list.
+	 */
+	public int getLimit() {
+		return(limit);
 	}
 
 	/** 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.7 2002/12/06 08:58:42 dustin Exp $
+// $Id: ThreadPool.java,v 1.8 2002/12/06 09:05:41 dustin Exp $
 
 package net.spy.util;
 
@@ -110,6 +110,8 @@ public class ThreadPool extends ThreadGroup {
 
 	/**
 	 * Add a task for one of the threads to execute.
+	 *
+	 * @see ThreadPoolRunnable
 	 */
 	public void addTask(Runnable r) {
 		synchronized(tasks) {
