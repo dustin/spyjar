@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.4 2002/08/28 05:49:42 dustin Exp $
+// $Id: SPGen.java,v 1.5 2002/08/28 06:03:44 dustin Exp $
 
 package net.spy.util;
 
@@ -36,7 +36,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.4 $";
+	private String version="$Revision: 1.5 $";
 	private long cachetime=0;
 	private ArrayList sqlquery=null;
 	private ArrayList required=null;
@@ -276,11 +276,15 @@ public class SPGen extends Object {
 			for(Iterator i=results.iterator(); i.hasNext(); ) {
 				Result r=(Result)i.next();
 
-				out.println(" *  <li>"
-					+ r.getName() + " - "
-					+ "{@link java.sql.Types#" + r.getType() + " "
-						+ r.getType() + "}\n * "
-					+ "   - " + r.getDescription() + "</li>");
+				out.print(" *  <li>"
+					+ r.getName() + " - ");
+				if(isValidJDBCType(r.getType())) {
+					out.print("{@link java.sql.Types#" + r.getType() + " "
+						+ r.getType() + "}\n *   ");
+				} else {
+					out.print(r.getType());
+				}
+				out.println(" - " + r.getDescription() + "</li>");
 			}
 
 			out.println(" * </ul>\n"
@@ -351,6 +355,7 @@ public class SPGen extends Object {
 				+ "\t\t" + getJavaQuery()
 				+ "\n\t\tsetQuery(query.toString());");
 		}
+
 		// Set the required parameters
 		if(required.size() > 0) {
 			out.println("\n\t\t// Set the required parameters.");
@@ -360,6 +365,7 @@ public class SPGen extends Object {
 					+ "Types." + p.getType() + ");");
 			}
 		}
+
 		// Set the optional parameters
 		if(optional.size() > 0) {
 			out.println("\n\t\t// Set the optional parameters.");
@@ -369,6 +375,7 @@ public class SPGen extends Object {
 					+ "Types." + p.getType() + ");");
 			}
 		}
+
 		// Set the output parameters
 		if(output.size() > 0) {
 			out.println("\n\t\t// Set the output parameters.");
@@ -378,6 +385,7 @@ public class SPGen extends Object {
 					+ "Types." + p.getType() + ");");
 			}
 		}
+
 		// Set the cachetime, if there is one
 		if(cachetime>0) {
 			out.println("\n\t\t// Set the default cache time.");
@@ -510,8 +518,7 @@ public class SPGen extends Object {
 				type=st.nextToken();
 
 				if(!isValidJDBCType(type)) {
-					throw new IllegalArgumentException("Invalid JDBC type:  "
-						+ type);
+					System.err.println("Warning! Invalid JDBC type:  " + type);
 				}
 			} catch(NoSuchElementException e) {
 				throw new IllegalArgumentException(
