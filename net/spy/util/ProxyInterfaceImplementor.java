@@ -1,16 +1,12 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ProxyInterfaceImplementor.java,v 1.2 2003/02/04 23:02:59 dustin Exp $
+// $Id: ProxyInterfaceImplementor.java,v 1.4 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.util;
 
 import java.util.ArrayList;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import net.spy.SpyUtil;
 
@@ -74,19 +70,19 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 		Class i=getInterface();
 		String rv=null;
 
-		rv+="\t/**\n"
+		rv ="\t/**\n"
 			+ "\t * Get the proxied object.\n"
 			+ "\t */\n";
 
 		rv+="\tprotected " + i.getName() + " getProxiedObject() {\n"
-			+ "\t\treturn(proxiedObject);\n"
+			+ "\t\treturn(proxyedObject);\n"
 			+ "\t}\n";
 
 		rv+="\t/**\n"
 			+ "\t * Set the proxied object.\n"
 			+ "\t */\n";
 		rv+="\tprotected void setProxiedObject(" + i.getName() + " o) {\n"
-			+ "\t\tthis.proxiedObject=o;\n"
+			+ "\t\tthis.proxyedObject=o;\n"
 			+ "\t}\n";
 
 		return(rv);

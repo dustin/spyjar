@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NestedRuntimeException.java,v 1.2 2003/01/14 18:11:38 dustin Exp $
+// $Id: NestedRuntimeException.java,v 1.3 2003/08/05 09:01:04 dustin Exp $
 
 package net.spy.util;
 
@@ -47,8 +47,8 @@ public class NestedRuntimeException extends RuntimeException {
 	/**
 	 * Set the root cause of this problem.
 	 */
-	protected void setRootCause(Throwable root) {
-		this.root=root;
+	protected void setRootCause(Throwable cause) {
+		this.root=cause;
 	}
 
 	/**

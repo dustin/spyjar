@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FileJobQueue.java,v 1.10 2003/07/26 07:46:51 dustin Exp $
+// $Id: FileJobQueue.java,v 1.11 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.cron;
 
@@ -204,7 +204,7 @@ public class FileJobQueue extends JobQueue {
 		Collection rv=new ArrayList();
 
 		int f1[]={Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH,
-				 Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};
+					Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};
 		rv.add(new TimeFormat("yyyyMMdd-HHmmss", f1));
 
 		int f2[]={Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};
@@ -260,7 +260,7 @@ public class FileJobQueue extends JobQueue {
 		return(rv);
 	}
 
-	private static class TimeFormat extends Object {
+	private static final class TimeFormat extends Object {
 		private SimpleDateFormat format=null;
 		private int fields[]=null;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyDB.java,v 1.5 2003/06/25 16:51:38 dustin Exp $
+ * $Id: SpyDB.java,v 1.6 2003/08/05 09:01:02 dustin Exp $
  */
 
 package net.spy;
@@ -66,11 +66,11 @@ public class SpyDB extends SpyObject {
 	 * You will also need to provide any additional parameters that are
 	 * required by the ConnectionSource in this config.
 	 *
-	 * @param conf SpyConfig object describing how to connect.
+	 * @param c SpyConfig object describing how to connect.
 	 */
-	public SpyDB(SpyConfig conf) {
+	public SpyDB(SpyConfig c) {
 		super();
-		this.conf=conf;
+		this.conf=c;
 
 		initType=INIT_FROM_CONFIG;
 		initialize();
@@ -79,11 +79,11 @@ public class SpyDB extends SpyObject {
 	/**
 	 * Get a SpyDB object wrapping the given connection.
 	 *
-	 * @param conn the connection to wrap.
+	 * @param c the connection to wrap.
 	 */
-	public SpyDB(Connection conn) {
+	public SpyDB(Connection c) {
 		super();
-		this.conn=conn;
+		this.conn=c;
 		initType=INIT_FROM_CONN;
 	}
 
@@ -106,8 +106,8 @@ public class SpyDB extends SpyObject {
 	 * or the SQL query fails.
 	 */
 	public ResultSet executeQuery(String query) throws SQLException {
-		Connection conn=getConn();
-		Statement st = conn.createStatement();
+		Connection c=getConn();
+		Statement st = c.createStatement();
 		ResultSet rs = st.executeQuery(query);
 		return(rs);
 	}
@@ -123,8 +123,8 @@ public class SpyDB extends SpyObject {
 	 */
 	public int executeUpdate(String query) throws SQLException {
 		int rv=0;
-		Connection conn=getConn();
-		Statement st = conn.createStatement();
+		Connection c=getConn();
+		Statement st = c.createStatement();
 		rv=st.executeUpdate(query);
 		return(rv);
 	}
@@ -139,8 +139,8 @@ public class SpyDB extends SpyObject {
 	public PreparedStatement prepareStatement(String query)
 		throws SQLException {
 
-		Connection conn=getConn();
-		PreparedStatement pst = conn.prepareStatement(query);
+		Connection c=getConn();
+		PreparedStatement pst = c.prepareStatement(query);
 		return(pst);
 	}
 
@@ -154,8 +154,8 @@ public class SpyDB extends SpyObject {
 	public CallableStatement prepareCall(String query)
 		throws SQLException {
 
-		Connection conn=getConn();
-		CallableStatement cst = conn.prepareCall(query);
+		Connection c=getConn();
+		CallableStatement cst = c.prepareCall(query);
 		return(cst);
 	}
 
@@ -257,13 +257,6 @@ public class SpyDB extends SpyObject {
 
 		// Get the connection from the source.
 		conn=source.getConnection(conf);
-	}
-
-	/**
-	 * @deprecated use dbquoteStr instead
-	 */
-	public static String dbquote_str(String in) {
-		return(dbquoteStr(in));
 	}
 
 	/**

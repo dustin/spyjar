@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.22 2003/04/18 07:50:12 dustin Exp $
+	$Id: build.xml,v 1.23 2003/08/05 09:01:01 dustin Exp $
 
 	-->
 
@@ -573,20 +573,23 @@
 			</classpath>
 		</taskdef>
 
-		<delete file="checkstyle.txt"/>
+		<delete file="checkstyle_report.xml"/>
 
-		<checkstyle
-			allowtabs="yes"
-			tabwidth="4"
-			allowNoAuthor="yes"
-			requirePackageHtml="yes"
-			javadocScope="nothing"
-			ignorewhitespace="yes">
+		<checkstyle config="etc/checkstyle_config.xml" failOnViolation="false">
+			<formatter type="xml" tofile="checkstyle_report.xml"/>
 			<fileset dir=".">
 				<include name="net/spy/**/*.java"/>
+				<include name="net/spy/**/*.ojava"/>
+				<exclude name="net/spy/db/sp/*.java"/>
+				<exclude name="net/spy/db/CachedResultSet.java"/>
+				<exclude name="net/spy/db/CachePreparedStatement.java"/>
+				<exclude name="net/spy/db/TypeNames.java"/>
 			</fileset>
-			<formatter type="plain" toFile="checkstyle.txt"/>
 		</checkstyle>
+
+		<style in="checkstyle_report.xml"
+			out="checkstyle_report.html"
+			style="etc/checkstyle.xsl"/>
 	</target>
 
 </project>

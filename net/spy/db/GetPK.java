@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetPK.java,v 1.5 2003/01/03 01:20:48 dustin Exp $
+// $Id: GetPK.java,v 1.6 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.db;
 
@@ -88,7 +88,7 @@ public class GetPK extends SpyObject {
 	 * 
 	 * @return the instance
 	 */
-	public synchronized static GetPK getInstance() {
+	public static synchronized GetPK getInstance() {
 		if(instance==null) {
 			instance=new GetPK();
 		}
@@ -241,7 +241,8 @@ public class GetPK extends SpyObject {
 
 	// get keys from a database
 	private void getKeysFromDB(SpyDB db, String table, String key)
-			throws SQLException {
+		throws SQLException {
+
 		Connection conn=null;
 		boolean complete=false;
 

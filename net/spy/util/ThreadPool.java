@@ -1,12 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.21 2003/08/01 07:16:53 dustin Exp $
+// $Id: ThreadPool.java,v 1.22 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.util;
 
 import java.util.Iterator;
 import java.util.Collection;
-import java.util.List;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.lang.reflect.Constructor;

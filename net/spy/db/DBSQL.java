@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSQL.java,v 1.5 2003/06/05 23:20:00 dustin Exp $
+// $Id: DBSQL.java,v 1.6 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.db;
 
@@ -14,22 +14,22 @@ import java.sql.SQLException;
 import net.spy.SpyConfig;
 
 /**
- * Superclass for dynamic SQL calls.
- */
-public abstract class DBSQL extends DBSP {
-
-	private Map registeredQueries=null;
-
-	/**
-	 * Get a DBSQL object with the given DBConfig.
+	 * Superclass for dynamic SQL calls.
 	 */
-	public DBSQL(SpyConfig conf) throws SQLException {
-		super(conf);
-	}
+	public abstract class DBSQL extends DBSP {
 
-	/**
-	 * Get a DBSQL object with the given Connection.
-	 */
+		private Map registeredQueries=null;
+
+		/**
+		 * Get a DBSQL object with the given DBConfig.
+		 */
+		public DBSQL(SpyConfig conf) throws SQLException {
+			super(conf);
+		}
+
+		/**
+		 * Get a DBSQL object with the given Connection.
+		 */
 	public DBSQL(Connection conn) throws SQLException {
 		super(conn);
 	}
@@ -98,8 +98,7 @@ public abstract class DBSQL extends DBSP {
 		} else {
 			// Get just enough characters
 			sb.append(shortClassName.substring(
-							(shortClassName.length() - totalSize))
-						);
+				(shortClassName.length() - totalSize)));
 		}
 
 		// Append the hash
@@ -118,6 +117,8 @@ public abstract class DBSQL extends DBSP {
 			case INIT_FROM_CONN:
 				query=qs.getQuery(getConn(), registeredQueries);
 				break;
+			default:
+				throw new SQLException("Unknown init type:  " + getInitType());
 		}
 
 		if(query==null) {

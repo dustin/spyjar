@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyCache.java,v 1.9 2003/07/26 07:46:51 dustin Exp $
+ * $Id: SpyCache.java,v 1.10 2003/08/05 09:01:03 dustin Exp $
  */
 
 package net.spy.cache;
@@ -64,7 +64,7 @@ public class SpyCache extends SpyObject {
 	 *
 	 * @return the instance of SpyCache, or a new instance if required
 	 */
-	public synchronized static SpyCache getInstance() {
+	public static synchronized SpyCache getInstance() {
 		if(instance==null) {
 			instance=new SpyCache();
 		}
@@ -123,7 +123,7 @@ public class SpyCache extends SpyObject {
 				// get the object from the cache
 				ret=i.getCachedObject();
 				// If the stored object is a reference, dereference it.
-				if( (ret!=null) && (ret instanceof Reference) ) {
+				if((ret!=null) && (ret instanceof Reference)) {
 					Reference ref=(Reference)ret;
 					ret=ref.get();
 				} // Object was a reference
@@ -154,7 +154,7 @@ public class SpyCache extends SpyObject {
 	 */
 	public void uncacheLike(String keystart) {
 		synchronized(cacheStore) {
-			for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext(); ) {
+			for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext();) {
 				Map.Entry me=(Map.Entry)i.next();
 
 				String key=(String)me.getKey();
@@ -225,7 +225,7 @@ public class SpyCache extends SpyObject {
 
 			// Return true if the difference between now and the last
 			// time the cache was touched is less than an hour.
-			if( (cacheStore.getUseAge()) < (3600*1000) ) {
+			if((cacheStore.getUseAge()) < (3600*1000)) {
 				rv=true;
 			}
 
@@ -275,7 +275,7 @@ public class SpyCache extends SpyObject {
 					cleanup();
 					// Check to see if we want a multicast listener
 					if(wantMulticastListener
-						&& (listener==null || (!listener.isAlive())) ) {
+						&& (listener==null || (!listener.isAlive()))) {
 						checkMulticastThread();
 					}
 				} catch(Exception e) {

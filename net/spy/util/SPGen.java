@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.35 2003/08/04 22:01:12 knitterb Exp $
+// $Id: SPGen.java,v 1.36 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.util;
 
@@ -50,11 +50,11 @@ public class SPGen extends Object {
 	private String pkg="";
 
 	private String superclass=null;
-	private String dbcp_superclass=null;
-	private String dbsp_superclass=null;
+	private String dbcpSuperclass=null;
+	private String dbspSuperclass=null;
 
 	private String superinterface=null;
-	private String version="$Revision: 1.35 $";
+	private String version="$Revision: 1.36 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -71,17 +71,21 @@ public class SPGen extends Object {
 
 	private boolean looseTypes=false;
 
-	private boolean type_dbsp=false;
-	private boolean type_dbcp=false;
+	private boolean typeDbsp=false;
+	private boolean typeDbcp=false;
 
 	/**
 	 * Get a new SPGen from the given BufferedReader.
+	 *
+	 * @param cn the name of the class to generate
+	 * @param in the stream containing the spt source
+	 * @param out the stream to which the java code will be written
 	 */
-	public SPGen(String classname, BufferedReader in, PrintWriter out) {
+	public SPGen(String cn, BufferedReader i, PrintWriter o) {
 		super();
-		this.in=in;
-		this.out=out;
-		this.classname=classname;
+		this.in=i;
+		this.out=o;
+		this.classname=cn;
 		queries=new TreeMap();
 		results=new ArrayList();
 		args=new ArrayList();
@@ -107,7 +111,7 @@ public class SPGen extends Object {
 	 */
 	public void setDbcpSuperclass(String sc) {
 		if (sc!=null) {
-			this.dbcp_superclass=sc;
+			this.dbcpSuperclass=sc;
 		}
 	}
 
@@ -116,7 +120,7 @@ public class SPGen extends Object {
 	 */
 	public void setDbspSuperclass(String sc) {
 		if (sc!=null) {
-			this.dbsp_superclass=sc;
+			this.dbspSuperclass=sc;
 		}
 	}
 
@@ -171,7 +175,7 @@ public class SPGen extends Object {
 
 			// Same as above, without the java.sql. part
 			Map tmp=new HashMap();
-			for(Iterator i=javaTypes.entrySet().iterator(); i.hasNext(); ) {
+			for(Iterator i=javaTypes.entrySet().iterator(); i.hasNext();) {
 				Map.Entry me=(Map.Entry)i.next();
 				String k=(String)me.getKey();
 				if(k.startsWith("java.sql.Types.")) {
@@ -181,7 +185,7 @@ public class SPGen extends Object {
 			javaTypes.putAll(tmp);
 			tmp.clear();
 			for(Iterator i=javaResultTypes.entrySet().iterator();
-				i.hasNext(); ) {
+				i.hasNext();) {
 				Map.Entry me=(Map.Entry)i.next();
 				String k=(String)me.getKey();
 				if(k.startsWith("java.sql.Types.")) {
@@ -362,7 +366,7 @@ public class SPGen extends Object {
 			+ "import net.spy.SpyConfig;\n");
 
 		// custom imports
-		for (Iterator it=imports.iterator(); it.hasNext(); ) {
+		for (Iterator it=imports.iterator(); it.hasNext();) {
 			String tmpimp=(String)it.next();
 			out.print("import ");
 			out.print(tmpimp);
@@ -406,13 +410,13 @@ public class SPGen extends Object {
 		}
 
 		// Different stuff for different classes
-		if(type_dbsp) {
+		if(typeDbsp) {
 			out.println(" * <b>Procedure Name</b>\n"
 				+ " *\n"
 				+ " * <ul>\n"
 				+ " *  <li>" + procname + "</li>\n"
 				+ " * </ul>");
-		} else if (type_dbcp) {
+		} else if (typeDbcp) {
 			out.println(" * <b>Callable Name</b>\n"
 				+ " *\n"
 				+ " * <ul>\n"
@@ -437,7 +441,7 @@ public class SPGen extends Object {
 		if(getRequiredArgs(false).size()==0) {
 			out.println(" *  <li><i>none</i></li>");
 		} else {
-			for(Iterator i=getRequiredArgs(false).iterator(); i.hasNext(); ) {
+			for(Iterator i=getRequiredArgs(false).iterator(); i.hasNext();) {
 				Parameter p=(Parameter)i.next();
 				out.print(" * <li>" + p.getName() + " - "
 					+ "{@link java.sql.Types#" + p.getShortType() + " "
@@ -463,7 +467,7 @@ public class SPGen extends Object {
 		if(getOptionalArgs().size()==0) {
 			out.println(" *  <li><i>none</i></li>");
 		} else {
-			for(Iterator i=getOptionalArgs().iterator(); i.hasNext(); ) {
+			for(Iterator i=getOptionalArgs().iterator(); i.hasNext();) {
 				Parameter p=(Parameter)i.next();
 				out.println(" * <li>" + p.getName() + " - "
 					+ "{@link java.sql.Types#" + p.getShortType() + " "
@@ -477,7 +481,7 @@ public class SPGen extends Object {
 			+ " * <p>\n"
 			+ " *");
 
-		if (type_dbcp) {
+		if (typeDbcp) {
 			// Output parameters
 			out.println(" *\n"
 				+ " * <b>Output Parameters</b>\n"
@@ -505,7 +509,7 @@ public class SPGen extends Object {
 			out.println(" * <b>Results</b>\n"
 				+ " * <ul>");
 
-			for(Iterator i=results.iterator(); i.hasNext(); ) {
+			for(Iterator i=results.iterator(); i.hasNext();) {
 				Result r=(Result)i.next();
 
 				out.print(" *  <li>"
@@ -608,7 +612,7 @@ public class SPGen extends Object {
 			out.println("\t\tsetQueryTimeout("+timeout+");\n");
 
 			// Figure out whether we're a DBSP or a DBSQL
-			if(type_dbsp || type_dbcp) {
+			if(typeDbsp || typeDbcp) {
 				out.println("\t\t// Set the stored procedure name\n"
 					+ "\t\tsetSPName(\"" + procname + "\");");
 			} else {
@@ -619,7 +623,7 @@ public class SPGen extends Object {
 			// parameters
 			if (args.size()>0) {
 				out.println("\n\t\t// Set the parameters.");
-				for (Iterator i=args.iterator(); i.hasNext(); ) {
+				for (Iterator i=args.iterator(); i.hasNext();) {
 					Parameter p=(Parameter)i.next();
 					if (p.isRequired()) {
 						if (!p.isOutput()) {
@@ -662,7 +666,7 @@ public class SPGen extends Object {
 
 		// Create set methods for all the individual parameters
 		int count=1;
-		for(Iterator i=args.iterator(); i.hasNext(); ) {
+		for(Iterator i=args.iterator(); i.hasNext();) {
 			Parameter p=(Parameter)i.next();
 
 			if (!p.isOutput()) {
@@ -731,7 +735,7 @@ public class SPGen extends Object {
 			+ "\t\t\tsuper(rs);\n"
 			+ "\t\t}\n\n";
 
-		for(Iterator i=results.iterator(); i.hasNext(); ) {
+		for(Iterator i=results.iterator(); i.hasNext();) {
 			rv+=createGetMethod((Result)i.next());
 		}
 
@@ -780,7 +784,7 @@ public class SPGen extends Object {
 			sb.append("\n");
 			sb.append(" *  </b>\n");
 			sb.append(" *  <pre>\n");
-			for(Iterator i2=sqlquery.iterator(); i2.hasNext(); ) {
+			for(Iterator i2=sqlquery.iterator(); i2.hasNext();) {
 				String part=(String)i2.next();
 				sb.append(" * ");
 				sb.append(docifySQL(part));
@@ -806,12 +810,12 @@ public class SPGen extends Object {
 
 			sb.append("\n\t\tquery=new StringBuffer(1024);");
 
-			for(Iterator i2=sqlquery.iterator(); i2.hasNext(); ) {
+			for(Iterator i2=sqlquery.iterator(); i2.hasNext();) {
 				String part=(String)i2.next();
 				sb.append("\n\t\tquery.append(\"");
 
 				for(StringTokenizer st=new StringTokenizer(part, "\"", true);
-					st.hasMoreTokens(); ) {
+					st.hasMoreTokens();) {
 
 					String tmp=st.nextToken();
 					if(tmp.equals("\"")) {
@@ -836,7 +840,7 @@ public class SPGen extends Object {
 	private void parse() throws Exception {
 
 		// this is for when a user overrides the superclass
-		StringBuffer user_superclass=null;
+		StringBuffer userSuperclass=null;
 
 		System.out.println("Parsing " + classname + ".spt");
 
@@ -889,21 +893,21 @@ public class SPGen extends Object {
 					} else if(section.equals("procname")) {
 						isInterface=false;
 						procname+=tmp;
-						if (dbsp_superclass==null) {
+						if (dbspSuperclass==null) {
 							superclass="net.spy.db.DBSP";
 						} else {
-							superclass=dbsp_superclass;
+							superclass=dbspSuperclass;
 						}
-						type_dbsp=true;
+						typeDbsp=true;
 					} else if(section.equals("callable")) {
 						isInterface=false;
 						procname+=tmp;
-						if (dbcp_superclass==null) {
+						if (dbcpSuperclass==null) {
 							superclass="net.spy.db.DBCP";
 						} else {
-							superclass=dbcp_superclass;
+							superclass=dbcpSuperclass;
 						}
-						type_dbcp=true;
+						typeDbcp=true;
 					} else if(section.equals("defaults")) {
 						Default d=new Default(tmp);
 						registerDefault(d);
@@ -924,8 +928,8 @@ public class SPGen extends Object {
 					} else if(section.equals("timeout")) {
 						timeout=Integer.parseInt(tmp);
 					} else if(section.equals("superclass")) {
-						user_superclass=new StringBuffer(96);
-						user_superclass.append(tmp);
+						userSuperclass=new StringBuffer(96);
+						userSuperclass.append(tmp);
 					} else if(section.equals("import")) {
 						imports.add(tmp);
 					} else if(section.equals("implements")) {
@@ -946,11 +950,11 @@ public class SPGen extends Object {
 		}
 		
 		// if the user over-rode (like your mom) the superclass, use it!!
-		if (user_superclass!=null) {
+		if (userSuperclass!=null) {
 			if(isInterface) {
-				superinterface=user_superclass.toString();
+				superinterface=userSuperclass.toString();
 			} else {
-				superclass=user_superclass.toString();
+				superclass=userSuperclass.toString();
 			}
 		}
 
@@ -958,7 +962,7 @@ public class SPGen extends Object {
 
 	private void registerDefault(Default d) {
 		boolean done=false;
-		for(Iterator i=args.iterator(); done==false && i.hasNext(); ) {
+		for(Iterator i=args.iterator(); done==false && i.hasNext();) {
 			Parameter p=(Parameter)i.next();
 			if(p.getName().equals(d.getName())) {
 				p.setDefaultValue(d);
@@ -1348,7 +1352,7 @@ public class SPGen extends Object {
 			String rv=null;
 
 			// Look for the parameter
-			for(Iterator i=args.iterator(); rv==null && i.hasNext(); ) {
+			for(Iterator i=args.iterator(); rv==null && i.hasNext();) {
 				Parameter p=(Parameter)i.next();
 				if(p.getName().equals(name)) {
 					rv=p.getType();

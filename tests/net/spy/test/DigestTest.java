@@ -1,7 +1,7 @@
 
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DigestTest.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// $Id: DigestTest.java,v 1.2 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.test;
 
@@ -48,10 +48,9 @@ public class DigestTest extends TestCase {
 	 */
 	public void testPasswordGenerator() {
 		HashSet words=new HashSet();
-		PwGen gen=new PwGen();
 
 		for(int i=0; i<1000; i++) {
-			String pw=gen.getPass(8);
+			String pw=PwGen.getPass(8);
 			assertTrue("Generated a duplicate password on attempt " + i,
 				(!words.contains(pw)));
 			words.add(pw);

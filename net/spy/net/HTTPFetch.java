@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -23,7 +22,7 @@ import java.util.Iterator;
  */
 
 // Fetch the contents of a URL
-public class HTTPFetch {
+public class HTTPFetch extends Object {
 	private URL url;
 
 	private String contents=null;

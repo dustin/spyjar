@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TTLMonitor.java,v 1.5 2003/07/26 07:46:54 dustin Exp $
+// $Id: TTLMonitor.java,v 1.6 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.util;
 
@@ -86,7 +86,7 @@ public final class TTLMonitor extends SpyThread {
 				// Reset the expired count
 				expiredTTLs=0;
 				// Flip through the TTLs
-				for(Iterator i=ttls.iterator(); i.hasNext(); ) {
+				for(Iterator i=ttls.iterator(); i.hasNext();) {
 					TTL ttl=(TTL)i.next();
 					// Update the expired count if it's expired
 					if(ttl.isExpired()) {

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: JobQueue.java,v 1.6 2003/08/01 07:16:52 dustin Exp $
+// $Id: JobQueue.java,v 1.7 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.cron;
 
@@ -55,7 +55,7 @@ public class JobQueue extends ArrayList {
 		ArrayList v=new ArrayList();
 
 		// Flip through all of the jobs and see what we've got to do.
-		for(Iterator i=iterator(); i.hasNext(); ) {
+		for(Iterator i=iterator(); i.hasNext();) {
 			Job j=(Job)i.next();
 
 			// Add a job if it's ready.
@@ -79,7 +79,7 @@ public class JobQueue extends ArrayList {
 		Date next=null;
 		long soonestJob=MAX_SLEEP_TIME;
 		long now=System.currentTimeMillis();
-		for(Iterator i=iterator(); i.hasNext(); ) {
+		for(Iterator i=iterator(); i.hasNext();) {
 			Job j=(Job)i.next();
 			Date jdate=j.getStartTime();
 			if(jdate!=null) {

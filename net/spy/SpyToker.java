@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyToker.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+ * $Id: SpyToker.java,v 1.2 2003/08/05 09:01:02 dustin Exp $
  */
 
 package net.spy;
@@ -49,7 +49,7 @@ public class SpyToker extends Object {
 		}
 		StringBuffer output=new StringBuffer(input.length() + 256);
 
-		while( (which=input.indexOf('%')) >= 0) {
+		while((which=input.indexOf('%')) >= 0) {
 			output.append(input.substring(0, which));
 			input=input.substring(which+1);
 
@@ -58,7 +58,7 @@ public class SpyToker extends Object {
 				String v=null;
 				String tmp = input.substring(0, which);
 				input = input.substring(which+1);
-				if( (v=(String)p.get(tmp)) != null) {
+				if((v=(String)p.get(tmp)) != null) {
 					output.append(v);
 				} else {
 					output.append("%" + tmp + "%");

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBCP.java,v 1.6 2003/04/18 07:50:14 dustin Exp $
+// $Id: DBCP.java,v 1.7 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.db;
 
@@ -14,10 +14,8 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.sql.Time;
 
-import java.util.Map;
 import java.util.Iterator;
 import java.util.Collection;
-import java.util.ArrayList;
 
 import net.spy.SpyConfig;
 
@@ -26,7 +24,7 @@ import net.spy.SpyConfig;
  */
 public abstract class DBCP extends DBSP {
 
-	private int argument_index=1;
+	private int argumentIndex=1;
 
 	/**
 	 * Get a DBCP object with the given DBConfig.
@@ -81,8 +79,7 @@ public abstract class DBCP extends DBSP {
 	 * @param query the query we'll be calling
 	 * @param v the list of Argument objects we need to add, in order
 	 */
-	protected void applyArgs(Collection v)
-			throws SQLException {
+	protected void applyArgs(Collection v) throws SQLException {
 
 		PreparedStatement pst=getPreparedStatement();
 		// Get the statement
@@ -96,8 +93,8 @@ public abstract class DBCP extends DBSP {
 		}
 
 		// Use this iterator for the now positional arguments
-		for(Iterator e=getArguments().iterator(); e.hasNext(); ) {
-			int i=argument_index;
+		for(Iterator e=getArguments().iterator(); e.hasNext();) {
+			int i=argumentIndex;
 
 			Argument arg=(Argument)e.next();
 			Object o=arg.getValue();
@@ -179,7 +176,7 @@ public abstract class DBCP extends DBSP {
 				throw new SQLException (msg);
 			}
 
-			argument_index++;
+			argumentIndex++;
 
 		}
 	}
@@ -199,7 +196,7 @@ public abstract class DBCP extends DBSP {
 		querySb.append(" (");
 
 		int nargs=0;
-		for(Iterator i=getArguments().iterator(); i.hasNext(); ) {
+		for(Iterator i=getArguments().iterator(); i.hasNext();) {
 			Argument arg=(Argument)i.next();
 			querySb.append("?,");
 			nargs++;

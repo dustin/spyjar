@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: DiskCache.java,v 1.8 2003/07/26 07:46:51 dustin Exp $
+// $Id: DiskCache.java,v 1.9 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.cache;
 
@@ -17,7 +17,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.AbstractMap;
 
@@ -159,7 +158,6 @@ public class DiskCache extends AbstractMap {
 	private Logger getLogger() {
 		if(logger==null) {
 			logger=LoggerFactory.getLogger(getClass());
-				logger=LoggerFactory.getLogger(getClass());
 		}
 		return(logger);
 	}
@@ -324,10 +322,10 @@ public class DiskCache extends AbstractMap {
 		File path=null;
 		Object k=null;
 
-		public E(Object key, File path) {
+		public E(Object key, File p) {
 			super();
 			this.k=key;
-			this.path=path;
+			this.path=p;
 		}
 
 		/** 

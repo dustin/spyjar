@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Token.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: Token.java,v 1.2 2003/08/05 09:01:02 dustin Exp $
 
 package net.spy.aaa;
 
@@ -14,9 +14,9 @@ public class Token extends Object {
 	/**
 	 * Get an instance of Token.
 	 */
-	public Token(String username) {
+	public Token(String un) {
 		super();
-		this.username=username;
+		this.username=un;
 	}
 
 	/**

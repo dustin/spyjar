@@ -1,11 +1,9 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLWatcher.java,v 1.5 2003/07/26 07:46:52 dustin Exp $
+// $Id: URLWatcher.java,v 1.6 2003/08/05 09:01:04 dustin Exp $
 
 package net.spy.net;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import java.net.URL;
@@ -21,11 +19,11 @@ import net.spy.SpyObject;
  * URLWatcher watches URLs and provides access to the most recent data from
  * the URL.
  */
-public class URLWatcher extends SpyObject {
+public final class URLWatcher extends SpyObject {
 
 	private static URLWatcher instance=null;
 
-	private Cron cron=null; 
+	private Cron cron=null;
 
 	// How long to sleep between updates
 	private static final int NAP_TIME=60000;
@@ -74,7 +72,7 @@ public class URLWatcher extends SpyObject {
 		JobQueue jq=cron.getJobQueue();
 		synchronized(jq) {
 			// Look at each item for the match
-			for(Iterator i=jq.iterator(); ui==null && i.hasNext(); ) {
+			for(Iterator i=jq.iterator(); ui==null && i.hasNext();) {
 				URLItem tmp=(URLItem)i.next();
 
 				if(tmp.getURL().equals(u)) {

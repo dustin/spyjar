@@ -1,12 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ReferenceSet.java,v 1.4 2003/07/26 07:46:53 dustin Exp $
+// $Id: ReferenceSet.java,v 1.5 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.util;
 
 import java.lang.ref.Reference;
 
-import java.util.Set;
 import java.util.HashSet;
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -116,7 +115,7 @@ public abstract class ReferenceSet extends AbstractSet {
 	private static class ReferenceIterator extends Object implements Iterator {
 
 		private Iterator backIterator=null;
-		boolean hasNext=false;
+		private boolean hasNext=false;
 		private Object current=null;
 		private Reference currentRef=null;
 
@@ -132,7 +131,7 @@ public abstract class ReferenceSet extends AbstractSet {
 		}
 
 		public Object next() throws NoSuchElementException {
-			if(hasNext == false) {
+			if(!hasNext) {
 				throw new NoSuchElementException("All out.");
 			}
 			Object rv=current;

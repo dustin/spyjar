@@ -1,11 +1,8 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: WeakHashSet.java,v 1.2 2003/04/16 05:03:57 dustin Exp $
+// $Id: WeakHashSet.java,v 1.3 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.util;
-
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 
 import java.util.Collection;
 import java.util.WeakHashMap;

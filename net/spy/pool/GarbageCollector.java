@@ -1,5 +1,5 @@
 //
-// $Id: GarbageCollector.java,v 1.3 2003/07/26 07:46:53 dustin Exp $
+// $Id: GarbageCollector.java,v 1.4 2003/08/05 09:01:04 dustin Exp $
 
 package net.spy.pool;
 
@@ -8,7 +8,7 @@ import net.spy.SpyObject;
 /**
  * Perform garbage collection with rate control.
  */
-public class GarbageCollector extends SpyObject {
+public final class GarbageCollector extends SpyObject {
 
 	private static GarbageCollector gcInstance=null;
 
@@ -38,7 +38,7 @@ public class GarbageCollector extends SpyObject {
 	public synchronized void collect() {
 		long now=System.currentTimeMillis();
 
-		if( (!inProgress) && (now - lastRun) > MIN_SLEEP ) {
+		if((!inProgress) && (now - lastRun) > MIN_SLEEP) {
 			inProgress=true;
 			try {
 				getLogger().debug("Running gc and finalization");

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: GenericResultSetStub.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
+ * $Id: GenericResultSetStub.java,v 1.3 2003/08/05 09:01:03 dustin Exp $
  */
 
 package net.spy.db;
@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
-import java.sql.Types;
 
 import java.util.Iterator;
 import java.util.HashMap;
@@ -83,21 +82,21 @@ public abstract class GenericResultSetStub extends SpyObject
 		while(rs.next()) {
 
 			// Get an array to store them
-			Object result[]=new Object[ncolumns];
+			Object ars[]=new Object[ncolumns];
 
 			// Flip through the columns
 			for(int i=1; i<=ncolumns; i++) {
 				// Get the object from the result set.
-				result[i-1]=rs.getObject(i);
+				ars[i-1]=rs.getObject(i);
 
 				// If we did a numeric thingy
 				if(rs.wasNull()) {
-					result[i-1]=null;
+					ars[i-1]=null;
 				}
 			} // columns
 
 			// Stick it in our resultset.
-			r.add(result);
+			r.add(ars);
 
 		} // results
 
@@ -116,8 +115,8 @@ public abstract class GenericResultSetStub extends SpyObject
 	 * 
 	 * @param results results list to use
 	 */
-	protected void setResults(List results) {
-		this.results=results;
+	protected void setResults(List to) {
+		this.results=to;
 		resetResults();
 	}
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Job.java,v 1.6 2003/07/26 07:46:51 dustin Exp $
+// $Id: Job.java,v 1.7 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.cron;
 
@@ -90,7 +90,7 @@ public abstract class Job extends SpyObject implements Runnable {
 
 		// If the time is current or has passed, and the job is not
 		// currently running, then it's ready to run.
-		if( (nextStart.getTime() <= now) && (!isAlive()) ) {
+		if((nextStart.getTime() <= now) && (!isAlive())) {
 			rv=true;
 		}
 

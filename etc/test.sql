@@ -40,17 +40,17 @@ insert into testtable(test_vc, test_d, test_t, test_ts,
 	test_n, test_b)
 	values('nullnums', '7/29/1998', '23:02', now(), '1234567.09', true);
 
-drop table primary_keys;
+drop table primary_key;
 
-create table primary_keys(
+create table primary_key(
 	table_name varchar(128) not null,
 	primary_key numeric(16) not null default 1,
-	incr integer not null default 10,
+	incr_value integer not null default 10,
 	primary key(table_name)
 );
 
-insert into primary_keys(table_name) values('test_table');
-insert into primary_keys(table_name, incr) values('test_table2', 1000);
+insert into primary_key(table_name) values('test_table');
+insert into primary_key(table_name, incr_value) values('test_table2', 1000);
 
 drop function testFuncWithArg(INTEGER);
 create function testFuncWithArg(INTEGER) returns INTEGER as

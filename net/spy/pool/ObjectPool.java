@@ -1,11 +1,10 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPool.java,v 1.3 2003/07/26 07:46:53 dustin Exp $
+// $Id: ObjectPool.java,v 1.4 2003/08/05 09:01:04 dustin Exp $
 
 package net.spy.pool;
 
 import java.util.Date;
-import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -143,12 +142,12 @@ public class ObjectPool extends SpyObject {
 		StringBuffer out=new StringBuffer(256);
 		ArrayList a=new ArrayList();
 		synchronized (pools) {
-			for(Iterator i=pools.values().iterator(); i.hasNext(); ) {
+			for(Iterator i=pools.values().iterator(); i.hasNext();) {
 				a.add(i.next());
 			}
 		}
 		// This is broken out to get out of the lock fast...
-		for(Iterator i=a.iterator(); i.hasNext(); ) {
+		for(Iterator i=a.iterator(); i.hasNext();) {
 			out.append(i.next());
 		}
 		return(out.toString());
@@ -163,7 +162,7 @@ public class ObjectPool extends SpyObject {
 	public void prune() throws PoolException {
 		ArrayList a=new ArrayList();
 		synchronized (pools) {
-			for(Iterator i=pools.values().iterator(); i.hasNext(); ) {
+			for(Iterator i=pools.values().iterator(); i.hasNext();) {
 				PoolContainer pc=(PoolContainer)i.next();
 
 				// If it's empty, remove it.
@@ -176,7 +175,7 @@ public class ObjectPool extends SpyObject {
 				}
 			}
 		}
-		for(Iterator i=a.iterator(); i.hasNext(); ) {
+		for(Iterator i=a.iterator(); i.hasNext();) {
 			PoolContainer pc=(PoolContainer)i.next();
 			pc.prune();
 		}

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TTL.java,v 1.5 2003/07/26 07:46:54 dustin Exp $
+// $Id: TTL.java,v 1.6 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.util;
 
@@ -155,7 +155,7 @@ public class TTL extends Object {
 	private boolean readyForReport() {
 		long now=System.currentTimeMillis();
 
-		return( (now-lastReport) > reportInterval);
+		return((now-lastReport) > reportInterval);
 	}
 
 	/** 

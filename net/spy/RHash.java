@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: RHash.java,v 1.2 2002/11/20 04:32:06 dustin Exp $
+// $Id: RHash.java,v 1.3 2003/08/05 09:01:02 dustin Exp $
 
 package net.spy;
 
@@ -9,9 +9,6 @@ import java.rmi.NotBoundException;
 import java.net.MalformedURLException;
 
 import net.spy.rmi.RObject;
-
-import net.spy.log.Logger;
-import net.spy.log.LoggerFactory;
 
 import net.spy.util.NestedException;
 

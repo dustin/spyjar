@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: RingBuffer.java,v 1.5 2003/07/26 07:46:53 dustin Exp $
+// $Id: RingBuffer.java,v 1.6 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.util;
 
@@ -27,14 +27,14 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 	private boolean wrapped=false;
 	private int size=0;
 
-	private static final long serialVersionUID=823830283278235l;
+	private static final long serialVersionUID=823830283278235L;
 
 	/**
 	 * Get an instance of RingBuffer.
 	 */
-	public RingBuffer(int size) {
+	public RingBuffer(int s) {
 		super();
-		buf=new Object[size];
+		buf=new Object[s];
 		Arrays.fill(buf, null);
 	}
 
@@ -42,12 +42,12 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 	 * Get a RingBuffer at a particular size filled from the given
 	 * Collection.
 	 * 
-	 * @param size the maximum number of objects to be held in the ring
+	 * @param s the maximum number of objects to be held in the ring
 	 * @param fill a Collection whose elements will be used to fill the buffer
 	 */
-	public RingBuffer(int size, Collection fill) {
-		this(size);
-		for(Iterator i=fill.iterator(); i.hasNext(); ) {
+	public RingBuffer(int s, Collection fill) {
+		this(s);
+		for(Iterator i=fill.iterator(); i.hasNext();) {
 			add(i.next());
 		}
 	}

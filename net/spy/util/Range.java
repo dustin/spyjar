@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Range.java,v 1.1 2003/07/05 07:50:54 dustin Exp $
+// $Id: Range.java,v 1.2 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.util;
 
@@ -44,7 +44,7 @@ public class Range extends Object implements Comparable {
 				"At least one of the low or high object must be set.");
 		}
 
-		if( (low != null) && (high != null) ) {
+		if((low != null) && (high != null)) {
 			if(low.compareTo(high) > 0) {
 				throw new IllegalArgumentException(
 					"Low object must not be greater than the high object");
@@ -157,18 +157,18 @@ public class Range extends Object implements Comparable {
 		if(c != null) {
 			// If low and high are the same, this range represents an exact
 			// match.
-			if( (low != null) && (high != null) && low.equals(high) ) {
-				if( !(c.compareTo(low) == 0)) {
+			if((low != null) && (high != null) && low.equals(high)) {
+				if(!(c.compareTo(low) == 0)) {
 					rv=false;
 				}
 			} else {
 				// Make sure it's not below the low
-				if( (low != null) && (c.compareTo(low) < lowCompare) ) {
+				if((low != null) && (c.compareTo(low) < lowCompare)) {
 					rv=false;
 				}
 
 				// Make sure it's not above the high
-				if( (high != null) && (c.compareTo(high) > highCompare) ) {
+				if((high != null) && (c.compareTo(high) > highCompare)) {
 					rv=false;
 				}
 			}
@@ -222,7 +222,7 @@ public class Range extends Object implements Comparable {
 	private int compareLow(Range a, Range b) {
 		int rv=0;
 
-		if(! (a.low==null && b.low == null) ) {
+		if(!(a.low==null && b.low == null)) {
 			// At least one is not null
 			if(a.low != null && b.low != null) {
 				// neither is null, plain compare
@@ -246,7 +246,7 @@ public class Range extends Object implements Comparable {
 	private int compareHigh(Range a, Range b) {
 		int rv=0;
 
-		if(! (a.high==null && b.high == null) ) {
+		if(!(a.high==null && b.high == null)) {
 			// At least one is not null
 			if(a.high != null && b.high != null) {
 				// neither is null, plain compare

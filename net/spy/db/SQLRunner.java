@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SQLRunner.java,v 1.4 2003/07/23 03:56:59 dustin Exp $
+// $Id: SQLRunner.java,v 1.5 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.db;
 
@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 

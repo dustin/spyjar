@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: KeyStore.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: KeyStore.java,v 1.2 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.db;
 
@@ -15,16 +15,16 @@ public class KeyStore extends Object {
 	private BigDecimal end=null;
 	private BigDecimal current=null;
 
-	private BigDecimal ONE=new BigDecimal(1);
+	private static final BigDecimal ONE=new BigDecimal(1);
 
 	/**
 	 * Get an instance of KeyStore.
 	 */
-	public KeyStore(BigDecimal start, BigDecimal end) {
+	public KeyStore(BigDecimal s, BigDecimal e) {
 		super();
-		this.start=start;
-		this.current=start;
-		this.end=end;
+		this.start=s;
+		this.current=s;
+		this.end=e;
 	}
 
 	/** 

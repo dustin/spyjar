@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Log4JLogger.ojava,v 1.3 2002/11/20 06:20:01 dustin Exp $
+// $Id: Log4JLogger.ojava,v 1.4 2003/08/05 09:01:04 dustin Exp $
 
 package net.spy.log;
 
@@ -12,7 +12,7 @@ public class Log4JLogger extends AbstractLogger {
 
 	// Can't really import this without confusion as there's another thing
 	// by this name in here.
-	org.apache.log4j.Logger l4jLogger=null;
+	private org.apache.log4j.Logger l4jLogger=null;
 
 	/**
 	 * Get an instance of Log4JLogger.

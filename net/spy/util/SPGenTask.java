@@ -2,7 +2,7 @@
  * Copyright (c) 2002 Scott Lamb <slamb@slamb.org>
  * This code is released under the MIT license; see the file LICENSE.
  *
- * $Id: SPGenTask.java,v 1.6 2003/08/04 22:01:12 knitterb Exp $
+ * $Id: SPGenTask.java,v 1.7 2003/08/05 09:01:05 dustin Exp $
  */
 
 package net.spy.util;
@@ -43,15 +43,15 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  * </p>
  *
  * @author Scott Lamb
- * @version $Revision: 1.6 $ $Date: 2003/08/04 22:01:12 $
+ * @version $Revision: 1.7 $ $Date: 2003/08/05 09:01:05 $
  **/
 public class SPGenTask extends MatchingTask {
 
 	private File srcDir;
 	private File destDir;
 	private String superclass=null;
-	private String dbcp_superclass=null;
-	private String dbsp_superclass=null;
+	private String dbcpSuperclass=null;
+	private String dbspSuperclass=null;
 
 	/**
 	 * Sets the source directory to search for .spt files.
@@ -79,14 +79,14 @@ public class SPGenTask extends MatchingTask {
 	 * Set the DBCP superclass for the generated class.
 	 */
 	public void setDbcpSuperclass(String sc) {
-		this.dbcp_superclass=sc;
+		this.dbcpSuperclass=sc;
 	}
 
 	/** 
 	 * Set the DBSP superclass for the generated class.
 	 */
 	public void setDbspSuperclass(String sc) {
-		this.dbsp_superclass=sc;
+		this.dbspSuperclass=sc;
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class SPGenTask extends MatchingTask {
 				+ " to " + destDir);
 
 			// Do the work
-			for (int i = 0; i < toDoFiles.length; i ++) {
+			for (int i = 0; i < toDoFiles.length; i++) {
 				processFile(toDoFiles[i]);
 			}
 		}
@@ -132,7 +132,7 @@ public class SPGenTask extends MatchingTask {
 	private String[] trimSPTList(String input[]) {
 		ArrayList a=new ArrayList();
 
-		for(int i = 0; i < input.length; i ++) {
+		for(int i = 0; i < input.length; i++) {
 			File srcFile = new File(srcDir, input[i]);
 			File destFile = getDestFile(input[i]);
 
@@ -201,11 +201,11 @@ public class SPGenTask extends MatchingTask {
 			if (this.superclass!=null) {
 				spg.setSuperclass(this.superclass);
 			}
-			if (this.dbcp_superclass!=null) {
-				spg.setDbcpSuperclass(this.dbcp_superclass);
+			if (this.dbcpSuperclass!=null) {
+				spg.setDbcpSuperclass(this.dbcpSuperclass);
 			}
-			if (this.dbsp_superclass!=null) {
-				spg.setDbspSuperclass(this.dbsp_superclass);
+			if (this.dbspSuperclass!=null) {
+				spg.setDbspSuperclass(this.dbspSuperclass);
 			}
 			try {
 				spg.generate();

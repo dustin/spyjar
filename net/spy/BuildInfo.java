@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: BuildInfo.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: BuildInfo.java,v 1.2 2003/08/05 09:01:02 dustin Exp $
 
 package net.spy;
 
@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.io.InputStream;
 import java.io.IOException;
-import java.net.URL;
 
 import net.spy.util.NestedRuntimeException;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: QuerySelector.java,v 1.2 2002/10/30 08:16:34 dustin Exp $
+// $Id: QuerySelector.java,v 1.3 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.db;
 
@@ -18,7 +18,7 @@ public interface QuerySelector {
 	/** 
 	 * Name of the default query in the map.
 	 */
-	public static final String DEFAULT_QUERY="-default-";
+	static final String DEFAULT_QUERY="-default-";
 
 	/** 
 	 * Get the query for the given connection.

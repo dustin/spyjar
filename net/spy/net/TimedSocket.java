@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  *
- * $Id: TimedSocket.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+ * $Id: TimedSocket.java,v 1.2 2003/08/05 09:01:04 dustin Exp $
  */
 
 package net.spy.net;
@@ -19,6 +19,10 @@ public abstract class TimedSocket extends Object {
 
 	// Polling delay for socket checks (in milliseconds)
 	private static final int POLL_DELAY = 100;
+
+	private TimedSocket() {
+		super();
+	}
 
 	/**
 	 * Connect to a given host and port for a bit.

@@ -1,6 +1,6 @@
 // Copyright (c) 1999 Dustin Sallings
 //
-// $Id: Syslog.java,v 1.3 2003/07/26 07:46:51 dustin Exp $
+// $Id: Syslog.java,v 1.4 2003/08/05 09:01:02 dustin Exp $
 
 package net.spy;
 
@@ -46,6 +46,8 @@ public class Syslog extends SpyObject {
 	public static final int LOCAL6 = 176;
 	public static final int LOCAL7 = 184;
 
+	private static final int PACKET_SIZE=514;
+
 	private InetAddress addr=null;
 
 	/**
@@ -67,7 +69,7 @@ public class Syslog extends SpyObject {
 
 		try {
 			DatagramPacket dp = new DatagramPacket(what.getBytes(),
-				what.length(), addr, 514);
+				what.length(), addr, PACKET_SIZE);
 			DatagramSocket s = new DatagramSocket();
 			s.send(dp);
 		} catch(IOException e) {

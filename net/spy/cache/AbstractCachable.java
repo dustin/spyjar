@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AbstractCachable.java,v 1.1 2002/12/08 06:21:24 dustin Exp $
+// $Id: AbstractCachable.java,v 1.2 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.cache;
 
@@ -21,10 +21,10 @@ public abstract class AbstractCachable
 	/**
 	 * Get an instance of AbstractCachable.
 	 */
-	public AbstractCachable(Object key, Object value) {
+	public AbstractCachable(Object k, Object v) {
 		super();
-		this.key=key;
-		this.value=value;
+		this.key=k;
+		this.value=v;
 		cacheTime=System.currentTimeMillis();
 	}
 
@@ -88,12 +88,12 @@ public abstract class AbstractCachable
 	 * Override cachedEvent to also send the message to the cached object
 	 * if it wants it.
 	 */
-	public void cachedEvent(Object key) {
-		super.cachedEvent(key);
+	public void cachedEvent(Object k) {
+		super.cachedEvent(k);
 		// If we're holding a CacheListener, send the message to it.
 		CacheListener o=getContainedObjectAsListener();
 		if(o!=null) {
-			o.cachedEvent(key);
+			o.cachedEvent(k);
 		}
 	}
 
@@ -101,14 +101,14 @@ public abstract class AbstractCachable
 	 * Override uncachedEvent to also send the message to the cached object
 	 * if it wants it.
 	 * 
-	 * @param key 
+	 * @param k 
 	 */
-	public void uncachedEvent(Object key) {
-		super.uncachedEvent(key);
+	public void uncachedEvent(Object k) {
+		super.uncachedEvent(k);
 		// If we're holding a CacheListener, send the message to it.
 		CacheListener o=getContainedObjectAsListener();
 		if(o!=null) { 
-			o.uncachedEvent(key);
+			o.uncachedEvent(k);
 		}
 	}
 

@@ -1,13 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ShortestPathFinder.java,v 1.6 2002/11/07 18:31:22 dustin Exp $
+// $Id: ShortestPathFinder.java,v 1.7 2003/08/05 09:01:05 dustin Exp $
 
 package net.spy.util;
 
 import java.util.Set;
-import java.util.Map;
 import java.util.HashSet;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Collection;
 
@@ -87,8 +85,8 @@ public class ShortestPathFinder extends Object {
 	 * @param nodes the nodes to calculate
 	 */
 	public void calculatePaths(Collection nodes) {
-		for(Iterator i=nodes.iterator(); i.hasNext(); ) {
-			calculatePaths( (SPNode)i.next() );
+		for(Iterator i=nodes.iterator(); i.hasNext();) {
+			calculatePaths((SPNode)i.next());
 		}
 	}
 
@@ -103,7 +101,7 @@ public class ShortestPathFinder extends Object {
 		// Clear the current list
 		node.clearNextHops();
 
-		for(Iterator i=node.getConnections().iterator(); i.hasNext(); ) {
+		for(Iterator i=node.getConnections().iterator(); i.hasNext();) {
 			SPVertex spv=(SPVertex)i.next();
 			recordLink(node, spv.getCost(), spv.getTo(), spv.getTo(),
 				nodesSeen);
@@ -117,7 +115,7 @@ public class ShortestPathFinder extends Object {
 		SPNode other, Set s) {
 
 		// Make sure we're not looping over a path we've already seen.
-		if(! s.contains(other)) {
+		if(!s.contains(other)) {
 			s.add(other);
 
 			// Add the next hop.  If there is an existing hop that is less

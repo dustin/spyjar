@@ -1,13 +1,11 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LimitedList.java,v 1.2 2002/12/06 09:05:41 dustin Exp $
+// $Id: LimitedList.java,v 1.3 2003/08/05 09:01:04 dustin Exp $
 
 package net.spy.util;
 
 import java.util.Collection;
 import java.util.LinkedList;
-
-import net.spy.SpyObject;
 
 /**
  * A LinkedList with a maximum capacity.
@@ -19,9 +17,9 @@ public class LimitedList extends LinkedList {
 	/** 
 	 * Get an instance of Queue.
 	 */
-	public LimitedList(int limit) {
+	public LimitedList(int l) {
 		super();
-		this.limit=limit;
+		this.limit=l;
 	}
 
 	/** 
@@ -128,7 +126,7 @@ public class LimitedList extends LinkedList {
 	}
 
 	private void checkSizeForNew(int toAdd) {
-		if( (size()+toAdd) > limit) {
+		if((size()+toAdd) > limit) {
 			throw new IndexOutOfBoundsException(
 				"Adding " + toAdd + " element(s) would cause the size of this "
 				+ "LimitedList to exceed the maximum specified size:  "

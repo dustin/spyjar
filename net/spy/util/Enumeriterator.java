@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Enumeriterator.java,v 1.1 2002/08/28 03:52:06 dustin Exp $
+// $Id: Enumeriterator.java,v 1.2 2003/08/05 09:01:04 dustin Exp $
 
 package net.spy.util;
 
@@ -17,9 +17,9 @@ public class Enumeriterator extends Object implements Iterator {
 	/**
 	 * Get an instance of Enumeriterator.
 	 */
-	public Enumeriterator(Enumeration e) {
+	public Enumeriterator(Enumeration src) {
 		super();
-		this.e=e;
+		this.e=src;
 	}
 
 	/** 

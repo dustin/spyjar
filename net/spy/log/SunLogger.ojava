@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SunLogger.ojava,v 1.5 2003/04/18 07:50:15 dustin Exp $
+// $Id: SunLogger.ojava,v 1.6 2003/08/05 09:01:04 dustin Exp $
 
 package net.spy.log;
 
@@ -11,7 +11,7 @@ public class SunLogger extends AbstractLogger {
 
 	// Can't really import this without confusion as there's another thing
 	// by this name in here.
-	java.util.logging.Logger sunLogger=null;
+	private java.util.logging.Logger sunLogger=null;
 
 	/**
 	 * Get an instance of SunLogger.

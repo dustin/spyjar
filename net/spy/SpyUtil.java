@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyUtil.java,v 1.5 2003/08/01 21:07:58 dustin Exp $
+// $Id: SpyUtil.java,v 1.6 2003/08/05 09:01:02 dustin Exp $
 
 package net.spy;
 
@@ -26,8 +26,12 @@ import net.spy.util.Enumeriterator;
 /**
  * Miscellaneous utilities.
  */
-
 public class SpyUtil {
+
+	// Do not instantiate
+	private SpyUtil() {
+		super();
+	}
 
 	/**
 	 * Shuffle (unsort) an array.
@@ -69,7 +73,7 @@ public class SpyUtil {
 		String ret[]=new String[st.countTokens()];
 
 		int i=0;
-		while( st.hasMoreTokens() ) {
+		while(st.hasMoreTokens()) {
 			ret[i++]=st.nextToken();
 		}
 
@@ -96,7 +100,7 @@ public class SpyUtil {
 		StringBuffer rv=new StringBuffer((int)file.length());
 		int size;
 
-		while( (size=f.read(b)) >=0 ) {
+		while((size=f.read(b)) >=0) {
 			String tmp = new String(b);
 			// Substring to get rid of all the damned nulls
 			rv.append(tmp.substring(0, size));

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPoolConnectionSource.java,v 1.6 2002/11/20 04:32:07 dustin Exp $
+// $Id: ObjectPoolConnectionSource.java,v 1.7 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.db;
 
@@ -15,7 +15,6 @@ import net.spy.pool.ObjectPool;
 import net.spy.pool.PooledObject;
 import net.spy.pool.PoolException;
 import net.spy.pool.JDBCPoolFiller;
-import net.spy.pool.NoSuchPoolException;
 
 import net.spy.SpyObject;
 
@@ -224,7 +223,7 @@ public class ObjectPoolConnectionSource extends SpyObject
 		rv.put(prefix + "dbPass", tmp);
 
 		// Add the db options
-		for(Enumeration e=conf.propertyNames(); e.hasMoreElements(); ) {
+		for(Enumeration e=conf.propertyNames(); e.hasMoreElements();) {
 			String pname=(String)e.nextElement();
 			if(pname.startsWith("dboption.")) {
 				String ovalue=conf.get(pname);

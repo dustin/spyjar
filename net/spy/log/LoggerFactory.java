@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: LoggerFactory.java,v 1.5 2003/07/26 07:46:52 dustin Exp $
+// $Id: LoggerFactory.java,v 1.6 2003/08/05 09:01:04 dustin Exp $
 
 package net.spy.log;
 
@@ -27,7 +27,7 @@ import net.spy.util.NestedRuntimeException;
  *
  * @see AbstractLogger
  */
-public class LoggerFactory extends Object {
+public final class LoggerFactory extends Object {
 
 	private Map instances=null;
 	private Constructor instanceConstructor=null;
@@ -134,8 +134,8 @@ public class LoggerFactory extends Object {
 				Class args[]={};
 				instanceConstructor=c.getConstructor(args);
 			} catch(NoSuchMethodException e2) {
-				System.err.println("Warning:  " + className +
-					" has no appropriate constructor, switching to defaults.");
+				System.err.println("Warning:  " + className
+					+ " has no appropriate constructor, using defaults.");
 
 				// Try to find a constructor that takes a single string
 				try {

@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AbstractSavable.java,v 1.2 2003/01/15 08:08:06 dustin Exp $
+// $Id: AbstractSavable.java,v 1.3 2003/08/05 09:01:03 dustin Exp $
 
 package net.spy.db;
 
@@ -14,8 +14,8 @@ import net.spy.SpyObject;
 public abstract class AbstractSavable extends SpyObject
 	implements SavableNode {
 
-	private boolean _asIsNew=false;
-	private boolean _asIsModified=false;
+	private boolean asIsNew=false;
+	private boolean asIsModified=false;
 
 	/**
 	 * Get an instance of AbstractSavable.
@@ -25,21 +25,21 @@ public abstract class AbstractSavable extends SpyObject
 	 */
 	protected AbstractSavable() {
 		super();
-		_asIsNew=true;
+		asIsNew=true;
 	}
 
 	/** 
 	 * Indicate whether this object is new.
 	 */
 	public boolean isNew() {
-		return(_asIsNew);
+		return(asIsNew);
 	}
 
 	/** 
 	 * Indicate whether this object has been modified.
 	 */
 	public boolean isModified() {
-		return(_asIsModified);
+		return(asIsModified);
 	}
 
 	/** 
@@ -48,7 +48,7 @@ public abstract class AbstractSavable extends SpyObject
 	 * @param to the new value of the new flag
 	 */
 	protected void setNew(boolean to) {
-		_asIsNew=to;
+		asIsNew=to;
 	}
 
 	/** 
@@ -57,7 +57,7 @@ public abstract class AbstractSavable extends SpyObject
 	 * @param to the new value for the modified flag
 	 */
 	protected void setModified(boolean to) {
-		_asIsModified=to;
+		asIsModified=to;
 	}
 
 	/** 

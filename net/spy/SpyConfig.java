@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyConfig.java,v 1.5 2003/07/26 07:46:50 dustin Exp $
+ * $Id: SpyConfig.java,v 1.6 2003/08/05 09:01:02 dustin Exp $
  */
 
 package net.spy;
@@ -149,7 +149,7 @@ public class SpyConfig extends Properties {
 	}
 
 	private void set(Map h) {
-		for(Iterator i=h.entrySet().iterator(); i.hasNext(); ) {
+		for(Iterator i=h.entrySet().iterator(); i.hasNext();) {
 			Map.Entry me=(Map.Entry)i.next();
 			put(me.getKey(), me.getValue());
 		}
@@ -161,7 +161,7 @@ public class SpyConfig extends Properties {
 	 * @param key which config entry to return.
 	 */
 	public String get(String key) {
-		return( (String)super.get(key));
+		return((String)super.get(key));
 	}
 
 	/**
