@@ -95,11 +95,8 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 			HTTPFetch hf=new HTTPFetch(url, headers);
 			hf.setIfModifiedSince(lastModified);
 
-			System.err.println("Status:  " + hf.getStatus());
 			if(hf.getStatus() == HttpURLConnection.HTTP_OK) {
-				content=hf.getData();
-				lastModified=hf.getLastModified();
-				lastHeaders=hf.getResponseHeaders();
+				setContent(hf.getData(), hf.getResponseHeaders(), hf.getLastModified());
 			} else {
 				getLogger().info("Not saving content due to response status "
 					+ hf.getStatus());
@@ -107,20 +104,44 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 		} catch(IOException e) {
 			lastError=e;
 		}
+	}
+
+	private synchronized void setContent(String to, Map headers, long lastMod) {
+		content=to;
+		// Big chunk of debug logging.
+		if(getLogger().isDebugEnabled()) {
+			String contentDesc=null;
+			if(to == null) {
+				contentDesc="<null>";
+			} else {
+				contentDesc=to.length() + " bytes";
+			}
+			getLogger().debug("Setting content for " + this + ":  " + contentDesc);
+		}
+		lastModified=lastMod;
+		lastHeaders=headers;
 
 		// Notify listeners that this has been updated.
-		synchronized(this) {
-			notifyAll();
-		}
+		notifyAll();
 	}
 
 	/** 
 	 * Get the content from the last fetch.
 	 */
-	public String getContent() throws IOException {
+	public synchronized String getContent() throws IOException {
 		lastRequest=System.currentTimeMillis();
 		if(lastError!=null) {
 			throw lastError;
+		}
+		if(getLogger().isDebugEnabled()) {
+			String contentDesc=null;
+			if(content == null) {
+				contentDesc="<null>";
+			} else {
+				contentDesc=content.length() + " bytes";
+			}
+			getLogger().debug("Getting content for " + this + ":  "
+				+ contentDesc);
 		}
 		return(content);
 	}
