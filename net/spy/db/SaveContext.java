@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveContext.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: SaveContext.java,v 1.2 2004/02/02 23:23:57 dustin Exp $
 
 package net.spy.db;
 
@@ -18,6 +18,14 @@ public class SaveContext extends Hashtable {
 	 */
 	public SaveContext() {
 		super();
+	}
+
+	/** 
+	 * Get the session ID for this context.  The session ID is not guaranteed
+	 * to be globally unique, just unique enough for local correlation in logs.
+	 */
+	public int getId() {
+		return(System.identityHashCode(this));
 	}
 
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.12 2003/08/15 19:15:14 dustin Exp $
+// $Id: Saver.java,v 1.13 2004/02/02 23:23:57 dustin Exp $
 
 package net.spy.db;
 
@@ -60,6 +60,10 @@ public class Saver extends SpyObject {
 	public void save(Savable o) throws SaveException {
 		boolean complete=false;
 
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Beginning save transaction " + getSessId());
+		}
+
 		try {
 			db=new SpyDB(config);
 			conn=db.getConn();
@@ -111,6 +115,13 @@ public class Saver extends SpyObject {
 				tl.transactionCommited();
 			}
 		} // end looking at all the listeners.
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Save transaction " + getSessId() + " complete");
+		}
+	}
+
+	private String getSessId() {
+		return(Integer.toHexString(context.getId()));
 	}
 
 	// Deal with individual saves.
@@ -163,6 +174,28 @@ public class Saver extends SpyObject {
 		}
 	}
 
+	//  make a pleasant way to print out the debug strings.
+	private String dbgString(Object o) {
+		StringBuffer sb=new StringBuffer(80);
+		if(o == null) {
+			sb.append("<null>");
+		} else {
+			sb.append("{");
+			sb.append(o.getClass().getName());
+			sb.append("@");
+			sb.append(Integer.toHexString(System.identityHashCode(o)));
+			String s=o.toString();
+			sb.append(" - ");
+			if(s.length() < 64) {
+				sb.append(s);
+			} else {
+				sb.append(s.substring(0, 63));
+			}
+			sb.append("}");
+		}
+		return(sb.toString());
+	}
+
 	// Loop through a Collection of savables, passing each to rsave().  If
 	// only java supported functional programming...
 	private void saveLoop(Savable o, Collection c)
@@ -173,7 +206,8 @@ public class Saver extends SpyObject {
 		checkRecursionDepth();
 
 		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Saving " + c + " from " + o);
+			getLogger().debug("Saving " + dbgString(c) + " from "
+				+ dbgString(o) + " in " + getSessId());
 		}
 
 		if(c!=null) {
@@ -181,7 +215,7 @@ public class Saver extends SpyObject {
 				Object tmpo=i.next();
 				if(tmpo==null) {
 					throw new NullPointerException("Got a null object from "
-						+ o);
+						+ o + " (" + dbgString(o) + ")");
 				}
 
 				// Dispatch based on type
@@ -192,11 +226,16 @@ public class Saver extends SpyObject {
 				} else {
 					throw new SaveException(
 						"Invalid object type found in save tree:  "
-						+ tmpo.getClass()
-						+ " from " + o);
+						+ tmpo.getClass() + " from " + o
+						+ " (" + dbgString(o) + ")");
 				}
 			} // iterator loop
 		} // got a collection
+
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Completed saving " + dbgString(c)
+				+ " in " + getSessId());
+		}
 
 		rdepth--;
 	} // saveLoop()
