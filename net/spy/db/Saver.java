@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.10 2003/04/19 01:14:57 dustin Exp $
+// $Id: Saver.java,v 1.11 2003/04/19 03:33:19 dustin Exp $
 
 package net.spy.db;
 
@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import net.spy.SpyDB;
 import net.spy.SpyConfig;
 import net.spy.SpyObject;
+
+import net.spy.util.IdentityEqualifier;
 
 /**
  * Transactional object saver.
@@ -195,33 +197,5 @@ public class Saver extends SpyObject {
 
 		rdepth--;
 	} // saveLoop()
-
-	// private class to deal with identity comparisons
-	private class IdentityEqualifier {
-
-		private Object o=null;
-
-		// Get an IdentityEqualifier
-		public IdentityEqualifier(Object o) {
-			super();
-			this.o=o;
-		}
-
-		// Get the object
-		public Object get() {
-			return(o);
-		}
-
-		// Identity comparison
-		public boolean equals(Object other) {
-			return(o == other);
-		}
-
-		// Get the hash code of the class
-		public int hashCode() {
-			return(o.getClass().hashCode());
-		}
-
-	}
 
 }

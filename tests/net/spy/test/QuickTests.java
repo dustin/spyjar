@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: QuickTests.java,v 1.6 2002/12/19 07:12:45 dustin Exp $
+// $Id: QuickTests.java,v 1.7 2003/04/19 03:33:19 dustin Exp $
 
 package net.spy.test;
 
@@ -37,6 +37,7 @@ public class QuickTests extends TestSuite {
 		rv.addTest(ShortestPathTest.suite());
 		rv.addTest(LimitedListTest.suite());
 		rv.addTest(LRUTest.suite());
+		rv.addTest(IdentityEqualifierTest.suite());
 		return(rv);
 	}
 
