@@ -68,7 +68,7 @@ public class ThreadPool extends ThreadGroup {
 	// The threads we're managing.
 	private Collection threads=null;
 	// The tasks for the threads to do.
-	private LinkedList tasks=null;
+	private LimitedList tasks=null;
 
 	// This is what we monitor for things being checked out (otherwise we
 	// can't tell the difference between adds and check outs).
@@ -308,6 +308,8 @@ public class ThreadPool extends ThreadGroup {
 			synchronized(tasks) {
 				sb.append(tasks.size());
 			}
+			sb.append(" of a maximum");
+			sb.append(maxTaskQueueSize);
 			sb.append(" tasks queued");
 		}
 
@@ -349,6 +351,9 @@ public class ThreadPool extends ThreadGroup {
 				"Value must be greater than or equal to zero.");
 		}
 		this.maxTaskQueueSize=mtqs;
+		if(tasks != null) {
+			tasks.setLimit(maxTaskQueueSize);
+		}
 	}
 
 	/** 
