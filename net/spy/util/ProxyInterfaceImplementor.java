@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ProxyInterfaceImplementor.java,v 1.1 2002/11/27 06:00:24 dustin Exp $
+// $Id: ProxyInterfaceImplementor.java,v 1.2 2003/02/04 23:02:59 dustin Exp $
 
 package net.spy.util;
 
@@ -64,6 +64,32 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 			+ "\t}\n\n";
 
 		return(ret);
+	}
+
+	/** 
+	 * Before the generated methods, include methods for accessing and
+	 * setting the proxied object.
+	 */
+	protected String preMethods() {
+		Class i=getInterface();
+		String rv=null;
+
+		rv+="\t/**\n"
+			+ "\t * Get the proxied object.\n"
+			+ "\t */\n";
+
+		rv+="\tprotected " + i.getName() + " getProxiedObject() {\n"
+			+ "\t\treturn(proxiedObject);\n"
+			+ "\t}\n";
+
+		rv+="\t/**\n"
+			+ "\t * Set the proxied object.\n"
+			+ "\t */\n";
+		rv+="\tprotected void setProxiedObject(" + i.getName() + " o) {\n"
+			+ "\t\tthis.proxiedObject=o;\n"
+			+ "\t}\n";
+
+		return(rv);
 	}
 
 	/** 
