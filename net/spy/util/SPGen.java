@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.38 2004/02/17 18:44:20 dustin Exp $
+// $Id: SPGen.java,v 1.39 2004/02/17 19:22:08 dustin Exp $
 
 package net.spy.util;
 
@@ -56,7 +56,7 @@ public class SPGen extends Object {
 	private String dbspSuperclass=null;
 
 	private String superinterface=null;
-	private String version="$Revision: 1.38 $";
+	private String version="$Revision: 1.39 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -64,7 +64,6 @@ public class SPGen extends Object {
 	private List args=null;
 	private Set interfaces=null;
 	private Set imports=null;
-	private boolean debug=false;
 	private int timeout=0;
 
 	private static Set types=null;
@@ -803,7 +802,6 @@ public class SPGen extends Object {
 
 					// Handlers for things that occur when a section is begun
 					if(section.equals("debug")) {
-						debug=true;
 						System.err.println("debug is deprecated");
 					} else if (section.equals("genresults")) {
 						wantsResultSet=true;
