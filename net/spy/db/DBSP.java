@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.5 2002/09/17 22:49:34 dustin Exp $
+// $Id: DBSP.java,v 1.6 2002/09/19 20:44:38 dustin Exp $
 
 package net.spy.db;
 
@@ -575,6 +575,17 @@ public abstract class DBSP extends SpyCacheDB {
 	public void set(String which,boolean a1) 
 		throws SQLException {
 		setArg(which, new Boolean(a1), Types.BIT);
+	}
+
+	/** 
+	 * Set field <i>which</i> to the value of b.
+	 * 
+	 * @param which the field to set
+	 * @param b the value to set
+	 * @throws SQLException if there's an error setting this argument
+	 */
+	public void set(String which, Boolean b) throws SQLException {
+		setArg(which, b, Types.BIT);
 	}
 
 	/**
