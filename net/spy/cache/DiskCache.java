@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: DiskCache.java,v 1.4 2002/09/13 17:27:49 dustin Exp $
+// $Id: DiskCache.java,v 1.5 2002/12/05 08:03:51 dustin Exp $
 
 package net.spy.cache;
 
@@ -40,6 +40,13 @@ public class DiskCache extends AbstractMap {
 	public DiskCache(String basedir) {
 		super();
 		this.basedir=basedir;
+	}
+
+	/** 
+	 * Get the base directory which this cache is watching.
+	 */
+	public String getBaseDir() {
+		return(basedir);
 	}
 
 	// Get the path of an object for the given key
