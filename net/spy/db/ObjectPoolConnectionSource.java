@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPoolConnectionSource.java,v 1.7 2003/08/05 09:01:03 dustin Exp $
+// $Id: ObjectPoolConnectionSource.java,v 1.8 2003/08/10 20:21:18 dustin Exp $
 
 package net.spy.db;
 
@@ -17,6 +17,7 @@ import net.spy.pool.PoolException;
 import net.spy.pool.JDBCPoolFiller;
 
 import net.spy.SpyObject;
+import net.spy.db.DBInitException;
 
 /**
  * Connection source to retrieve connections from an ObjectPool.
@@ -80,7 +81,7 @@ public class ObjectPoolConnectionSource extends SpyObject
 			conn=getConn(poolName);
 		} catch(PoolException pe) {
 			getLogger().warn("Could not get a DB connection", pe);
-			throw new SQLException("Could not get a DB connection:  " + pe);
+			throw new DBInitException("Could not get a DB connection:  " + pe);
 		}
 		return(conn);
 	}
