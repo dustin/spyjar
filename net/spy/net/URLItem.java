@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLItem.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: URLItem.java,v 1.2 2003/04/14 04:00:28 dustin Exp $
 
 package net.spy.net;
 
@@ -20,9 +20,9 @@ import net.spy.cron.SimpleTimeIncrement;
  */
 public class URLItem extends Job {
 
-	// How long a URL will be watched if nobody wants it (defaults to an
-	// hour).
-	private int maxIdleTime=3600000;
+	// How long a URL will be watched if nobody wants it (defaults to a
+	// half hour).
+	private int maxIdleTime=1800000;
 
 	private long lastRequest=0;
 
@@ -40,7 +40,7 @@ public class URLItem extends Job {
 	 * @param u URL to watch
 	 */
 	public URLItem(URL u) {
-		this(u, new Date(), new SimpleTimeIncrement(300000));
+		this(u, new Date(), new SimpleTimeIncrement(900000));
 	}
 
 	/** 
