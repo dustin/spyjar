@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyCache.java,v 1.6 2002/12/08 06:21:25 dustin Exp $
+ * $Id: SpyCache.java,v 1.7 2002/12/08 07:28:05 dustin Exp $
  */
 
 package net.spy.cache;
@@ -35,6 +35,9 @@ public class SpyCache extends SpyObject {
 	private SpyCacheCleaner cacheCleaner=null;
 
 	private static SpyCache instance=null;
+
+	// how frequently to clean up the cache
+	private static final int CACHE_CLEAN_SLEEP_TIME=60000;
 
 	/**
 	 * Construct a new instance of SpyCache.  This allows subclasses to
@@ -87,6 +90,11 @@ public class SpyCache extends SpyObject {
 
 	/**
 	 * Store an object in the cache with the specified timeout.
+	 *
+	 * <p>
+	 *  Objects will be wrapped in a private subclass of {@link Cachable}
+	 *  that expires based on the time.
+	 * </p>
 	 *
 	 * @param key Cache key
 	 * @param value Object to cache
@@ -263,7 +271,7 @@ public class SpyCache extends SpyObject {
 			while(keepgoing) {
 				try {
 					// Just for throttling, sleep a second.
-					sleep(1000);
+					sleep(CACHE_CLEAN_SLEEP_TIME);
 					cleanup();
 					// Check to see if we want a multicast listener
 					if(wantMulticastListener
