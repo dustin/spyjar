@@ -54,19 +54,45 @@ public class Saver extends SpyObject {
 		this.listedObjects=new HashSet();
 	}
 
+	/** 
+	 * Save this Savabale and everything it contains at the default isolation
+	 * level.
+	 */
+	public void save(Savable o) throws SaveException {
+		save(o, null);
+	}
+
+	/** 
+	 * Save this Savabale and everything it contains at the default isolation
+	 * level.
+	 *
+	 * @param o the savable
+	 * @param level the isolation level (as defined in java.sql.Connection)
+	 */
+	public void save(Savable o, int level) throws SaveException {
+		save(o, new Integer(level));
+	}
+
 	/**
 	 * Save this Savabale and everything it contains.
 	 */
-	public void save(Savable o) throws SaveException {
+	private void save(Savable o, Integer isoLevel) throws SaveException {
 		boolean complete=false;
 
+		int oldIsolationLevel=0;
+
 		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Beginning save transaction " + getSessId());
+			getLogger().debug("Beginning save transaction " + getSessId()
+				+ " with isolation level " + isoLevel);
 		}
 
 		try {
 			db=new SpyDB(config);
 			conn=db.getConn();
+			if(isoLevel != null) {
+				oldIsolationLevel=conn.getTransactionIsolation();
+				conn.setTransactionIsolation(isoLevel.intValue());
+			}
 			conn.setAutoCommit(false);
 
 			// Begin recursion
@@ -97,6 +123,15 @@ public class Saver extends SpyObject {
 					conn.setAutoCommit(true);
 				} catch(SQLException sqe) {
 					getLogger().warn("Problem resetting autocommit.", sqe);
+				}
+				// Reset the isolation level
+				if(isoLevel != null) {
+					try {
+						conn.setTransactionIsolation(oldIsolationLevel);
+					} catch(SQLException sqe) {
+						getLogger().warn("Problem resetting isolation level.",
+							sqe);
+					}
 				}
 			} // Dealt with opened connection
 
