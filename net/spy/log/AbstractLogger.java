@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: AbstractLogger.java,v 1.2 2002/11/05 06:06:52 dustin Exp $
+// $Id: AbstractLogger.java,v 1.3 2002/11/15 11:12:06 dustin Exp $
 
 package net.spy.log;
 
@@ -31,7 +31,7 @@ public abstract class AbstractLogger implements Logger {
 	 */
 	protected final static int FATAL=5;
 
-	private static String name=null;
+	private String name=null;
 
 	/** 
 	 * Instantiate the abstract logger.
