@@ -629,7 +629,7 @@
 	</target>
 
 	<!-- checkstyle -->
-	<target name="checkstyle">
+	<target name="checkstyle" depends="prepare">
 		<taskdef name="checkstyle"
 			classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
 			<classpath>
@@ -639,29 +639,26 @@
 			</classpath>
 		</taskdef>
 
-		<delete file="checkstyle_report.xml"/>
+		<delete file="${BUILDTOP}/checkstyle_report.xml"/>
 
 		<checkstyle config="etc/checkstyle_config.xml" failOnViolation="false">
-			<formatter type="xml" tofile="checkstyle_report.xml"/>
-			<fileset dir=".">
+			<formatter type="xml" tofile="${BUILDTOP}/checkstyle_report.xml"/>
+			<fileset dir="${SRCDIR}">
 				<include name="net/spy/**/*.java"/>
 				<include name="net/spy/**/*.ojava"/>
-				<exclude name="net/spy/db/sp/*.java"/>
-				<exclude name="net/spy/db/CachedResultSet.java"/>
-				<exclude name="net/spy/db/CachePreparedStatement.java"/>
-				<exclude name="net/spy/db/TypeNames.java"/>
+				<exclude name="**/Base64.java"/>
 			</fileset>
 		</checkstyle>
 
-		<style in="checkstyle_report.xml"
-			out="checkstyle_report.html"
+		<style in="${BUILDTOP}/checkstyle_report.xml"
+			out="${BUILDTOP}/checkstyle_report.html"
 			style="etc/checkstyle.xsl"/>
 	</target>
 
 	<target name="simian">
 		<taskdef resource="simiantask.properties"/>
 		<simian lineCount="6">
-			<fileset dir="net" includes="**/*.java" />
+			<fileset dir="${SRCDIR}" includes="**/*.java,**/*.ojava" />
 		</simian>
 	</target>
 
