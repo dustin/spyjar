@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.16 2003/04/18 07:50:16 dustin Exp $
+// $Id: ThreadPool.java,v 1.17 2003/04/18 08:02:06 dustin Exp $
 
 package net.spy.util;
 
@@ -271,9 +271,13 @@ public class ThreadPool extends ThreadGroup {
 	public String toString() {
 		StringBuffer sb=new StringBuffer(128);
 		sb.append(super.toString());
-		sb.append(" - ");
-		sb.append(tasks.size());
-		sb.append(" tasks queued");
+		if(tasks==null) {
+			sb.append(" - no queue");
+		} else {
+			sb.append(" - ");
+			sb.append(tasks.size());
+			sb.append(" tasks queued");
+		}
 
 		return(sb.toString());
 	}

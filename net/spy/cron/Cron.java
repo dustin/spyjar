@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Cron.java,v 1.5 2003/04/18 07:50:14 dustin Exp $
+// $Id: Cron.java,v 1.6 2003/04/18 08:02:05 dustin Exp $
 
 package net.spy.cron;
 
@@ -68,6 +68,11 @@ public class Cron extends SpyThread {
 			tp.setMaxTotalThreads(100);
 		}
 		threads=tp;
+		try {
+			threads.start();
+		} catch(IllegalStateException e) {
+			getLogger().warn("Threads were already started", e);
+		}
 
 		start();
 		validJobFound=System.currentTimeMillis();
