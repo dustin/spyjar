@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTest.java,v 1.4 2002/09/06 20:39:01 dustin Exp $
+// $Id: DBTest.java,v 1.5 2002/09/13 05:49:09 dustin Exp $
 
 package net.spy.test;
 
@@ -198,7 +198,7 @@ public class DBTest extends TestCase {
 			// Get the value
 			rv=(String)pnf.get(opcs);
 
-			System.err.println("poolName is " + rv);
+			// System.err.println("poolName is " + rv);
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail("Couldn't get pool name for DB object:  " + e);

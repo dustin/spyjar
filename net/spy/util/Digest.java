@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Beyond.com <dustin@beyond.com>
 //
-// $Id: Digest.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: Digest.java,v 1.2 2002/09/13 05:49:09 dustin Exp $
 
 package net.spy.util;
 
@@ -13,11 +13,23 @@ import java.security.SecureRandom;
  */
 public class Digest extends Object {
 
+	private boolean prefixHash=true;
+
 	/**
 	 * Get a new Digest object.
 	 */
 	public Digest() {
 		super();
+	}
+
+	/** 
+	 * If set to true, hashes will be prefixed with the type of hash used.
+	 * (i.e. {SHA}, {SSHA}, etc...).
+	 * 
+	 * @param doit whether or not to prefix the hash
+	 */
+	public void prefixHash(boolean doit) {
+		prefixHash=doit;
 	}
 
 	// SSHA = 20 bytes of SHA data + a random salt.  Perl for checking can
@@ -60,6 +72,14 @@ public class Digest extends Object {
 		return(sb.toString());
 	}
 
+	private String getPrefix(String p) {
+		String rv="";
+		if(prefixHash) {
+			rv=p;
+		}
+		return(rv);
+	}
+
 	/**
 	 * Get a hash for a String with a known salt.  This should only be used
 	 * for verification, don't be stupid and start handing out words with
@@ -76,26 +96,37 @@ public class Digest extends Object {
 		md.update(salt);
 		Base64 base64=new Base64();
 		byte pwhash[]=md.digest();
-		String hout = "{SSHA}" + base64.encode(cat(pwhash, salt));
+		String hout = getPrefix("{SSHA}") + base64.encode(cat(pwhash, salt));
 		return(hout.trim());
 	}
 
-	/**
-	 * Get a hash for a String with no salt.  This should only be used for
-	 * checksumming, not passwords.
+	/** 
+	 * Get the hash for a given string (with no salt).
+	 * 
+	 * @param s the thing to hash
+	 * @return the hash
 	 */
-	public String getSaltFreeHash(String word) {
+	public byte[] getSaltFreeHashBytes(String s) {
 		MessageDigest md=null;
 		try {
 			md=MessageDigest.getInstance("SHA");
 		} catch(NoSuchAlgorithmException e) {
 			throw new Error("There's no SHA?");
 		}
-		md.update(word.getBytes());
+		md.update(s.getBytes());
+		byte hash[]=md.digest();
+		return(hash);
+	}
+
+	/**
+	 * Get a hash for a String with no salt.  This should only be used for
+	 * checksumming, not passwords.
+	 */
+	public String getSaltFreeHash(String s) {
 		Base64 base64=new Base64();
-		byte pwhash[]=md.digest();
-		String hout = "{SHA}" + base64.encode(pwhash);
-		return(hout.trim());
+		String hout = getPrefix("{SHA}")
+			+ base64.encode(getSaltFreeHashBytes(s));
+		return(hout);
 	}
 
 	/**
