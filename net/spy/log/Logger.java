@@ -1,11 +1,14 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: Logger.java,v 1.1 2002/11/04 21:13:57 dustin Exp $
+// $Id: Logger.java,v 1.2 2002/11/05 04:59:09 dustin Exp $
 
 package net.spy.log;
 
 /**
  * Abstract mechanism for dealing with logs from various objects.
+ *
+ * Implementations are expected to have a constructor that takes a single
+ * String representing the name of the logging item, or an empty constructor.
  *
  * @see LoggerFactory
  */

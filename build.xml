@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.12 2002/10/31 08:11:57 dustin Exp $
+	$Id: build.xml,v 1.13 2002/11/05 04:59:09 dustin Exp $
 
 	-->
 
@@ -47,6 +47,7 @@
 				<include name="spy/db/CachePreparedStatement.java"/>
 				<include name="spy/db/CachedResultSet.java"/>
 				<include name="spy/db/sp/*.java"/>
+				<include name="spy/log/SunLogger.java"/>
 			</fileset>
 			<!--
 				Get rid of the installed one since it keeps messing with my
@@ -234,7 +235,22 @@
 		<antcall target="compile"/>
 	</target>
 
-	<target name="compile" depends="rmic,dbstuff">
+	<!-- Optional components -->
+
+	<target name="check-sunlog">
+		<available classname="java.util.logging.Logger" property="has.sunlog"/>
+	</target>
+
+	<target name="optional-sunlog" depends="check-sunlog" if="has.sunlog">
+		<copy file="${SRCDIR}/net/spy/log/SunLogger.ojava"
+			tofile="${SRCDIR}/net/spy/log/SunLogger.java"/>
+	</target>
+
+	<target name="optional" depends="optional-sunlog"/>
+
+	<!-- End optional components -->
+
+	<target name="compile" depends="optional,rmic,dbstuff">
 		<javac
 			srcdir="${SRCDIR}"
 			destdir="${BUILDDIR}"
