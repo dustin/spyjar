@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.13 2004/02/02 23:23:57 dustin Exp $
+// $Id: Saver.java,v 1.14 2004/02/06 01:46:58 dustin Exp $
 
 package net.spy.db;
 
@@ -145,7 +145,20 @@ public class Saver extends SpyObject {
 
 			// Save this object if it needs saving.
 			if(o.isNew() || o.isModified()) {
+				// Log the pre-save
+				if(getLogger().isDebugEnabled()) {
+					getLogger().debug("Saving " + dbgString(o)
+						+ " in " + getSessId());
+				}
+
+				// Perform the actual save
 				o.save(conn, context);
+
+				// Log the post save
+				if(getLogger().isDebugEnabled()) {
+					getLogger().debug("Completed saving " + dbgString(o)
+						+ " in " + getSessId());
+				}
 			}
 
 			// Get the post savables
@@ -205,11 +218,6 @@ public class Saver extends SpyObject {
 
 		checkRecursionDepth();
 
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Saving " + dbgString(c) + " from "
-				+ dbgString(o) + " in " + getSessId());
-		}
-
 		if(c!=null) {
 			for(Iterator i=c.iterator(); i.hasNext(); ) {
 				Object tmpo=i.next();
@@ -231,11 +239,6 @@ public class Saver extends SpyObject {
 				}
 			} // iterator loop
 		} // got a collection
-
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Completed saving " + dbgString(c)
-				+ " in " + getSessId());
-		}
 
 		rdepth--;
 	} // saveLoop()
