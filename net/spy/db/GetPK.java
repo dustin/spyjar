@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetPK.java,v 1.6 2003/08/05 09:01:03 dustin Exp $
+// $Id: GetPK.java,v 1.7 2004/01/21 21:49:12 dustin Exp $
 
 package net.spy.db;
 
@@ -117,7 +117,7 @@ public class GetPK extends SpyObject {
 	// source
 	private String makeDbTableKey (SpyConfig conf, String table) {
 		StringBuffer rc=new StringBuffer(512);
-		
+
 		// shove in typical stuff
 		rc.append(conf.get("dbSource"));
 		rc.append(";");
@@ -257,7 +257,8 @@ public class GetPK extends SpyObject {
 			// Make sure one row got updated
 			if(changed!=1) {
 				throw new SQLException(
-					"Did not update the correct number of rows");
+					"Did not update the correct number of rows for "
+						+ table + " (got " + changed + ")");
 			}
 			dbsp.close();
 
