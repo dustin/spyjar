@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: BitArrayTest.java,v 1.2 2002/11/06 20:01:40 dustin Exp $
+// $Id: BitArrayTest.java,v 1.3 2002/11/06 20:14:27 dustin Exp $
 
 package net.spy.test;
 
@@ -135,6 +135,38 @@ public class BitArrayTest extends TestCase {
 			fail("Allowed me to get more than 32 bits.");
 		} catch(IllegalArgumentException e) {
 			// OK
+		}
+	}
+
+	/** 
+	 * Test that we can get arbitrary bits.
+	 */
+	public void testGetArbitraryBits() {
+		BitArray bitArray=new BitArray();
+		// 1101011
+		bitArray.addBits(0x6b, 7);
+		assertEquals("Getting the middle bits didn't work",
+			2, bitArray.getBits(2, 3));
+	}
+
+	/** 
+	 * Test the string constructor.
+	 */
+	public void testStringConstructor() {
+		String toTest="00101101110010111011101001101";
+		BitArray bitArray=new BitArray(toTest);
+		assertEquals("BitArray string construction failed",
+			toTest, bitArray.toString());
+
+		bitArray=new BitArray("    " + toTest + "\n\t   ");
+		assertEquals("BitArray string construction with whitespace failed",
+			toTest, bitArray.toString());
+
+		try {
+			bitArray=new BitArray(toTest + "2");
+			fail("Parsed an invalid bit array.");
+		} catch(IllegalArgumentException e) {
+			// That's what it's supposed to do
 		}
 	}
 

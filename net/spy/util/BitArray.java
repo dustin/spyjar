@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: BitArray.java,v 1.2 2002/11/06 20:01:40 dustin Exp $
+// $Id: BitArray.java,v 1.3 2002/11/06 20:14:27 dustin Exp $
 
 package net.spy.util;
 
@@ -19,11 +19,48 @@ public class BitArray extends Object {
 	private List bitList=null;
 
 	/**
-	 * Get an instance of BitArray.
+	 * Get an instance of BitArray with storage for a given number of bits.
+	 */
+	public BitArray(int size) {
+		super();
+		bitList=new ArrayList(size);
+	}
+
+	/** 
+	 * Get an intance of BitArray.
 	 */
 	public BitArray() {
 		super();
 		bitList=new ArrayList();
+	}
+
+	/** 
+	 * Get a BitArray by parsing a string.
+	 *
+	 * The string must only contain the characters 0 (zero), 1 (one), and
+	 * whitespace.
+	 * 
+	 * @param bitString the string containing zeros and ones
+	 */
+	public BitArray(String bitString) {
+		this(bitString.length());
+
+		char acters[]=bitString.toCharArray();
+		for(int i=0; i<acters.length; i++) {
+			if(!Character.isWhitespace(acters[i])) {
+				switch(acters[i]) {
+					case '0':
+						add(false);
+						break;
+					case '1':
+						add(true);
+						break;
+					default:
+						throw new IllegalArgumentException(
+							"Only 0, 1, and whitespace is allowed.");
+				} // switch - My name is Dustin Sallings, and I'm a programmer
+			} // Ignore whitespace
+		} // All characters
 	}
 
 	/** 
