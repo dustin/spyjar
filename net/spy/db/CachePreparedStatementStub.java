@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePreparedStatementStub.java,v 1.5 2003/07/26 07:46:51 dustin Exp $
+ * $Id: CachePreparedStatementStub.java,v 1.6 2003/07/31 21:44:39 knitterb Exp $
  */
 
 package net.spy.db;
@@ -239,7 +239,11 @@ public class CachePreparedStatementStub extends SpyObject {
 	// Implemented
 	public void setBoolean(int a0,boolean a1) 
 		throws SQLException {
-		setArg(a0, Boolean.valueOf(a1), Types.BIT);
+		// this only works in jdk 1.4
+		//setArg(a0, Boolean.valueOf(a1), Types.BIT);
+		
+		// this works in jdk 1.3 and 1.4
+		setArg(a0, new Boolean(a1), Types.BIT);
 	}
 
 	// Implemented
