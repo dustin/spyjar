@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetPK.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: GetPK.java,v 1.2 2002/11/04 19:55:06 knitterb Exp $
 
 package net.spy.db;
 
@@ -43,7 +43,9 @@ import net.spy.db.sp.SelectPrimaryKey;
  *    <td>table_name</td>
  *    <td>varchar</td>
  *    <td>The name of the table (or other resource) for which we are
- *        generating the given primary key.
+ *        generating the given primary key.  All table names in this column
+ *        must be in lowercase as the input from the user will be
+ *        lowercased on key retrieval.
  *    </td>
  *  </tr>
  *  <tr>
@@ -103,7 +105,7 @@ public class GetPK extends Object {
 		throws SQLException {
 
 		SpyDB db=new SpyDB(conf);
-		BigDecimal pk=getPrimaryKey(db, table);
+		BigDecimal pk=getPrimaryKey(db, table.toLowerCase());
 		db.close();
 		return(pk);
 	}
