@@ -1,0 +1,44 @@
+What is SpyJar??
+
+
+* DBSP/SPGen
+
+These are classes which are used to generate java classes for sql
+statements from template files.  Since much of the work of setting and
+getting variables, all the way to documentation is duplicated every step
+along the way, the template files allow for code generation to occur in a
+systematically standard way.
+
+SPGen takes care of converting the .spt files into java classes (DBPSs)
+through the use of an Ant target.  From here, the DBSP is compiled and made
+accessible through configuration, without the need to require connections
+directly from a pool.  Much less code is required for using the DBSP
+classes.
+
+
+
+* Saver/Savable
+
+Saver takes the DBSPs and turns multiples of DBSP calls into a single
+transation.  Saver then can continue to go a step further and assure that
+and child objects are then saved in the single transaction as well.  Care
+should be taken to assure that a dead locking issue does not occur on the
+backend database.
+
+Saver, much like DBSP, takes only a configuration object to handle the
+atomic sql execution.  Saver will take care of getting a connection,
+starting a transaction on it, and then calling the chain of objects for
+saving and calling their appropriate DBSPs.
+
+Any object which implements the Savable interface can make use of the Saver
+transaction management.  Saver will start by determining if the object has
+changed, and if it has, then the Saver object will find all child objects
+requiring saving as well.  From here, the deepest child is saved, and then
+Saver will continue to traverse the tree upwards until the initial object
+is saved.  Saver works will in saving object that have associations which
+much be saved at once.  A good example would be an order in an order
+processing system, where the header and line item details much be saved
+atomically, or not at all.
+
+
+
