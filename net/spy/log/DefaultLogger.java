@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: DefaultLogger.java,v 1.4 2002/11/20 06:20:01 dustin Exp $
+// $Id: DefaultLogger.java,v 1.5 2003/04/20 20:12:52 dustin Exp $
 
 package net.spy.log;
 
@@ -17,6 +17,13 @@ public class DefaultLogger extends AbstractLogger {
 	 */
 	public DefaultLogger(String name) {
 		super(name);
+	}
+
+	/** 
+	 * True.
+	 */
+	public boolean isInfoEnabled() {
+		return(true);
 	}
 
 	/** 
