@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.6 2002/08/28 16:35:50 dustin Exp $
+// $Id: SPGen.java,v 1.7 2002/08/29 00:31:25 dustin Exp $
 
 package net.spy.util;
 
@@ -36,7 +36,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.6 $";
+	private String version="$Revision: 1.7 $";
 	private long cachetime=0;
 	private ArrayList sqlquery=null;
 	private ArrayList required=null;
@@ -310,16 +310,18 @@ public class SPGen extends Object {
 		}
 
 		// Document the cache time
-		out.println(" * <b>Cache Time</b>");
+		out.println(" * <b>Cache Time</b>\n"
+			+ " * <ul>");
 		if(cachetime > 0) {
 			NumberFormat nf=NumberFormat.getNumberInstance();
-			out.println(" * The results of this call will be cached for "
+			out.println(" *  <li>The results of this call will be cached for "
 				+ formatCacheTime() 
-				+ " (" + nf.format(cachetime) + " seconds) by default.");
+				+ " (" + nf.format(cachetime) + " seconds) by default.</li>");
 		} else {
-			out.println(" * The results of this call will not "
-				+ "be cached by default.");
+			out.println(" *  <li>The results of this call will not "
+				+ "be cached by default.</li>");
 		}
+		out.println(" * </ul>");
 
 		// end the class documentation comment
 		out.println(" * </p>\n"
