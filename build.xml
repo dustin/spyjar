@@ -119,7 +119,7 @@
 	</target>
 
 	<target name="install-docs" depends="docs">
-		<copy todir="/afs/spy.net/home/dustin/public_html/spyjar/j2/doc/">
+		<copy todir="${DOCINSTDIR}">
 			<fileset dir="${DOCDEST}">
 				<include name="**/*.html"/>
 				<include name="**/*.css"/>
@@ -233,6 +233,8 @@
 			<entry key="DEBUG" value="on"/>
 			<entry key="VERBOSE" value="off"/>
 			<entry key="INSTDIR" value="/afs/spy.net/home/dustin/public_html/soft"/>
+			<entry key="DOCINSTDIR"
+				value="/afs/spy.net/home/dustin/public_html/spyjar/j2/doc/"/>
 			<!-- Location of extra jars for classpaths -->
 			<entry key="JARPATH" value="${user.home}/lib/java"/>
 			<!-- Driver to use for DB tests, expected to be found in JARPATH -->
