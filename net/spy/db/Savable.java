@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Savable.java,v 1.2 2002/10/03 18:39:54 dustin Exp $
+// $Id: Savable.java,v 1.3 2003/01/15 08:08:06 dustin Exp $
 
 package net.spy.db;
 
@@ -10,6 +10,8 @@ import java.sql.SQLException;
 
 /**
  * Interface for transactionally savable objects.
+ *
+ * @deprecated use SavableNode instead
  */
 public interface Savable {
 

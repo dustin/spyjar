@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.5 2003/01/07 07:15:25 dustin Exp $
+// $Id: Saver.java,v 1.6 2003/01/15 08:08:06 dustin Exp $
 
 package net.spy.db;
 
@@ -66,8 +66,6 @@ public class Saver extends SpyObject {
 			complete=true;
 		} catch(SQLException se) {
 			throw new SaveException("Error saving object", se);
-		} catch(SaveException se) {
-			throw se;
 		} finally {
 			// figure out whether we need to commit or roll back
 			if(conn!=null) {
@@ -116,13 +114,8 @@ public class Saver extends SpyObject {
 
 		// watch recursion depth
 		if(rdepth>MAX_RECURSION_DEPTH) {
-			throw new SaveException("Recursing too deep!  Max depth is  "
+			throw new SaveException("Recursing too deep!  Max depth is "
 				+ MAX_RECURSION_DEPTH);
-		}
-
-		// Save this object if it needs saving.
-		if(o.isNew() || o.isModified()) {
-			o.save(conn, context);
 		}
 
 		// Only go through the savables if we haven't gone through the
@@ -132,27 +125,41 @@ public class Saver extends SpyObject {
 			// Add this to the set to keep us from doing it again
 			listedObjects.add(ie);
 
-			// Get the savables
-			Collection c=o.getSavables(context);
-			if(c!=null) {
+			// If this is a SavableNode, it's got a pre, grab those
+			if(o instanceof SavableNode) {
+				SavableNode sn=(SavableNode)o;
+				saveLoop(o, sn.getPreSavables(context));
+			} // Was a savable node
 
-				// Deal with the savables
-				for(Iterator i=c.iterator(); i.hasNext(); ) {
-					Savable s=(Savable)i.next();
-					// verify the object isn't null, if it is, report it here
-					// so we can figure out what gave it to us
-					if(s==null) {
-						throw new NullPointerException("Got a null object from "
-							+ o);
-					}
+			// Save this object if it needs saving.
+			if(o.isNew() || o.isModified()) {
+				o.save(conn, context);
+			}
 
-					rsave(s);
-				} // Flipping through the savables
-			} // getSavables returned a collection
+			// Get the post savables
+			saveLoop(o, o.getSavables(context));
+
 		} // Haven't seen this object
 
 		rdepth--;
 	}
+
+	// Loop through a Collection of savables, passing each to rsave().  If
+	// only java supported functional programming...
+	private void saveLoop(Savable o, Collection c)
+		throws SaveException, SQLException {
+		if(c!=null) {
+			for(Iterator i=c.iterator(); i.hasNext(); ) {
+				Savable s=(Savable)i.next();
+				if(s==null) {
+					throw new NullPointerException("Got a null object from "
+						+ o);
+				}
+
+				rsave(s);
+			} // iterator loop
+		} // got a collection
+	} // saveLoop()
 
 	// private class to deal with identity comparisons
 	private class IdentityEqualifier {
