@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FileJobQueue.java,v 1.5 2002/11/22 00:35:16 dustin Exp $
+// $Id: FileJobQueue.java,v 1.6 2002/11/22 02:20:09 dustin Exp $
 
 package net.spy.cron;
 
@@ -136,7 +136,7 @@ public class FileJobQueue extends JobQueue {
 			rv=new MainJob(classS, args, startDate, ti);
 		} else {
 			if(startDate.getTime() < System.currentTimeMillis()) {
-				System.err.println("At job on line " + lineNum
+				getLogger().warn("At job on line " + lineNum
 					+ " is in the past.");
 			} else {
 				rv=new MainJob(classS, args, startDate);
@@ -226,8 +226,7 @@ public class FileJobQueue extends JobQueue {
 			// This is an ``at'' job
 			rv=-1;
 		} else {
-			System.err.println("WARNING!  " + fieldName
-				+ " is not a valid Calendar field.");
+			getLogger().warn(fieldName + " is not a valid Calendar field.");
 		}
 
 		return(rv);

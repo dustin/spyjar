@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CacheClearRequestListener.java,v 1.2 2002/11/20 04:52:33 dustin Exp $
+// $Id: CacheClearRequestListener.java,v 1.3 2002/11/22 02:20:09 dustin Exp $
 
 package net.spy.cache;
 
@@ -31,7 +31,7 @@ public class CacheClearRequestListener extends SpyThread {
 
 		super();
 
-		System.err.println("Starting multicast cache listener on "
+		getLogger().info("Starting multicast cache listener on "
 			+ group + ":" + port);
 		setDaemon(true);
 		setName("SpyCacheClearRequestListener");
@@ -85,7 +85,7 @@ public class CacheClearRequestListener extends SpyThread {
 		byte tmp[]=new byte[recv.getLength()];
 		System.arraycopy(data, 0, tmp, 0, tmp.length);
 		String prefix=new String(tmp);
-		System.err.println("CacheClearRequestListener flushing ``"
+		getLogger().info("CacheClearRequestListener flushing ``"
 			+ prefix + "'' per multicast request from " + recv.getAddress());
 		requests++;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyConfig.java,v 1.3 2002/09/05 17:28:24 dustin Exp $
+ * $Id: SpyConfig.java,v 1.4 2002/11/22 02:20:09 dustin Exp $
  */
 
 package net.spy;
@@ -91,14 +91,6 @@ public class SpyConfig extends Properties {
 				// Didn't load, this is not considered a failure.
 			}
 		}
-
-		/*
-		if(loaded) {
-			System.err.println("Successfully loaded " + conffile);
-		} else {
-			System.err.println("Failed to load " + conffile);
-		}
-		*/
 
 		return(loaded);
 	}
