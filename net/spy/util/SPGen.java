@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.16 2002/11/06 18:47:00 knitterb Exp $
+// $Id: SPGen.java,v 1.17 2002/11/10 03:30:42 dustin Exp $
 
 package net.spy.util;
 
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -42,7 +43,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="net.spy.db.DBSP";
-	private String version="$Revision: 1.16 $";
+	private String version="$Revision: 1.17 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -66,7 +67,7 @@ public class SPGen extends Object {
 		this.in=in;
 		this.out=out;
 		this.classname=classname;
-		queries=new HashMap();
+		queries=new TreeMap();
 		required=new ArrayList();
 		optional=new ArrayList();
 		output=new ArrayList();
@@ -483,10 +484,32 @@ public class SPGen extends Object {
 
 	}
 
+	// Fix > and < characters, and & characters if there are any
+	private String docifySQL(String sql) {
+		StringBuffer sb=new StringBuffer(sql.length());
+
+		char acters[]=sql.toCharArray();
+		for(int i=0; i<acters.length; i++) {
+			switch(acters[i]) {
+				case '>':
+					sb.append("&gt;");
+					break;
+				case '<':
+					sb.append("&lt;");
+					break;
+				case '&':
+					sb.append("&amp;");
+					break;
+				default:
+					sb.append(acters[i]);
+			}
+		}
+
+		return (sb.toString());
+	}
+
 	private String getDocQuery() {
 		StringBuffer sb=new StringBuffer(1024);
-
-		sb.append(" * <li>\n");
 
 		for(Iterator i=queries.entrySet().iterator(); i.hasNext();) {
 
@@ -503,14 +526,12 @@ public class SPGen extends Object {
 			for(Iterator i2=sqlquery.iterator(); i2.hasNext(); ) {
 				String part=(String)i2.next();
 				sb.append(" * ");
-				sb.append(part);
+				sb.append(docifySQL(part));
 				sb.append("\n");
 			}
 			sb.append(" *  </pre>\n * </li>\n");
 
 		}
-
-		sb.append(" * </li>\n");
 
 		return(sb.toString().trim());
 	}
