@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTest.java,v 1.8 2003/03/11 09:10:14 dustin Exp $
+// $Id: DBTest.java,v 1.9 2003/04/07 00:07:38 dustin Exp $
 
 package net.spy.test;
 
@@ -376,6 +376,32 @@ public class DBTest extends TestCase {
 		threeColumnTester(db, 8, 10, "or wallet sized");
 		threeColumnTester(db, 9, 5, "what a way to make a livin'");
 
+		db.close();
+	}
+
+	/** 
+	 * Testing SPTs with defaults without supplying values for the
+	 * defaults.
+	 */
+	public void testDefaultsNotSupplied() throws SQLException {
+		ThreeColumnTest db=new ThreeColumnTest(conf);
+
+		// Set only the one value
+		db.setSecond(13);
+		ResultSet rs=db.executeQuery();
+		if(!rs.next()) {
+			fail("No results returned");
+		}
+
+		assertEquals("first", rs.getInt("first"), 37);
+		assertEquals("second", rs.getInt("second"), 13);
+		assertEquals("third", rs.getString("third"), "This is a test");
+
+		if(rs.next()) {
+			fail("Too many results returned.");
+		}
+
+		rs.close();
 		db.close();
 	}
 

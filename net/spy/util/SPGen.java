@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.24 2003/03/11 09:10:12 dustin Exp $
+// $Id: SPGen.java,v 1.25 2003/04/07 00:07:38 dustin Exp $
 
 package net.spy.util;
 
@@ -21,6 +21,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Date;
+
+import java.math.BigDecimal;
 
 import java.lang.reflect.Field;
 
@@ -46,12 +48,13 @@ public class SPGen extends Object {
 	private String pkg="";
 	private String superclass=null;
 	private String superinterface=null;
-	private String version="$Revision: 1.24 $";
+	private String version="$Revision: 1.25 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
 	private List required=null;
 	private List optional=null;
+	private List defaults=null;
 	private List output=null;
 	private List results=null;
 	private List args=null;
@@ -77,6 +80,7 @@ public class SPGen extends Object {
 		required=new ArrayList();
 		optional=new ArrayList();
 		output=new ArrayList();
+		defaults=new ArrayList();
 		results=new ArrayList();
 		args=new ArrayList();
 		interfaces=new HashSet();
@@ -551,21 +555,33 @@ public class SPGen extends Object {
 				out.println("\t\tsetRegisteredQueryMap(queries);");
 			}
 
+			// parameters
 			if (args.size()>0) {
 				out.println("\n\t\t// Set the parameters.");
 				for (Iterator i=args.iterator(); i.hasNext(); ) {
 					Parameter p=(Parameter)i.next();
 					if (p.isRequired()) {
 						if (!p.isOutput()) {
-							out.println("\t\tsetRequired(\"" + p.getName() + "\", "
-								+ p.getType() + ");");
+							out.println("\t\tsetRequired(\"" + p.getName()
+								+ "\", " + p.getType() + ");");
 						} else {
-							out.println("\t\tsetOutput(\"" + p.getName() + "\", "
-								+ p.getType() + ");");
+							out.println("\t\tsetOutput(\"" + p.getName()
+								+ "\", " + p.getType() + ");");
 						}
 					} else {
-						out.println("\t\tsetOptional(\"" + p.getName() + "\", "
-							+ p.getType() + ");");
+						out.println("\t\tsetOptional(\"" + p.getName()
+							+ "\", " + p.getType() + ");");
+					}
+				}
+
+				// Fill in the default values for those parameters
+				if(defaults.size()>0) {
+					out.println("\n\t\t// Defaults");
+					for(Iterator i=defaults.iterator(); i.hasNext(); ) {
+						Default d=(Default)i.next();
+
+						out.println("\t\tset(\"" + d.getName() + "\", "
+							+ d.getPrintValue() + ");");
 					}
 				}
 			}
@@ -806,6 +822,9 @@ public class SPGen extends Object {
 						if (superclass==null) {
 							superclass="net.spy.db.DBCP";
 						}
+					} else if(section.equals("defaults")) {
+						Default d=new Default(tmp);
+						defaults.add(d);
 					} else if(section.equals("params")) {
 						Parameter param=new Parameter(tmp);
 						args.add(param);
@@ -1032,6 +1051,141 @@ public class SPGen extends Object {
 
 		public boolean isOutput() {
 			return(output);
+		}
+	}
+
+	// Default values for parameters
+
+	private class Default extends Object {
+		private String name=null;
+		// Class of this parameter
+		private String type=null;
+		private Object value=null;
+
+		public Default(String line) {
+			super();
+
+			StringTokenizer st=new StringTokenizer(line, " \t");
+			try {
+				name=st.nextToken();
+			} catch (NoSuchElementException ex) {
+				// ASSERT: this theoretically should never happen,
+				// otherwise how did we end up here in the first place?
+				throw new IllegalArgumentException("Missing parameter name! "
+					+ex.toString());
+			}
+
+			// Figure out the type of this parameter
+			type=findType();
+
+			// Get the rest of the line
+			String rest=st.nextToken("\n");
+
+			parse(rest);
+		}
+
+		public String getName() {
+			return(name);
+		}
+
+		// Get the value to be used for printing in the source
+		public String getPrintValue() {
+			String rv=null;
+			boolean needsCast=false;
+
+			// Figure out if we need a cast
+			if(value instanceof Integer) {
+				// Nothing
+			} else if(value instanceof Float) {
+				// Nothing
+			} else if(value instanceof String) {
+				// Nothing
+			} else if(value instanceof Double) {
+				// Nothing
+			} else if(value instanceof Boolean) {
+				// Nothing
+			} else {
+				needsCast=true;
+			}
+
+			if(needsCast) {
+				rv="(" + javaTypes.get(type) + ")" + value;
+			} else {
+				rv=value.toString();
+			}
+			return(rv);
+		}
+
+		private void parse(String input) {
+			if(input==null) {
+				throw new NullPointerException("Can't parse a null string");
+			}
+			// Get rid of whitespace from the ends
+			input=input.trim();
+
+			// make sure there's something left
+			if(input.length() == 0) {
+				throw new IllegalArgumentException(
+					"Can't parse nothin'");
+			}
+
+			if(type.equals("java.sql.Types.INTEGER")) {
+				value=new Integer(input);
+			} else if(type.equals("java.sql.Types.SMALLINT")) {
+				value=new Short(input);
+			} else if(type.equals("java.sql.Types.TINYINT")) {
+				value=new Short(input);
+			} else if(type.equals("java.sql.Types.BIGINT")) {
+				value=new BigDecimal(input);
+			} else if(type.equals("java.sql.Types.Decimal")) {
+				value=new BigDecimal(input);
+			} else if(type.equals("java.sql.Types.BIT")) {
+				value=new Boolean(input);
+			} else if(type.equals("java.sql.Types.DOUBLE")) {
+				value=new Double(input);
+			} else if(type.equals("java.sql.Types.FLOAT")) {
+				value=new Float(input);
+			} else if(type.equals("java.sql.Types.VARCHAR")) {
+				value=input;
+			} else {
+				throw new IllegalArgumentException(
+					"I don't know how to parse a default for " + type);
+			}
+		}
+
+		// Lookup the type for this spt.
+		private String findType() {
+			String rv=null;
+
+			// Check the required parameters first
+			for(Iterator i=required.iterator(); rv==null && i.hasNext(); ) {
+				Parameter p=(Parameter)i.next();
+				if(p.getName().equals(name)) {
+					rv=p.getType();
+				}
+			}
+
+			// If we didn't find anything, check the optional parameters
+			if(rv==null) {
+				for(Iterator i=optional.iterator(); rv==null && i.hasNext(); ) {
+					Parameter p=(Parameter)i.next();
+					if(p.getName().equals(name)) {
+						rv=p.getType();
+					}
+				}
+			}
+
+			if(rv==null) {
+				throw new IllegalArgumentException(
+					"No parameter for this default:  " + name);
+			}
+			return(rv);
+		}
+
+		// String me
+		public String toString() {
+			String rv="{Default " + name + " (" + type + ") " + value + "}";
+			return(rv);
 		}
 	}
 
