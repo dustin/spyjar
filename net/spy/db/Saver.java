@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.9 2003/04/19 01:00:03 dustin Exp $
+// $Id: Saver.java,v 1.10 2003/04/19 01:14:57 dustin Exp $
 
 package net.spy.db;
 
@@ -166,6 +166,10 @@ public class Saver extends SpyObject {
 		rdepth++;
 
 		checkRecursionDepth();
+
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Saving " + c + " from " + o);
+		}
 
 		if(c!=null) {
 			for(Iterator i=c.iterator(); i.hasNext(); ) {

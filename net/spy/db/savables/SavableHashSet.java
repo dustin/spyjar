@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SavableHashSet.java,v 1.1 2003/01/15 20:57:51 dustin Exp $
+// $Id: SavableHashSet.java,v 1.2 2003/04/19 01:14:57 dustin Exp $
 
 package net.spy.db.savables;
 
@@ -90,7 +90,7 @@ public class SavableHashSet extends HashSet implements SavableNode {
 	 * @return this
 	 */
 	public Collection getPostSavables(SaveContext context) {
-		return(this);
+		return(null);
 	}
 
 	/** 
