@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.11 2003/04/11 09:05:05 dustin Exp $
+// $Id: ThreadPool.java,v 1.12 2003/04/11 09:13:28 dustin Exp $
 
 package net.spy.util;
 
@@ -24,6 +24,8 @@ import net.spy.SpyThread;
  * <pre>
  * // Get a thread pool that will perform 15 tasks at a time
  * ThreadPool tp=new ThreadPool("Test Pool", 15);
+ * // Start the thread pool
+ * tp.start();
  *
  * // Do the tasks in a loop, throttling to make sure all we don't
  * // create too many objects that aren't ready to be used.
@@ -31,7 +33,6 @@ import net.spy.SpyThread;
  *     // Don't have more than 32 unclaimed tasks
  *     tp.waitForTaskCount(32);
  *     tp.addTask(new MyRunnableClass());
- *     }
  * }
  * tp.waitForCompletion();
  * 
@@ -256,6 +257,21 @@ public class ThreadPool extends ThreadGroup {
 	}
 
 	/** 
+	 * Set the PoolManager class.  This class will be instantiated when the
+	 * ThreadPool is started.
+	 * 
+	 * @param poolManagerClass a subclass of ThreadPoolManager
+	 */
+	public void setPoolManagerClass(Class poolManagerClass) {
+		if(ThreadPoolManager.class.isAssignableFrom(poolManagerClass)) {
+			throw new IllegalArgumentException(
+				"PoolManagerClass must be a subclass of "
+				+ "ThreadPoolManager");
+		}
+		this.poolManagerClass=poolManagerClass;
+	}
+
+	/** 
 	 * Get the maximum size of the task queue.
 	 */
 	public int getMaxTaskQueueSize() {
@@ -374,6 +390,10 @@ public class ThreadPool extends ThreadGroup {
 		return(monitor);
 	}
 
+	/** 
+	 * Set the observer who will receive notification whenever a task is
+	 * completed.
+	 */
 	public void setMonitor(ThreadPoolObserver monitor) {
 		this.monitor=monitor;
 	}
