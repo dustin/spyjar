@@ -38,30 +38,40 @@ import net.spy.SpyObject;
  *     <tr><td>A</td><td>C</td><td>C</td><td>15</td></tr>
  *     <tr><td>A</td><td>D</td><td>C</td><td>25</td></tr>
  *     <tr><td>A</td><td>E</td><td>C</td><td>25</td></tr>
+ *     <tr><td>A</td><td>F</td><td>C</td><td>25</td></tr>
+ *     <tr><td>A</td><td>G</td><td>C</td><td>35</td></tr>
  *
  *     <tr><td>B</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>B</td><td>B</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>B</td><td>C</td><td>C</td><td>10</td></tr>
  *     <tr><td>B</td><td>D</td><td>C</td><td>20</td></tr>
  *     <tr><td>B</td><td>E</td><td>C</td><td>20</td></tr>
+ *     <tr><td>B</td><td>F</td><td>C</td><td>20</td></tr>
+ *     <tr><td>B</td><td>G</td><td>C</td><td>30</td></tr>
  *
  *     <tr><td>C</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>C</td><td>B</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>C</td><td>C</td><td>D</td><td>110</td></tr>
  *     <tr><td>C</td><td>D</td><td>D</td><td>10</td></tr>
  *     <tr><td>C</td><td>E</td><td>E</td><td>10</td></tr>
+ *     <tr><td>C</td><td>F</td><td>F</td><td>10</td></tr>
+ *     <tr><td>C</td><td>G</td><td>F</td><td>20</td></tr>
  *
  *     <tr><td>D</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>D</td><td>B</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>D</td><td>C</td><td>C</td><td>100</td></tr>
  *     <tr><td>D</td><td>D</td><td>C</td><td>110</td></tr>
  *     <tr><td>D</td><td>E</td><td>C</td><td>110</td></tr>
+ *     <tr><td>D</td><td>F</td><td>C</td><td>110</td></tr>
+ *     <tr><td>D</td><td>G</td><td>C</td><td>120</td></tr>
  *
  *     <tr><td>E</td><td>A</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>E</td><td>B</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>E</td><td>C</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>E</td><td>D</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *     <tr><td>E</td><td>E</td><td>E</td><td>10</td></tr>
+ *     <tr><td>E</td><td>F</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
+ *     <tr><td>E</td><td>G</td><td><i>n/a</i></td><td><i>n/a</i></td></tr>
  *
  *    </table>
  *   </td>

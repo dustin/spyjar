@@ -10,6 +10,8 @@ digraph sp {
 	"B" -> "C" [label="10"];
 	"C" -> "D" [label="10"];
 	"C" -> "E" [label="10"];
+	"C" -> "F" [label="10"];
+	"F" -> "G" [label="10"];
 	"D" -> "C" [label="100"];
 	"E" -> "E" [label="10"];
 };

@@ -36,6 +36,8 @@ public class ShortestPathTest extends TestCase {
 	private StringNode c=null;
 	private StringNode d=null;
 	private StringNode e=null;
+	private StringNode f=null;
+	private StringNode g=null;
 
 	/**
 	 * Get an instance of ShortestPathTest.
@@ -69,6 +71,8 @@ public class ShortestPathTest extends TestCase {
 		c=new StringNode("C");
 		d=new StringNode("D");
 		e=new StringNode("E");
+		f=new StringNode("F");
+		g=new StringNode("G");
 
 		// Add the nodes to the collection
 		nodes.put("A", a);
@@ -76,6 +80,8 @@ public class ShortestPathTest extends TestCase {
 		nodes.put("C", c);
 		nodes.put("D", d);
 		nodes.put("E", e);
+		nodes.put("F", f);
+		nodes.put("G", g);
 
 		// A -> B    A -> C (cost 15)
 		a.linkTo(b);
@@ -84,9 +90,10 @@ public class ShortestPathTest extends TestCase {
 		// B -> C
 		b.linkTo(c);
 
-		// C -> D   C -> E
+		// C -> D   C -> E  C -> F
 		c.linkTo(d);
 		c.linkTo(e);
+		c.linkTo(f);
 
 		// D -> E
 		// d.linkTo(e);
@@ -95,6 +102,9 @@ public class ShortestPathTest extends TestCase {
 
 		// Link e to itself
 		e.linkTo(e, 10);
+
+		// And f links to g
+		f.linkTo(g, 10);
 
 		// calculate the paths
 		ShortestPathFinder spf=new ShortestPathFinder();
@@ -140,10 +150,14 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(a, b, b, 10);
 		// A -> C == 15 via C
 		assertLinkMatch(a, c, c, 15);
-		// A -> D == 30 via B
+		// A -> D == 25 via C
 		assertLinkMatch(a, d, c, 25);
-		// A -> E == 60 via B
+		// A -> E == 25 via C
 		assertLinkMatch(a, e, c, 25);
+		// A -> F == 25 via C
+		assertLinkMatch(a, f, c, 25);
+		// A -> G == 35 via C
+		assertLinkMatch(a, g, c, 35);
 
 		// B -> A -- doesn't exist
 		assertLinkMatch(b, a, null, 0);
@@ -155,6 +169,10 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(b, d, c, 20);
 		// B -> E == 20 via C
 		assertLinkMatch(b, e, c, 20);
+		// B -> F == 20 via C
+		assertLinkMatch(b, f, c, 20);
+		// B -> G == 30 via C
+		assertLinkMatch(b, g, c, 30);
 
 		// C -> A won't go
 		assertLinkMatch(c, a, null, 0);
@@ -166,6 +184,10 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(c, d, d, 10);
 		// C -> E == 10 via E
 		assertLinkMatch(c, e, e, 10);
+		// C -> F == 10 via F
+		assertLinkMatch(c, f, f, 10);
+		// C -> G == 20 via F
+		assertLinkMatch(c, g, f, 20);
 
 		// D -> A won't go
 		assertLinkMatch(d, a, null, 0);
@@ -177,13 +199,19 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(d, d, c, 110);
 		// D -> E via C
 		assertLinkMatch(d, e, c, 110);
+		// D -> F via C
+		assertLinkMatch(d, f, c, 110);
+		// D -> G via C
+		assertLinkMatch(d, g, c, 120);
 
-		// E Goes nowhere
+		// E Goes nowhere except E
 		assertLinkMatch(e, a, null, 0);
 		assertLinkMatch(e, b, null, 0);
 		assertLinkMatch(e, c, null, 0);
 		assertLinkMatch(e, d, null, 0);
 		assertLinkMatch(e, e, e, 10);
+		assertLinkMatch(e, f, null, 0);
+		assertLinkMatch(e, g, null, 0);
 	}
 
 	/** 
