@@ -2,7 +2,7 @@
  * Copyright (c) 2002 Scott Lamb <slamb@slamb.org>
  * This code is released under the MIT license; see the file LICENSE.
  *
- * $Id: SPGenTask.java,v 1.2 2002/12/19 22:07:32 knitterb Exp $
+ * $Id: SPGenTask.java,v 1.3 2002/12/19 22:10:48 knitterb Exp $
  */
 
 package net.spy.util;
@@ -30,8 +30,21 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  * creating output with a temporary file until it is finished so partial
  * builds don't create problems, etc.
  *
+ * <p>Example ant build entry:
+ * <pre><code>
+ *	<target name="spfiles">
+ *		<taskdef name="spgen" classname="net.spy.util.SPGenTask">
+ *			<classpath refid="compile.classpath"/>
+ *		</taskdef>
+ *		<spgen srcdir="${spt.dir}" destdir="${spt.dir}"
+ *			superclass="com.tivo.db.TivoDbsp"/>
+ *	</target>
+ *
+ * </pre></code>
+ * </p>
+ *
  * @author Scott Lamb
- * @version $Revision: 1.2 $ $Date: 2002/12/19 22:07:32 $
+ * @version $Revision: 1.3 $ $Date: 2002/12/19 22:10:48 $
  **/
 public class SPGenTask extends MatchingTask {
 
@@ -168,7 +181,6 @@ public class SPGenTask extends MatchingTask {
 			// assert name.endsWith(".spt");
 			SPGen spg = new SPGen(name.substring(0, name.length()-4), in, out);
 			if (this.superclass!=null) {
-				System.err.println("making sc: "+this.superclass);
 				spg.setSuperclass(this.superclass);
 			}
 			try {
