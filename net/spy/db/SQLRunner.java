@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SQLRunner.java,v 1.1 2003/07/15 22:51:40 dustin Exp $
+// $Id: SQLRunner.java,v 1.2 2003/07/21 19:46:03 dustin Exp $
 
 package net.spy.db;
 
@@ -23,6 +23,7 @@ import net.spy.SpyObject;
 public class SQLRunner extends SpyObject {
 
 	private SpyDB db=null;
+	private int timeout=0;
 
 	/**
 	 * Get an instance of SQLRunner.
@@ -30,6 +31,13 @@ public class SQLRunner extends SpyObject {
 	public SQLRunner(SpyDB db) {
 		super();
 		this.db=db;
+	}
+
+	/** 
+	 * Set the query timeout (in seconds).
+	 */
+	public void setTimeout(int timeout) {
+		this.timeout=timeout;
 	}
 
 	/** 
@@ -116,6 +124,7 @@ public class SQLRunner extends SpyObject {
 				// Execute the current query
 
 				Statement st=conn.createStatement();
+				st.setQueryTimeout(timeout);
 				int updated=0;
 				long starttime=System.currentTimeMillis();
 				try {
