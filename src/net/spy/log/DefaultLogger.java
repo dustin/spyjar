@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: DefaultLogger.java,v 1.5 2003/04/20 20:12:52 dustin Exp $
+// arch-tag: 7296FF66-1110-11D9-8D65-000A957659CC
 
 package net.spy.log;
 

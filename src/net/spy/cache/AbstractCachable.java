@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AbstractCachable.java,v 1.2 2003/08/05 09:01:03 dustin Exp $
+// arch-tag: 5EAF43DA-1110-11D9-BF17-000A957659CC
 
 package net.spy.cache;
 

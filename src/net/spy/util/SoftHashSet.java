@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SoftHashSet.java,v 1.2 2003/07/26 07:46:54 dustin Exp $
+// arch-tag: 89242245-1110-11D9-870E-000A957659CC
 
 package net.spy.util;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: QuerySelectorFactory.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
+// arch-tag: 6C7C6CCE-1110-11D9-8498-000A957659CC
 
 package net.spy.db;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.14 2004/02/06 01:46:58 dustin Exp $
+// arch-tag: 6E505332-1110-11D9-9D6C-000A957659CC
 
 package net.spy.db;
 

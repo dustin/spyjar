@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Enumeriterator.java,v 1.2 2003/08/05 09:01:04 dustin Exp $
+// arch-tag: 82479F4D-1110-11D9-9427-000A957659CC
 
 package net.spy.util;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLItem.java,v 1.6 2003/07/26 07:46:52 dustin Exp $
+// arch-tag: 78AC4743-1110-11D9-9A79-000A957659CC
 
 package net.spy.net;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyLogFlusher.java,v 1.2 2002/11/20 04:52:33 dustin Exp $
+ * arch-tag: 761E0E77-1110-11D9-8C3C-000A957659CC
  */
 
 package net.spy.log;

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetPK.java,v 1.7 2004/01/21 21:49:12 dustin Exp $
+// arch-tag: 6A38711C-1110-11D9-B129-000A957659CC
 
 package net.spy.db;
 

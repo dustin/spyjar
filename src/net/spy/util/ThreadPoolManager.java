@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPoolManager.java,v 1.5 2003/04/18 21:23:13 dustin Exp $
+// arch-tag: 8BEBB41A-1110-11D9-BCE8-000A957659CC
 
 package net.spy.util;
 

@@ -2,7 +2,7 @@
  * Copyright (c) 2002 Scott Lamb <slamb@slamb.org>
  * This code is released under the MIT license; see the file LICENSE.
  *
- * $Id: SPGenTask.java,v 1.7 2003/08/05 09:01:05 dustin Exp $
+ * arch-tag: 87C2C1A0-1110-11D9-938F-000A957659CC
  */
 
 package net.spy.util;

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Cron.java,v 1.10 2003/07/26 07:46:51 dustin Exp $
+// arch-tag: 61E9D0E9-1110-11D9-8105-000A957659CC
 
 package net.spy.cron;
 

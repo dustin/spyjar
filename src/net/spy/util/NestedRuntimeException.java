@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NestedRuntimeException.java,v 1.4 2003/09/04 07:18:26 dustin Exp $
+// arch-tag: 84052BF1-1110-11D9-99EB-000A957659CC
 
 package net.spy.util;
 

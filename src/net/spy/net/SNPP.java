@@ -2,7 +2,7 @@
 //
 // Copyright (c) 1999 Dustin Sallings
 //
-// $Id: SNPP.java,v 1.2 2003/07/26 07:46:52 dustin Exp $
+// arch-tag: 78144148-1110-11D9-8C3B-000A957659CC
 
 package net.spy.net;
 

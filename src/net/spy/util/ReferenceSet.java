@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ReferenceSet.java,v 1.5 2003/08/05 09:01:05 dustin Exp $
+// arch-tag: 86CCC9D7-1110-11D9-B5D1-000A957659CC
 
 package net.spy.util;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: QuickTests.java,v 1.9 2003/07/05 07:50:55 dustin Exp $
+// arch-tag: 2092F544-1110-11D9-9917-000A957659CC
 
 package net.spy.test;
 

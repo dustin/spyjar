@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyPermissionCollection.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// arch-tag: 533A7C9F-1110-11D9-837F-000A957659CC
 
 package net.spy.aaa;
 

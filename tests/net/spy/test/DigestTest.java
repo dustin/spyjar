@@ -1,7 +1,6 @@
-
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DigestTest.java,v 1.2 2003/08/05 09:01:05 dustin Exp $
+// arch-tag: 0F8BBA2B-1110-11D9-BBB3-000A957659CC
 
 package net.spy.test;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ToStringComparator.java,v 1.1 2003/07/18 05:44:58 dustin Exp $
+// arch-tag: 8D701B78-1110-11D9-9F25-000A957659CC
 
 package net.spy.util;
 

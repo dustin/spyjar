@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPNode.java,v 1.3 2002/10/19 09:37:16 dustin Exp $
+// arch-tag: 88043DBE-1110-11D9-AC50-000A957659CC
 
 package net.spy.util;
 

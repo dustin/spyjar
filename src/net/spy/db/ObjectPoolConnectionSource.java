@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPoolConnectionSource.java,v 1.8 2003/08/10 20:21:18 dustin Exp $
+// arch-tag: 6B85CEEA-1110-11D9-B887-000A957659CC
 
 package net.spy.db;
 

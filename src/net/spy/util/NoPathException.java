@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NoPathException.java,v 1.1 2002/10/19 08:32:21 dustin Exp $
+// arch-tag: 84B366EB-1110-11D9-9B12-000A957659CC
 
 package net.spy.util;
 

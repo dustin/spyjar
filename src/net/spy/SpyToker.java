@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyToker.java,v 1.2 2003/08/05 09:01:02 dustin Exp $
+ * arch-tag: 424C5378-1110-11D9-B04F-000A957659CC
  */
 
 package net.spy;

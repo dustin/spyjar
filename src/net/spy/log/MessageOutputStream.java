@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MessageOutputStream.java,v 1.2 2002/11/20 06:20:01 dustin Exp $
+// arch-tag: 75526290-1110-11D9-8DCB-000A957659CC
 
 package net.spy.log;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: RangeTest.java,v 1.1 2003/07/05 07:50:55 dustin Exp $
+// arch-tag: 25BC30A2-1110-11D9-9B0F-000A957659CC
 
 package net.spy.test;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpySort.java,v 1.2 2003/08/05 09:01:05 dustin Exp $
+// arch-tag: 8AE4519B-1110-11D9-90F0-000A957659CC
 
 package net.spy.util;
 

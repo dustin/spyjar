@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TransactionListener.java,v 1.1 2003/01/07 07:04:21 dustin Exp $
+// arch-tag: 6EED00D5-1110-11D9-8892-000A957659CC
 
 package net.spy.db;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: QuickRun.java,v 1.3 2003/04/18 07:50:16 dustin Exp $
+// arch-tag: 865FE6EB-1110-11D9-9156-000A957659CC
 
 package net.spy.util;
 

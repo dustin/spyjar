@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Level.java,v 1.1 2002/11/20 06:20:01 dustin Exp $
+// arch-tag: 72D7F78E-1110-11D9-B5E5-000A957659CC
 
 package net.spy.log;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: BigWords.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
+// arch-tag: 6F5A02FF-1110-11D9-BFE9-000A957659CC
 
 package net.spy.info;
 

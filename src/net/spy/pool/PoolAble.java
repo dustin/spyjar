@@ -1,5 +1,5 @@
 //
-// $Id: PoolAble.java,v 1.4 2003/08/01 07:16:53 dustin Exp $
+// arch-tag: 7B7EE941-1110-11D9-984C-000A957659CC
 
 package net.spy.pool;
 

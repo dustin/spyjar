@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: RingBuffer.java,v 1.6 2003/08/05 09:01:05 dustin Exp $
+// arch-tag: 86FFCE4F-1110-11D9-A139-000A957659CC
 
 package net.spy.util;
 

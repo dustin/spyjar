@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPool.java,v 1.4 2003/08/05 09:01:04 dustin Exp $
+// arch-tag: 7B3A3A10-1110-11D9-B529-000A957659CC
 
 package net.spy.pool;
 

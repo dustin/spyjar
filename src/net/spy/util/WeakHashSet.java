@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: WeakHashSet.java,v 1.3 2003/08/05 09:01:05 dustin Exp $
+// arch-tag: 8E2BBB45-1110-11D9-938F-000A957659CC
 
 package net.spy.util;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Spy Internetworking
 //
-// $Id: SpyTemp.java,v 1.2 2002/10/30 08:31:14 dustin Exp $
+// arch-tag: 7FF404EC-1110-11D9-9C1D-000A957659CC
 
 package net.spy.temperature;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NestedException.java,v 1.3 2003/08/05 09:01:04 dustin Exp $
+// arch-tag: 83C3FE6A-1110-11D9-B2CB-000A957659CC
 
 package net.spy.util;
 

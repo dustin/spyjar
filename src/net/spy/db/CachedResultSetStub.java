@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachedResultSetStub.java,v 1.4 2003/08/05 09:01:03 dustin Exp $
+ * arch-tag: 6513108A-1110-11D9-B659-000A957659CC
  */
 
 package net.spy.db;

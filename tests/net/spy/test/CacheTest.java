@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2002  Dustin Sallings
  *
- * $Id: CacheTest.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+ * arch-tag: 0CE1BEDE-1110-11D9-A32D-000A957659CC
  */
 
 package net.spy.test;

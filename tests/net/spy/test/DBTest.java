@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTest.java,v 1.10 2003/08/01 03:34:11 dustin Exp $
+// arch-tag: 0E34846D-1110-11D9-B232-000A957659CC
 
 package net.spy.test;
 

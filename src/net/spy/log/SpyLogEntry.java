@@ -1,6 +1,6 @@
 // Copyright (c) 1999 Dustin Sallings
 //
-// $Id: SpyLogEntry.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// arch-tag: 75C36C5F-1110-11D9-8EBD-000A957659CC
 
 package net.spy.log;
 

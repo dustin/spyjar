@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TimeIncrement.java,v 1.2 2003/04/18 07:50:14 dustin Exp $
+// arch-tag: 641D8450-1110-11D9-9FD7-000A957659CC
 
 package net.spy.cron;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBSPResult.java,v 1.1 2003/03/11 09:10:07 dustin Exp $
+// arch-tag: 6844B69D-1110-11D9-A179-000A957659CC
 
 package net.spy.db;
 

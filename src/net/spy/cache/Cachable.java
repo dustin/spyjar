@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Cachable.java,v 1.1 2002/12/08 06:21:25 dustin Exp $
+// arch-tag: 5F7E1BE8-1110-11D9-AC5D-000A957659CC
 
 package net.spy.cache;
 

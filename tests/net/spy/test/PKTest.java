@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PKTest.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// arch-tag: 19EC14FC-1110-11D9-B3FA-000A957659CC
 
 package net.spy.test;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.39 2004/02/17 19:22:08 dustin Exp $
+// arch-tag: 878079BA-1110-11D9-8A8C-000A957659CC
 
 package net.spy.util;
 

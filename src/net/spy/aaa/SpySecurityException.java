@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpySecurityException.java,v 1.3 2003/09/04 07:18:25 dustin Exp $
+// arch-tag: 53DCD258-1110-11D9-822A-000A957659CC
 
 package net.spy.aaa;
 

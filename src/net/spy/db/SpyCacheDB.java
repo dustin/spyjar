@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000 Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyCacheDB.java,v 1.3 2003/08/30 00:42:19 dustin Exp $
+ * arch-tag: 6EA3CD36-1110-11D9-B5A1-000A957659CC
  */
 
 package net.spy.db;

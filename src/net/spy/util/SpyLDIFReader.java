@@ -1,5 +1,5 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
-// $Id: SpyLDIFReader.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// arch-tag: 8AA22848-1110-11D9-B062-000A957659CC
 
 package net.spy.util;
 

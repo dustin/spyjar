@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: IdentityEqualifierTest.java,v 1.1 2003/04/19 03:33:19 dustin Exp $
+// arch-tag: 12B3573D-1110-11D9-B93C-000A957659CC
 
 package net.spy.test;
 

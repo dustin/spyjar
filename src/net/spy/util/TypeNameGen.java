@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TypeNameGen.java,v 1.2 2002/08/29 07:47:38 dustin Exp $
+// arch-tag: 8DAC7620-1110-11D9-80DA-000A957659CC
 
 package net.spy.util;
 

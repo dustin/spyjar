@@ -1,5 +1,5 @@
 //
-// $Id: SNPPPoolAble.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
+// arch-tag: 7DB3627A-1110-11D9-B445-000A957659CC
 
 package net.spy.pool;
 

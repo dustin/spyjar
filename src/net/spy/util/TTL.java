@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TTL.java,v 1.6 2003/08/05 09:01:05 dustin Exp $
+// arch-tag: 8B221C1B-1110-11D9-8B85-000A957659CC
 
 package net.spy.util;
 

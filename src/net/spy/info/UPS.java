@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UPS.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
+// arch-tag: 719C1E88-1110-11D9-AD43-000A957659CC
 
 package net.spy.info;
 

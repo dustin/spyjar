@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000 Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyLogQueue.java,v 1.3 2003/08/01 07:16:53 dustin Exp $
+ * arch-tag: 766973C0-1110-11D9-94B1-000A957659CC
  */
 
 package net.spy.log;

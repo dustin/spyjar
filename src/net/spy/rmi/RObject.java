@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: RObject.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// arch-tag: 7F642423-1110-11D9-BBF3-000A957659CC
 
 package net.spy.rmi;
 

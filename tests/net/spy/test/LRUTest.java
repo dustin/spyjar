@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LRUTest.java,v 1.1 2002/12/19 07:12:45 dustin Exp $
+// arch-tag: 13FD9F8D-1110-11D9-A39E-000A957659CC
 
 package net.spy.test;
 

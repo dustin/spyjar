@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MainJob.java,v 1.3 2003/04/19 03:50:06 dustin Exp $
+// arch-tag: 639281E0-1110-11D9-A286-000A957659CC
 
 package net.spy.cron;
 

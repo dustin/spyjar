@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LimitedListTest.java,v 1.2 2002/12/05 08:24:03 dustin Exp $
+// arch-tag: 1727EB84-1110-11D9-B332-000A957659CC
 
 package net.spy.test;
 

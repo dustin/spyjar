@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SQLRunner.java,v 1.5 2003/08/05 09:01:03 dustin Exp $
+// arch-tag: 6CC30EF0-1110-11D9-9F94-000A957659CC
 
 package net.spy.db;
 

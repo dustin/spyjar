@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: BitArrayTest.java,v 1.3 2002/11/06 20:14:27 dustin Exp $
+// arch-tag: 0B3A8E46-1110-11D9-84C4-000A957659CC
 
 package net.spy.test;
 

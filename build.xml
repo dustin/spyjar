@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 
 <!--
-	Build file for spy.jar
+	Build file for spy.jar.
 
-	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
+	Copyright (c) 2004	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.26 2003/09/18 18:51:16 dustin Exp $
-
+	arch-tag: A44231A4-110F-11D9-9031-000A957659CC
 	-->
 
 <project name="spy.jar" default="spy.jar" basedir=".">

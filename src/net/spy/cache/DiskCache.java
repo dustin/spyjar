@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: DiskCache.java,v 1.9 2003/08/05 09:01:03 dustin Exp $
+// arch-tag: 608AC506-1110-11D9-A809-000A957659CC
 
 package net.spy.cache;
 

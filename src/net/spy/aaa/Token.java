@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Token.java,v 1.2 2003/08/05 09:01:02 dustin Exp $
+// arch-tag: 54D5FE54-1110-11D9-95D6-000A957659CC
 
 package net.spy.aaa;
 

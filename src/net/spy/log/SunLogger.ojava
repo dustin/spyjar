@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SunLogger.ojava,v 1.6 2003/08/05 09:01:04 dustin Exp $
+// arch-tag: CCEE8C42-1110-11D9-ADD2-000A957659CC
 
 package net.spy.log;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2002  Dustin Sallings
  *
- * $Id: DiskCacheTest.java,v 1.4 2002/12/19 07:12:45 dustin Exp $
+ * arch-tag: 1173AE26-1110-11D9-A3AF-000A957659CC
  */
 
 package net.spy.test;

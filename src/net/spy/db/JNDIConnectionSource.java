@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: JNDIConnectionSource.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
+// arch-tag: 6AE74D60-1110-11D9-8842-000A957659CC
 
 package net.spy.db;
 

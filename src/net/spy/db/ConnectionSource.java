@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: ConnectionSource.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// arch-tag: 658EC244-1110-11D9-AF89-000A957659CC
 
 package net.spy.db;
 

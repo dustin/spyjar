@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Traffic.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// arch-tag: 7159E872-1110-11D9-AFFB-000A957659CC
 
 package net.spy.info;
 

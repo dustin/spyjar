@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NetStringEncoder.java,v 1.2 2003/05/07 08:04:23 dustin Exp $
+// arch-tag: 84758527-1110-11D9-B558-000A957659CC
 
 package net.spy.util;
 

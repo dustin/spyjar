@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyIntegerComparable.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// arch-tag: 8A2071B0-1110-11D9-A5B5-000A957659CC
 
 package net.spy.util;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FedEx.java,v 1.2 2003/04/18 07:50:15 dustin Exp $
+// arch-tag: 6FAC18C1-1110-11D9-866B-000A957659CC
 
 package net.spy.info;
 

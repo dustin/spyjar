@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AuthException.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// arch-tag: 5012030A-1110-11D9-A8A5-000A957659CC
 
 package net.spy.aaa;
 

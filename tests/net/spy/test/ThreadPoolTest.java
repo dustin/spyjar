@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPoolTest.java,v 1.3 2003/04/12 00:52:29 dustin Exp $
+// arch-tag: 293B0664-1110-11D9-8706-000A957659CC
 
 package net.spy.test;
 

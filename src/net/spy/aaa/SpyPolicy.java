@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyPolicy.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// arch-tag: 538C7EAE-1110-11D9-9BBE-000A957659CC
 
 package net.spy.aaa;
 

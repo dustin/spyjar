@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LimitedList.java,v 1.3 2003/08/05 09:01:04 dustin Exp $
+// arch-tag: 8303CC5C-1110-11D9-B1B6-000A957659CC
 
 package net.spy.util;
 

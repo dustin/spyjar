@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PwGen.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// arch-tag: 8622FAE2-1110-11D9-933A-000A957659CC
 
 package net.spy.util;
 

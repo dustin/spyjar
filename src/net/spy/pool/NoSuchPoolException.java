@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NoSuchPoolException.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// arch-tag: 7AC16146-1110-11D9-886B-000A957659CC
 
 package net.spy.pool;
 

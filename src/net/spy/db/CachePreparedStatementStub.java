@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePreparedStatementStub.java,v 1.8 2003/09/05 08:11:17 dustin Exp $
+ * arch-tag: 64B2B521-1110-11D9-BFD3-000A957659CC
  */
 
 package net.spy.db;

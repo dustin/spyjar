@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ProgressStats.java,v 1.4 2003/07/26 07:46:53 dustin Exp $
+// arch-tag: 850AD394-1110-11D9-A061-000A957659CC
 
 package net.spy.util;
 

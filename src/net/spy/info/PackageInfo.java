@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings
 //
-// $Id: PackageInfo.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// arch-tag: 708DB13D-1110-11D9-8D9F-000A957659CC
 
 package net.spy.info;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: BuildInfo.java,v 1.2 2003/08/05 09:01:02 dustin Exp $
+// arch-tag: A44CCEEC-1110-11D9-B51F-000A957659CC
 
 package %PACKAGE%;
 

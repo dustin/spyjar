@@ -2,6 +2,8 @@
  * Java Interface Implementor.  :)
  *
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
+ *
+ * arch-tag: D9D3F080-1110-11D9-8A4C-000A957659CC
  */
 
 package net.spy.util;

@@ -1,5 +1,5 @@
 //
-// $Id: GarbageCollector.java,v 1.4 2003/08/05 09:01:04 dustin Exp $
+// arch-tag: 79D81207-1110-11D9-BB71-000A957659CC
 
 package net.spy.pool;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTTL.java,v 1.2 2002/11/07 07:43:55 dustin Exp $
+// arch-tag: 690A8B46-1110-11D9-B5AD-000A957659CC
 
 package net.spy.db;
 

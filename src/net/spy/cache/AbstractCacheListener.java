@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AbstractCacheListener.java,v 1.1 2002/12/08 06:21:25 dustin Exp $
+// arch-tag: 5F233E04-1110-11D9-9CDE-000A957659CC
 
 package net.spy.cache;
 

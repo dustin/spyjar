@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyThread.java,v 1.1 2002/11/20 04:52:32 dustin Exp $
+// arch-tag: 419C07BB-1110-11D9-A8EB-000A957659CC
 
 package net.spy;
 

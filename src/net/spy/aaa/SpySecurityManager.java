@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpySecurityManager.java,v 1.2 2002/09/05 00:05:20 dustin Exp $
+// arch-tag: 54405A22-1110-11D9-813E-000A957659CC
 
 package net.spy.aaa;
 

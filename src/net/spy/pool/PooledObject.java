@@ -1,5 +1,5 @@
 //
-// $Id: PooledObject.java,v 1.2 2003/07/26 07:46:53 dustin Exp $
+// arch-tag: 7D5DEAA3-1110-11D9-9CD8-000A957659CC
 
 package net.spy.pool;
 

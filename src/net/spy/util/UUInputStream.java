@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UUInputStream.java,v 1.3 2003/09/04 07:18:26 dustin Exp $
+// arch-tag: 8DE90D50-1110-11D9-B362-000A957659CC
 
 package net.spy.util;
 

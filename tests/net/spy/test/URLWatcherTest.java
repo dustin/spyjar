@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLWatcherTest.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// arch-tag: 29F051AE-1110-11D9-A274-000A957659CC
 
 package net.spy.test;
 

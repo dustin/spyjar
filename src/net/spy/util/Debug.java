@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Beyond.com <dustin@beyond.com>
 //
-// $Id: Debug.java,v 1.3 2003/04/18 07:50:15 dustin Exp $
+// arch-tag: 81BE7382-1110-11D9-8F47-000A957659CC
 
 package net.spy.util;
 

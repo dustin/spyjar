@@ -1,5 +1,5 @@
 //
-// $Id: JDBCPoolAble.java,v 1.4 2003/03/28 08:30:48 dustin Exp $
+// arch-tag: 7A180BBA-1110-11D9-BDD4-000A957659CC
 
 package net.spy.pool;
 

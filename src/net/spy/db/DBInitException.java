@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBInitException.java,v 1.1 2003/08/10 20:13:56 dustin Exp $
+// arch-tag: 667C0FD0-1110-11D9-AF43-000A957659CC
 
 package net.spy.db;
 

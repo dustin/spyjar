@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ByteConverionInputStream.java,v 1.1 2003/09/04 07:18:26 dustin Exp $
+// arch-tag: 817F9A87-1110-11D9-B8AD-000A957659CC
 
 package net.spy.util;
 

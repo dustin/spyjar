@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyCache.java,v 1.10 2003/08/05 09:01:03 dustin Exp $
+ * arch-tag: 616FA28A-1110-11D9-99F2-000A957659CC
  */
 
 package net.spy.cache;

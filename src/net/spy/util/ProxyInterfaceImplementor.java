@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ProxyInterfaceImplementor.java,v 1.4 2003/08/05 09:01:05 dustin Exp $
+// arch-tag: 85CB2C90-1110-11D9-B869-000A957659CC
 
 package net.spy.util;
 

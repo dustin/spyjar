@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: GenericResultSetStub.java,v 1.3 2003/08/05 09:01:03 dustin Exp $
+ * arch-tag: 69C500B4-1110-11D9-9E9F-000A957659CC
  */
 
 package net.spy.db;

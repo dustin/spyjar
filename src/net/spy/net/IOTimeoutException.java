@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: IOTimeoutException.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// arch-tag: 773E3F8A-1110-11D9-8879-000A957659CC
 
 package net.spy.net;
 

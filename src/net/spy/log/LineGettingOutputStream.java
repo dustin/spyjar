@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LineGettingOutputStream.java,v 1.1 2002/11/20 06:20:01 dustin Exp $
+// arch-tag: 734198D6-1110-11D9-B33B-000A957659CC
 
 package net.spy.log;
 

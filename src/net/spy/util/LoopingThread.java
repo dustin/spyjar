@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoopingThread.java,v 1.4 2003/07/26 07:46:53 dustin Exp $
+// arch-tag: 836DC6FD-1110-11D9-8C0C-000A957659CC
 
 package net.spy.util;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MCastListener.java,v 1.3 2003/07/26 07:46:52 dustin Exp $
+// arch-tag: 74C228C9-1110-11D9-BB8A-000A957659CC
 
 package net.spy.log;
 

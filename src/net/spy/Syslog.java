@@ -1,6 +1,6 @@
 // Copyright (c) 1999 Dustin Sallings
 //
-// $Id: Syslog.java,v 1.4 2003/08/05 09:01:02 dustin Exp $
+// arch-tag: 4A536336-1110-11D9-B222-000A957659CC
 
 package net.spy;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyConfig.java,v 1.6 2003/08/05 09:01:02 dustin Exp $
+ * arch-tag: 3E827B37-1110-11D9-A386-000A957659CC
  */
 
 package net.spy;

@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: WorkerThread.java,v 1.1 2003/03/28 07:30:54 dustin Exp $
+// arch-tag: 7F1BB678-1110-11D9-AE83-000A957659CC
 
 package net.spy.pool;
 

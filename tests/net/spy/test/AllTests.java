@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2002  Dustin Sallings
  *
- * $Id: AllTests.java,v 1.2 2003/04/11 09:05:06 dustin Exp $
+ * arch-tag: 096F9FD2-1110-11D9-A6B1-000A957659CC
  */
 
 package net.spy.test;

@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBSPLike.java,v 1.2 2003/01/03 22:20:24 dustin Exp $
+// arch-tag: 67D90AD6-1110-11D9-B767-000A957659CC
 
 package net.spy.db;
 

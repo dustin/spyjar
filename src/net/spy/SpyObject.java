@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyObject.java,v 1.1 2002/11/20 04:32:06 dustin Exp $
+// arch-tag: 3FF58B8A-1110-11D9-9F8C-000A957659CC
 
 package net.spy;
 

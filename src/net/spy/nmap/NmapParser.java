@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NmapParser.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// arch-tag: 79627946-1110-11D9-8090-000A957659CC
 
 package net.spy.nmap;
 

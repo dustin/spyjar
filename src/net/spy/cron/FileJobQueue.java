@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FileJobQueue.java,v 1.11 2003/08/05 09:01:03 dustin Exp $
+// arch-tag: 6283078E-1110-11D9-9516-000A957659CC
 
 package net.spy.cron;
 

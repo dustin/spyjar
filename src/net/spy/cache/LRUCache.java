@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LRUCache.java,v 1.1 2002/12/19 07:12:45 dustin Exp $
+// arch-tag: 60E626CC-1110-11D9-ACFA-000A957659CC
 
 package net.spy.cache;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSQL.java,v 1.6 2003/08/05 09:01:03 dustin Exp $
+// arch-tag: 68A71B25-1110-11D9-92A5-000A957659CC
 
 package net.spy.db;
 

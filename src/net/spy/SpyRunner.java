@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyRunner.java,v 1.6 2003/08/05 09:01:02 dustin Exp $
+// arch-tag: 40E1EA0F-1110-11D9-9B23-000A957659CC
 
 package net.spy;
 

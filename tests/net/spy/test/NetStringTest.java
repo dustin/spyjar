@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NetStringTest.java,v 1.1 2003/05/07 07:45:13 dustin Exp $
+// arch-tag: 188DDDF2-1110-11D9-A494-000A957659CC
 
 package net.spy.test;
 

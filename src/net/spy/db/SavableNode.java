@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SavableNode.java,v 1.1 2003/01/15 08:08:06 dustin Exp $
+// arch-tag: 6D4D8795-1110-11D9-8FEC-000A957659CC
 
 package net.spy.db;
 
