@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SQLRunner.java,v 1.3 2003/07/22 07:44:02 dustin Exp $
+// $Id: SQLRunner.java,v 1.4 2003/07/23 03:56:59 dustin Exp $
 
 package net.spy.db;
 
@@ -133,10 +133,10 @@ public class SQLRunner extends SpyObject {
 
 				Statement st=conn.createStatement();
 				st.setQueryTimeout(timeout);
-				int updated=0;
+				int affected=0;
 				long starttime=System.currentTimeMillis();
 				try {
-					updated=st.executeUpdate(query.toString());
+					affected=st.executeUpdate(query.toString());
 				} catch(SQLException e) {
 					if(errok) {
 						// log the exception
@@ -150,10 +150,10 @@ public class SQLRunner extends SpyObject {
 				st.close();
 				st=null;
 				String rows=" rows";
-				if(updated == 1) {
+				if(affected == 1) {
 					rows=" row";
 				}
-				getLogger().info("Updated " + updated + rows
+				getLogger().info("Affected " + affected + rows
 					+ " in " + (stoptime-starttime) + "ms");
 
 				// Clear out the string buffer
