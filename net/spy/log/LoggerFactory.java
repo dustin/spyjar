@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: LoggerFactory.java,v 1.2 2002/11/05 04:59:09 dustin Exp $
+// $Id: LoggerFactory.java,v 1.3 2002/11/08 06:53:31 dustin Exp $
 
 package net.spy.log;
 
@@ -100,10 +100,17 @@ public class LoggerFactory extends Object {
 		if(className!=null) {
 			try {
 				c=Class.forName(className);
+			} catch(NoClassDefFoundError e) {
+				System.err.println("Warning:  " + className
+					+ " not found while initializing"
+					+ " net.spy.log.LoggerFactory");
+				e.printStackTrace();
+				c=DefaultLogger.class;
 			} catch(ClassNotFoundException e) {
 				System.err.println("Warning:  " + className
 					+ " not found while initializing"
 					+ " net.spy.log.LoggerFactory");
+				e.printStackTrace();
 				c=DefaultLogger.class;
 			}
 		}

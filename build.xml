@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.14 2002/11/06 09:04:23 dustin Exp $
+	$Id: build.xml,v 1.15 2002/11/08 06:53:30 dustin Exp $
 
 	-->
 
@@ -20,6 +20,7 @@
 		<fileset dir="${JARPATH}">
 			<include name="jndi.jar"/>
 			<include name="jdbc2_0-stdext.jar"/>
+			<include name="log4j*.jar"/>
 		</fileset>
 		<pathelement path="${java.class.path}"/>
 		<pathelement path="."/>
@@ -48,6 +49,7 @@
 				<include name="spy/db/CachedResultSet.java"/>
 				<include name="spy/db/sp/*.java"/>
 				<include name="spy/log/SunLogger.java"/>
+				<include name="spy/log/Log4JLogger.java"/>
 			</fileset>
 			<!--
 				Get rid of the installed one since it keeps messing with my
@@ -246,7 +248,19 @@
 			tofile="${SRCDIR}/net/spy/log/SunLogger.java"/>
 	</target>
 
-	<target name="optional" depends="optional-sunlog"/>
+	<target name="check-log4j">
+		<available classname="org.apache.log4j.Logger" property="has.log4j">
+			<classpath refid="myclasses"/>
+		</available>
+	</target>
+
+	<target name="optional-log4j" depends="check-log4j" if="has.log4j">
+		<copy file="${SRCDIR}/net/spy/log/Log4JLogger.ojava"
+			tofile="${SRCDIR}/net/spy/log/Log4JLogger.java"/>
+	</target>
+
+
+	<target name="optional" depends="optional-sunlog,optional-log4j"/>
 
 	<!-- End optional components -->
 

@@ -1,0 +1,72 @@
+// Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
+//
+// $Id: Log4JLogger.ojava,v 1.1 2002/11/08 06:53:31 dustin Exp $
+
+package net.spy.log;
+
+import org.apache.log4j.Level;
+
+/**
+ * Logging implementation using the sun logger.
+ */
+public class Log4JLogger extends AbstractLogger {
+
+	// Can't really import this without confusion as there's another thing
+	// by this name in here.
+	org.apache.log4j.Logger l4jLogger=null;
+
+	/**
+	 * Get an instance of Log4JLogger.
+	 */
+	public Log4JLogger(String name) {
+		super(name);
+
+		// Get the log4j logger instance.
+		l4jLogger=org.apache.log4j.Logger.getLogger(name);
+	}
+
+	/** 
+	 * True if the underlying logger would allow debug messages through.
+	 */
+	public boolean isDebugEnabled() {
+		return(l4jLogger.isDebugEnabled());
+	}
+
+	/** 
+	 * True if the underlying logger would allow info messages through.
+	 */
+	public boolean isInfoEnabled() {
+		return(l4jLogger.isInfoEnabled());
+	}
+
+	/** 
+	 * Wrapper around sun logger.
+	 * 
+	 * @param level net.spy.log.AbstractLogger level.
+	 * @param message object message
+	 * @param e optional throwable
+	 */
+	protected void logAt(int level, Object message, Throwable e) {
+		Level pLevel=null;
+		switch(level) {
+			case DEBUG:
+				pLevel=Level.DEBUG;
+				break;
+			case INFO:
+				pLevel=Level.INFO;
+				break;
+			case WARN:
+				pLevel=Level.WARN;
+				break;
+			case ERROR:
+				pLevel=Level.ERROR;
+				break;
+			case FATAL:
+				pLevel=Level.FATAL;
+				break;
+		}
+
+		l4jLogger.log("net.spy.log.AbstractLogger", pLevel, message, e);
+	}
+
+}
