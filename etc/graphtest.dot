@@ -2,7 +2,7 @@
 //
 // $Id: graphtest.dot,v 1.1 2002/11/07 18:15:28 dustin Exp $
 
-// This diagram is used in the documented for ShortestPathFinder.
+// This diagram is used in the documentation for ShortestPathFinder.
 
 digraph sp {
 	"A" -> "B" [label="10"];
