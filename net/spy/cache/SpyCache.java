@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyCache.java,v 1.3 2002/11/20 04:32:07 dustin Exp $
+ * $Id: SpyCache.java,v 1.4 2002/12/07 22:41:22 dustin Exp $
  */
 
 package net.spy.cache;
@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.util.Iterator;
 
 import net.spy.SpyObject;
+import net.spy.SpyThread;
 import net.spy.util.TimeStampedHash;
 
 /**
@@ -50,7 +51,7 @@ public class SpyCache extends SpyObject {
 
 	private synchronized void checkThread() {
 		if(cacheCleaner==null || (!cacheCleaner.isAlive())) {
-			cacheCleaner=new SpyCacheCleaner(cacheStore);
+			cacheCleaner=new SpyCacheCleaner();
 		}
 	}
 
@@ -140,8 +141,7 @@ public class SpyCache extends SpyObject {
 	//                       Private Classes                          //
 	////////////////////////////////////////////////////////////////////
 
-	private class SpyCacheCleaner extends Thread {
-		private TimeStampedHash cacheStore=null;
+	private class SpyCacheCleaner extends SpyThread {
 
 		// How many cleaning passes we've done.
 		private int passes=0;
@@ -153,12 +153,15 @@ public class SpyCache extends SpyObject {
 		// Insert multicast listener here.
 		private CacheClearRequestListener listener=null;
 
-		public SpyCacheCleaner(TimeStampedHash cacheStore) {
+		// This indicates whether we need to go through the multicast cache
+		// clearer loop.  It's true by default so we'll try it the first time.
+		private boolean wantMulticastListener=true;
+
+		public SpyCacheCleaner() {
 			super();
-			this.cacheStore=cacheStore;
-			this.setName("SpyCacheCleaner");
-			this.setDaemon(true);
-			this.start();
+			setName("SpyCacheCleaner");
+			setDaemon(true);
+			start();
 		}
 
 		public String toString() {
@@ -204,10 +207,13 @@ public class SpyCache extends SpyObject {
 				String portS=System.getProperty("net.spy.cache.multi.port");
 
 				if(addrS!=null && portS!=null) {
+					wantMulticastListener=true;
 					int port=Integer.parseInt(portS);
 
 					InetAddress group = InetAddress.getByName(addrS);
 					listener=new CacheClearRequestListener(group, port);
+				} else {
+					wantMulticastListener=false;
 				}
 
 			} catch(SecurityException se) {
@@ -221,6 +227,9 @@ public class SpyCache extends SpyObject {
 			}
 		}
 
+		/** 
+		 * Loop until there's no need to loop any more.
+		 */
 		public void run() {
 
 			boolean keepgoing=true;
@@ -229,14 +238,16 @@ public class SpyCache extends SpyObject {
 			// for an hour, at which point it'll dump the whole cache and join.
 			while(keepgoing) {
 				try {
-					if(listener==null || (!listener.isAlive())) {
-						checkMulticastThread();
-					}
 					// Just for throttling, sleep a second.
 					sleep(1000);
 					cleanup();
+					// Check to see if we want a multicast listener
+					if(wantMulticastListener
+						&& (listener==null || (!listener.isAlive())) ) {
+						checkMulticastThread();
+					}
 				} catch(Exception e) {
-					// Just try again.
+					getLogger().warn("Exception in cleanup loop", e);
 				}
 
 				keepgoing=shouldIContinue();
