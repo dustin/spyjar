@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TypeNameGen.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// $Id: TypeNameGen.java,v 1.2 2002/08/29 07:47:38 dustin Exp $
 
 package net.spy.util;
 
@@ -14,7 +14,7 @@ import java.sql.Types;
 import java.lang.reflect.Field;
 
 /**
- * Used at compile time to generated {@link net.spy.db.TypeNames}.
+ * Used at compile time to generate {@link net.spy.db.TypeNames}.
  */
 public class TypeNameGen extends Object {
 
@@ -47,7 +47,7 @@ public class TypeNameGen extends Object {
 		ps.println("\t\tString rv=null;\n");
 		ps.println("\t\tswitch(type) {");
 
-		// XXX Fill in switch statement
+		// Fill in the switch statement with all the known types.
 		Field fields[]=Types.class.getDeclaredFields();
 		for(int i=0; i<fields.length; i++) {
 			ps.println("\t\t\tcase Types." + fields[i].getName() + ":");
@@ -71,7 +71,12 @@ public class TypeNameGen extends Object {
 		ps.println("}");
 	}
 
-	// Integer sort in main
+	/** 
+	 * Write out the TypeNames implementation.
+	 * 
+	 * @param String args[0] = path to which to write the TypeNames
+	 * @throws IOException if there's a problem writing the file
+	 */
 	public static void main(String args[]) throws IOException {
 		TypeNameGen tng=new TypeNameGen();
 		FileOutputStream fos=new FileOutputStream(args[0]);
