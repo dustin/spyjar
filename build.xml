@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.13 2002/11/05 04:59:09 dustin Exp $
+	$Id: build.xml,v 1.14 2002/11/06 09:04:23 dustin Exp $
 
 	-->
 
@@ -332,8 +332,19 @@
   </target>
 
   <target name="tests-sp" depends="test-suite"
-		description="Test the shortest path alogorithm.">
+		description="Test the shortest path algorithm.">
     <java classname="net.spy.test.ShortestPathTest" fork="yes">
+			<classpath refid="myclasses"/>
+			<classpath refid="junitclasses"/>
+      <classpath>
+        <pathelement path="${TBUILDDIR}"/>
+			</classpath>
+    </java>
+  </target>
+
+  <target name="tests-bitarray" depends="test-suite"
+		description="Test the BitArray implementation.">
+    <java classname="net.spy.test.BitArrayTest" fork="yes">
 			<classpath refid="myclasses"/>
 			<classpath refid="junitclasses"/>
       <classpath>
