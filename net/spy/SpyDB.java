@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyDB.java,v 1.4 2002/11/20 04:32:06 dustin Exp $
+ * $Id: SpyDB.java,v 1.5 2003/06/25 16:51:38 dustin Exp $
  */
 
 package net.spy;
@@ -280,22 +280,23 @@ public class SpyDB extends SpyObject {
 			return(null);
 		}
 
-		String scopy = new String(in);
-		if(scopy.indexOf('\'') >= 0) {
-			String sout = new String("");
-			StringTokenizer st = new StringTokenizer(scopy, "\'");
+		String sout = null;
+		if(in.indexOf('\'') < 0) {
+			sout = in;
+		} else {
+			StringBuffer sb=new StringBuffer(in.length());
+			StringTokenizer st = new StringTokenizer(in, "\'", true);
 			while(st.hasMoreTokens()) {
 				String part = st.nextToken();
-
-				if(st.hasMoreTokens()) {
-					sout += part + "\'\'";
-				} else {
-					sout += part;
+				sb.append(part);
+				// If this is a quote, add another one
+				if(part.equals("'")) {
+					sb.append('\'');
 				}
 			}
-			scopy=sout;
+			sout=sb.toString();
 		}
-		return(scopy);
+		return(sout);
 	}
 
 	/**
