@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: DBSP.java,v 1.2 2002/08/30 16:45:54 knitterb Exp $
 
 package net.spy.db;
 
@@ -35,8 +35,14 @@ public abstract class DBSP extends SpyCacheDB {
 
 	// The arguments themselves
 	private HashMap args=null;
+	
+	// the args in the order we got them
+	private ArrayList argsInorder=null;
+
 	// The data type of this argument
 	private HashMap types=null;
+
+	private ArrayList paramsInorder=null;
 
 	/**
 	 * Required fields and their types.
@@ -69,7 +75,7 @@ public abstract class DBSP extends SpyCacheDB {
 	// Caching info
 	private long cachetime=0;
 
-	private boolean debug=false;
+	private boolean debug=true;
 
 	// The query
 	private String query=null;
@@ -96,6 +102,7 @@ public abstract class DBSP extends SpyCacheDB {
 	// Initialize hashtables
 	private void initsp() {
 		this.args=new HashMap();
+		this.argsInorder=new ArrayList();
 		this.types=new HashMap();
 		this.required=new HashMap();
 		this.optional=new HashMap();
@@ -103,6 +110,7 @@ public abstract class DBSP extends SpyCacheDB {
 		this.requiredInorder=new ArrayList();
 		this.optionalInorder=new ArrayList();
 		this.outputInorder=new ArrayList();
+		this.paramsInorder=new ArrayList();
 	}
 
 	/**
@@ -218,6 +226,7 @@ public abstract class DBSP extends SpyCacheDB {
 				+ name + "'' already provided.");
 		}
 		requiredInorder.add(name);
+		paramsInorder.add(name);
 	}
 
 	/**
@@ -235,6 +244,7 @@ public abstract class DBSP extends SpyCacheDB {
 				+ name + "'' already provided.");
 		}
 		optionalInorder.add(name);
+		paramsInorder.add(name);
 	}
 
 	/**
@@ -252,6 +262,7 @@ public abstract class DBSP extends SpyCacheDB {
 				+ name + "'' already provided.");
 		}
 		outputInorder.add(name);
+		paramsInorder.add(name);
 	}
 
 	/**
@@ -266,6 +277,7 @@ public abstract class DBSP extends SpyCacheDB {
 			throws SQLException {
 		if (what!=null) {
 			args.put(which, what);
+			argsInorder.add(which);
 			types.put(which, new Integer(type));
 		} else { // it was a null object
 			if (debug) {
@@ -273,6 +285,7 @@ public abstract class DBSP extends SpyCacheDB {
 			}
 			DBNull n=new DBNull(type);
 			args.put(which, n);
+			argsInorder.add(which);
 			types.put(which, new Integer(Types.NULL));
 		}
 	}
@@ -284,6 +297,14 @@ public abstract class DBSP extends SpyCacheDB {
 	 */
 	protected Map getArgs() {
 		return(Collections.unmodifiableMap(args));
+	}
+
+	protected List getArgsInorder() {
+		return(Collections.unmodifiableList(argsInorder));
+	}
+
+	protected List getParamsInorder() {
+		return(Collections.unmodifiableList(paramsInorder));
 	}
 
 	/** 
@@ -416,7 +437,7 @@ public abstract class DBSP extends SpyCacheDB {
 		// Get the keys in a vector so we can make sure they come out in
 		// the right order.
 		ArrayList v=new ArrayList();
-		for(Iterator e=args.keySet().iterator(); e.hasNext(); ) {
+		for(Iterator e=getParamsInorder().iterator(); e.hasNext(); ) {
 			String param=(String)e.next();
 			v.add(param);
 
@@ -438,6 +459,10 @@ public abstract class DBSP extends SpyCacheDB {
 			pst=prepareStatement(query, getCacheTime());
 		} else {
 			pst=prepareStatement(query);
+		}
+
+		if (debug) {
+			System.out.println("Query: "+query);
 		}
 
 		// Fill in the arguments.
