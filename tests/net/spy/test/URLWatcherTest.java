@@ -68,7 +68,7 @@ public class URLWatcherTest extends TestCase {
 
 		URL u=new URL("http://bleu.west.spy.net/~dustin/util/getdate.jsp");
 		String c1=uw.getContent(u);
-		assertNotNull(c1);
+		assertNotNull("Did not get content from " + u, c1);
 		Thread.sleep(1000);
 		String c2=uw.getContent(u);
 		assertNotNull(c2);
