@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.2 2002/08/28 03:01:16 dustin Exp $
+// $Id: SPGen.java,v 1.3 2002/08/28 03:52:06 dustin Exp $
 
 package net.spy.util;
 
@@ -14,6 +14,10 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+
+import java.text.NumberFormat;
+
+import net.spy.SpyUtil;
 
 /**
  * Generator for .spt-&gt;.java.
@@ -29,7 +33,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.2 $";
+	private String version="$Revision: 1.3 $";
 	private long cachetime=0;
 	private ArrayList sqlquery=null;
 	private ArrayList required=null;
@@ -55,6 +59,66 @@ public class SPGen extends Object {
 	public void generate() throws Exception {
 		parse();
 		write();
+	}
+
+	// Make a pretty string out of the cache time for the documentation.
+	private String formatCacheTime() {
+		ArrayList rva=new ArrayList();
+		long days, hours, minutes, seconds;
+
+		seconds=cachetime;
+
+		// Deal with days
+		if(seconds > 86400) {
+			days=seconds/86400;
+			seconds=seconds % 86400;
+
+			StringBuffer daysb=new StringBuffer();
+			daysb.append(days);
+			daysb.append(" day");
+			if(days != 1) {
+				daysb.append("s");
+			}
+			rva.add(daysb.toString());
+		}
+
+		// Deal with hours
+		if(seconds > 3600) {
+			hours=seconds/3600;
+			seconds=seconds % 3600;
+
+			StringBuffer hsb=new StringBuffer();
+			hsb.append(hours);
+			hsb.append(" hour");
+			if(hours != 1) {
+				hsb.append("s");
+			}
+			rva.add(hsb.toString());
+		}
+
+		// Deal with minutes
+		if(seconds > 60) {
+			minutes=seconds/60;
+			seconds=seconds%60;
+
+			StringBuffer msb=new StringBuffer();
+			msb.append(minutes);
+			msb.append(" minute");
+			if(minutes != 1) {
+				msb.append("s");
+			}
+			rva.add(msb.toString());
+		}
+
+		StringBuffer ssb=new StringBuffer();
+		ssb.append(seconds);
+		ssb.append(" second");
+		if(seconds != 1) {
+			ssb.append("s");
+		}
+		rva.add(ssb.toString());
+
+		return(SpyUtil.join(rva, ", "));
 	}
 
 	private void write() throws Exception {
@@ -188,6 +252,18 @@ public class SPGen extends Object {
 
 			out.println(" * </ul>\n"
 				+ " *");
+		}
+
+		// Document the cache time
+		out.println(" * <b>Cache Time</b>");
+		if(cachetime > 0) {
+			NumberFormat nf=NumberFormat.getNumberInstance();
+			out.println(" * The results of this call will be cached for "
+				+ formatCacheTime() 
+				+ " (" + nf.format(cachetime) + " seconds) by default.");
+		} else {
+			out.println(" * The results of this call will not "
+				+ "be cached by default.");
 		}
 
 		// end the class documentation comment

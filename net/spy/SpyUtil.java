@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyUtil.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: SpyUtil.java,v 1.2 2002/08/28 03:52:06 dustin Exp $
 
 package net.spy;
 
@@ -15,9 +15,13 @@ import java.lang.reflect.Method;
 
 import java.security.SecureRandom;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
+import net.spy.util.Enumeriterator;
 
 /**
  * Miscellaneous utilities.
@@ -104,17 +108,42 @@ public class SpyUtil {
 
 	/**
 	 * Join an Enumeration of Strings on a join string.
+	 * @param e The enumeration
+	 * @param on the join string
+	 * @return a new String with all of the elements joined
 	 */
 	public static String join(Enumeration e, String on) {
+		return(join(new Enumeriterator(e), on));
+	}
+
+	/** 
+	 * Join an Iterator of Strings on a join string.
+	 * 
+	 * @param i the iterator of Strings
+	 * @param on the join string
+	 * @return a new String with all of the elements joined
+	 */
+	public static String join(Iterator i, String on) {
 		StringBuffer sb=new StringBuffer(256);
-		while(e.hasMoreElements()) {
-			String s=(String)e.nextElement();
+		while(i.hasNext()) {
+			String s=(String)i.next();
 			sb.append(s);
-			if(e.hasMoreElements()) {
+			if(i.hasNext()) {
 				sb.append(on);
 			}
 		}
 		return(sb.toString());
+	}
+
+	/** 
+	 * Join a Collection of Strings on a join string.
+	 * 
+	 * @param c the collection
+	 * @param on the join string
+	 * @return a String with all the elements joined
+	 */
+	public static String join(Collection c, String on) {
+		return(join(c.iterator(), on));
 	}
 
 	/**

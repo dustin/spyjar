@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.2 2002/08/28 02:24:15 dustin Exp $
+	$Id: build.xml,v 1.3 2002/08/28 03:52:05 dustin Exp $
 
 	-->
 
@@ -196,7 +196,7 @@
 		</propertyfile>
 
 		<echo message=""/>
-		<echo message="*** You must run your build again (ignore failures)! ***"/>
+		<echo message="*** You must run your build again (ignore this failure)!"/>
 		<echo message=""/>
 		<fail message="You must run your build again"/>
 
