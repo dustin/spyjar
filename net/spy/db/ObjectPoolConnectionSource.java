@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ObjectPoolConnectionSource.java,v 1.2 2002/09/05 00:05:20 dustin Exp $
+// $Id: ObjectPoolConnectionSource.java,v 1.3 2002/09/05 17:28:24 dustin Exp $
 
 package net.spy.db;
 
@@ -125,18 +125,18 @@ public class ObjectPoolConnectionSource extends Object
 				SpyConfig conf = (SpyConfig)gConf.clone();
 				// Create the ObjectPool
 				pool=new ObjectPool(conf);
-
-				// Make sure the ObjectPool has the pool we seek
-				if(!pool.hasPool(poolName)) {
-					try {
-						createPool(conf);
-					} catch(PoolException pe) {
-						pe.printStackTrace();
-						throw new SQLException("Error initializing pool:  "
-							+ pe);
-					} // Catch the PoolException
-				} // pool doesn't exist
 			} // No pools exist
+
+			// Make sure the ObjectPool has the pool we seek
+			if(!pool.hasPool(poolName)) {
+				try {
+					createPool(conf);
+				} catch(PoolException pe) {
+					pe.printStackTrace();
+					throw new SQLException("Error initializing pool:  "
+						+ pe);
+				} // Catch the PoolException
+			} // pool doesn't exist
 		} // Synchronized block
 	}
 
