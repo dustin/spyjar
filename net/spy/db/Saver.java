@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.11 2003/04/19 03:33:19 dustin Exp $
+// $Id: Saver.java,v 1.12 2003/08/15 19:15:14 dustin Exp $
 
 package net.spy.db;
 
@@ -38,7 +38,7 @@ public class Saver extends SpyObject {
 	 * Get an instance of Saver with the given database config.
 	 */
 	public Saver(SpyConfig config) {
-		this(config, new SaveContext());
+		this(config, null);
 	}
 
 	/**
@@ -47,6 +47,9 @@ public class Saver extends SpyObject {
 	public Saver(SpyConfig config, SaveContext context) {
 		super();
 		this.context=context;
+		if(this.context == null) {
+			this.context = new SaveContext();
+		}
 		this.config=config;
 		this.listedObjects=new HashSet();
 	}
