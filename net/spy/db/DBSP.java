@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.24 2003/08/04 18:30:08 knitterb Exp $
+// $Id: DBSP.java,v 1.25 2003/08/29 17:46:50 dustin Exp $
 
 package net.spy.db;
 
@@ -49,6 +49,8 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 	// timeout
 	private int timeout=0;
+	// Max rows
+	private int maxRows=0;
 
 	private boolean debug=false;
 
@@ -95,6 +97,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			getLogger().debug("Setting timeout to: "+timeout);
 		}
 		pst.setQueryTimeout(timeout);
+		pst.setMaxRows(maxRows);
 
 		// Set the cursor name if there is one.
 		if(cursorName != null) {
@@ -324,10 +327,18 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	}
 
 	/**
-	 * Set the timeout for this query
+	 * Set the timeout for this query.  See JDCB Statement documentation.
 	 */
 	public void setQueryTimeout(int timeout) {
 		this.timeout=timeout;
+	}
+
+	/**
+	 * Set the maximum number of rows that should be returned from this
+	 * query.  See JDBC Statement documentation.
+	 */
+	public void setMaxRows(int timeout) {
+		this.maxRows=maxRows;
 	}
 
 	/**
@@ -336,7 +347,6 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	public int getQueryTimeout() {
 		return(this.timeout);
 	}
-		
 
 	/**
 	 * Set the stored procedure to the given value.
