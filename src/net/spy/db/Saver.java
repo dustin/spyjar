@@ -172,11 +172,8 @@ public class Saver extends SpyObject {
 			// Add this to the set to keep us from doing it again
 			listedObjects.add(ie);
 
-			// If this is a SavableNode, it's got a pre, grab those
-			if(o instanceof SavableNode) {
-				SavableNode sn=(SavableNode)o;
-				saveLoop(o, sn.getPreSavables(context));
-			} // Was a savable node
+			// Go through the preSavables
+			saveLoop(o, o.getPreSavables(context));
 
 			// Save this object if it needs saving.
 			if(o.isNew() || o.isModified()) {
@@ -202,18 +199,7 @@ public class Saver extends SpyObject {
 			}
 
 			// Get the post savables
-			saveLoop(o, o.getSavables(context));
-			// This is a kind of ugly hack, but he identity equalifier
-			// should prevent the same object from being saved more than
-			// once, even though the tree is walked twice.  Perhaps
-			// getPostSavables was a mistake to wedge in for backwards
-			// compatibility.  Maybe I should go for a one or the other
-			// type implementation.  In the meantime, this scared the shit
-			// out of me.
-			if(o instanceof SavableNode) {
-				SavableNode sn=(SavableNode)o;
-				saveLoop(o, sn.getPostSavables(context));
-			}
+			saveLoop(o, o.getPostSavables(context));
 
 		} // Haven't seen this object
 

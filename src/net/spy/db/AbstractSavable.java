@@ -9,10 +9,9 @@ import java.util.Collection;
 import net.spy.SpyObject;
 
 /**
- * Abstract implementation of {@link SavableNode}.
+ * Abstract implementation of {@link Savable}.
  */
-public abstract class AbstractSavable extends SpyObject
-	implements SavableNode {
+public abstract class AbstractSavable extends SpyObject implements Savable {
 
 	private boolean asIsNew=false;
 	private boolean asIsModified=false;

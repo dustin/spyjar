@@ -11,18 +11,18 @@ import java.util.HashSet;
 import java.util.Collection;
 
 import net.spy.db.SaveException;
-import net.spy.db.SavableNode;
+import net.spy.db.Savable;
 import net.spy.db.SaveContext;
 
 /**
- * A subclass of HashSet that implements SavableNode.
+ * A subclass of HashSet that implements Savable.
  *
  * The save() method does nothing (and should not be called), but all of
  * the objects in the Set will be returned from getPostSavables().
  *
  * @author <a href="mailto:dsallings@2wire.com">Dustin Sallings</a>
  */
-public class SavableHashSet extends HashSet implements SavableNode {
+public class SavableHashSet extends HashSet implements Savable {
 
     /**
      * Get an instance of SavableHashSet.
