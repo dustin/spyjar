@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.17 2003/05/12 05:44:25 dustin Exp $
+// $Id: DBSP.java,v 1.18 2003/06/05 20:16:27 dustin Exp $
 
 package net.spy.db;
 
@@ -892,6 +892,21 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		return(rv);
+	}
+
+	/** 
+	 * Close this statement and whatever the superclass wants to do.
+	 */
+	public void close() {
+		if(pst!=null) {
+			try {
+				pst.close();
+			} catch(SQLException e) {
+				getLogger().warn("Problem closing prepared statement", e);
+			}
+			pst=null;
+		}
+		super.close();
 	}
 
 	/** 
