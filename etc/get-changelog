@@ -1,0 +1,3 @@
+#!/bin/sh
+
+tla changelog --no-files | sed 1,4d

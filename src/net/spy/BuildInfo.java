@@ -4,12 +4,14 @@
 
 package net.spy;
 
+import java.net.URL;
 import java.util.Properties;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 
 import net.spy.util.NestedRuntimeException;
 
@@ -68,6 +70,22 @@ public class BuildInfo extends Properties {
 		return(rv);
 	}
 
+	/** 
+	 * Get a URL to a file within this classloader.
+	 * 
+	 * @param rel the relative name (i.e. net.spy.changelog)
+	 * @return the URL
+	 * @throws FileNotFoundException if the file cannot be found
+	 */
+	public URL getFile(String rel) throws FileNotFoundException {
+		ClassLoader cl=getClass().getClassLoader();
+		URL u=cl.getResource(rel);
+		if(u == null) {
+			throw new FileNotFoundException("Can't find " + rel);
+		}
+		return(u);
+	}
+
 	/**
 	 * String me.
 	 */
@@ -101,6 +119,24 @@ public class BuildInfo extends Properties {
 		BuildInfo bi=new BuildInfo();
 
 		System.out.println("spy.jar " + bi);
+
+		if(args.length > 0 && args[0].equals("-c")) {
+			System.out.println(" -- Changelog:\n");
+
+			URL u=bi.getFile("net/spy/changelog.txt");
+			InputStream is=u.openStream();
+			byte data[]=new byte[8192];
+			int bread=0;
+			do {
+				bread=is.read(data);
+				if(bread > 0) {
+					System.out.write(data, 0, bread);
+				}
+			} while(bread != -1);
+			is.close();
+		} else {
+			System.out.println("(add -c to see the recent changelog)");
+		}
 	}
 
 }

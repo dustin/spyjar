@@ -141,6 +141,7 @@
 			<fileset dir="${BUILDDIR}">
 				<include name="net/spy/**/*.class"/>
 				<include name="net/spy/**/*.properties"/>
+				<include name="net/spy/**/*.txt"/>
 			</fileset>
 			<fileset dir=".">
 				<include name="etc/license.txt"/>
@@ -159,6 +160,7 @@
 			<fileset dir="${BUILDDIR}">
 				<include name="net/spy/**/*.class"/>
 				<include name="net/spy/**/*.properties"/>
+				<include name="net/spy/**/*.txt"/>
 			</fileset>
 			<fileset dir="${DOCDEST}/../">
 				<include name="docs/**/*.html"/>
@@ -192,6 +194,8 @@
 		<buildnumber file="etc/build.number"/>
 		<!-- Find the current patch level of this tree -->
 		<exec executable="./etc/tree-version" outputproperty="tree.version"/>
+		<exec executable="./etc/get-changelog"
+			output="${BUILDDIR}/net/spy/changelog.txt"/>
 		<propertyfile file="${BUILDDIR}/net/spy/build.properties">
 			<entry key="java.vendor" value="${java.vendor}"/>
 			<entry key="java.version" value="${java.version}"/>
