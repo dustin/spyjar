@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Cron.java,v 1.7 2003/04/18 20:15:45 dustin Exp $
+// $Id: Cron.java,v 1.8 2003/04/19 08:02:33 dustin Exp $
 
 package net.spy.cron;
 
@@ -55,10 +55,9 @@ public class Cron extends SpyThread {
 	 * @param tp the thread pool
 	 */
 	public Cron(String name, JobQueue jq, ThreadPool tp) {
-		super();
+		super(new ThreadGroup(name), name);
 		this.jq=jq;
 		setDaemon(true);
-		setName(name);
 
 		if(tp==null) {
 			tp=new ThreadPool(name + "Pool");
