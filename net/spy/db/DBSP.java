@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.3 2002/09/04 02:02:13 dustin Exp $
+// $Id: DBSP.java,v 1.4 2002/09/17 21:54:18 knitterb Exp $
 
 package net.spy.db;
 
@@ -314,15 +314,20 @@ public abstract class DBSP extends SpyCacheDB {
 				throw new SQLException("Invalid argument " + arg);
 			}
 
+			int ptype=p.getJavaType();
+			int atype=arg.getJavaType();
+			if (atype==Types.NULL) {
+				atype=((DBNull)arg.getValue()).getType();
+			}
 			// Check the type
-			if(p.getJavaType() != arg.getJavaType()) {
+			if(ptype!=atype) {
 				throw new SQLException("Invalid type for arg " + arg
 					+ " type was "
-					+ arg.getJavaType() + " ("
-						+ TypeNames.getTypeName(arg.getJavaType()) + ")"
+					+ atype + " ("
+						+ TypeNames.getTypeName(atype) + ")"
 					+ " should be "
-					+ p.getJavaType()
-						+ " (" + TypeNames.getTypeName(p.getJavaType())
+					+ ptype
+						+ " (" + TypeNames.getTypeName(ptype)
 						+ ")"
 				);
 			}
@@ -1240,7 +1245,13 @@ public abstract class DBSP extends SpyCacheDB {
 		 * Get the {@link java.sql.Types} type of this parameter.
 		 */
 		public int getJavaType() {
-			return(javaType);
+			int rv=0;
+			if(value==null) {
+				rv=Types.NULL;
+			} else {
+				rv=javaType;
+			}
+			return(rv);
 		}
 
 		/** 
