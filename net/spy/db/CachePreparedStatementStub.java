@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePreparedStatementStub.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+ * $Id: CachePreparedStatementStub.java,v 1.2 2002/11/07 03:30:22 dustin Exp $
  */
 
 package net.spy.db;
@@ -38,6 +38,9 @@ public class CachePreparedStatementStub extends Object {
 
 	// How long the results of this statement should be cached
 	private long cacheTime=60*60*1000;
+
+	// Query timeout
+	private int timeout=0;
 
 	/**
 	 * Create a CachePreparedStatement object for the given query (you
@@ -127,10 +130,21 @@ public class CachePreparedStatementStub extends Object {
 		return(crsret);
 	}
 
+	/** 
+	 * Set the query timeout.
+	 * 
+	 * @param to the maximum number of seconds
+	 * @throws SQLException if the number is not greater than or equal to 0
+	 */
+	public void setQueryTimeout(int to) throws SQLException {
+		timeout=to;
+	}
+
 	// OK, here's what happens when we determine that we really don't have
 	// the data and need to come up with it.
 	private CachedResultSet realExecuteQuery() throws SQLException {
 		PreparedStatement pst=db.prepareStatement(queryStr);
+		pst.setQueryTimeout(timeout);
 
 		// Set allllllll the types
 		for(int i=0; i<args.length; i++) {
