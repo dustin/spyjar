@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ProgressStats.java,v 1.2 2003/06/11 03:08:19 dustin Exp $
+// $Id: ProgressStats.java,v 1.3 2003/06/11 07:31:18 dustin Exp $
 
 package net.spy.util;
 
@@ -52,15 +52,16 @@ public class ProgressStats extends Object {
 	}
 
 	/** 
-	 * Get the average processing time.
+	 * Get the overall average.
 	 */
-	public double getAvgProcessingTime() {
+	public double getOverallAverage() {
 		double avgProcessTime=((double)totalTime/(double)done)/1000.0;
 		return(avgProcessTime);
 	}
 
 	/** 
-	 * Get the estimated number of seconds remaining.
+	 * Get the estimated number of seconds remaining with the given average
+	 * time per unit.
 	 */
 	public double getEstimatedTimeRemaining(double avgProcessTime) {
 		double estimate=avgProcessTime*(double)(todo-done);
@@ -68,10 +69,11 @@ public class ProgressStats extends Object {
 	}
 
 	/** 
-	 * Get the estimated number of seconds remaining.
+	 * Get the estimated number of seconds remaining with the current
+	 * average.
 	 */
 	public double getEstimatedTimeRemaining() {
-		return(getEstimatedTimeRemaining(getAvgProcessingTime()));
+		return(getEstimatedTimeRemaining(getOverallAverage()));
 	}
 
 	/** 
@@ -99,17 +101,16 @@ public class ProgressStats extends Object {
 	 *
 	 */
 	public String getStats(String format) {
-		// Average number of seconds spent processing
-		double avgProcessTime=getAvgProcessingTime();
+		double average=getOverallAverage();
 		// Estimated number of seconds left
-		double estimate=getEstimatedTimeRemaining(avgProcessTime);
+		double estimate=getEstimatedTimeRemaining(average);
 		// Estimated time of completion
 		Date ofCompletion=new Date(System.currentTimeMillis()
 			+ (1000*(long)estimate));
 
 		// Assemble arguments
 		Object args[]={
-			new Double(avgProcessTime),
+			new Double(average),
 			new Double(estimate),
 			ofCompletion,
 			new Integer(done),
@@ -126,6 +127,15 @@ public class ProgressStats extends Object {
 	 */
 	public String getStats() {
 		return(getStats(DEFAULT_FORMAT));
+	}
+
+	/** 
+	 * String me.
+	 * 
+	 * @return getStats()
+	 */
+	public String toString() {
+		return(getStats());
 	}
 
 }
