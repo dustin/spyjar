@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.8 2002/08/29 07:47:38 dustin Exp $
+// $Id: SPGen.java,v 1.9 2002/08/30 16:48:05 knitterb Exp $
 
 package net.spy.util;
 
@@ -37,16 +37,19 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.8 $";
+	private String version="$Revision: 1.9 $";
 	private long cachetime=0;
 	private ArrayList sqlquery=null;
 	private ArrayList required=null;
 	private ArrayList optional=null;
 	private ArrayList output=null;
 	private ArrayList results=null;
+	private ArrayList args=null;
 	private boolean debug=false;
 
 	private static HashSet types=null;
+
+	private boolean looseTypes=false;
 
 	/**
 	 * Get a new SPGen from the given BufferedReader.
@@ -61,6 +64,7 @@ public class SPGen extends Object {
 		optional=new ArrayList();
 		output=new ArrayList();
 		results=new ArrayList();
+		args=new ArrayList();
 
 		if(types==null) {
 			initTypes();
@@ -332,6 +336,27 @@ public class SPGen extends Object {
 				+ "\n\t\tsetQuery(query.toString());");
 		}
 
+		if (args.size()>0) {
+			out.println("\n\t\t// Set the parameters.");
+			for (Iterator i=args.iterator(); i.hasNext(); ) {
+				Parameter p=(Parameter)i.next();
+				if (p.isRequired()) {
+					if (!p.isOutput()) {
+						out.println("\t\tsetRequired(\"" + p.getName() + "\", "
+							+ p.getType() + ");");
+					} else {
+						out.println("\t\tsetOutput(\"" + p.getName() + "\", "
+							+ p.getType() + ");");
+					}
+				} else {
+					out.println("\t\tsetOptional(\"" + p.getName() + "\", "
+						+ p.getType() + ");");
+				}
+			}
+		}
+			
+			
+		/*
 		// Set the required parameters
 		if(required.size() > 0) {
 			out.println("\n\t\t// Set the required parameters.");
@@ -361,6 +386,8 @@ public class SPGen extends Object {
 					+ "Types." + p.getType() + ");");
 			}
 		}
+
+		*/
 
 		// Set the cachetime, if there is one
 		if(cachetime>0) {
@@ -429,6 +456,8 @@ public class SPGen extends Object {
 					// Handlers for things that occur when a section is begun
 					if(section.equals("debug")) {
 						debug=true;
+					} else if (section.startsWith("loosetyp")) {
+						looseTypes=true;
 					}
 				} else if(tmp.charAt(0) == '#') {
 					// Comment, ignore
@@ -450,6 +479,7 @@ public class SPGen extends Object {
 						superclass="DBCP";
 					} else if(section.equals("params")) {
 						Parameter param=new Parameter(tmp);
+						args.add(param);
 						if(param.isRequired()) {
 							if (!param.isOutput()) {
 								required.add(param);
@@ -502,7 +532,8 @@ public class SPGen extends Object {
 				type=st.nextToken();
 
 				if(!isValidJDBCType(type)) {
-					System.err.println("Warning! Invalid JDBC type:  " + type);
+					System.err.println("Warning! Invalid JDBC type found:  "
+						+ type);
 				}
 			} catch(NoSuchElementException e) {
 				throw new IllegalArgumentException(
@@ -583,9 +614,13 @@ public class SPGen extends Object {
 			try {
 				type=st.nextToken();
 
-				if(!isValidJDBCType(type)) {
-					throw new IllegalArgumentException("Invalid JDBC type: "
-						+ type);
+				if(isValidJDBCType(type)) {
+					type="java.sql.Types."+type;
+				} else {
+					if (!looseTypes) {
+						throw new IllegalArgumentException("Invalid JDBC type: "
+							+ type);
+					}
 				}
 			} catch (NoSuchElementException ex) {
 				// now the variable type is missing  That's no good, you
