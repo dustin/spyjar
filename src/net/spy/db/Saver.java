@@ -159,6 +159,11 @@ public class Saver extends SpyObject {
 					getLogger().debug("Completed saving " + dbgString(o)
 						+ " in " + getSessId());
 				}
+			} else {
+				if(getLogger().isDebugEnabled()) {
+					getLogger().debug("Not saving " + dbgString(o)
+						+ " in " + getSessId() + " (not modified)");
+				}
 			}
 
 			// Get the post savables
