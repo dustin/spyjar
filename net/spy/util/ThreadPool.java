@@ -1,14 +1,13 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.3 2002/11/20 04:32:08 dustin Exp $
+// $Id: ThreadPool.java,v 1.4 2002/12/05 08:07:03 dustin Exp $
 
 package net.spy.util;
 
-import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.Stack;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import net.spy.SpyObject;
 
@@ -42,7 +41,7 @@ public class ThreadPool extends SpyObject {
 	// The threads we're managing.
 	private List threads=null;
 	// The tasks for the threads to do.
-	private Stack tasks=null;
+	private LimitedList tasks=null;
 
 	// This is what we monitor for things being checked out (otherwise we
 	// can't tell the difference between adds and check outs).
@@ -53,6 +52,9 @@ public class ThreadPool extends SpyObject {
 
 	// Set to true when shutdown is called.
 	private boolean shutdown=false;
+
+	// 16,384 should be enough for anybody.
+	private static final int DEFAULT_LIST_LIMIT=16384;
 
 	/**
 	 * Get an instance of ThreadPool.
@@ -69,7 +71,7 @@ public class ThreadPool extends SpyObject {
 				+ " is an invalid priority.");
 		}
 
-		tasks=new Stack();
+		tasks=new LimitedList(DEFAULT_LIST_LIMIT);
 		threads=new java.util.ArrayList(n);
 		monitor=new Object();
 
@@ -100,7 +102,7 @@ public class ThreadPool extends SpyObject {
 	 */
 	public void addTask(Runnable r) {
 		synchronized(tasks) {
-			tasks.addElement(r);
+			tasks.add(r);
 			tasks.notify();
 		}
 	}
@@ -265,7 +267,7 @@ public class ThreadPool extends SpyObject {
 
 	private class RunThread extends Thread {
 		private Object monitor=null;
-		private Stack tasks=null;
+		private LimitedList tasks=null;
 		private boolean going=true;
 		private int threadId=0;
 
@@ -273,7 +275,7 @@ public class ThreadPool extends SpyObject {
 		private Object running=null;
 		private long start=0;
 
-		public RunThread(ThreadGroup tg, Stack tasks, Object monitor) {
+		public RunThread(ThreadGroup tg, LimitedList tasks, Object monitor) {
 			super(tg, "RunThread");
 
 			runningMutex=new String("runningMutex");
@@ -294,11 +296,17 @@ public class ThreadPool extends SpyObject {
 			StringBuffer sb=new StringBuffer(128);
 			sb.append(super.toString());
 
+			int size=tasks.size();
+
+			sb.append(" - ");
+			sb.append(size);
+			sb.append(" queued, ");
+
 			synchronized(runningMutex) {
 				if(running==null) {
-					sb.append(" - idle");
+					sb.append(" idle");
 				} else {
-					sb.append(" - running ");
+					sb.append(" running ");
 					sb.append(running.getClass().getName());
 					sb.append(" for ");
 					sb.append(System.currentTimeMillis() - start);
@@ -331,13 +339,13 @@ public class ThreadPool extends SpyObject {
 		public void run() {
 			while(going) {
 				try {
-					Runnable r=(Runnable)tasks.pop();
+					Runnable r=(Runnable)tasks.removeFirst();
 					// Let the monitor know we got one.
 					synchronized(monitor) {
 						monitor.notify();
 					}
 					run(r);
-				} catch(EmptyStackException e) {
+				} catch(NoSuchElementException e) {
 					// If the stack is empty, wait for something to get added.
 					synchronized(tasks) {
 						try {

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: QuickTests.java,v 1.4 2002/10/18 07:11:04 dustin Exp $
+// $Id: QuickTests.java,v 1.5 2002/12/05 08:07:04 dustin Exp $
 
 package net.spy.test;
 
@@ -35,6 +35,7 @@ public class QuickTests extends TestSuite {
 		rv.addTest(PKTest.suite());
 		rv.addTest(WeakHashSetTest.suite());
 		rv.addTest(ShortestPathTest.suite());
+		rv.addTest(LimitedListTest.suite());
 		return(rv);
 	}
 
