@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.15 2002/11/05 23:19:16 knitterb Exp $
+// $Id: SPGen.java,v 1.16 2002/11/06 18:47:00 knitterb Exp $
 
 package net.spy.util;
 
@@ -42,7 +42,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="net.spy.db.DBSP";
-	private String version="$Revision: 1.15 $";
+	private String version="$Revision: 1.16 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -52,6 +52,7 @@ public class SPGen extends Object {
 	private List results=null;
 	private List args=null;
 	private boolean debug=false;
+	private int timeout=0;
 
 	private static Set types=null;
 
@@ -431,6 +432,9 @@ public class SPGen extends Object {
 				+ "\t\tsetDebug(true);\n");
 		}
 
+		// set the timeout variable
+		out.println("\t\tsetQueryTimeout("+timeout+");\n");
+
 		// Figure out whether we're a DBSP or a DBSQL
 		if(superclass.equals("net.spy.db.DBSP") ||
 				superclass.equals("net.spy.db.DBCP")) {
@@ -625,6 +629,8 @@ public class SPGen extends Object {
 						pkg+=tmp;
 					} else if(section.equals("cachetime")) {
 						cachetime=Long.parseLong(tmp);
+					} else if(section.equals("timeout")) {
+						timeout=Integer.parseInt(tmp);
 					} else if(section.equals("superclass")) {
 						user_superclass=new StringBuffer(96);
 						user_superclass.append(tmp);

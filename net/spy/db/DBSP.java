@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.9 2002/11/05 23:18:51 knitterb Exp $
+// $Id: DBSP.java,v 1.10 2002/11/06 18:47:00 knitterb Exp $
 
 package net.spy.db;
 
@@ -46,6 +46,9 @@ public abstract class DBSP extends SpyCacheDB {
 	// Caching info
 	private long cachetime=0;
 
+	// timeout
+	private int timeout=0;
+
 	private boolean debug=false;
 
 	// The query
@@ -83,6 +86,12 @@ public abstract class DBSP extends SpyCacheDB {
 		prepare();
 
 		ResultSet rs=null;
+
+		if (debug) {
+			System.out.println("Setting timeout to: "+timeout);
+		}
+		pst.setQueryTimeout(timeout);
+
 		rs=pst.executeQuery();
 
 		if (debug) {
@@ -107,6 +116,12 @@ public abstract class DBSP extends SpyCacheDB {
 	public int executeUpdate() throws SQLException  {
 		int rv=0;
 		prepare();
+
+		if (debug) {
+			System.out.println("Setting timeout to: "+timeout);
+		}
+		pst.setQueryTimeout(timeout);
+
 		rv=pst.executeUpdate();
 		return(rv);
 	}
@@ -274,6 +289,21 @@ public abstract class DBSP extends SpyCacheDB {
 	protected void resetArgs() {
 		arguments.clear();
 	}
+
+	/**
+	 * Set the timeout for this query
+	 */
+	public void setQueryTimeout(int timeout) {
+		this.timeout=timeout;
+	}
+
+	/**
+	 * Get the timeout for this query
+	 */
+	public int getQueryTimeout() {
+		return(this.timeout);
+	}
+		
 
 	/**
 	 * Set the stored procedure to the given value.
