@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: AbstractLogger.java,v 1.1 2002/11/04 21:13:56 dustin Exp $
+// $Id: AbstractLogger.java,v 1.2 2002/11/05 06:06:52 dustin Exp $
 
 package net.spy.log;
 
@@ -83,7 +83,7 @@ public abstract class AbstractLogger implements Logger {
 	}
 
 	/** 
-	 * Is debug enabled for this logger?
+	 * True if debug is enabled for this logger.
 	 * Default implementation always returns false
 	 * 
 	 * @return true if debug messages would be displayed
@@ -93,7 +93,7 @@ public abstract class AbstractLogger implements Logger {
 	}
 
 	/** 
-	 * Is info enabled for this logger?
+	 * True if debug is enabled for this logger.
 	 * Default implementation always returns false
 	 * 
 	 * @return true if info messages would be displayed
