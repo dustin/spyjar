@@ -23,7 +23,132 @@ import net.spy.util.SpyUtil;
  * SNPP client.
  */
 public class SNPP extends SpyObject {
-	private Socket s=null;
+
+	private static final int STATUS_TYPE_LENGTH=1;
+	private static final int STATUS_LENGTH=3;
+
+	/** 
+	 * Response code indicating a line of multiline help.
+	 */
+	public static final int MULTILINE_HELP=214;
+
+	/** 
+	 * Response code indicating single line help.
+	 */
+	public static final int SINGLELINE_HELP=218;
+
+	/** 
+	 * Response code to acknowldege a quit command.
+	 */
+	public static final int QUIT_ACK=221;
+
+	/** 
+	 * Response code inicating a successful transaction.
+	 */
+	public static final int OK=250;
+
+	/** 
+	 * Response code indicating a fatal error which will be followed by a
+	 * terminated connection.
+	 */
+	public static final int FATAL_ERROR=421;
+
+	/** 
+	 * Response code indicating that a command was issued that was not
+	 * implemented.
+	 */
+	public static final int COMMAND_NOT_IMPLEMENTED=500;
+
+	/** 
+	 * Response code indicating a command was implemented in duplicate.
+	 */
+	public static final int DUPLICATE_COMMAND_ENTRY=503;
+
+	/** 
+	 * Response code indicating a command failed (invalid pager ID, illegal
+	 * parameter, etc...).
+	 */
+	public static final int ADMIN_FAILURE=550;
+	/** 
+	 * Response code indicating a command failed (system problem).
+	 */
+	public static final int SYSTEM_FAILURE=554;
+
+	/** 
+	 * Response code indicating too many of something was entered (i.e. too
+	 * many pager IDs).
+	 */
+	public static final int MAX_ENTRIES_EXCEEDED=552;
+
+	/** 
+	 * Response code indicating DATA command was accepted and input should
+	 * begin.
+	 */
+	public static final int DATA_OK=354;
+
+	/** 
+	 * Response code indicating a message was delivered and is awaiting a reply
+	 * ACK.
+	 */
+	public static final int MSG_AWAITING_ACK=860;
+
+	/** 
+	 * Response code indicating a message was delivered and is awaiting a
+	 * reply.
+	 */
+	public static final int MSG_AWAITING_REPLY=861;
+
+	/** 
+	 * Response code indicating a message has been delivered.
+	 */
+	public static final int MSG_DELIVERED=880;
+
+	/** 
+	 * Response code indicating a response to a message is available.
+	 */
+	public static final int RESPONSE=889;
+
+	/** 
+	 * Response code indicating a message was queued for delivery.
+	 */
+	public static final int MSG_QUEUED=960;
+
+	/** 
+	 * Message type indicating success.
+	 */
+	public static final int MTYPE_SUCCESS=2;
+
+	/** 
+	 * Message type indicating DATA was accepted and server is ready for input.
+	 */
+	public static final int MTYPE_DATA_SUCCESS=3;
+
+	/** 
+	 * Message type indicating a permanent failure.
+	 */
+	public static final int MTYPE_PERM_FAILURE=4;
+
+	/** 
+	 * Message type indicating a temporary failure.
+	 */
+	public static final int MTYPE_TEMP_FAILURE=5;
+
+	/** 
+	 * Message type indicating an unsuccesful two-way specific transaction.
+	 */
+	public static final int MTYPE_UNSUCCESSFUL_2WAY=7;
+
+	/** 
+	 * Message type indicating a successful two-way transaction.
+	 */
+	public static final int MTYPE_SUCCESS_2WAY=8;
+
+	/** 
+	 * Successful queued transaction.
+	 */
+	public static final int MTYPE_SUCCESS_QUEUED=9;
+
+	private Socket socket=null;
 	private InputStream in=null;
 	private OutputStream out=null;
 	private BufferedReader din=null;
@@ -33,18 +158,14 @@ public class SNPP extends SpyObject {
 	private boolean goesBothWays=false;
 	private String msgTag=null;
 
-	/**
-	 * Current full line received from the SNPP server.
-	 */
-	private String currentline=null;
-	/**
-	 * Current message received from the SNPP server.
-	 */
-	private String currentmessage=null;
-	/**
-	 * Current status received from SNPP server.
-	 */
-	private int currentstatus=-1;
+	// Current full line received from the SNPP server.
+	private String currentLine=null;
+	// Current message received from the SNPP server.
+	private String currentMessage=null;
+	// Current status received from SNPP server.
+	private int currentStatus=-1;
+	// Current type of status
+	private int currentStatusType=-1;
 
 	/**
 	 * Get a new SNPP object connected to host:port
@@ -61,15 +182,15 @@ public class SNPP extends SpyObject {
 	 */
 	public SNPP(String host, int port, int timeout)
 		throws IOException, UnknownHostException {
-		s = new Socket(host, port);
+		socket = new Socket(host, port);
 
 		if(timeout>0) {
-			s.setSoTimeout(timeout);
+			socket.setSoTimeout(timeout);
 		}
 
-		in=s.getInputStream();
+		in=socket.getInputStream();
 		din = new BufferedReader(new InputStreamReader(in));
-		out=s.getOutputStream();
+		out=socket.getOutputStream();
 		prout=new PrintWriter(out);
 
 		getaline();
@@ -96,21 +217,28 @@ public class SNPP extends SpyObject {
 	 * Current full line received from the SNPP server.
 	 */
 	public String getCurrentline() {
-		return(currentline);
+		return(currentLine);
 	}
 
 	/**
 	 * Current message received from the SNPP server.
 	 */
 	public String getCurrentmessage() {
-		return(currentmessage);
+		return(currentMessage);
 	}
 
 	/**
 	 * Current status received from SNPP server.
 	 */
-	public int getCurrentstatus() {
-		return(currentstatus);
+	public int getCurrentStatus() {
+		return(currentStatus);
+	}
+
+	/** 
+	 * Current status type received from SNPP server.
+	 */
+	public int getCurrentStatusType() {
+		return(currentStatusType);
 	}
 
 	/**
@@ -162,7 +290,7 @@ public class SNPP extends SpyObject {
 		try {
 			cmd("data");
 		} catch(Exception e) {
-			if(currentstatus != 354) {
+			if(currentStatusType != MTYPE_DATA_SUCCESS) {
 				throw e;
 			}
 		}
@@ -202,6 +330,9 @@ public class SNPP extends SpyObject {
 		} catch(Exception e) {
 			// This is a nonstandard command and is likely to throw an
 			// exception.
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Failed to set priority");
+			}
 		}
 		send();
 	}
@@ -215,8 +346,8 @@ public class SNPP extends SpyObject {
 		cmd("send");
 		if(goesBothWays) {
 			// If it looks 2way, we get the stuff
-			if(currentstatus >= 860) {
-				String a[]=SpyUtil.split(" ", currentmessage);
+			if(currentStatusType == MTYPE_SUCCESS_2WAY) {
+				String a[]=SpyUtil.split(" ", currentMessage);
 				msgTag=a[0] + " " + a[1];
 			}
 		}
@@ -236,8 +367,8 @@ public class SNPP extends SpyObject {
 		String ret=null;
 		if(goesBothWays) {
 			cmd("msta " + tag);
-			if(currentstatus == 889) {
-				String tmp=currentmessage;
+			if(currentStatus == RESPONSE) {
+				String tmp=currentMessage;
 				tmp=tmp.substring(tmp.indexOf(" ")).trim();
 				tmp=tmp.substring(tmp.indexOf(" ")).trim();
 				tmp=tmp.substring(tmp.indexOf(" ")).trim();
@@ -297,7 +428,7 @@ public class SNPP extends SpyObject {
 		prout.flush();
 		getaline();
 		if(!ok()) {
-			throw new Exception(currentmessage + " (" + command + ")");
+			throw new Exception(currentMessage + " (" + command + ")");
 		}
 	}
 
@@ -305,20 +436,22 @@ public class SNPP extends SpyObject {
 	 * Close the connection to the SNPP server.
 	 */
 	public void close() {
-		if(s!=null) {
+		if(socket!=null) {
 			try {
 				cmd("quit");
 			} catch(Exception e) {
 				// Don't care, we tried...
+				getLogger().warn("Exception while quitting", e);
 			} finally {
 				try {
-					s.close();
+					socket.close();
 				} catch(IOException e) {
 					// Don't care anymore
+					getLogger().warn("Exception while quitting", e);
 				}
 			}
 			// Go ahead and set s to null anyway.
-			s=null;
+			socket=null;
 		}
 	}
 
@@ -332,62 +465,45 @@ public class SNPP extends SpyObject {
 
 	// Return whether the current status number is within an OK range.
 	private boolean ok() {
-		boolean r = false;
-		if(currentstatus < 300 ) {
-			if(currentstatus >= 200) {
-				r = true;
-			}
+		boolean rv = false;
+		if(currentStatusType == MTYPE_SUCCESS) {
+			rv = true;
 		}
 		// Specific stuff for two-way
-		if(goesBothWays && r == false) {
-			if(currentstatus < 890 && currentstatus >= 860) {
+		if(goesBothWays && !rv) {
+			if(currentStatusType == MTYPE_SUCCESS_2WAY) {
 				// delivered, processing or final
-				r=true;
-			} else if(currentstatus < 970 && currentstatus >= 960) {
+				rv=true;
+			} else if(currentStatusType == MTYPE_SUCCESS_QUEUED) {
 				// Queued transaction
-				r=true;
+				rv=true;
 			}
 		}
-		return(r);
+		return(rv);
 	}
 
 	// Return a line from the SNPP server.
 	private void getaline() throws IOException {
-		String stmp;
-		Integer itmp;
-
 		// Get the line
-		currentline = din.readLine();
+		currentLine = din.readLine();
 
 		// make sure we read something
-		if(currentline==null) {
+		if(currentLine==null) {
 			throw new IOException("Read returned null, disconnected?");
 		}
 
 		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("<< " + currentline);
+			getLogger().debug("<< " + currentLine);
 		}
 
 		// Extract the message
-		currentmessage = currentline.substring(4);
+		currentMessage = currentLine.substring(STATUS_LENGTH+1);
 
-		// Calculate the status number
-		stmp = currentline.substring(0, 3);
-		itmp = Integer.valueOf(stmp);
-		currentstatus = itmp.intValue();
+		// Calculate the status number and type
+		String stmp = currentLine.substring(0, STATUS_LENGTH);
+		currentStatus = Integer.parseInt(stmp);
+		stmp = currentLine.substring(0, STATUS_TYPE_LENGTH);
+		currentStatusType = Integer.parseInt(stmp);
 	}
 
-	/**
-	 * Test page routine, send pages from the commandline.
-	 *
-	 * <p>
-	 *
-	 * Usage:<br>
-	 * SNPP hostname port username password
-	 */
-	public static void main(String args[]) throws Exception {
-		SNPP snpp=new SNPP(args[0], Integer.parseInt(args[1]));
-		snpp.sendpage(args[2], args[3]);
-		snpp.close();
-	}
 }
