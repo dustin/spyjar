@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Cron.java,v 1.3 2002/11/20 04:52:33 dustin Exp $
+// $Id: Cron.java,v 1.4 2003/03/28 20:29:30 knitterb Exp $
 
 package net.spy.cron;
 
@@ -67,6 +67,10 @@ public class Cron extends SpyThread {
 		}
 	}
 
+	public boolean isRunning() {
+		return(this.stillRunning);
+	}
+
 	public void run() {
 		while(stillRunning) {
 			// Check all the running jobs.
@@ -94,6 +98,9 @@ public class Cron extends SpyThread {
 				if( (now-validJobFound) > maxIdleTime) {
 					getLogger().debug("Been a long time "
 						+ "since I had a job.  Shutting down.");
+					getLogger().debug("now: "+now);
+					getLogger().debug("validJobFound: "+validJobFound);
+					getLogger().debug("maxIdleTime: "+maxIdleTime);
 					shutdown();
 				}
 				soonestJob=60000;
