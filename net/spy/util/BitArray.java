@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: BitArray.java,v 1.1 2002/11/06 09:04:24 dustin Exp $
+// $Id: BitArray.java,v 1.2 2002/11/06 20:01:40 dustin Exp $
 
 package net.spy.util;
 
@@ -61,7 +61,66 @@ public class BitArray extends Object {
 	}
 
 	/** 
-	 * Get a few bits from the front of the list.
+	 * Remove a give number of bits from the MSB side.
+	 * 
+	 * @param howMany bits to remove
+	 */
+	public void removeMSBBits(int howMany) {
+		removeBits(0, howMany);
+	}
+
+	/** 
+	 * Remove a give number of bits from the LSB side.
+	 * 
+	 * @param howMany bits to remove
+	 */
+	public void removeLSBBits(int howMany) {
+		removeBits(bitList.size()-howMany, howMany);
+	}
+
+	/** 
+	 * Remove a specific number of bits from a specific location.
+	 * 
+	 * @param from starting point
+	 * @param howMany number of bits to remove.
+	 */
+	public void removeBits(int from, int howMany) {
+		bitList.subList(from, from+howMany).clear();
+	}
+
+	/** 
+	 * Get a given number of bits from a given offset.
+	 * 
+	 * @param from starting offset (from MSB side).
+	 * @param number number of bits to retrieve
+	 *
+	 * @return an integer containing those bits
+	 * @exception IllegalArgumentException if number &gt; 32
+	 * @exception IndexOutOfBoundsException if the bit range would specify
+	 * 				bits we don't have
+	 */
+	public int getBits(int from, int number) {
+		if(number > 31) {
+			throw new IllegalArgumentException(
+				"Bits requested would exceed integer precision.");
+		}
+
+		int rv=0;
+		// Get a sublist to walk
+		List l=bitList.subList(from, from+number);
+		for(Iterator i=l.iterator(); i.hasNext();) {
+			Integer iTmp=(Integer)i.next();
+			// Make room for the new bit
+			rv<<=1;
+			// Add it
+			rv|=iTmp.intValue();
+		}
+
+		return(rv);
+	}
+
+	/** 
+	 * Get a given number of the most significant bits.
 	 * 
 	 * @param numBits number of bits to get
 	 * @return an int representing the bits requested
@@ -69,25 +128,21 @@ public class BitArray extends Object {
 	 * @exception IllegalArgumentException if numBits greater than 31 or
 	 * 			the number of bits remaining in the bit list
 	 */
-	public int getBits(int numBits) {
-		if(numBits > 31) {
-			throw new IllegalArgumentException("Too many bits requested.");
-		}
-		if(numBits > size()) {
-			throw new IllegalArgumentException("Too many bits requested.");
-		}
-		int rv=0;
-		for(Iterator i=bitList.iterator(); i.hasNext() && numBits>0; ) {
-			Integer iTmp=(Integer)i.next();
-			// Make room for the new bit
-			rv<<=1;
-			// Add it
-			rv|=iTmp.intValue();
-			i.remove();
-			numBits--;
-		}
+	public int getMSBBits(int numBits) {
+		return(getBits(0, numBits));
+	}
 
-		return(rv);
+	/** 
+	 * Get a given number of the least significant bits.
+	 * 
+	 * @param numBits number of bits to get
+	 * @return an int representing the bits requested
+	 *
+	 * @exception IllegalArgumentException if numBits greater than 31 or
+	 * 			the number of bits remaining in the bit list
+	 */
+	public int getLSBBits(int numBits) {
+		return(getBits((bitList.size()-numBits), numBits));
 	}
 
 	/** 

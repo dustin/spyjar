@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: BitArrayTest.java,v 1.1 2002/11/06 09:04:24 dustin Exp $
+// $Id: BitArrayTest.java,v 1.2 2002/11/06 20:01:40 dustin Exp $
 
 package net.spy.test;
 
@@ -69,19 +69,23 @@ public class BitArrayTest extends TestCase {
 	}
 
 	/** 
-	 * Test that we can get bits.
+	 * Test that we can get MSB bits.
 	 */
-	public void testGetBits() {
+	public void testGetMSBBits() {
 		BitArray bitArray=new BitArray();
+		// 1101011
 		bitArray.addBits(0x6b, 7);
-		assertEquals("One didn't work", 1, bitArray.getBits(1));
-		assertEquals("Two didn't work", 2, bitArray.getBits(2));
-		assertEquals("Three didn't work", 5, bitArray.getBits(3));
+		assertEquals("One didn't work", 1, bitArray.getMSBBits(1));
+		bitArray.removeMSBBits(1);
+		assertEquals("Two didn't work", 2, bitArray.getMSBBits(2));
+		bitArray.removeMSBBits(2);
+		assertEquals("Three didn't work", 5, bitArray.getMSBBits(3));
+		bitArray.removeMSBBits(3);
 
 		try {
-			bitArray.getBits(16);
+			bitArray.getMSBBits(16);
 			fail("Allowed me to get more bits than existed.");
-		} catch(IllegalArgumentException e) {
+		} catch(IndexOutOfBoundsException e) {
 			// OK
 		}
 
@@ -92,12 +96,46 @@ public class BitArrayTest extends TestCase {
 		bitArray.addBits(0xffff, 16);
 
 		try {
-			bitArray.getBits(32);
+			bitArray.getMSBBits(32);
 			fail("Allowed me to get more than 32 bits.");
 		} catch(IllegalArgumentException e) {
 			// OK
 		}
 
+	}
+
+	/** 
+	 * Test that we can get LSB bits.
+	 */
+	public void testGetLSBBits() {
+		BitArray bitArray=new BitArray();
+		// 1101011
+		bitArray.addBits(0x6b, 7);
+		assertEquals("One didn't work", 1, bitArray.getLSBBits(1));
+		bitArray.removeLSBBits(1);
+		assertEquals("Two didn't work", 1, bitArray.getLSBBits(2));
+		bitArray.removeLSBBits(2);
+		assertEquals("Three didn't work", 5, bitArray.getLSBBits(3));
+
+		try {
+			bitArray.getLSBBits(16);
+			fail("Allowed me to get more bits than existed.");
+		} catch(IndexOutOfBoundsException e) {
+			// OK
+		}
+
+		// Add some bits, just to check the range
+		bitArray.addBits(0xffff, 16);
+		bitArray.addBits(0xffff, 16);
+		bitArray.addBits(0xffff, 16);
+		bitArray.addBits(0xffff, 16);
+
+		try {
+			bitArray.getLSBBits(32);
+			fail("Allowed me to get more than 32 bits.");
+		} catch(IllegalArgumentException e) {
+			// OK
+		}
 	}
 
 }
