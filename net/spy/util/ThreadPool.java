@@ -1,11 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.9 2003/04/05 02:07:14 dustin Exp $
+// $Id: ThreadPool.java,v 1.10 2003/04/11 00:57:05 dustin Exp $
 
 package net.spy.util;
 
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -40,13 +41,13 @@ import net.spy.log.LoggerFactory;
 public class ThreadPool extends ThreadGroup {
 
 	// The threads we're managing.
-	private List threads=null;
+	private Collection threads=null;
 	// The tasks for the threads to do.
-	private LimitedList tasks=null;
+	private Collection tasks=null;
 
 	// This is what we monitor for things being checked out (otherwise we
 	// can't tell the difference between adds and check outs).
-	private Object monitor=null;
+	private ThreadPoolObserver monitor=null;
 
 	// Private thread ID allocator for the inner class.
 	private static int threadIds=0;
@@ -56,6 +57,11 @@ public class ThreadPool extends ThreadGroup {
 
 	// 16,384 should be enough for anybody.
 	private static final int DEFAULT_LIST_LIMIT=16384;
+
+	private boolean started=false;
+
+	// The priority for all threads we create
+	private int priority=Thread.NORM_PRIORITY;
 
 	/**
 	 * Get an instance of ThreadPool.
@@ -72,17 +78,7 @@ public class ThreadPool extends ThreadGroup {
 			throw new IllegalArgumentException(priority
 				+ " is an invalid priority.");
 		}
-
-		tasks=new LimitedList(DEFAULT_LIST_LIMIT);
-		threads=new java.util.ArrayList(n);
-		monitor=new Object();
-
-		// Initialize all of the threads.
-		for(int i=0; i<n; i++) {
-			RunThread rt=new RunThread(this, tasks, monitor);
-			rt.setPriority(priority);
-			threads.add(rt);
-		}
+		setPriority(priority);
 	}
 
 	/**
@@ -93,6 +89,67 @@ public class ThreadPool extends ThreadGroup {
 	 */
 	public ThreadPool(String name, int n) {
 		this(name, n, Thread.NORM_PRIORITY);
+	}
+
+	/** 
+	 * Start the ThreadPool.
+	 */
+	public synchronized void start() {
+		// make sure we haven't already started
+		if(started) {
+			throw new IllegalStateException("Already started");
+		}
+		// Make sure there's a place to put the tasks
+		if(tasks==null) {
+			tasks=new LimitedList(getListLimit());
+		}
+		// Make sure there's a place to put the threads
+		if(threads==null) {
+			threads=new java.util.ArrayList(getStartSize());
+		}
+		// We'll also need an object monitor
+		if(monitor==null) {
+			monitor=new ThreadPoolObserver();
+		}
+		// Make sure we've got a manager, too
+		if(manager==null) {
+			manager=new ThreadPoolManager();
+		}
+		// Set up the manager
+		manager.setThreadPool(this);
+		manager.start();
+	}
+
+	/** 
+	 * Create a new worker thread in the pool.
+	 */
+	void createThread() {
+		RunThread rt=new RunThread(this, tasks, monitor);
+		rt.setPriority(priority);
+		threads.add(rt);
+	}
+
+	/** 
+	 * Shut down a thread.
+	 */
+	synchronized void destroyThread() {
+		boolean shutOneDown=false;
+		// Try to shut down something that doesn't appear to be running
+		// anything (although it may start as we go)
+		for(Iterator i=threads.iterator(); candidate==null && i.hasNext(); ) {
+			RunThread rt=(runThread)i.next();
+			if(!rt.isRunning()) {
+				rt.shutdown();
+				shutOneDown=true;
+			}
+
+			// If we haven't shut one down yet, and this is the last one,
+			// shut it down.
+			if((!shutOneDown) && (!i.hasNext())) {
+				rt.shutdown();
+				shutOneDown();
+			}
+		}
 	}
 
 	/** 
@@ -108,12 +165,75 @@ public class ThreadPool extends ThreadGroup {
 		return(sb.toString());
 	}
 
+	/** 
+	 * Get the priority that will be used for any new threads within this
+	 * thread group.
+	 */
+	public int getPriority() {
+		return(priority);
+	}
+
+	/** 
+	 * Set the priority to be used for any new threads within this threaad
+	 * group.
+	 */
+	public void setPriority(int priority) {
+		this.priority=priority;
+	}
+
+	/** 
+	 * Get the list of worker threads belonging to this group.
+	 */
+	Collection getThreads() {
+		return(threads);
+	}
+
+	/** 
+	 * Get the list of tasks yet to be claimed by any worker threads.
+	 */
+	Collection getTasks() {
+		return(tasks);
+	}
+
+	/** 
+	 * Set the collection to contain the tasks on which this ThreadPool
+	 * will be listening.
+	 */
+	public void setTasks(Collection tasks) {
+		if(started) {
+			throw new IllegalStateException("Can't set tasks after the "
+				+ "pool has started.");
+		}
+		this.tasks=tasks;
+	}
+
+	/** 
+	 * Get the monitor that receives notifications when a worker thread
+	 * finishes a job.
+	 */
+	public ThreadPoolObserver getMonitor() {
+		return(monitor);
+	}
+
+	public void setMonitor(ThreadPoolObserver monitor) {
+		this.monitor=monitor;
+	}
+
+	// Make sure the thing's started
+	private synchronized void checkStarted() {
+		if(!started) {
+			start();
+			started=true;
+		}
+	}
+
 	/**
 	 * Add a task for one of the threads to execute.
 	 *
 	 * @see ThreadPoolRunnable
 	 */
 	public void addTask(Runnable r) {
+		checkStarted();
 		synchronized(tasks) {
 			tasks.add(r);
 			tasks.notify();
@@ -279,16 +399,18 @@ public class ThreadPool extends ThreadGroup {
 	// //////////////////////////////////////////////////////////////////////
 
 	private class RunThread extends Thread {
-		private Object monitor=null;
+		private ThreadPoolObserver monitor=null;
 		private LimitedList tasks=null;
 		private boolean going=true;
 		private int threadId=0;
 
 		private String runningMutex=null;
-		private Object running=null;
+		private Runnable running=null;
 		private long start=0;
 
-		public RunThread(ThreadGroup tg, LimitedList tasks, Object monitor) {
+		public RunThread(ThreadGroup tg, LimitedList tasks,
+			ThreadPoolObserver monitor) {
+
 			super(tg, "RunThread");
 
 			runningMutex=new String("runningMutex");
@@ -336,6 +458,17 @@ public class ThreadPool extends ThreadGroup {
 			going=false;
 		}
 
+		/** 
+		 * Ask if this thing is currently running something.
+		 *
+		 * This offer subject to local taxes and race conditions.
+		 * 
+		 * @return true if this object is running a task
+		 */
+		public boolean isRunning() {
+			return(running != null);
+		}
+
 		private void run(Runnable r) {
 			try {
 				// Record the runnable
@@ -358,7 +491,7 @@ public class ThreadPool extends ThreadGroup {
 					Runnable r=(Runnable)tasks.removeFirst();
 					// Let the monitor know we got one.
 					synchronized(monitor) {
-						monitor.notify();
+						monitor.completedJob(r);
 					}
 					run(r);
 				} catch(NoSuchElementException e) {
