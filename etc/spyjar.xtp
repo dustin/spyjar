@@ -75,7 +75,10 @@
 			Basically, anything I write that I plan on reusing goes into this jar.
 
 		<p>
-			<a href="../spyjar/j2/doc/">Latest Documentation</a>
+			<a href="../spyjar/doc/2/">Latest Documentation for the 2.x series</a>
+		<p>
+		<p>
+			<a href="../spyjar/j2/doc/">Latest Documentation for the 1.x series</a>
 		<p>
 			<a href="http://sourceforge.net/projects/spyjar/"> <img
 			src="http://sourceforge.net/sflogo.php?group_id=61122&type=1"
@@ -95,13 +98,13 @@
 	</dist>
 
 	<dist>
-		<disturl>../soft/spy-1.0.36.jar</disturl>
-		<distversion>1.0.36</distversion>
+		<disturl>../soft/spy-1.0.37.jar</disturl>
+		<distversion>1.0.37</distversion>
 	</dist>
 
 	<dist>
-		<disturl>../soft/spy-big-1.0.36.jar</disturl>
-		<distversion>1.0.36</distversion>
+		<disturl>../soft/spy-big-1.0.37.jar</disturl>
+		<distversion>1.0.37</distversion>
 		<note>*big*: source, documentation, and test suite included</note>
 	</dist>
 

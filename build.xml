@@ -251,7 +251,7 @@
 			<entry key="PROJECTSDIR"
 				value="/afs/spy.net/home/dustin/public_html/projects"/>
 			<entry key="DOCINSTDIR"
-				value="/afs/spy.net/home/dustin/public_html/spyjar/j2/doc/"/>
+				value="/afs/spy.net/home/dustin/public_html/spyjar/doc/2/"/>
 			<!-- Location of extra jars for classpaths -->
 			<entry key="JARPATH" value="${user.home}/lib/java"/>
 			<!-- Driver to use for DB tests, expected to be found in JARPATH -->
