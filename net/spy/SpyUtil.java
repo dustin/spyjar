@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyUtil.java,v 1.4 2003/08/01 03:34:10 dustin Exp $
+// $Id: SpyUtil.java,v 1.5 2003/08/01 21:07:58 dustin Exp $
 
 package net.spy;
 
@@ -28,15 +28,6 @@ import net.spy.util.Enumeriterator;
  */
 
 public class SpyUtil {
-
-	/** 
-	 * True boolean.
-	 */
-	public static final Boolean TRUE=new Boolean(true);
-	/** 
-	 * False boolean.
-	 */
-	public static final Boolean FALSE=new Boolean(false);
 
 	/**
 	 * Shuffle (unsort) an array.
@@ -270,10 +261,10 @@ public class SpyUtil {
 	 * @return the Boolean instance
 	 */
 	public static Boolean getBoolean(String s) {
-		Boolean rv=FALSE;
+		Boolean rv=Boolean.FALSE;
 
 		if(s != null && s.equalsIgnoreCase("true")) {
-			rv=TRUE;
+			rv=Boolean.TRUE;
 		}
 
 		return(rv);
@@ -288,9 +279,9 @@ public class SpyUtil {
 	public static Boolean getBoolean(boolean b) {
 		Boolean rv=null;
 		if(b) {
-			rv=TRUE;
+			rv=Boolean.TRUE;
 		} else {
-			rv=FALSE;
+			rv=Boolean.FALSE;
 		}
 		return(rv);
 	}
