@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DefaultQuerySelector.java,v 1.5 2002/10/30 20:40:59 dustin Exp $
+// $Id: DefaultQuerySelector.java,v 1.6 2002/10/30 23:34:51 knitterb Exp $
 
 package net.spy.db;
 
@@ -28,13 +28,19 @@ import net.spy.SpyConfig;
  *
  * <table border="1">
  *  <tr>
- *   <th>Driver class prefix</th><th>Query Name</th>
+ *   <th>Driver class prefix</th><th>Query Name</th><th>Driver *   Provider</th>
  *  </tr>
  *  <tr>
- *   <td>org.postgresql.</td><td>pgsql</td>
+ *   <td>org.postgresql.</td><td>pgsql</td><td>http://www.postgresql.org</td>
  *  </tr>
  *  <tr>
- *   <td>com.ashna.jturbo.</td><td>mssql</td>
+ *   <td>oracle.jdbc.driver.</td><td>oracle</td><td>http://www.oracle.com</td>
+ *  </tr>
+ *  <tr>
+ *   <td>weblogic.jdbc.oci.</td><td>oracle</td><td>http://www.bea.com</td>
+ *  </tr>
+ *  <tr>
+ *   <td>com.ashna.jturbo.</td><td>mssql</td><td>&nbsp;</td>
  *  </tr>
  * </table>
  *
@@ -60,7 +66,16 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 	 * Initialize the prefix to name map.
 	 */
 	protected void initNameMap() {
+		// Postgres
 		registerNameMapping("org.postgresql.", "pgsql");
+
+		// Oracle
+		registerNameMapping("oracle.jdbc.driver.", "oracle");
+
+		// Weblogic's Oracle jDrvier
+		registerNameMapping("weblogic.jdbc.oci.", "oracle");
+
+		// Micro$oft MSSQL from 
 		registerNameMapping("com.ashna.jturbo.", "mssql");
 	}
 
@@ -88,16 +103,18 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 		String rv=null;
 
 		String tmp=conf.get("queryName");
+
 		if (tmp != null) {
 			rv=(String)queryMap.get(tmp);
-			if (rv==null) {
-				rv=(String)queryMap.get(DEFAULT_QUERY);
-			}
 		} else {
 			tmp=conf.get("dbDriverName");
 			if(tmp!=null) {
 				rv=getQuery(tmp, queryMap);
 			}
+		}
+
+		if (rv==null) {
+			rv=(String)queryMap.get(DEFAULT_QUERY);
 		}
 
 		return (rv);
