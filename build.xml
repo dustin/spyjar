@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.20 2003/01/09 07:40:22 dustin Exp $
+	$Id: build.xml,v 1.21 2003/03/11 09:10:02 dustin Exp $
 
 	-->
 
@@ -386,7 +386,7 @@
     </java>
   </target>
 
-	<target name="dbstuff" depends="types,resultset,preparedstatement,spfiles">
+	<target name="dbstuff" depends="types,resultsets,preparedstatement,spfiles">
 	</target>
 
 	<!-- type name map -->
@@ -409,13 +409,19 @@
 
 	<!-- Build the result set -->
 	<target name="checkrsupdate">
-		<uptodate property="rs.uptodate"
+		<uptodate property="crs.uptodate"
 			srcfile="net/spy/db/CachedResultSetStub.java"
 			targetfile="net/spy/db/CachedResultSet.java"/>
+		<uptodate property="prs.uptodate"
+			srcfile="net/spy/util/ProxyInterfaceImplementor.java"
+			targetfile="net/spy/db/ProxyResultSet.java"/>
 	</target>
 
+	<!-- Targets for result sets -->
+	<target name="resultsets" depends="cachers,proxyrs"/>
+
 	<!-- real target for the result set -->
-	<target name="resultset" unless="rs.uptodate"
+	<target name="cachers" unless="crs.uptodate"
 		depends="checkrsupdate,interfaceimplementor">
 		<javac
 			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
@@ -434,6 +440,19 @@
 		</java>
 	</target>
 
+	<target name="proxyrs" unless="prs.uptodate"
+		depends="checkrsupdate,proxyii">
+		<java classname="net.spy.util.ProxyInterfaceImplementor" >
+			<arg value="-interface"/>
+				<arg value="java.sql.ResultSet"/>
+			<arg value="-superclass"/>
+				<arg value="net.spy.SpyObject"/>
+			<arg value="-outputclass"/>
+				<arg value="net.spy.db.ProxyResultSet"/>
+			<classpath refid="myclasses"/>
+		</java>
+	</target>
+
 	<!-- Build the prepared statement set -->
 	<target name="checkpstupdate">
 		<uptodate property="pst.uptodate"
@@ -443,7 +462,7 @@
 
 	<!-- The real target for prepared statements -->
 	<target name="preparedstatement" unless="pst.uptodate"
-		depends="checkpstupdate,resultset,interfaceimplementor">
+		depends="checkpstupdate,resultsets,interfaceimplementor">
 		<javac
 			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
@@ -468,6 +487,15 @@
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
 			<classpath refid="myclasses"/>
 			<include name="net/spy/util/InterfaceImplementor.java"/>
+		</javac>
+	</target>
+
+	<target name="proxyii">
+		<javac
+			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
+			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
+			<classpath refid="myclasses"/>
+			<include name="net/spy/util/ProxyInterfaceImplementor.java"/>
 		</javac>
 	</target>
 

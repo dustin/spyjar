@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTest.java,v 1.7 2002/09/24 17:44:07 dustin Exp $
+// $Id: DBTest.java,v 1.8 2003/03/11 09:10:14 dustin Exp $
 
 package net.spy.test;
 
@@ -441,6 +441,31 @@ public class DBTest extends TestCase {
 		rs.close();
 	}
 
+	private void threeColumnTesterTwo(
+		ThreeColumnTest db, int first, int second, String third)
+		throws SQLException {
+
+		db.setFirst(first);
+		db.setSecond(second);
+		db.setThird(third);
+
+		ThreeColumnTest.Result rs=db.getResult();
+
+		if(!rs.next()) {
+			fail("No results returned");
+		}
+
+		assertEquals("first", rs.getFirst(), first);
+		assertEquals("second", rs.getSecond(), second);
+		assertEquals("third", rs.getThird(), third);
+
+		if(rs.next()) {
+			fail("Too many results returned.");
+		}
+
+		rs.close();
+	}
+
 	/** 
 	 * Test a DBSP call with three columns with early-binding parameters.
 	 */
@@ -450,6 +475,20 @@ public class DBTest extends TestCase {
 		threeColumnTesterEarlyBinding(db, 24, 7, "three sixty-five");
 		threeColumnTesterEarlyBinding(db, 8, 10, "or wallet sized");
 		threeColumnTesterEarlyBinding(db, 9, 5, "what a way to make a livin'");
+
+		db.close();
+	}
+
+	/** 
+	 * Test a DBSP call with three columns with early-binding parameters
+	 * and early-binding result sets.
+	 */
+	public void testThreeColumnsEarlyBindingWithResult() throws SQLException {
+		ThreeColumnTest db=new ThreeColumnTest(conf);
+
+		threeColumnTesterTwo(db, 24, 7, "three sixty-five");
+		threeColumnTesterTwo(db, 8, 10, "or wallet sized");
+		threeColumnTesterTwo(db, 9, 5, "what a way to make a livin'");
 
 		db.close();
 	}

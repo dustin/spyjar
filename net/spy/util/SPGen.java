@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.23 2003/01/04 10:36:41 dustin Exp $
+// $Id: SPGen.java,v 1.24 2003/03/11 09:10:12 dustin Exp $
 
 package net.spy.util;
 
@@ -38,6 +38,7 @@ public class SPGen extends Object {
 	private PrintWriter out=null;
 	private String classname=null;
 	private boolean isInterface=true;
+	private boolean wantsResultSet=false;
 
 	private String section="";
 	private String description="";
@@ -45,7 +46,7 @@ public class SPGen extends Object {
 	private String pkg="";
 	private String superclass=null;
 	private String superinterface=null;
-	private String version="$Revision: 1.23 $";
+	private String version="$Revision: 1.24 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -59,6 +60,8 @@ public class SPGen extends Object {
 	private int timeout=0;
 
 	private static Set types=null;
+	private static Map javaTypes=null;
+	private static Map javaResultTypes=null;
 
 	private boolean looseTypes=false;
 
@@ -94,6 +97,74 @@ public class SPGen extends Object {
 
 	private static synchronized void initTypes() {
 		if(types==null) {
+			javaTypes=new HashMap();
+			javaResultTypes=new HashMap();
+
+			// Map the jdbc types to useful java types
+			String t="java.sql.Types.BIT";
+			javaTypes.put(t, "Boolean");
+			javaResultTypes.put(t, "boolean");
+			t="java.sql.Types.DATE";
+			javaTypes.put(t, "Date");
+			javaResultTypes.put(t, "java.sql.Date");
+			t="java.sql.Types.DOUBLE";
+			javaTypes.put(t, "Double");
+			javaResultTypes.put(t, "double");
+			t="java.sql.Types.FLOAT";
+			javaTypes.put(t, "Float");
+			javaResultTypes.put(t, "float");
+			t="java.sql.Types.INTEGER";
+			javaTypes.put(t, "Int");
+			javaResultTypes.put(t, "int");
+			t="java.sql.Types.BIGINT";
+			javaTypes.put(t, "BigDecimal");
+			javaResultTypes.put(t, "java.math.BigDecimal");
+			t="java.sql.Types.NUMERIC";
+			javaTypes.put(t, "BigDecimal");
+			javaResultTypes.put(t, "java.math.BigDecimal");
+			t="java.sql.Types.DECIMAL";
+			javaTypes.put(t, "BigDecimal");
+			javaResultTypes.put(t, "java.math.BigDecimal");
+			t="java.sql.Types.SMALLINT";
+			javaTypes.put(t, "Int");
+			javaResultTypes.put(t, "int");
+			t="java.sql.Types.TINYINT";
+			javaTypes.put(t, "Int");
+			javaResultTypes.put(t, "int");
+			t="java.sql.Types.OTHER";
+			javaTypes.put(t, "Object");
+			javaResultTypes.put(t, "Object");
+			t="java.sql.Types.VARCHAR";
+			javaTypes.put(t, "String");
+			javaResultTypes.put(t, "String");
+			t="java.sql.Types.TIME";
+			javaTypes.put(t, "Time");
+			javaResultTypes.put(t, "java.sql.Time");
+			t="java.sql.Types.TIMESTAMP";
+			javaTypes.put(t, "Timestamp");
+			javaResultTypes.put(t, "java.sql.Timestamp");
+
+			// Same as above, without the java.sql. part
+			Map tmp=new HashMap();
+			for(Iterator i=javaTypes.entrySet().iterator(); i.hasNext(); ) {
+				Map.Entry me=(Map.Entry)i.next();
+				String k=(String)me.getKey();
+				if(k.startsWith("java.sql.Types.")) {
+					tmp.put(k.substring(15), me.getValue());
+				}
+			}
+			javaTypes.putAll(tmp);
+			tmp.clear();
+			for(Iterator i=javaResultTypes.entrySet().iterator();
+				i.hasNext(); ) {
+				Map.Entry me=(Map.Entry)i.next();
+				String k=(String)me.getKey();
+				if(k.startsWith("java.sql.Types.")) {
+					tmp.put(k.substring(15), me.getValue());
+				}
+			}
+			javaResultTypes.putAll(tmp);
+
 			Field fields[]=java.sql.Types.class.getDeclaredFields();
 			types=new HashSet();
 
@@ -249,6 +320,7 @@ public class SPGen extends Object {
 		out.println("import java.sql.Types;\n"
 			+ "import java.sql.Connection;\n"
 			+ "import java.sql.SQLException;\n"
+			+ "import java.sql.ResultSet;\n"
 			+ "import java.util.Map;\n"
 			+ "import java.util.HashMap;\n"
 			+ "import net.spy.SpyConfig;\n");
@@ -522,8 +594,61 @@ public class SPGen extends Object {
 			out.println(createSetMethod(p));
 		}
 
+		// If we want result sets, add them.
+		if(wantsResultSet) {
+			if(results.size() > 0) {
+				out.println(createExecuteMethods());
+				out.println(createResultClass());
+			}
+		}
+
 		out.println("}");
 
+	}
+
+	private String createExecuteMethods() {
+		String rv="\t/**\n"
+			+ "\t * Execute this query and get a Result object.\n"
+			+ "\t */\n"
+			+ "\tpublic Result getResult() throws SQLException {\n"
+			+ "\t\treturn(new Result(executeQuery()));\n"
+			+ "\t}\n";
+		return(rv);
+	}
+
+	private String createGetMethod(Result r) {
+		String rv="\t\t/**\n"
+			+ "\t\t * Get the " + r.getName() + " value.\n"
+			+ "\t\t */\n"
+			+ "\t\tpublic " + r.getJavaResultType()
+			+ " get" + methodify(r.getName()) + "() throws SQLException {\n"
+			+ "\t\t\treturn(get" + r.getJavaType()
+				+ "(\"" + r.getName() + "\"));\n"
+			+ "\t\t}\n\n";
+
+		return(rv);
+	}
+
+	private String createResultClass() {
+		String rv="";
+
+		// Class header
+		rv+="\t/**\n"
+			+ "\t * ResultSet object representing the results of this query.\n"
+			+ "\t */\n"
+			+ "\tpublic class Result extends net.spy.db.DBSPResult {\n"
+			+ "\n\t\tprivate Result(ResultSet rs) {\n"
+			+ "\t\t\tsuper(rs);\n"
+			+ "\t\t}\n\n";
+
+		for(Iterator i=results.iterator(); i.hasNext(); ) {
+			rv+=createGetMethod((Result)i.next());
+		}
+
+		// End of class
+		rv+="\n\t}\n";
+
+		return(rv);
 	}
 
 	// Fix > and < characters, and & characters if there are any
@@ -640,6 +765,8 @@ public class SPGen extends Object {
 						debug=true;
 					} else if (section.startsWith("loosetyp")) {
 						looseTypes=true;
+					} else if (section.startsWith("genresults")) {
+						wantsResultSet=true;
 					} else if (section.startsWith("sql.")) {
 						currentQuery=section.substring(4);
 						section="sql";
@@ -756,7 +883,7 @@ public class SPGen extends Object {
 				type=st.nextToken();
 
 				if(!isValidJDBCType(type)) {
-					System.err.println("Warning! Invalid JDBC type found:  "
+					throw new IllegalArgumentException("Invalid JDBC type: "
 						+ type);
 				}
 			} catch(NoSuchElementException e) {
@@ -778,6 +905,24 @@ public class SPGen extends Object {
 
 		public String getType() {
 			return(type);
+		}
+
+		public String getJavaType() {
+			String rv=(String)javaTypes.get(type);
+			if(rv==null) {
+				throw new RuntimeException("Whoops!  " + type
+					+ " must have been overlooked");
+			}
+			return(rv);
+		}
+
+		public String getJavaResultType() {
+			String rv=(String)javaResultTypes.get(type);
+			if(rv==null) {
+				throw new RuntimeException("Whoops!  " + type
+					+ " must have been overlooked");
+			}
+			return(rv);
 		}
 
 		public String getDescription() {
