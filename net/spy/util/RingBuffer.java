@@ -1,17 +1,23 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: RingBuffer.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: RingBuffer.java,v 1.2 2002/10/31 08:12:17 dustin Exp $
 
 package net.spy.util;
 
-import java.util.Collection;
+import java.util.AbstractCollection;
 import java.util.Iterator;
+import java.util.Collection;
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.ConcurrentModificationException;
 
 /**
- * A circular buffer.
+ * A circular buffer.  Ring buffers may have new entries appended to them,
+ * but may not otherwise be modified.  Individual entries may not be
+ * accessed directly, only via the iterator.
  */
-public class RingBuffer extends Object {
+public class RingBuffer extends AbstractCollection {
 
 	private Object buf[]=null;
 	private int start=0;
@@ -25,16 +31,40 @@ public class RingBuffer extends Object {
 	public RingBuffer(int size) {
 		super();
 		buf=new Object[size];
-		for(int i=0; i<size; i++) {
-			buf[i]=null;
+		Arrays.fill(buf, null);
+	}
+
+	/** 
+	 * Get a RingBuffer at a particular size filled from the given
+	 * Collection.
+	 * 
+	 * @param size the maximum number of objects to be held in the ring
+	 * @param fill a Collection whose elements will be used to fill the buffer
+	 */
+	public RingBuffer(int size, Collection fill) {
+		this(size);
+		for(Iterator i=fill.iterator(); i.hasNext(); ) {
+			add(i.next());
 		}
+	}
+
+	/** 
+	 * Add a new object to the ring.
+	 *
+	 * @deprecated use add()
+	 */
+	public void addObject(Object o) {
+		add(o);
 	}
 
 	/**
 	 * Add an object to the ring buffer (if it's full, it'll cycle the
 	 * oldest one out).
+	 *
+	 * @param o the object to add
+	 * @return true
 	 */
-	public synchronized void addObject(Object o) {
+	public boolean add(Object o) {
 		if(end>=buf.length) {
 			// Will get set to 0
 			end=0;
@@ -50,6 +80,8 @@ public class RingBuffer extends Object {
 		} else {
 			size++;
 		}
+
+		return (true);
 	}
 
 	/** 
@@ -59,27 +91,6 @@ public class RingBuffer extends Object {
 	 */
 	public boolean hasWrapped() {
 		return(wrapped);
-	}
-
-	/**
-	 * Get the sequenced data that exists in the RingBuffer.
-	 */
-	public synchronized Collection getData() {
-		ArrayList a=new ArrayList();
-
-		if(end<=start) {
-			for(int i=start; i<buf.length; i++) {
-				a.add(buf[i]);
-			}
-			for(int i=0; i<end; i++) {
-				a.add(buf[i]);
-			}
-		} else {
-			for(int i=start; i<end; i++) {
-				a.add(buf[i]);
-			}
-		}
-		return(a);
 	}
 
 	/**
@@ -99,19 +110,25 @@ public class RingBuffer extends Object {
 			sb.append(" ");
 		}
 		sb.append("]\n\t");
-		ArrayList a=new ArrayList();
-		for(Iterator i=getData().iterator(); i.hasNext(); ) {
-			a.add(i.next());
-		}
-		sb.append(a);
+		ArrayList a=new ArrayList(this);
+		sb.append(a.toString());
 		sb.append("}");
 		return(sb.toString());
 	}
 
 	/**
 	 * Get the number of objects in this RingBuffer.
+	 *
+	 * @deprecated use the Collections implementation instead
 	 */
 	public int getSize() {
+		return(size);
+	}
+
+	/**
+	 * Get the number of objects in this RingBuffer.
+	 */
+	public int size() {
 		return(size);
 	}
 
@@ -121,6 +138,56 @@ public class RingBuffer extends Object {
 	 */
 	public int getCapacity() {
 		return(buf.length);
+	}
+
+	/** 
+	 * Get the iterator for this ring buffer.
+	 * 
+	 * @return an iterator
+	 */
+	public Iterator iterator() {
+		return (new RingBufferIterator());
+	}
+
+	// Iterator implementation
+
+	private class RingBufferIterator extends Object implements Iterator {
+
+		private int pos=0;
+		private int startPos=0;
+		private int remaining=0;
+
+		public RingBufferIterator() {
+			super();
+			pos=start;
+			startPos=start;
+			remaining=size();
+		}
+
+		public boolean hasNext() {
+			if(start != startPos) {
+				throw new ConcurrentModificationException(
+					"Looks like additions have been made to the "
+						+ "RingBuffer since the creation of this iterator.");
+			}
+			return(remaining > 0);
+		}
+
+		public Object next() {
+			if(!hasNext()) {
+				throw new NoSuchElementException("Your buffer runneth under.");
+			}
+			remaining--;
+			if(pos==buf.length) {
+				pos=0;
+			}
+			return(buf[pos++]);
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException("Nope.");
+		}
+
 	}
 
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: RingBufferTest.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// $Id: RingBufferTest.java,v 1.2 2002/10/31 08:12:18 dustin Exp $
 
 package net.spy.test;
 
@@ -40,13 +40,11 @@ public class RingBufferTest extends TestCase {
 	}
 
 	private void verify(RingBuffer rb) {
-		ArrayList a=new ArrayList();
-		for(Iterator i=rb.getData().iterator(); i.hasNext(); ) {
-			a.add(i.next());
-		}
+		ArrayList a=new ArrayList(rb);
 
 		// The buffer should be at capacity here
-		assertTrue("Capacity not filled.", (rb.getSize() == rb.getCapacity()));
+		assertTrue("Size is incorrect.", (rb.size() == a.size()));
+		assertTrue("Capacity not filled.", (rb.size() == rb.getCapacity()));
 
 		int i=((Integer)a.get(0)).intValue();
 		for(Iterator it=a.iterator(); it.hasNext(); i++) {
@@ -65,13 +63,13 @@ public class RingBufferTest extends TestCase {
 
 		// Fill 'er up
 		for(int i=1; i<cap; i++) {
-			rb.addObject(new Integer(i));
-			assertTrue("Capacity filled prematurely", rb.getSize() < cap);
+			rb.add(new Integer(i));
+			assertTrue("Capacity filled prematurely", rb.size() < cap);
 		}
 
 		for(int i=cap; i<2048; i++) {
-			rb.addObject(new Integer(i));
-			assertTrue("Exceeded capacity", rb.getSize() <= cap);
+			rb.add(new Integer(i));
+			assertTrue("Exceeded capacity", rb.size() <= cap);
 			verify(rb);
 		}
 	}
