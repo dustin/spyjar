@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TTL.java,v 1.3 2002/11/26 09:36:12 dustin Exp $
+// $Id: TTL.java,v 1.4 2002/12/30 20:55:29 knitterb Exp $
 
 package net.spy.util;
 
@@ -54,8 +54,16 @@ public class TTL extends Object {
 	public TTL(long ttl, Object extraInfo) {
 		this.ttl=ttl;
 		this.extraInfo=extraInfo;
-		this.startTime=System.currentTimeMillis();
+		this.reset();
 		this.e=new Expired();
+	}
+
+	/** 
+	 *  Resets the counter by setting the time that the TTL started to
+	 *  <i>right now</i>.
+	 */
+	public void reset() {
+		this.startTime=System.currentTimeMillis();
 	}
 
 	/**
