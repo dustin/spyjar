@@ -94,7 +94,7 @@
 
 	<!-- Install the project file -->
 	<target name="install-project">
-		<copy file="etc/spyjar.xtp" filtering="true"
+		<copy file="etc/spyjar.xtp" filtering="true" overwrite="true"
 			tofile="${PROJECTSDIR}/spyjar.xtp">
 			<filterset>
 				<filter token="VER" value="${tree.version.short}"/>
