@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Spy Internetworking
 //
-// $Id: SpyTemp.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: SpyTemp.java,v 1.2 2002/10/30 08:31:14 dustin Exp $
 
 package net.spy.temperature;
 
@@ -17,7 +17,7 @@ import net.spy.net.HTTPFetch;
 public class SpyTemp extends Object {
 
 	private static final String DEFAULT_TEMP_BASE=
-		"http://bleu.west.spy.net/servlet/Temperature";
+		"http://bleu.west.spy.net/therm/Temperature";
 
 	private String tempBase=null;
 
