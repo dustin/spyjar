@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.19 2003/07/26 07:46:54 dustin Exp $
+// $Id: ThreadPool.java,v 1.20 2003/07/31 21:49:16 knitterb Exp $
 
 package net.spy.util;
 
@@ -742,7 +742,7 @@ public class ThreadPool extends ThreadGroup {
 			// Adjust the name to include the thread number
 			setName("RunThread#" + threadId);
 			// Note:  This should not be a daemon thread.
-			start();
+			this.start();
 		}
 
 		public String toString() {
@@ -795,7 +795,7 @@ public class ThreadPool extends ThreadGroup {
 				// Run the runnable.
 				r.run();
 			} catch(Throwable t) {
-				getLogger().error("Problem running your runnable", t);
+				this.getLogger().error("Problem running your runnable", t);
 			}
 			synchronized(runningMutex) {
 				running=null;
@@ -832,7 +832,7 @@ public class ThreadPool extends ThreadGroup {
 					}
 				} // empty stack
 			} // while
-			getLogger().debug("Shutting down.");
+			this.getLogger().debug("Shutting down.");
 		} // ThreadPool$RunThread.run()
 	} // ThreadPool$RunThread
 } // ThreadPool
