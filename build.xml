@@ -118,11 +118,9 @@
 		depends="versioned-spy.jar,versioned-spy-big.jar"/>
 
 	<target name="install-jars" depends="versioned-jars">
-		<copy file="spy.jar" tofile="${INSTDIR}/spy.jar"/>
 		<copy file="spy-${tree.version.short}.jar"
 			tofile="${INSTDIR}/spy-${tree.version.short}.jar"/>
 		<copy file="spy.jar" tofile="${user.home}/lib/java/spy.jar"/>
-		<copy file="spy-big.jar" tofile="${INSTDIR}/spy-big.jar"/>
 		<copy file="spy-big-${tree.version.short}.jar"
 			tofile="${INSTDIR}/spy-big-${tree.version.short}.jar"/>
 	</target>
