@@ -24,6 +24,7 @@
 		</fileset>
 		<pathelement path="${java.class.path}"/>
 		<pathelement path="${BUILDDIR}"/>
+		<pathelement path="${SRCDIR}"/>
 	</path>
 
 	<path id="junitclasses">
@@ -133,13 +134,17 @@
 	<target name="spy.jar" depends="all,properties"
 		description="Create a lightweight jar (no docs or source)"
 		unless="spy.jar.upToDate">
-		<jar jarfile="spy.jar" basedir="${BUILDDIR}" index="true">
+		<jar jarfile="spy.jar" index="true">
 			<manifest>
 				<attribute name="Main-Class" value="net.spy.BuildInfo"/>
 			</manifest>
-			<include name="net/spy/**/*.class"/>
-			<include name="net/spy/**/*.properties"/>
-			<include name="etc/license.txt"/>
+			<fileset dir="${BUILDDIR}">
+				<include name="net/spy/**/*.class"/>
+				<include name="net/spy/**/*.properties"/>
+			</fileset>
+			<fileset dir=".">
+				<include name="etc/license.txt"/>
+			</fileset>
 		</jar>
 		<property name="spy.jar.upToDate" value="true"/>
 	</target>
@@ -147,20 +152,28 @@
 	<target name="spy-big.jar" unless="spy-big.jar.upToDate"
 		depends="all,properties,docs,testjar"
 		description="Build the big jar - classes, sources, docs, oh my!">
-		<jar jarfile="spy-big.jar" basedir="${BUILDDIR}" index="true">
+		<jar jarfile="spy-big.jar" index="true">
 			<manifest>
 				<attribute name="Main-Class" value="net.spy.BuildInfo"/>
 			</manifest>
-			<include name="build.xml"/>
-			<include name="${DOCDEST}/**/*.html"/>
-			<include name="${DOCDEST}/**/*.css"/>
-			<include name="${DOCDEST}/package-list"/>
-			<include name="net/spy/**/*.class"/>
-			<include name="net/spy/**/*.java"/>
-			<include name="net/spy/**/*.properties"/>
-			<include name="testsuite.jar"/>
-			<include name="etc/test.sql"/>
-			<include name="etc/license.txt"/>
+			<fileset dir="${BUILDDIR}">
+				<include name="net/spy/**/*.class"/>
+				<include name="net/spy/**/*.properties"/>
+			</fileset>
+			<fileset dir="${DOCDEST}/../">
+				<include name="docs/**/*.html"/>
+				<include name="docs/**/*.css"/>
+				<include name="docs/package-list"/>
+			</fileset>
+			<fileset dir="${SRCDIR}/../">
+				<include name="src/net/spy/**/*.java"/>
+			</fileset>
+			<fileset dir=".">
+				<include name="build.xml"/>
+				<include name="testsuite.jar"/>
+				<include name="etc/test.sql"/>
+				<include name="etc/license.txt"/>
+			</fileset>
 		</jar>
 		<property name="spy-big.jar.upToDate" value="true"/>
 	</target>
@@ -189,7 +202,6 @@
 			<entry key="tree.version" value="${tree.version}"/>
 		</propertyfile>
 		<property file="${BUILDDIR}/net/spy/build.properties"/>
-		<!-- Copy any additional properties over -->
 		<copy todir="${BUILDDIR}">
 			<fileset dir="${SRCDIR}">
 				<include name="**/*.properties"/>

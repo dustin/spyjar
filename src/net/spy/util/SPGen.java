@@ -31,13 +31,14 @@ import java.lang.reflect.Field;
 
 import java.text.NumberFormat;
 
+import net.spy.SpyObject;
 import net.spy.SpyUtil;
 import net.spy.db.QuerySelector;
 
 /**
  * Generator for .spt-&gt;.java.
  */
-public class SPGen extends Object {
+public class SPGen extends SpyObject {
 
 	private BufferedReader in=null;
 	private PrintWriter out=null;
@@ -265,6 +266,7 @@ public class SPGen extends Object {
 			String typeString=typeMap.getString(p.getType());
 			types=SpyUtil.split(" ", typeString);
 		} catch(MissingResourceException e) {
+			getLogger().warn("Can't set all types for " + p, e);
 			// XXX This is just a thing to get me over the hump
 			//return("");
 			String typesTmp[]={"java.lang.Object"};
@@ -278,7 +280,7 @@ public class SPGen extends Object {
 		for(int i=0; i<types.length; i++) {
 			String type=types[i];
 			// Too verbose, need some way to configure this kind of stuff
-			// System.out.println("Generating " + p + " for " + type);
+			getLogger().debug("Generating " + p + " for " + type);
 			rv+="\t/**\n"
 				+ "\t * Set the ``" + p.getName() + "'' parameter.\n"
 				+ "\t * " + p.getDescription() + "\n"
