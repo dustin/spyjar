@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.8 2003/03/13 20:35:46 dustin Exp $
+// $Id: Saver.java,v 1.9 2003/04/19 01:00:03 dustin Exp $
 
 package net.spy.db;
 
@@ -211,6 +211,11 @@ public class Saver extends SpyObject {
 		// Identity comparison
 		public boolean equals(Object other) {
 			return(o == other);
+		}
+
+		// Get the hash code of the class
+		public int hashCode() {
+			return(o.getClass().hashCode());
 		}
 
 	}
