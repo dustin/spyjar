@@ -1,22 +1,44 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// $Id: ThreadPool.java,v 1.2 2002/10/15 06:42:21 dustin Exp $
 
 package net.spy.util;
 
 import java.util.EmptyStackException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Stack;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * A thread pool for easy parallelism.
+ *
+ * <p>
+ * Example (assuming you want to do a million tasks, 15 at time):
+ *
+ * <pre>
+ * // Get a thread pool that will perform 15 tasks at a time
+ * ThreadPool tp=new ThreadPool("Test Pool", 15);
+ *
+ * // Do the tasks in a loop, throttling to make sure all we don't
+ * // create too many objects that aren't ready to be used.
+ * for(int i=0; i&lt;1000000; i++) {
+ *     // Don't have more than 32 unclaimed tasks
+ *     if(tp.waitForTaskCount(32)) {
+ *         tp.addTask(new MyRunnableClass());
+ *     }
+ * }
+ * tp.waitForCompletion();
+ * 
+ * </pre>
+ *
+ * </p>
+ *
  */
 public class ThreadPool extends Object {
 
 	// The threads we're managing.
-	private Vector threads=null;
+	private List threads=null;
 	// The tasks for the threads to do.
 	private Stack tasks=null;
 
@@ -46,7 +68,7 @@ public class ThreadPool extends Object {
 		}
 
 		tasks=new Stack();
-		threads=new Vector();
+		threads=new java.util.ArrayList(n);
 		monitor=new Object();
 
 		// Get the group for this threadpool.
@@ -57,7 +79,7 @@ public class ThreadPool extends Object {
 		for(int i=0; i<n; i++) {
 			RunThread rt=new RunThread(tg, tasks, monitor);
 			rt.setPriority(priority);
-			threads.addElement(rt);
+			threads.add(rt);
 		}
 	}
 
@@ -82,7 +104,9 @@ public class ThreadPool extends Object {
 	}
 
 	/**
-	 * Find out how many tasks are in the queue.
+	 * Find out how many tasks are in the queue.  This is the number of
+	 * jobs that have <i>not</i> been accepted by threads, i.e. they
+	 * haven't been started.
 	 */
 	public int getTaskCount() {
 		int rv=0;
@@ -100,12 +124,12 @@ public class ThreadPool extends Object {
 	}
 
 	/**
-	 * Find out how many threads are still active in the pool.
+	 * Find out how many threads are still active (not shut down) in the pool.
 	 */
 	public int getActiveThreadCount() {
 		int rv=0;
-		for(Enumeration e=threads.elements(); e.hasMoreElements(); ) {
-			RunThread t=(RunThread)e.nextElement();
+		for(Iterator i=threads.iterator(); i.hasNext(); ) {
+			RunThread t=(RunThread)i.next();
 			if(t.isAlive()) {
 				rv++;
 			}
@@ -118,15 +142,37 @@ public class ThreadPool extends Object {
 	 * tasks.
 	 */
 	public void shutdown() {
-		for(Enumeration e=threads.elements(); e.hasMoreElements(); ) {
-			RunThread t=(RunThread)e.nextElement();
+		for(Iterator i=threads.iterator(); i.hasNext(); ) {
+			RunThread t=(RunThread)i.next();
 			t.shutdown();
 		}
 		shutdown=true;
 	}
 
+	/** 
+	 * Shut down all of the threads after all jobs are complete, and wait
+	 * for all tasks to complete.
+	 *
+	 * <p>
+	 *  This is a convenience method that calls waitforTaskCount(0),
+	 *  followed by shutdown(), followed by waitForThreads().
+	 * </p>
+	 *
+	 * @throws InterruptedException if waitForTaskCount or waitForThreads
+	 *								throws an exception
+	 */
+	public void waitForCompletion() throws InterruptedException {
+		waitForTaskCount(0);
+		shutdown();
+		waitForThreads();
+	}
+
 	/**
-	 * Wait until there are no more than <i>num</i> tasks.
+	 * Wait until there are no more than <i>num</i> tasks in the queue.
+	 * This is good for throttling task additions.
+	 *
+	 * @param num the number of tasks for which to wait
+	 * @throws InterruptedException if wait fails
 	 */
 	public void waitForTaskCount(int num) throws InterruptedException {
 		while(getTaskCount() > num) {
@@ -138,6 +184,11 @@ public class ThreadPool extends Object {
 
 	/**
 	 * Wait until there are no more threads processing.
+	 *
+	 * This will return when all threads have shut down.
+	 *
+	 * @throws IllegalStateException if shutdown() has not been called
+	 * @throws InterruptedException if sleep() is interrupted
 	 */
 	public void waitForThreads() throws InterruptedException {
 		if(!shutdown) {
@@ -200,6 +251,8 @@ public class ThreadPool extends Object {
 		System.out.println("All tasks have been accepted, shutting down.");
 		// I shut 'em down!
 		tp.shutdown();
+		tp.waitForThreads();
+		System.out.println("All threads have been shut down.");
 
 		System.out.println("Done.");
 	}
