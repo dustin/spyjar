@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.11 2002/11/09 07:12:18 knitterb Exp $
+// $Id: DBSP.java,v 1.12 2002/11/11 21:38:36 knitterb Exp $
 
 package net.spy.db;
 
@@ -1311,9 +1311,9 @@ public abstract class DBSP extends SpyCacheDB {
 		public String toString() {
 			StringBuffer rc=new StringBuffer(100);
 			rc.append("{ Arg: type=");
-			rc.append(TypeNames.getTypeName(javaType));
-			rc.append("(");
 			rc.append(javaType);
+			rc.append("(");
+			rc.append(TypeNames.getTypeName(javaType));
 			rc.append(")");
 			rc.append(", name=");
 			rc.append(getName().toString());
