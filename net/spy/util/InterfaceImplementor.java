@@ -7,13 +7,16 @@
 package net.spy.util;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import java.util.HashSet;
+
+import net.spy.SpyObject;
 
 /**
  * Extend existing classes with missing methods required to implement a
@@ -32,7 +35,7 @@ import java.util.HashSet;
  * java net.spy.util.InterfaceImplementor -interface java.sql.ResultSet
  * -superclass test.TestSet -outputclass test.TestSetImpl
  */
-public class InterfaceImplementor extends Object {
+public class InterfaceImplementor extends SpyObject {
 
 	// Functions that are already defined.
 	private HashSet definedFunctions=null;
@@ -68,6 +71,13 @@ public class InterfaceImplementor extends Object {
 		// worry about it later.
 		definedFunctions=new HashSet();
 		this.interfaceClass=c;
+	}
+
+	/** 
+	 * Get the interface we're implementing.
+	 */
+	protected Class getInterface() {
+		return(interfaceClass);
 	}
 
 	/**
@@ -160,13 +170,24 @@ public class InterfaceImplementor extends Object {
 		return(rv);
 	}
 
-	// Get the method signature with exceptions 
-	private String getSignature(Method method) {
+	/** 
+	 * Get the method signature.
+	 * 
+	 * @param method method needing the signature
+	 * @return the method signature, as a String
+	 */
+	protected String getSignature(Method method) {
 		return(getSignature(method, true));
 	}
 
-	// Get the method signature
-	private String getSignature(Method method, boolean needExceptions) {
+	/** 
+	 * Get a String representing this method signature.
+	 * 
+	 * @param method the name of the method
+	 * @param needExceptions true if exceptions are needed as part of the
+	 * 		signature string
+	 */
+	protected String getSignature(Method method, boolean needExceptions) {
 
 		String ret="";
 
@@ -203,7 +224,10 @@ public class InterfaceImplementor extends Object {
 		return(ret.trim());
 	}
 
-	private String getDocLink(Method method) {
+	/** 
+	 * Get the relative javadoc signature for this method.
+	 */
+	protected String getDocLink(Method method) {
 		String ret=method.getName();
 		Class types[]=method.getParameterTypes();
 		ret+="(";
@@ -269,7 +293,10 @@ public class InterfaceImplementor extends Object {
 		return(ret);
 	}
 
-	private String getDocLink(Constructor con) {
+	/** 
+	 * Get the relative javadoc signature for this Constructor.
+	 */
+	protected String getDocLink(Constructor con) {
 		String ret=con.getName();
 		Class types[]=con.getParameterTypes();
 		ret+="(";
@@ -285,15 +312,23 @@ public class InterfaceImplementor extends Object {
 		return(ret);
 	}
 
-	// Implement a constructor that tries to error out as best as possible
-	private String implement(Method method) {
+	/** 
+	 * Implement the given method.
+	 *
+	 * Subclasses may override this to provide a different method
+	 * implementation
+	 * 
+	 * @param method the method to be implemented.
+	 * @return the text required to implement this method
+	 */
+	protected String implement(Method method) {
 		// Start
 		String ret="\t/**\n"
 			+ "\t * InterfaceImplementor implementation of "
-				+ method.getName() + "\n"
+				+ method.getName() + ".\n"
 			+ "\t * @see " + interfaceClass.getName() + "#"
 				+ getDocLink(method) + "\n"
-			+ "\t */";
+			+ "\t */\n";
 		ret+="\t" + getSignature(method) + " {\n";
 
 		Class e[]=method.getExceptionTypes();
@@ -347,6 +382,22 @@ public class InterfaceImplementor extends Object {
 		return(ret);
 	}
 
+	/** 
+	 * Anything that should appear before the automatically generated
+	 * constructors.
+	 */
+	protected String preConstructors() {
+		return(null);
+	}
+
+	/** 
+	 * Anything that should appear before the automatically generated
+	 * methods.
+	 */
+	protected String preMethods() {
+		return(null);
+	}
+
 	/**
 	 * Generate the source code for the class this object represents.
 	 */
@@ -372,13 +423,25 @@ public class InterfaceImplementor extends Object {
 		
 		ret+="implements " + interfaceClass.getName() + " {\n\n";
 
+		// Do any pre-constructor stuff
+		String pc=preConstructors();
+		if(pc!=null) {
+			ret+=pc;
+		}
+
 		// If there's a superclass, grab all of the constructors from that
 		// superclass and make sure they all get called.
-		if(superClass!=null) {
+		if(superClass!=null && buildConstructors()) {
 			Constructor constructors[]=superClass.getConstructors();
 			for(int i=0; i<constructors.length; i++) {
 				ret+=implementConstructor(constructors[i]);
 			}
+		}
+
+		// Stuff that needs to be added after all methods.
+		String pm=preMethods();
+		if(pm!=null) {
+			ret+=pm;
 		}
 
 		// Now, implement the methods of the interface
@@ -389,16 +452,52 @@ public class InterfaceImplementor extends Object {
 				ret+=implement(methods[i]);
 			}
 		}
+
 		ret+=("}\n");
 		return(ret);
 	}
 
+	/** 
+	 * If true, build the default constructors.
+	 */
+	protected boolean buildConstructors() {
+		return(true);
+	}
+
+	/** 
+	 * Write this implementation out to a given file.
+	 * 
+	 * @param outdir the base directory to write the file
+	 * @throws IOException if there's a problem writing the file
+	 */
+	public void writeSourceToFile(String outdir) throws IOException {
+		String fn=outdir + File.separatorChar;
+		String op=getOutPackageName();
+		String oc=getOutClassName();
+		// Figure out if there's a package name, if so, make sure the
+		// dirs exist and all that.
+		if(op!=null) {
+			File packagepath= new File(
+				fn + op.replace('.', File.separatorChar));
+			packagepath.mkdirs();
+			fn=packagepath.toString() + File.separatorChar;
+		}
+		// Stick the classname.java to the end
+		fn+=oc + ".java";
+
+		// Write it out...
+		System.out.println("Writing output to " + fn);
+		FileWriter fw=new FileWriter(fn);
+		fw.write(makeSource());
+		fw.close();
+	}
+
 	// A method com
 
-	public static void usage() {
+	private static void usage() {
 		System.err.println("Usage:  InterfaceImplementor"
 			+ " -interface className [-superclass className]\n"
-			+ "\t[-outputclass className]");
+			+ "\t[-outputdir outputDir] [-outputclass className]");
 	}
 
 	public static void main(String args[]) throws Exception {
@@ -448,24 +547,7 @@ public class InterfaceImplementor extends Object {
 			// Set the output class name
 			i.setOutputClass(outclass);
 
-			String fn=outdir + File.separatorChar;
-			String op=i.getOutPackageName();
-			String oc=i.getOutClassName();
-			// Figure out if there's a package name, if so, make sure the
-			// dirs exist and all that.
-			if(op!=null) {
-				File packagepath= new File(
-					fn + op.replace('.', File.separatorChar));
-				packagepath.mkdirs();
-				fn=packagepath.toString() + File.separatorChar;
-			}
-			// Stick the classname.java to the end
-			fn+=oc + ".java";
-
-			// Write it out...
-			System.out.println("Writing output to " + fn);
-			FileOutputStream fout=new FileOutputStream(fn);
-			fout.write(i.makeSource().getBytes());
+			i.writeSourceToFile(outdir);
 		} else {
 			System.out.print(i.makeSource());
 		}
