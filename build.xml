@@ -316,11 +316,11 @@
 
 			<classpath refid="myclasses"/>
 			<include name="net/spy/util/SPGen.java"/>
+			<include name="net/spy/util/InterfaceImplementor.java"/>
+			<include name="net/spy/util/ProxyInterfaceImplementor.java"/>
 			<include name="net/spy/ant/*.java"/>
 		</javac>
-		<taskdef name="spgen" classname="net.spy.ant.SPGenTask">
-			<classpath refid="myclasses"/>
-		</taskdef>
+		<taskdef classpathref="myclasses" resource="net/spy/ant/tasks.properties"/>
 	</target>
 
 	<target name="test-spfiles" depends="all,anttasks">
