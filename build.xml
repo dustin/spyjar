@@ -5,15 +5,19 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.1 2002/08/28 00:34:55 dustin Exp $
+	$Id: build.xml,v 1.2 2002/08/28 02:24:15 dustin Exp $
 
 	-->
 
 <project name="spy.jar" default="spy.jar" basedir=".">
 
 	<!-- Setup -->
+
+	<!-- Load the build properties -->
+	<property file="build.properties"/>
+
 	<path id="myclasses">
-		<fileset dir="${user.home}/lib/java">
+		<fileset dir="${JARPATH}">
 			<include name="jndi.jar"/>
 			<include name="jdbc2_0-stdext.jar"/>
 		</fileset>
@@ -22,7 +26,7 @@
 	</path>
 
 	<path id="junitclasses">
-		<fileset dir="${user.home}/lib/java">
+		<fileset dir="${JARPATH}">
 			<include name="junit.jar"/>
 			<include name="spytest.jar"/>
 		</fileset>
@@ -31,21 +35,7 @@
 		</fileset>
 	</path>
 
-	<property name="SRCDIR" value="."/>
-	<property name="BUILDDIR" value="."/>
-	<property name="TSRCDIR" value="tests"/>
-	<property name="TBUILDDIR" value="tests"/>
-	<property name="DOCDEST" value="docs"/>
-	<property name="DEPRECATION" value="on"/>
-	<property name="DEBUG" value="on"/>
-	<property name="VERBOSE" value="off"/>
-
 	<!-- end setup -->
-
-	<!-- Turn on verbose compiles -->
-	<target name="verbose">
-		<property name="VERBOSE" value="on"/>
-	</target>
 
 	<target name="clean" description="Clean up all generated files.">
 		<delete>
@@ -61,7 +51,7 @@
 				Get rid of the installed one since it keeps messing with my
 				tests
 			-->
-			<fileset dir="${user.home}/lib/java">
+			<fileset dir="${JARPATH}">
 				<include name="spy.jar"/>
 			</fileset>
 			<fileset dir="${TBUILDDIR}">
@@ -185,7 +175,39 @@
 		<property name="properties.upToDate" value="true"/>
 	</target>
 
-	<target name="all" depends="rmic,dbstuff">
+	<target name="checkBuildProps">
+		<available file="build.properties" property="hasBuildProps"/>
+	</target>
+
+	<!-- Create the build.properties file if the user doesn't have one -->
+	<target name="buildprops" unless="hasBuildProps" depends="checkBuildProps"
+		description="Create a build.properties file *** MUST BE DONE FIRST ***">
+		<propertyfile file="build.properties">
+			<entry key="SRCDIR" value="."/>
+			<entry key="BUILDDIR" value="."/>
+			<entry key="TSRCDIR" value="tests"/>
+			<entry key="TBUILDDIR" value="tests"/>
+			<entry key="DOCDEST" value="docs"/>
+			<entry key="DEPRECATION" value="on"/>
+			<entry key="DEBUG" value="on"/>
+			<entry key="VERBOSE" value="off"/>
+			<!-- Location of extra jars for classpaths -->
+			<entry key="JARPATH" value="${user.home}/lib/java"/>
+		</propertyfile>
+
+		<echo message=""/>
+		<echo message="*** You must run your build again (ignore failures)! ***"/>
+		<echo message=""/>
+		<fail message="You must run your build again"/>
+
+	</target>
+
+	<!-- this is a bit of indirection to allow the compile to require props -->
+	<target name="all" depends="buildprops" if="hasBuildProps">
+		<antcall target="compile"/>
+	</target>
+
+	<target name="compile" depends="rmic,dbstuff">
 		<javac
 			srcdir="${SRCDIR}"
 			destdir="${BUILDDIR}"
@@ -385,7 +407,7 @@
 	<target name="pmd">
 		<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask">
 			<classpath>
-				<fileset dir="${user.home}/lib/java">
+				<fileset dir="${JARPATH}">
 					<include name="pmd-0.3.jar"/>
 				</fileset>
 			</classpath>
