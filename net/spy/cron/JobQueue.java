@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: JobQueue.java,v 1.4 2003/04/18 20:15:47 dustin Exp $
+// $Id: JobQueue.java,v 1.5 2003/04/21 02:57:46 dustin Exp $
 
 package net.spy.cron;
 
@@ -18,8 +18,8 @@ public class JobQueue extends ArrayList {
 
 	private Logger logger=null;
 
-	// Loop at least this frequently (half hour)
-	private static final long MAX_SLEEP_TIME=1800*1000;
+	// Loop at least this frequently (twenty-four hours)
+	private static final long MAX_SLEEP_TIME=86400000;
 
 	/**
 	 * Get a new job queue.

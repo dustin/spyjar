@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Cron.java,v 1.8 2003/04/19 08:02:33 dustin Exp $
+// $Id: Cron.java,v 1.9 2003/04/21 02:57:46 dustin Exp $
 
 package net.spy.cron;
 
@@ -75,6 +75,24 @@ public class Cron extends SpyThread {
 
 		start();
 		validJobFound=System.currentTimeMillis();
+	}
+
+	/** 
+	 * String me.
+	 */
+	public String toString() {
+		StringBuffer sb=new StringBuffer(128);
+		sb.append(super.toString());
+		if(jq==null) {
+			sb.append(" - null jobqueue");
+		} else {
+			sb.append(" - watching ");
+			sb.append(jq.size());
+			sb.append(" jobs, next up at ");
+			sb.append(jq.getNextStartDate());
+		}
+
+		return(sb.toString());
 	}
 
 	/**
