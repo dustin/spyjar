@@ -73,8 +73,8 @@ public final class Cron extends SpyThread {
 			getLogger().warn("Threads were already started", e);
 		}
 
-		start();
 		validJobFound=System.currentTimeMillis();
+		start();
 	}
 
 	/** 
