@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ShortestPathFinder.java,v 1.3 2002/11/04 08:16:07 dustin Exp $
+// $Id: ShortestPathFinder.java,v 1.4 2002/11/04 09:53:22 dustin Exp $
 
 package net.spy.util;
 
@@ -111,18 +111,28 @@ public class ShortestPathFinder extends Object {
 	private void recordLink(SPNode node, int cost, SPNode nextHop,
 		SPNode other, Set s) {
 
+		// Make sure we're not looping over a path we've already seen.
 		if(! s.contains(other)) {
 			s.add(other);
 
+			// Add the next hop.  If there is an existing hop that is less
+			// costly than the given hop, the new one will not take effect
 			node.addNextHop(other, new SPVertex(nextHop, cost));
 
+			// Flip through the connections to other nodes and recurse
 			for(Iterator i=other.getConnections().iterator(); i.hasNext();) {
 				SPVertex spv=(SPVertex)i.next();
+				// The cost to this link is the sum of the costs to this
+				// link and the cost of this link.
 				int nextCost=cost+spv.getCost();
-				node.addNextHop(spv.getTo(), new SPVertex(nextHop, nextCost));
-				recordLink(node, nextCost, nextHop, spv.getTo(), s);
+				// This is the node we've found in this loop
+				SPNode thisNode=spv.getTo();
+				node.addNextHop(thisNode, new SPVertex(nextHop, nextCost));
+				recordLink(node, nextCost, nextHop, thisNode, s);
 			}
 
+			// Remove the passed in node from the set, allowing us to
+			// traverse again.
 			s.remove(other);
 		}
 	}
