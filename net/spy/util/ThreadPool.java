@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.17 2003/04/18 08:02:06 dustin Exp $
+// $Id: ThreadPool.java,v 1.18 2003/04/18 08:21:44 dustin Exp $
 
 package net.spy.util;
 
@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
@@ -177,11 +179,19 @@ public class ThreadPool extends ThreadGroup {
 
 		// Set up the manager
 		try {
-			poolManager=(ThreadPoolManager)poolManagerClass.newInstance();
+			Constructor cons=getPoolMangerConstructor();
+			Object args[]={this};
+			poolManager=(ThreadPoolManager)cons.newInstance(args);
 			poolManager.setThreadPool(this);
 			getLogger().info("Starting the thread pool manager");
 			poolManager.start();
+		} catch(NoSuchMethodException e) {
+			throw new NestedRuntimeException(
+				"Problem starting ThreadPoolManager", e);
 		} catch(IllegalAccessException e) {
+			throw new NestedRuntimeException(
+				"Problem starting ThreadPoolManager", e);
+		} catch(InvocationTargetException e) {
 			throw new NestedRuntimeException(
 				"Problem starting ThreadPoolManager", e);
 		} catch(InstantiationException e) {
@@ -191,6 +201,14 @@ public class ThreadPool extends ThreadGroup {
 
 		// Mark it as started.
 		started=true;
+	}
+
+	private Constructor getPoolMangerConstructor()
+		throws NoSuchMethodException {
+
+		Class args[]={ThreadGroup.class};
+		Constructor cons=poolManagerClass.getConstructor(args);
+		return(cons);
 	}
 
 	private Logger getLogger() {
