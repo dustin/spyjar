@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPVertex.java,v 1.2 2002/10/19 08:32:21 dustin Exp $
+// $Id: SPVertex.java,v 1.3 2002/10/19 09:37:16 dustin Exp $
 
 package net.spy.util;
 
@@ -8,6 +8,8 @@ import java.lang.ref.WeakReference;
 
 /**
  * A weighted connection to a SPNode.
+ *
+ * @see ShortestPathFinder
  */
 public class SPVertex extends Object implements Comparable {
 

@@ -1,8 +1,10 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ShortestPathTest.java,v 1.2 2002/10/19 08:32:21 dustin Exp $
+// $Id: ShortestPathTest.java,v 1.3 2002/10/19 09:37:16 dustin Exp $
 
 package net.spy.test;
+
+import java.lang.ref.WeakReference;
 
 import java.util.Map;
 import java.util.Set;
@@ -185,6 +187,42 @@ public class ShortestPathTest extends TestCase {
 
 		sp=new ShortestPath(d, e);
 		assertEquals("ShortestPath from D -> E", 2, sp.size());
+	}
+
+	/** 
+	 * Verify garbage collection can clean up the instances.
+	 */
+	public void testCleanup() {
+		WeakReference aref=new WeakReference(a);
+		WeakReference bref=new WeakReference(b);
+		WeakReference cref=new WeakReference(c);
+		WeakReference dref=new WeakReference(d);
+		WeakReference eref=new WeakReference(e);
+
+		// Verify the reference is alive
+		assertNotNull("Reference to A is broken", aref.get());
+		assertNotNull("Reference to B is broken", bref.get());
+		assertNotNull("Reference to C is broken", cref.get());
+		assertNotNull("Reference to D is broken", dref.get());
+		assertNotNull("Reference to E is broken", eref.get());
+
+		// Kill them all.
+		nodes=null;
+		a=null;
+		b=null;
+		c=null;
+		d=null;
+		e=null;
+
+		// Pick up the trash
+		System.gc();
+
+		// Verify the reference is dead
+		assertNull("Node A is still around", aref.get());
+		assertNull("Node B is still around", bref.get());
+		assertNull("Node C is still around", cref.get());
+		assertNull("Node D is still around", dref.get());
+		assertNull("Node E is still around", eref.get());
 	}
 
 	private class StringNode extends AbstractSPNode {

@@ -1,13 +1,17 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ShortestPath.java,v 1.2 2002/10/19 08:32:21 dustin Exp $
+// $Id: ShortestPath.java,v 1.3 2002/10/19 09:37:16 dustin Exp $
 
 package net.spy.util;
 
 import java.util.ArrayList;
 
 /**
- * Implements the shortest path between two nodes.
+ * Represents the shortest path between two SPNodes.  This class can be used
+ * to find and store the shortest path between two {@link SPNode}
+ * instances.
+ *
+ * @see ShortestPathFinder
  */
 public class ShortestPath extends ArrayList {
 

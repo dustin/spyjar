@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.9 2002/10/18 07:11:03 dustin Exp $
+	$Id: build.xml,v 1.10 2002/10/19 09:37:15 dustin Exp $
 
 	-->
 
@@ -82,6 +82,8 @@
 			doctitle="Spy.jar Documentation - build ${build.number} from ${build.date}">
 			<link href="http://java.sun.com/j2se/1.3/docs/api/"/>
 		</javadoc>
+		<mkdir dir="docs/images"/>
+		<copy file="etc/graphtest.png" tofile="docs/images/graphtest.png"/>
 		<property name="docs.upToDate" value="true"/>
 	</target>
 
@@ -90,6 +92,7 @@
 			<fileset dir="docs">
 				<include name="**/*.html"/>
 				<include name="**/*.css"/>
+				<include name="**/*.png"/>
 				<include name="package-list"/>
 			</fileset>
 		</jar>
@@ -132,6 +135,7 @@
 			<fileset dir="docs">
 				<include name="**/*.html"/>
 				<include name="**/*.css"/>
+				<include name="**/*.png"/>
 				<include name="package-list"/>
 			</fileset>
 		</copy>
