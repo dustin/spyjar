@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.26 2003/08/29 20:08:41 dustin Exp $
+// $Id: DBSP.java,v 1.27 2003/09/11 07:26:42 dustin Exp $
 
 package net.spy.db;
 
@@ -167,9 +167,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		return(pst.getWarnings());
 	}
 
-	/** 
+	/**
 	 * Set the cursor name to be handed to the underlying Statement.
-	 * 
+	 *
 	 * @param name cursor name (or null to disable cursor handling)
 	 */
 	public void setCursorName(String name) {
@@ -187,36 +187,36 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		this.cachetime=time;
 	}
 
-	/** 
+	/**
 	 * Get the cache time configured for this SP.
-	 * 
+	 *
 	 * @return the time (in seconds) the results will be valid
 	 */
 	public long getCacheTime() {
 		return(cachetime);
 	}
 
-	/** 
+	/**
 	 * Set the prepared statement on which this DBSP will operate.
-	 * 
+	 *
 	 * @param pst the prepared statement
 	 */
 	protected void setPreparedStatement(PreparedStatement pst) {
 		this.pst=pst;
 	}
 
-	/** 
+	/**
 	 * Get the prepared statement on which this DBSP will operate.
-	 * 
+	 *
 	 * @param pst the prepared statement
 	 */
 	protected PreparedStatement getPreparedStatement() {
 		return(pst);
 	}
 
-	/** 
+	/**
 	 * Define a parameter.
-	 * 
+	 *
 	 * @param p the parameter
 	 * @throws SQLException if the parameter has already been added
 	 */
@@ -287,9 +287,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		arguments.add(new Argument(type, which, what));
 	}
 
-	/** 
+	/**
 	 * Get the arguments in parameter order.
-	 * 
+	 *
 	 * @return an unmodifiable list of {@link Argument} objects
 	 */
 	public List getArguments() {
@@ -309,17 +309,17 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		return(Collections.unmodifiableList(al));
 	}
 
-	/** 
+	/**
 	 * Get a List of all of the parameters in the order in which they were
 	 * defined.
-	 * 
+	 *
 	 * @return a List of {@link Parameter} objects.
 	 */
 	protected List getParams() {
 		return(parameters.getObjectList());
 	}
 
-	/** 
+	/**
 	 * Reset all arguments.
 	 */
 	protected void resetArgs() {
@@ -355,7 +355,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		this.spname=to;
 	}
 
-	/** 
+	/**
 	 * Get the SP name.
 	 *
 	 * @return the name of the SP to call, or null if not applicable
@@ -478,9 +478,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		this.debug=db;
 	}
 
-	/** 
+	/**
 	 * Find out if debug is enabled.
-	 * 
+	 *
 	 * @return true if debug is enabled
 	 */
 	protected boolean isDebugEnabled() {
@@ -494,7 +494,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		this.query=query;
 	}
 
-	/** 
+	/**
 	 * Get the query this DBSP will be calling.
 	 */
 	protected String getQuery() {
@@ -594,35 +594,35 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type java.math.BigDecimal 
+	 * Set field <i>which</i> to the value a1 of the type java.math.BigDecimal
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,java.math.BigDecimal a1) 
+	public void set(String which,java.math.BigDecimal a1)
 		throws SQLException {
 		setArg(which, a1, Types.DECIMAL);
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type boolean 
+	 * Set field <i>which</i> to the value a1 of the type boolean
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,boolean a1) 
+	public void set(String which,boolean a1)
 		throws SQLException {
 		setArg(which, SpyUtil.getBoolean(a1), Types.BIT);
 
 	}
 
-	/** 
+	/**
 	 * Set field <i>which</i> to the value of b.
-	 * 
+	 *
 	 * @param which the field to set
 	 * @param b the value to set
 	 * @throws SQLException if there's an error setting this argument
@@ -632,66 +632,66 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type java.sql.Date 
+	 * Set field <i>which</i> to the value a1 of the type java.sql.Date
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,java.sql.Date a1) 
+	public void set(String which,java.sql.Date a1)
 		throws SQLException {
 		setArg(which, a1, Types.DATE);
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type double 
+	 * Set field <i>which</i> to the value a1 of the type double
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,double a1) 
+	public void set(String which,double a1)
 		throws SQLException {
 		setArg(which, new Double(a1), Types.DOUBLE);
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type float 
+	 * Set field <i>which</i> to the value a1 of the type float
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,float a1) 
+	public void set(String which,float a1)
 		throws SQLException {
 		setArg(which, new Float(a1), Types.FLOAT);
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type float 
+	 * Set field <i>which</i> to the value a1 of the type float
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which, Float a1) 
+	public void set(String which, Float a1)
 		throws SQLException {
 		setArg(which, a1, Types.FLOAT);
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type java.lang.Integer 
+	 * Set field <i>which</i> to the value a1 of the type java.lang.Integer
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,Integer a1) 
+	public void set(String which,Integer a1)
 		throws SQLException {
 		if (debug) {
 			getLogger().debug("Adding Integer->INTEGER for "+which);
@@ -700,27 +700,27 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type int 
+	 * Set field <i>which</i> to the value a1 of the type int
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,int a1) 
+	public void set(String which,int a1)
 		throws SQLException {
 		setArg(which, new Integer(a1), Types.INTEGER);
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type long 
+	 * Set field <i>which</i> to the value a1 of the type long
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,long a1) 
+	public void set(String which,long a1)
 		throws SQLException {
 		setArg(which, new Long(a1), Types.BIGINT);
 	}
@@ -738,7 +738,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	protected void setNull(String which,int a1) 
+	protected void setNull(String which,int a1)
 		throws SQLException {
 		// This one works a bit different because we have to store the
 		// original type
@@ -746,7 +746,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type java.lang.Object 
+	 * Set field <i>which</i> to the value a1 of the type java.lang.Object
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
@@ -754,7 +754,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 * @exception SQLException if there's an error setting this argument.
 	 */
 	/*
-	public void set(String which,java.lang.Object a1) 
+	public void set(String which,java.lang.Object a1)
 		throws SQLException {
 		getLogger().debug("Setting OTHER for "+which);
 		setArg(which, a1, Types.OTHER);
@@ -762,34 +762,34 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	*/
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type short 
+	 * Set field <i>which</i> to the value a1 of the type short
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void setSmallInt(String which,short a1) 
+	public void setSmallInt(String which,short a1)
 		throws SQLException {
 		setArg(which, new Integer(a1), Types.SMALLINT);
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type short 
+	 * Set field <i>which</i> to the value a1 of the type short
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,short a1) 
+	public void set(String which,short a1)
 		throws SQLException {
 		setArg(which, new Integer(a1), Types.TINYINT);
 	}
 
-	/** 
+	/**
 	 * Set the field <i>which</i> to the value s of the type short.
-	 * 
+	 *
 	 * @param which the field to set (by name)
 	 * @param s the new value
 	 * @throws SQLException if there's a problem setting this value
@@ -799,14 +799,14 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type java.lang.String 
+	 * Set field <i>which</i> to the value a1 of the type java.lang.String
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,java.lang.String a1) 
+	public void set(String which,java.lang.String a1)
 		throws SQLException {
 		if (debug) {
 			getLogger().debug("Adding String->VARCHAR for "+which);
@@ -815,48 +815,48 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type Time 
+	 * Set field <i>which</i> to the value a1 of the type Time
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,Time a1) 
+	public void set(String which,Time a1)
 		throws SQLException {
 		setArg(which, a1, Types.TIME);
 	}
 
 	/**
-	 * Set field <i>which</i> to the value a1 of the type Timestamp 
+	 * Set field <i>which</i> to the value a1 of the type Timestamp
 	 *
 	 * @param which which field to set
 	 * @param a1 the value to set
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void set(String which,Timestamp a1) 
+	public void set(String which,Timestamp a1)
 		throws SQLException {
 		setArg(which, a1, Types.TIMESTAMP);
 	}
 
-	public void set(String which,Object obj) 
+	public void set(String which,Object obj)
 		throws SQLException {
 		setArg(which, obj, Types.OTHER);
 	}
 
-	/** 
+	/**
 	 * Get a List containing all parameters.
-	 * 
+	 *
 	 * @return an umodifiable List of {@link Parameter} objects.
 	 */
 	public List getParameters() {
 		return(parameters.getObjectList());
 	}
 
-	/** 
+	/**
 	 * Get a List of parameters of a specific type.
-	 * 
+	 *
 	 * @param type the Parameter type.
 	 * @return a list of {@link Parameter}s of the specified type.
 	 */
@@ -873,11 +873,11 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		return(al);
 	}
 
-	/** 
+	/**
 	 * Get the required arguments.
 	 *
 	 * @deprecated use getParameters() or getParameters(int) instead
-	 * 
+	 *
 	 * @return a List of {@link Parameter}s representing the required
 	 * 	arguments in the order in which they will be passed into the query
 	 */
@@ -885,11 +885,11 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		return(getParameters(Parameter.REQUIRED));
 	}
 
-	/** 
+	/**
 	 * Get the optional arguments.
 	 *
 	 * @deprecated use getParameters() or getParameters(int) instead
-	 * 
+	 *
 	 * @return a List of {@link Parameter}s representing the optional
 	 * 	arguments in the order in which they will be passed into the query
 	 */
@@ -897,11 +897,11 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		return(getParameters(Parameter.OPTIONAL));
 	}
 
-	/** 
+	/**
 	 * Get the output arguments.
 	 *
 	 * @deprecated use getParameters() or getParameters(int) instead
-	 * 
+	 *
 	 * @return a List of {@link Parameter}s representing the output
 	 * 	arguments in the order in which they will be passed into the query
 	 */
@@ -925,9 +925,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Get the {@link Parameter} type.
-	 * 
+	 *
 	 * @param var the name of the parameter
 	 * @return the {@link Parameter} type, or -1 if there's no such
 	 * 			parameter
@@ -943,7 +943,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Close this statement and whatever the superclass wants to do.
 	 */
 	public void close() {
@@ -958,11 +958,11 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		super.close();
 	}
 
-	/** 
+	/**
 	 * Set a field in the DBSP after coercing the String value to the
 	 * required value for the given field.  This should <i>rarely</i> be
 	 * used, but is useful for accessing DBSPs through web forms.
-	 * 
+	 *
 	 * @param var the field to set
 	 * @param value the String representation of the value to set
 	 * @throws SQLException if there's a problem with coersion
@@ -1087,7 +1087,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		private Map byName=null;
 		private List byPosition=null;
 
-		/** 
+		/**
 		 * Get a NamedObjectStorage instance.
 		 */
 		public NamedObjectStorage() {
@@ -1096,25 +1096,25 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			byPosition=new LinkedList();
 		}
 
-		/** 
+		/**
 		 * String me.
 		 */
 		public String toString() {
 			return(byPosition.toString());
 		}
 
-		/** 
+		/**
 		 * Get the number of objects stored in this object.
-		 * 
+		 *
 		 * @return number of objects
 		 */
 		public int size() {
 			return(byPosition.size());
 		}
 
-		/** 
+		/**
 		 * Add the object to the list.
-		 * 
+		 *
 		 * @param no the NamedObject to add
 		 */
 		public void add(NamedObject no) {
@@ -1134,9 +1134,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			byPosition.add(no);
 		}
 
-		/** 
+		/**
 		 * Get the named object.
-		 * 
+		 *
 		 * @param name the name of the object to get
 		 * @return the NamedObject with that name, or null if there isn't one
 		 */
@@ -1144,10 +1144,10 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			return((NamedObject)byName.get(name));
 		}
 
-		/** 
+		/**
 		 * Determine whether the storage contains an object with the given
 		 * name.
-		 * 
+		 *
 		 * @param name the name of the object we're looking for
 		 * @return true if the object is here
 		 */
@@ -1155,25 +1155,25 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			return(byName.containsKey(name));
 		}
 
-		/** 
+		/**
 		 * Get a Map of object names to objects.
-		 * 
+		 *
 		 * @return an unmodifable map mapping object names to objects
 		 */
 		public Map getObjectMap() {
 			return(Collections.unmodifiableMap(byName));
 		}
 
-		/** 
+		/**
 		 * Get a List of objects in insert order.
-		 * 
+		 *
 		 * @return an unmodifiable list of objects in insert order
 		 */
 		public List getObjectList() {
 			return(Collections.unmodifiableList(byPosition));
 		}
 
-		/** 
+		/**
 		 * Get rid of all objects.
 		 */
 		public void clear() {
@@ -1183,17 +1183,17 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 	}
 
-	/** 
+	/**
 	 * Objects with names.
 	 */
 	public abstract class NamedObject extends Object {
 
 		private String name=null;
 
-		/** 
+		/**
 		 * Get an instance of a named object with the given name.
-		 * 
-		 * @param name 
+		 *
+		 * @param name
 		 */
 		protected NamedObject(String name) {
 			super();
@@ -1205,14 +1205,14 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			this.name=name;
 		}
 
-		/** 
+		/**
 		 * Get the name of this object.
 		 */
 		public String getName() {
 			return(name);
 		}
 
-		/** 
+		/**
 		 * String me.
 		 */
 		public String toString() {
@@ -1227,18 +1227,18 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			return(sb.toString());
 		}
 
-		/** 
+		/**
 		 * Get the hash code of the name of this object.
-		 * 
+		 *
 		 * @return getName().hashCode()
 		 */
 		public int hashCode() {
 			return(name.hashCode());
 		}
 
-		/** 
+		/**
 		 * Test for equality.
-		 * 
+		 *
 		 * @param o object to test against
 		 * @return true if <code>o</code> is a NamedObject object with the
 		 * 			same name
@@ -1258,20 +1258,20 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 	}
 
-	/** 
+	/**
 	 * Parameters for DBSPs.
 	 */
 	public class Parameter extends NamedObject {
 
-		/** 
+		/**
 		 * Parameter type indicating this is a required parameter.
 		 */
 		public static final int REQUIRED=1;
-		/** 
+		/**
 		 * Parameter type indicating this is an optional parameter.
 		 */
 		public static final int OPTIONAL=2;
-		/** 
+		/**
 		 * Parameter type indicating this is an output parameter.
 		 */
 		public static final int OUTPUT=2;
@@ -1279,9 +1279,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		private int paramType=0;
 		private int javaType=0;
 
-		/** 
+		/**
 		 * Construct a new Parameter.
-		 * 
+		 *
 		 * @param paramType the parameter type (REQUIRED, etc...)
 		 * @param javaType the {@link java.sql.Types} type
 		 * @param name name of the parametr
@@ -1306,14 +1306,14 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			}
 		} // validateParamType
 
-		/** 
+		/**
 		 * Get the type of this parameter.
 		 */
 		public int getParamType() {
 			return(paramType);
 		}
 
-		/** 
+		/**
 		 * Get the {@link java.sql.Types} type of this parameter.
 		 */
 		public int getJavaType() {
@@ -1335,8 +1335,8 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			return(rc.toString());
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Arguments for DBSPs.
 	 */
 	public class Argument extends NamedObject {
@@ -1344,9 +1344,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		private int javaType=0;
 		private Object value=null;
 
-		/** 
+		/**
 		 * Construct a new Argument.
-		 * 
+		 *
 		 * @param javaType the {@link java.sql.Types} type
 		 * @param name name of the parametr
 		 */
@@ -1358,7 +1358,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			this.value=value;
 		}
 
-		/** 
+		/**
 		 * Get the {@link java.sql.Types} type of this parameter.
 		 */
 		public int getJavaType() {
@@ -1371,11 +1371,11 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			return(rv);
 		}
 
-		/** 
+		/**
 		 * Get the value of this argument.
 		 * @return the object passed in at construct time unless it was
 		 * 			null, in which case it will be an appropriate
-		 *			{@link DBNull} object 
+		 *			{@link DBNull} object
 		 */
 		public Object getValue() {
 			Object rv=value;
