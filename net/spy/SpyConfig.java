@@ -1,17 +1,20 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyConfig.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+ * $Id: SpyConfig.java,v 1.2 2002/09/04 23:24:17 dustin Exp $
  */
 
 package net.spy;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.FileInputStream;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Properties;
+import java.util.Map;
 
 /**
  * SpyConfig - an abstracted config file maintainer.
@@ -23,8 +26,7 @@ import java.util.Properties;
  */
 
 public class SpyConfig extends Properties {
-	private static Hashtable configStore=null;
-	private static Hashtable configTimeStamps=null;
+	private static Map configStore=null;
 
 	/**
 	 * Construct a new SpyConfig object describing a config file.
@@ -57,8 +59,7 @@ public class SpyConfig extends Properties {
 
 	private static synchronized void confInit() {
 		if(configStore==null) {
-			configStore=new Hashtable();
-			configTimeStamps=new Hashtable();
+			configStore=Collections.synchronizedMap(new HashMap());
 		}
 	}
 
@@ -77,16 +78,17 @@ public class SpyConfig extends Properties {
 		// See whether we've cached the config file or not.
 		if(isUpToDate(conffile)) {
 			// We've already generated this, set it here.
-			set( (Hashtable) configStore.get(conffile) );
+			ConfigInfo ci=(ConfigInfo)configStore.get(conffile);
+			set(ci.getConfig());
 			loaded=true;
 		} else {
 			try {
-				Hashtable h = hashConfig(conffile);
+				Map h = mapConfig(conffile);
 				record(conffile, h);
 				set(h);
 				loaded=true;
-			} catch(Exception e) {
-				// Didn't load.
+			} catch(IOException e) {
+				// Didn't load, this is not considered a failure.
 			}
 		}
 
@@ -132,35 +134,24 @@ public class SpyConfig extends Properties {
 	// Check to see if we have current data on this file.
 	private boolean isUpToDate(File file) {
 		boolean r = false;
-		try {
-			if(configStore.containsKey(file)) {
-				long ts=(long)((Long)configTimeStamps.get(file)).longValue();
-				if(ts == file.lastModified()) {
-					r=true;
-				}
+		ConfigInfo ci=(ConfigInfo)configStore.get(file);
+		if(ci!=null) {
+			if(ci.getTimestamp() == file.lastModified()) {
+				r=true;
 			}
-		} catch(Exception e) {
-			// Defaults to false.
 		}
 		return(r);
 	}
 
 	// record stuff to keep up with config file status
-	private void record(File file, Hashtable h) {
-		try {
-			Long l = new Long(file.lastModified());
-
-			configStore.put(file, h);
-			configTimeStamps.put(file, l);
-		} catch(Exception e) {
-			// Whatever
-		}
+	private void record(File file, Map h) {
+		configStore.put(file, new ConfigInfo(h, file.lastModified()));
 	}
 
-	private void set(Hashtable h) {
-		for(Enumeration e = h.keys(); e.hasMoreElements(); ) {
-			String key = (String)e.nextElement();
-			put(key, h.get(key));
+	private void set(Map h) {
+		for(Iterator i=h.entrySet().iterator(); i.hasNext(); ) {
+			Map.Entry me=(Map.Entry)i.next();
+			put(me.getKey(), me.getValue());
 		}
 	}
 
@@ -217,9 +208,31 @@ public class SpyConfig extends Properties {
 		}
 	}
 
-	private Hashtable hashConfig(File file) throws Exception {
+	private Map mapConfig(File file) throws IOException {
 		Properties p = new Properties();
 		p.load(new FileInputStream(file));
 		return(p);
+	}
+
+	// Inner class for storing configuration information
+	private class ConfigInfo extends Object {
+
+		private long timestamp=0;
+		private Map config=null;
+
+		public ConfigInfo(Map m, long ts) {
+			super();
+			this.config=m;
+			this.timestamp=ts;
+		}
+
+
+		public long getTimestamp() {
+			return(timestamp);
+		}
+
+		public Map getConfig() {
+			return(config);
+		}
 	}
 }
