@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.16 2003/04/18 07:50:14 dustin Exp $
+// $Id: DBSP.java,v 1.17 2003/05/12 05:44:25 dustin Exp $
 
 package net.spy.db;
 
@@ -259,7 +259,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 * 
 	 * @return an unmodifiable list of {@link Argument} objects
 	 */
-	protected List getArguments() {
+	public List getArguments() {
 		ArrayList al=new ArrayList(arguments.size());
 		for(Iterator i=getParameters().iterator(); i.hasNext();) {
 			Parameter p=(Parameter)i.next();
@@ -270,7 +270,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			}
 			al.add(arg);
 		}
-		return(al);
+		return(Collections.unmodifiableList(al));
 	}
 
 	/** 
