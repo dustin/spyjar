@@ -42,9 +42,14 @@
 
 	<target name="clean" description="Clean up all generated files.">
 		<delete dir="=build"/>
-		<delete file="spy.jar"/>
-		<delete file="spy-big.jar"/>
-		<delete file="testsuite.jar"/>
+		<delete>
+			<fileset dir=".">
+				<include name="spy.jar"/>
+				<include name="spy-big.jar"/>
+				<include name="spy-*.jar"/>
+				<include name="testsuite.jar"/>
+			</fileset>
+		</delete>
 	</target>
 
 	<target name="docs" depends="all,properties" unless="docs.upToDate">
@@ -56,8 +61,8 @@
 			use="true"
 			protected="true"
 			packagenames="net.spy.*"
-			windowtitle="Spy.jar Documentation - build ${build.number} from ${build.date}"
-			doctitle="Spy.jar Documentation - build ${build.number} from ${build.date}">
+			windowtitle="Spy.jar Documentation - version ${tree.version.short} from ${build.date}"
+			doctitle="Spy.jar Documentation - version ${tree.version.short} from ${build.date}">
 			<link href="http://java.sun.com/j2se/1.4/docs/api/"/>
 		</javadoc>
         <!--
@@ -91,12 +96,26 @@
 	<target name="install" depends="install-jars,install-docs"
 		description="Install the distribution and documentation for it"/>
 
-	<target name="install-jars" depends="spy.jar,spy-big.jar">
-		<copy file="spy.jar"
-			tofile="/afs/spy.net/home/dustin/public_html/soft/spy.jar"/>
+	<target name="jars" depends="spy.jar,spy-big.jar"/>
+
+	<target name="versioned-spy.jar" depends="spy.jar">
+		<copy file="spy.jar" tofile="spy-${tree.version.short}.jar"/>
+	</target>
+	<target name="versioned-spy-big.jar" depends="spy-big.jar">
+		<copy file="spy-big.jar" tofile="spy-big-${tree.version.short}.jar"/>
+	</target>
+
+	<target name="versioned-jars"
+		depends="versioned-spy.jar,versioned-spy-big.jar"/>
+
+	<target name="install-jars" depends="versioned-jars">
+		<copy file="spy.jar" tofile="${INSTDIR}/spy.jar"/>
+		<copy file="spy-${tree.version.short}.jar"
+			tofile="${INSTDIR}/spy-${tree.version.short}.jar"/>
 		<copy file="spy.jar" tofile="${user.home}/lib/java/spy.jar"/>
-		<copy file="spy-big.jar"
-			tofile="/afs/spy.net/home/dustin/public_html/soft/spy-big.jar"/>
+		<copy file="spy-big.jar" tofile="${INSTDIR}/spy-big.jar"/>
+		<copy file="spy-big-${tree.version.short}.jar"
+			tofile="${INSTDIR}/spy-big-${tree.version.short}.jar"/>
 	</target>
 
 	<target name="install-docs" depends="docs">
@@ -173,6 +192,7 @@
 		<buildnumber file="etc/build.number"/>
 		<!-- Find the current patch level of this tree -->
 		<exec executable="./etc/tree-version" outputproperty="tree.version"/>
+		<exec executable="./etc/version-num" outputproperty="tree.version.short"/>
 		<exec executable="./etc/get-changelog"
 			output="${BUILDDIR}/net/spy/changelog.txt"/>
 		<propertyfile file="${BUILDDIR}/net/spy/build.properties">
@@ -212,6 +232,7 @@
 			<entry key="DEPRECATION" value="on"/>
 			<entry key="DEBUG" value="on"/>
 			<entry key="VERBOSE" value="off"/>
+			<entry key="INSTDIR" value="/afs/spy.net/home/dustin/public_html/soft"/>
 			<!-- Location of extra jars for classpaths -->
 			<entry key="JARPATH" value="${user.home}/lib/java"/>
 			<!-- Driver to use for DB tests, expected to be found in JARPATH -->
