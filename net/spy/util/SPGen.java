@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.22 2003/01/03 19:04:17 dustin Exp $
+// $Id: SPGen.java,v 1.23 2003/01/04 10:36:41 dustin Exp $
 
 package net.spy.util;
 
@@ -45,7 +45,7 @@ public class SPGen extends Object {
 	private String pkg="";
 	private String superclass=null;
 	private String superinterface=null;
-	private String version="$Revision: 1.22 $";
+	private String version="$Revision: 1.23 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -292,11 +292,15 @@ public class SPGen extends Object {
 				+ " *  <li>" + procname + "</li>\n"
 				+ " * </ul>");
 		} else {
-			out.println(" * <b>SQL Query</b>\n"
-				+ " *\n"
-				+ " * <ul>\n"
-				+ " " + getDocQuery() + "\n"
-				+ " * </ul>");
+			// If it's not a stored procedure or callable, and it's not an
+			// interface, show the query.
+			if(!isInterface) {
+				out.println(" * <b>SQL Query</b>\n"
+					+ " *\n"
+					+ " * <ul>\n"
+					+ " " + getDocQuery() + "\n"
+					+ " * </ul>");
+			}
 		}
 
 		// Required parameters
