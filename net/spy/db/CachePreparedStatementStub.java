@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePreparedStatementStub.java,v 1.3 2003/03/28 20:30:11 knitterb Exp $
+ * $Id: CachePreparedStatementStub.java,v 1.4 2003/04/02 05:55:02 dustin Exp $
  */
 
 package net.spy.db;
@@ -17,13 +17,14 @@ import java.sql.Timestamp;
 import java.sql.Types;
 
 import net.spy.SpyDB;
+import net.spy.SpyObject;
 
 import net.spy.cache.SpyCache;
 
 /**
  * Prepared statement for executing cached queries
  */
-public class CachePreparedStatementStub extends Object {
+public class CachePreparedStatementStub extends SpyObject {
 
 	// Stored DB handle
 	private SpyDB db=null;
@@ -195,7 +196,7 @@ public class CachePreparedStatementStub extends Object {
 							+ ") seems to have been overlooked.");
 				}
 			} catch (NullPointerException ex) {
-				System.err.println("error with "+args[i]+" in type "+
+				getLogger().error("error with "+args[i]+" in type "+
 					types[i]+" at param postition "+i);
 				throw ex;
 			}
