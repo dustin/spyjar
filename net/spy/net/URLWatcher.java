@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLWatcher.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: URLWatcher.java,v 1.2 2002/08/28 07:24:13 dustin Exp $
 
 package net.spy.net;
 
@@ -101,13 +101,19 @@ public class URLWatcher extends Object {
 	 * @param u The item to watch
 	 */
 	public void startWatching(URLItem u) {
-		// Before adding it, make sure it's updated.
-		u.run();
 		JobQueue jq=cron.getJobQueue();
 		synchronized(jq) {
 			// Don't add it if it's already there
 			if(!isWatching(u.getURL())) {
 				jq.addJob(u);
+			}
+		}
+		// After adding it, wait a bit to see if it can grab the content
+		synchronized(u) {
+			try {
+				u.wait(5000);
+			} catch(InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}

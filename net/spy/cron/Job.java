@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Job.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: Job.java,v 1.2 2002/08/28 07:24:13 dustin Exp $
 
 package net.spy.cron;
 
@@ -104,6 +104,10 @@ public abstract class Job extends Object implements Runnable {
 		markStarted();
 		runJob();
 		markFinished();
+		// If anyone cares...
+		synchronized(this) {
+			notifyAll();
+		}
 	}
 
 	/**
