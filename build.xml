@@ -189,6 +189,12 @@
 			<entry key="tree.version" value="${tree.version}"/>
 		</propertyfile>
 		<property file="${BUILDDIR}/net/spy/build.properties"/>
+		<!-- Copy any additional properties over -->
+		<copy todir="${BUILDDIR}">
+			<fileset dir="${SRCDIR}">
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
 		<property name="properties.upToDate" value="true"/>
 	</target>
 
