@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: LoggerFactory.java,v 1.3 2002/11/08 06:53:31 dustin Exp $
+// $Id: LoggerFactory.java,v 1.4 2003/02/17 21:02:19 dustin Exp $
 
 package net.spy.log;
 
@@ -17,6 +17,15 @@ import net.spy.util.NestedRuntimeException;
  * Factory to get logger instances.
  * The system property <code>net.spy.log.LoggerImpl</code> should point to
  * an implementation of net.spy.log.Logger to use.
+ *
+ * <p>
+ *  Depending on how and where this was compiled, a sun logger (jdk 1.4)
+ *  and/or <a href="http://jakarta.apache.org/log4j/docs/">log4j</a> logger
+ *  implementation may be included.  Both are included with the official
+ *  distribution.
+ * </p>
+ *
+ * @see AbstractLogger
  */
 public class LoggerFactory extends Object {
 
