@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyUtil.java,v 1.2 2002/08/28 03:52:06 dustin Exp $
+// $Id: SpyUtil.java,v 1.3 2003/05/20 07:49:48 dustin Exp $
 
 package net.spy;
 
@@ -117,17 +117,18 @@ public class SpyUtil {
 	}
 
 	/** 
-	 * Join an Iterator of Strings on a join string.
+	 * Join an Iterator of Objects on a join string.  Each object's
+	 * toString() method will be used for stringification.
 	 * 
-	 * @param i the iterator of Strings
+	 * @param i the iterator of Objects
 	 * @param on the join string
 	 * @return a new String with all of the elements joined
 	 */
 	public static String join(Iterator i, String on) {
 		StringBuffer sb=new StringBuffer(256);
 		while(i.hasNext()) {
-			String s=(String)i.next();
-			sb.append(s);
+			Object o=i.next();
+			sb.append(o);
 			if(i.hasNext()) {
 				sb.append(on);
 			}
@@ -136,7 +137,8 @@ public class SpyUtil {
 	}
 
 	/** 
-	 * Join a Collection of Strings on a join string.
+	 * Join a Collection of Objects on a join string.  Each object's
+	 * toString() method will be used for stringification.
 	 * 
 	 * @param c the collection
 	 * @param on the join string
