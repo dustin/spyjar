@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.12 2003/04/11 09:13:28 dustin Exp $
+// $Id: ThreadPool.java,v 1.13 2003/04/11 23:24:20 dustin Exp $
 
 package net.spy.util;
 
@@ -406,21 +406,80 @@ public class ThreadPool extends ThreadGroup {
 		}
 	}
 
-	/**
-	 * Add a task for one of the threads to execute.
-	 *
-	 * @see ThreadPoolRunnable
-	 */
-	public void addTask(Runnable r) {
+	// Common stuff for adding tasks
+	private void addTask(Task t) {
 		checkStarted();
 		synchronized(tasks) {
-			tasks.add(r);
+			tasks.add(t);
 			tasks.notify();
 		}
 		// Let pool manager know something's been added.
 		synchronized(poolManager) {
 			poolManager.notify();
 		}
+	}
+
+	/**
+	 * Add a task for one of the threads to execute.
+	 *
+	 * This method will add a new task to the queue and notify the queue of
+	 * the new task (as well as notify the pool manager) then return
+	 * immediately.
+	 *
+	 * @see ThreadPoolRunnable
+	 * @exception IndexOutOfBoundsException if the backing list is full
+	 */
+	public void addTask(Runnable r) {
+		addTask(new Task(r));
+	}
+
+	/** 
+	 * Add a task for one of the threads to execute.
+	 *
+	 * This method will add a new task to the queue, but only wait a
+	 * certain amount of time for the task to get picked up.  If the task
+	 * is not picked up for execution by <i>timeout</i> milliseconds, the
+	 * task will not be executed.
+	 * 
+	 * @param r the task to execute
+	 * @param timeout the number of milliseconds to wait for it to start
+	 *
+	 * @return true if the task was started
+	 *
+	 * @exception IndexOutOfBoundsException if the backing list is full
+	 */
+	public boolean addTask(Runnable r, long timeout) {
+		boolean wasStarted=false;
+		Task t=new Task(r);
+		addTask(t);
+		synchronized(t) {
+			// If it hadn't started by the time we got here, wait for it
+			wasStarted=t.isStarted();
+			if(!wasStarted) {
+				try {
+					t.wait(timeout);
+				} catch(InterruptedException e) {
+					// We catch the interrupted exception here because
+					// there's not an easy way to give the client the
+					// ability to cancel this task, so it's just going to
+					// go anyway.  It's probably safer to potentially
+					// automatically cancel the task than it is to always
+					// run the task when there was an InterruptedException
+					getLogger().warn("addTask interrupted", e);
+				}
+			}
+		}
+		// Regain the lock and check again
+		synchronized(t) {
+			// If it's still not started after our wait, cancel it
+			wasStarted=t.isStarted();
+			if(!wasStarted) {
+				getLogger().info(
+					"Cancelling new task, wasn't completed in time");
+				t.cancel();
+			}
+		}
+		return(wasStarted);
 	}
 
 	/**
@@ -526,6 +585,62 @@ public class ThreadPool extends ThreadGroup {
 	}
 
 	// //////////////////////////////////////////////////////////////////////
+	// This object wraps the Runnable while it's queued, giving us the
+	// ability to effectively dequeue something.
+	// //////////////////////////////////////////////////////////////////////
+
+	private class Task extends Object {
+		Runnable runnable=null;
+		boolean started=false;
+
+		public Task(Runnable r) {
+			super();
+			this.runnable=r;
+		}
+
+		/** 
+		 * True if this task has been started.
+		 */
+		public boolean isStarted() {
+			return(started);
+		}
+
+		/** 
+		 * Cancel a task before it gets a chance to start.
+		 *
+		 * @exception IllegalStateException if it's already been canceled or
+		 * started
+		 */
+		public void cancel() {
+			if(runnable==null) {
+				throw new IllegalStateException("Already cancelled");
+			}
+			if(started) {
+				throw new IllegalStateException("Already started");
+			}
+
+			runnable=null;
+		}
+
+		/** 
+		 * Get the Runnable this task is representing.
+		 * 
+		 * @return the Runnable
+		 *
+		 * @exception IllegalStateException if this task has already started
+		 */
+		public Runnable getTask() {
+			if(started) {
+				throw new IllegalStateException("Already started");
+			}
+
+			started=true;
+			return(runnable);
+		}
+
+	}
+
+	// //////////////////////////////////////////////////////////////////////
 	// The threads that make up the pool.
 	// //////////////////////////////////////////////////////////////////////
 
@@ -605,11 +720,15 @@ public class ThreadPool extends ThreadGroup {
 				// Record the runnable
 				running=r;
 				start=System.currentTimeMillis();
+				// Notify the runnable that it's been accepted and we're
+				// ready to run it.
+				synchronized(r) {
+					r.notify();
+				}
 				// Run the runnable.
 				r.run();
 			} catch(Throwable t) {
-				Logger l=LoggerFactory.getLogger(getClass());
-				l.error("Problem running your runnable", t);
+				getLogger().error("Problem running your runnable", t);
 			}
 			synchronized(runningMutex) {
 				running=null;
@@ -619,12 +738,20 @@ public class ThreadPool extends ThreadGroup {
 		public void run() {
 			while(going) {
 				try {
-					Runnable r=(Runnable)tasks.removeFirst();
-					// Let the monitor know we got one.
-					synchronized(monitor) {
-						monitor.completedJob(r);
+					Task t=(Task)tasks.removeFirst();
+					// Get the runnable from the task (in a specific lock)
+					Runnable r=null;
+					synchronized(t) {
+						r=t.getTask();
 					}
-					run(r);
+					// Make sure we got something there.
+					if(r!=null) {
+						// Let the monitor know we got one.
+						synchronized(monitor) {
+							monitor.completedJob(r);
+						}
+						run(r);
+					}
 				} catch(NoSuchElementException e) {
 					// If the stack is empty, wait for something to get added.
 					synchronized(tasks) {
