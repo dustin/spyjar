@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.23 2003/08/01 19:10:23 knitterb Exp $
+// $Id: DBSP.java,v 1.24 2003/08/04 18:30:08 knitterb Exp $
 
 package net.spy.db;
 
@@ -261,6 +261,14 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 */
 	protected void setOutput(String name, int type) throws SQLException {
 		addParameter(new Parameter(Parameter.OUTPUT, type, name));
+
+		// I'm not sure how best to do this, but this has to be something
+		// other than a null.  If it's null, than the Argument will make
+		// the javaType into a Types.NULL instead of what I'm trying to set
+		// it to.  Then I just get pissed and life sucks.  I guess we could
+		// make the Argument have a "getSetJavaType()" method?  Anyhow, for
+		// now I'm just going to make an object.
+		setArg(name, "", type);
 	}
 
 	/**

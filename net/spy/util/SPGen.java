@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.32 2003/08/01 19:10:23 knitterb Exp $
+// $Id: SPGen.java,v 1.33 2003/08/04 18:30:08 knitterb Exp $
 
 package net.spy.util;
 
@@ -50,13 +50,14 @@ public class SPGen extends Object {
 	private String pkg="";
 	private String superclass=null;
 	private String superinterface=null;
-	private String version="$Revision: 1.32 $";
+	private String version="$Revision: 1.33 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
 	private List results=null;
 	private List args=null;
 	private Set interfaces=null;
+	private Set imports=null;
 	private boolean debug=false;
 	private int timeout=0;
 
@@ -78,6 +79,7 @@ public class SPGen extends Object {
 		results=new ArrayList();
 		args=new ArrayList();
 		interfaces=new HashSet();
+		imports=new HashSet();
 
 		if(types==null) {
 			initTypes();
@@ -224,6 +226,7 @@ public class SPGen extends Object {
 	private String createSetMethod(Parameter p) throws Exception {
 		String rv=null;
 		String types[]=null;
+		boolean customtype=false;
 
 		// TODO:  Replace this with an extensible Map.
 		if(p.getType().equals("java.sql.Types.BIT")) {
@@ -271,8 +274,11 @@ public class SPGen extends Object {
 			String typesTmp[]={"java.sql.Timestamp"};
 			types=typesTmp;
 		} else {
+			// XXX This is just a thing to get me over the hump
+			//return("");
 			String typesTmp[]={"java.lang.Object"};
 			types=typesTmp;
+			customtype=true;
 		}
 
 		String methodName=methodify(p.getName());
@@ -292,9 +298,14 @@ public class SPGen extends Object {
 			if(isInterface) {
 				rv+=";\n";
 			} else {
-				rv+=" {\n\n"
-					+ "\t\tsetArg(\"" + p.getName() + "\", to, "+p.getType()+");\n"
-					+ "\t}\n";
+				if (customtype) {
+					rv+=" {\n\n"
+						+ "\t\tsetArg(\"" + p.getName() + "\", to, "
+						+ p.getType() +");\n\t}\n";
+				} else {
+					rv+=" {\n\n"
+						+ "\t\tset(\"" + p.getName() + "\", to);\n\t}\n";
+				}
 			}
 		}
 	
@@ -324,6 +335,15 @@ public class SPGen extends Object {
 			+ "import java.util.Map;\n"
 			+ "import java.util.HashMap;\n"
 			+ "import net.spy.SpyConfig;\n");
+
+		// custom imports
+		for (Iterator it=imports.iterator(); it.hasNext(); ) {
+			String tmpimp=(String)it.next();
+			out.print("import ");
+			out.print(tmpimp);
+			out.println(";");
+		}
+		out.println("\n");
 
 		// Generate the documentation.
 		out.println("/**\n"
@@ -620,7 +640,9 @@ public class SPGen extends Object {
 		for(Iterator i=args.iterator(); i.hasNext(); ) {
 			Parameter p=(Parameter)i.next();
 
-			out.println(createSetMethod(p));
+			if (!p.isOutput()) {
+				out.println(createSetMethod(p));
+			}
 		}
 
 		// If we want result sets, add them.
@@ -859,6 +881,8 @@ public class SPGen extends Object {
 					} else if(section.equals("superclass")) {
 						user_superclass=new StringBuffer(96);
 						user_superclass.append(tmp);
+					} else if(section.equals("import")) {
+						imports.add(tmp);
 					} else if(section.equals("implements")) {
 						interfaces.add(tmp);
 					} else {
@@ -939,7 +963,7 @@ public class SPGen extends Object {
 		Collection rv=new ArrayList(args.size());
 		for(Iterator i=args.iterator(); i.hasNext();) {
 			Parameter p=(Parameter)i.next();
-			if(!p.isOutput()) {
+			if(p.isOutput()) {
 				rv.add(p);
 			}
 		}
