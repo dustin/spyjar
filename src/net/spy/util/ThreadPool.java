@@ -221,9 +221,13 @@ public class ThreadPool extends ThreadGroup {
 	 * Create a new worker thread in the pool.
 	 */
 	synchronized void createThread() {
-		RunThread rt=new RunThread(this, tasks, monitor);
-		rt.setPriority(priority);
-		threads.add(rt);
+		if(shutdown) {
+			getLogger().warn("Trying to create a thread after shutdown.");
+		} else {
+			RunThread rt=new RunThread(this, tasks, monitor);
+			rt.setPriority(priority);
+			threads.add(rt);
+		}
 	}
 
 	/** 
@@ -588,11 +592,14 @@ public class ThreadPool extends ThreadGroup {
 		if(shutdown) {
 			throw new IllegalStateException("Already shut down");
 		}
+		// First shut down the manager so it doesn't try to create any more
+		// threads
+		poolManager.requestStop();
+		// Now, tell all of the known threads that we don't need them anymore
 		for(Iterator i=threads.iterator(); i.hasNext(); ) {
 			RunThread t=(RunThread)i.next();
 			t.shutdown();
 		}
-		poolManager.requestStop();
 		shutdown=true;
 	}
 
