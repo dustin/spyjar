@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.7 2002/09/25 19:04:57 knitterb Exp $
+// $Id: DBSP.java,v 1.8 2002/10/28 23:42:37 dustin Exp $
 
 package net.spy.db;
 
@@ -419,37 +419,6 @@ public abstract class DBSP extends SpyCacheDB {
 	 */
 	protected void setQuery(String query) {
 		this.query=query;
-
-		/* XXX:  This is currently broken as I'm redoing args and params
-		if(debug) {
-			System.err.println("DBSP Query:  " + query);
-			System.err.println("\t-");
-
-			for(Iterator i=parameters.iterator(); i.hasNext(); ) {
-				Parameter p=(String)e.next();
-				String val=args.get(key).toString();
-				System.err.println("\t" + key + "=" + val);
-			}
-
-			for(Iterator e=optionalInorder.iterator(); e.hasNext(); ) {
-				String key=(String)e.next();
-				Object o=args.get(key);
-				if(o!=null) {
-					String val=o.toString();
-					System.err.println("\t" + key + "=" + val);
-				}
-			}
-
-			for(Iterator e=outputInorder.iterator(); e.hasNext(); ) {
-				String key=(String)e.next();
-				Object o=args.get(key);
-				if(o!=null) {
-					String val=o.toString();
-					System.err.println("\t" + key + "=" + val + " output");
-				}
-			}
-		}
-		*/
 	}
 
 	/** 
