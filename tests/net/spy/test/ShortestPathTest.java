@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ShortestPathTest.java,v 1.3 2002/10/19 09:37:16 dustin Exp $
+// $Id: ShortestPathTest.java,v 1.4 2002/11/07 18:22:45 dustin Exp $
 
 package net.spy.test;
 
@@ -91,6 +91,9 @@ public class ShortestPathTest extends TestCase {
 		// D -> C at a higher cost, giving it a path to E
 		d.linkTo(c, 100);
 
+		// Link e to itself
+		e.linkTo(e, 10);
+
 		// calculate the paths
 		ShortestPathFinder spf=new ShortestPathFinder();
 		spf.calculatePaths(nodes.values());
@@ -129,6 +132,8 @@ public class ShortestPathTest extends TestCase {
 		// above, these are all of the expected values (least costly
 		// next-hops).
 
+		// A -> A -- no match
+		assertLinkMatch(a, a, null, 0);
 		// A -> B == 10 via B
 		assertLinkMatch(a, b, b, 10);
 		// A -> C == 15 via C
@@ -140,6 +145,8 @@ public class ShortestPathTest extends TestCase {
 
 		// B -> A -- doesn't exist
 		assertLinkMatch(b, a, null, 0);
+		// B -> B -- doesn't exist
+		assertLinkMatch(b, b, null, 0);
 		// B -> C == 10 via C
 		assertLinkMatch(b, c, c, 10);
 		// B -> D == 20 via C
@@ -151,6 +158,8 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(c, a, null, 0);
 		// C -> B won't go
 		assertLinkMatch(c, b, null, 0);
+		// C -> C via D?
+		assertLinkMatch(c, c, d, 110);
 		// C -> D == 10 via D
 		assertLinkMatch(c, d, d, 10);
 		// C -> E == 10 via E
@@ -162,6 +171,8 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(d, b, null, 0);
 		// D -> C via C
 		assertLinkMatch(d, c, c, 100);
+		// D -> D via C
+		assertLinkMatch(d, d, c, 110);
 		// D -> E via C
 		assertLinkMatch(d, e, c, 110);
 
@@ -170,6 +181,7 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(e, b, null, 0);
 		assertLinkMatch(e, c, null, 0);
 		assertLinkMatch(e, d, null, 0);
+		assertLinkMatch(e, e, e, 10);
 	}
 
 	/** 
@@ -178,15 +190,24 @@ public class ShortestPathTest extends TestCase {
 	public void testShortestPath() throws NoPathException {
 		ShortestPath sp=new ShortestPath(a, b);
 		assertEquals("ShortestPath from A -> B", 1, sp.size());
+		try {
+			sp=new ShortestPath(a, a);
+			fail("Expected to not find a path from A -> A, found " + sp);
+		} catch(NoPathException e) {
+			// Success
+		}
 		sp=new ShortestPath(a, c);
-		assertEquals("ShortestPath from A -> C", 1, sp.size());
+		assertEquals("ShortestPath from A -> C:  " + sp, 1, sp.size());
 		sp=new ShortestPath(a, d);
-		assertEquals("ShortestPath from A -> D", 2, sp.size());
+		assertEquals("ShortestPath from A -> D:  " + sp, 2, sp.size());
 		sp=new ShortestPath(a, e);
-		assertEquals("ShortestPath from A -> E", 2, sp.size());
+		assertEquals("ShortestPath from A -> E:  " + sp, 2, sp.size());
 
 		sp=new ShortestPath(d, e);
-		assertEquals("ShortestPath from D -> E", 2, sp.size());
+		assertEquals("ShortestPath from D -> E:  " + sp, 2, sp.size());
+
+		sp=new ShortestPath(e, e);
+		assertEquals("ShortestPath from E -> E:  " + sp, 1, sp.size());
 	}
 
 	/** 

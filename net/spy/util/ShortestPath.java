@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ShortestPath.java,v 1.3 2002/10/19 09:37:16 dustin Exp $
+// $Id: ShortestPath.java,v 1.4 2002/11/07 18:22:45 dustin Exp $
 
 package net.spy.util;
 
@@ -25,7 +25,6 @@ public class ShortestPath extends ArrayList {
 	 *
 	 * @throws NoPathException if there's no path to the destination
 	 * @throws NullPointerException if from or to is null
-	 * @throws IllegalArgumentException if from and to are the same node
 	 */
 	public ShortestPath(SPNode from, SPNode to) throws NoPathException {
 		super();
@@ -36,11 +35,6 @@ public class ShortestPath extends ArrayList {
 
 		if (to == null) {
 			throw new NullPointerException("To may not be null.");
-		}
-
-		if (from.equals(to)) {
-			throw new IllegalArgumentException(
-				"From and To must be different nodes.");
 		}
 
 		SPVertex v=from.getNextHop(to);
