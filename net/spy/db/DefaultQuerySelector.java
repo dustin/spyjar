@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DefaultQuerySelector.java,v 1.6 2002/10/30 23:34:51 knitterb Exp $
+// $Id: DefaultQuerySelector.java,v 1.7 2002/10/30 23:39:39 dustin Exp $
 
 package net.spy.db;
 
@@ -28,7 +28,7 @@ import net.spy.SpyConfig;
  *
  * <table border="1">
  *  <tr>
- *   <th>Driver class prefix</th><th>Query Name</th><th>Driver *   Provider</th>
+ *   <th>Driver class prefix</th><th>Query Name</th><th>Driver Provider</th>
  *  </tr>
  *  <tr>
  *   <td>org.postgresql.</td><td>pgsql</td><td>http://www.postgresql.org</td>
@@ -40,7 +40,7 @@ import net.spy.SpyConfig;
  *   <td>weblogic.jdbc.oci.</td><td>oracle</td><td>http://www.bea.com</td>
  *  </tr>
  *  <tr>
- *   <td>com.ashna.jturbo.</td><td>mssql</td><td>&nbsp;</td>
+ *   <td>com.ashna.jturbo.</td><td>mssql</td><td>http://www.newatlanta.com/</td>
  *  </tr>
  * </table>
  *
@@ -75,7 +75,7 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 		// Weblogic's Oracle jDrvier
 		registerNameMapping("weblogic.jdbc.oci.", "oracle");
 
-		// Micro$oft MSSQL from 
+		// Micro$oft MSSQL from New Atlanta
 		registerNameMapping("com.ashna.jturbo.", "mssql");
 	}
 
@@ -102,17 +102,21 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 	public String getQuery(SpyConfig conf, Map queryMap) {
 		String rv=null;
 
+		// Find out if there's an explicit mapping in the config
 		String tmp=conf.get("queryName");
 
 		if (tmp != null) {
+			// If there is, use it.
 			rv=(String)queryMap.get(tmp);
 		} else {
+			// If there's not, base it on the driver name
 			tmp=conf.get("dbDriverName");
 			if(tmp!=null) {
 				rv=getQuery(tmp, queryMap);
 			}
 		}
 
+		// If we didn't find anything, use the default.
 		if (rv==null) {
 			rv=(String)queryMap.get(DEFAULT_QUERY);
 		}
