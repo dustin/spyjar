@@ -2,7 +2,7 @@
  * Copyright (c) 2002 Scott Lamb <slamb@slamb.org>
  * This code is released under the MIT license; see the file LICENSE.
  *
- * $Id: SPGenTask.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+ * $Id: SPGenTask.java,v 1.2 2002/12/19 22:07:32 knitterb Exp $
  */
 
 package net.spy.util;
@@ -31,12 +31,13 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  * builds don't create problems, etc.
  *
  * @author Scott Lamb
- * @version $Revision: 1.1 $ $Date: 2002/08/28 00:34:57 $
+ * @version $Revision: 1.2 $ $Date: 2002/12/19 22:07:32 $
  **/
 public class SPGenTask extends MatchingTask {
 
 	private File srcDir;
 	private File destDir;
+	private String superclass=null;
 
 	/**
 	 * Sets the source directory to search for .spt files.
@@ -51,6 +52,10 @@ public class SPGenTask extends MatchingTask {
 	 **/
 	public void setDestdir(File destDir) {
 		this.destDir = destDir;
+	}
+
+	public void setSuperclass(String sc) {
+		this.superclass=sc;
 	}
 
 	/**
@@ -162,6 +167,10 @@ public class SPGenTask extends MatchingTask {
 			String name = srcFile.getName();
 			// assert name.endsWith(".spt");
 			SPGen spg = new SPGen(name.substring(0, name.length()-4), in, out);
+			if (this.superclass!=null) {
+				System.err.println("making sc: "+this.superclass);
+				spg.setSuperclass(this.superclass);
+			}
 			try {
 				spg.generate();
 				in.close();

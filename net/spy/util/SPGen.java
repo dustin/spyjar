@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.18 2002/11/10 04:01:49 dustin Exp $
+// $Id: SPGen.java,v 1.19 2002/12/19 22:07:32 knitterb Exp $
 
 package net.spy.util;
 
@@ -42,8 +42,8 @@ public class SPGen extends Object {
 	private String description="";
 	private String procname="";
 	private String pkg="";
-	private String superclass="net.spy.db.DBSP";
-	private String version="$Revision: 1.18 $";
+	private String superclass=null;
+	private String version="$Revision: 1.19 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -76,6 +76,12 @@ public class SPGen extends Object {
 
 		if(types==null) {
 			initTypes();
+		}
+	}
+
+	public void setSuperclass(String sc) {
+		if (sc!=null) {
+			this.superclass=sc;
 		}
 	}
 
@@ -628,7 +634,9 @@ public class SPGen extends Object {
 						System.err.println("Warning, stuff in debug section:  "
 							+ tmp);
 					} else if(section.equals("sql")) {
-						superclass="net.spy.db.DBSQL";
+						if (superclass==null) {
+							superclass="net.spy.db.DBSQL";
+						}
 
 						List sqlquery=(List)queries.get(currentQuery);
 						if(sqlquery == null) {
@@ -638,10 +646,14 @@ public class SPGen extends Object {
 						sqlquery.add(tmp);
 					} else if(section.equals("procname")) {
 						procname+=tmp;
-						superclass="net.spy.db.DBSP";
+						if (superclass==null) {
+							superclass="net.spy.db.DBSP";
+						}
 					} else if(section.equals("callable")) {
 						procname+=tmp;
-						superclass="net.spy.db.DBCP";
+						if (superclass==null) {
+							superclass="net.spy.db.DBCP";
+						}
 					} else if(section.equals("params")) {
 						Parameter param=new Parameter(tmp);
 						args.add(param);
