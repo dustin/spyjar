@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DefaultQuerySelector.java,v 1.3 2002/10/30 20:11:06 dustin Exp $
+// $Id: DefaultQuerySelector.java,v 1.4 2002/10/30 20:29:44 dustin Exp $
 
 package net.spy.db;
 
@@ -120,10 +120,15 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 
 			// If we didn't get a key directly, try a fuzzy search in the Map
 			if(tmp == null) {
-				SortedMap h=nameMap.headMap(name);
-				String key=(String)h.lastKey();
-				if(name.startsWith(key)) {
-					tmp=(String)nameMap.get(key);
+				try {
+					SortedMap h=nameMap.headMap(name);
+					String key=(String)h.lastKey();
+					if(name.startsWith(key)) {
+						tmp=(String)nameMap.get(key);
+					}
+				} catch(NoSuchElementException e) {
+					// It wasn't there, and nothing like it was there, move
+					// along
 				}
 			} // not in the name map
 
