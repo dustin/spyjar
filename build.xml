@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.25 2003/09/04 07:18:23 dustin Exp $
+	$Id: build.xml,v 1.26 2003/09/18 18:51:16 dustin Exp $
 
 	-->
 
@@ -153,7 +153,7 @@
 	<target name="spy.jar" depends="all,properties"
 		description="Create a lightweight jar (no docs or source)"
 		unless="spy.jar.upToDate">
-		<jar jarfile="spy.jar" basedir=".">
+		<jar jarfile="spy.jar" basedir="." index="true">
 			<manifest>
 				<attribute name="Main-Class" value="net.spy.BuildInfo"/>
 			</manifest>
@@ -167,7 +167,7 @@
 	<target name="spy-big.jar" unless="spy-big.jar.upToDate"
 		depends="all,properties,docs,testjar"
 		description="Build the big jar - classes, sources, docs, oh my!">
-		<jar jarfile="spy-big.jar" basedir=".">
+		<jar jarfile="spy-big.jar" basedir="." index="true">
 			<manifest>
 				<attribute name="Main-Class" value="net.spy.BuildInfo"/>
 			</manifest>
