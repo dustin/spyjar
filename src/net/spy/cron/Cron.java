@@ -145,6 +145,7 @@ public final class Cron extends SpyThread {
 			// If we didn't get a next job start date, the queue is likely
 			// empty.  If we shut down on an empty queue, shut down.
 			if(next==null) {
+				getLogger().debug("No job in queue");
 				// If it's been too long, shut down
 				if( (now-validJobFound) > maxIdleTime) {
 					getLogger().info("Been a long time "

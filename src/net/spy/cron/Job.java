@@ -146,6 +146,7 @@ public abstract class Job extends SpyObject implements Runnable {
 	public final synchronized void findNextRun() {
 		if(ti == null)  {
 			nextStart = null;
+			getLogger().debug("I have no time increment, not rescheduling");
 		} else {
 			Date now=new Date();
 			while(nextStart.before(now)) {
