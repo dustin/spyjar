@@ -92,8 +92,18 @@
 	<target name="full-install" depends="install,install-docs"
 		description="Full install (install, install-docs)"/>
 
+	<!-- Install the project file -->
+	<target name="install-project">
+		<copy file="etc/spyjar.xtp" filtering="true"
+			tofile="${PROJECTSDIR}/spyjar.xtp">
+			<filterset>
+				<filter token="VER" value="${tree.version.short}"/>
+			</filterset>
+		</copy>
+	</target>
+
 	<!-- Regular install -->
-	<target name="install" depends="install-jars,install-docs"
+	<target name="install" depends="install-jars,install-docs,install-project"
 		description="Install the distribution and documentation for it"/>
 
 	<target name="jars" depends="spy.jar,spy-big.jar"/>
@@ -239,6 +249,8 @@
 			<entry key="DEBUG" value="on"/>
 			<entry key="VERBOSE" value="off"/>
 			<entry key="INSTDIR" value="/afs/spy.net/home/dustin/public_html/soft"/>
+			<entry key="PROJECTSDIR"
+				value="/afs/spy.net/home/dustin/public_html/projects"/>
 			<entry key="DOCINSTDIR"
 				value="/afs/spy.net/home/dustin/public_html/spyjar/j2/doc/"/>
 			<!-- Location of extra jars for classpaths -->

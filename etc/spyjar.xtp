@@ -1,0 +1,97 @@
+<project>
+	<name>spy.jar</name>
+
+	<description>
+		<p>
+			spy.jar provides a bunch of utility java classes for me, including the
+			following:
+
+		<p>
+			<ul>
+    		<li>Object instance pooling (including jdbc database pooling, and snpp
+       			connection pooling, it's very easy to make more)
+						<a href="../spyjar/j2/doc/net/spy/pool/package-summary.html">[docs]</a>
+				</li>
+    		<li>
+					Cron functionality
+					<a href="../spyjar/j2/doc/net/spy/cron/package-summary.html">[docs]</a>
+				</li>
+    		<li>
+					Remote Hashtables (via RMI)
+						<a href="../spyjar/j2/doc/net/spy/RHash.html">[docs]</a>
+				</li>
+    		<li>
+					More simplified configuration class
+						<a href="../spyjar/j2/doc/net/spy/SpyConfig.html">[docs]</a>
+				</li>
+    		<li>
+					Abstracted, easy-to-use pooled database connection class
+						<a href="../spyjar/j2/doc/net/spy/SpyDB.html">[docs]</a>
+				</li>
+    		<li>
+					Asynchronous logging, and general abstraction of logging
+					<a href="../spyjar/j2/doc/net/spy/log/package-summary.html">[docs]</a>
+				</li>
+    		<li>
+					A cheap application server
+					<a href="../spyjar/j2/doc/net/spy/SpyRunner.html">[docs]</a>
+				</li>
+    		<li>
+					An in-memory object cache manager
+					<a href="../spyjar/j2/doc/net/spy/cache/package-summary.html">[docs]</a>
+				</li>
+    		<li>
+					Syslog client
+					<a href="../spyjar/j2/doc/net/spy/Syslog.html">[docs]</a>
+				</li>
+    		<li>
+					Information gathering classes (stocks, weather, etc...)
+					<a href="../spyjar/j2/doc/net/spy/info/package-summary.html">[docs]</a>
+				</li>
+    		<li>
+					A simple HTTP document fetcher
+					<a href="../spyjar/j2/doc/net/spy/net/HTTPFetch.html">[docs]</a>
+				</li>
+    		<li>
+					A self-refreshing web page cache
+					<a href="../spyjar/j2/doc/net/spy/net/URLWatcher.html">[docs]</a>
+				</li>
+    		<li>
+					An SNPP client
+					<a href="../spyjar/j2/doc/net/spy/net/SNPP.html">[docs]</a>
+				</li>
+    		<li>
+					An nmap machine-readable output parser
+					<a href="../spyjar/j2/doc/net/spy/nmap/package-summary.html">[docs]</a>
+				</li>
+    		<li>
+					An algorithm for determining the lowest cost route between two
+					nodes in a graph
+					<a href="../spyjar/j2/doc/net/spy/util/ShortestPathFinder.html">[docs]</a>
+				</li>
+    		<li>Probably more</li>
+			</ul>
+
+			Basically, anything I write that I plan on reusing goes into this jar.
+
+		<p>
+			<a href="../spyjar/j2/doc/">Latest Documentation</a>
+		<p>
+			<a href="http://sourceforge.net/projects/spyjar/"> <img
+			src="http://sourceforge.net/sflogo.php?group_id=61122&type=1"
+			width="88" height="31" border="0" alt="SourceForge"></a>
+
+	</description>
+
+	<dist>
+		<disturl>../soft/spy-@VER@.jar</disturl>
+		<distversion>@VER@</distversion>
+	</dist>
+
+	<dist>
+		<disturl>../soft/spy-big-@VER@.jar</disturl>
+		<distversion>@VER@</distversion>
+		<note>*big*: source, documentation, and test suite included</note>
+	</dist>
+
+</project>
