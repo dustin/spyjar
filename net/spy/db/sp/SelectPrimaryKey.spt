@@ -1,5 +1,5 @@
 #
-# $Id: SelectPrimaryKey.spt,v 1.1 2002/08/28 00:34:55 dustin Exp $
+# $Id: SelectPrimaryKey.spt,v 1.2 2003/01/03 01:19:54 dustin Exp $
 #
 
 @package
@@ -10,9 +10,11 @@ Select the current value from the primary key table.
 
 @sql
 select
-	table_name, (primary_key - (incr-1)) as first_key, primary_key as last_key
+	table_name,
+	(primary_key - (incr_value-1)) as first_key,
+	primary_key as last_key
 from
-	primary_keys
+	primary_key
 where
 	table_name=?
 
