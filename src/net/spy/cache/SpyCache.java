@@ -34,6 +34,8 @@ public class SpyCache extends SpyObject {
 	private TimeStampedHashMap cacheStore=null;
 	private SpyCacheCleaner cacheCleaner=null;
 
+	private CacheDelegate delegate=null;
+
 	private static SpyCache instance=null;
 
 	// how frequently to clean up the cache
@@ -51,6 +53,7 @@ public class SpyCache extends SpyObject {
 
 	private void init() {
 		cacheStore=new TimeStampedHashMap();
+		delegate=new DummyDelegate();
 	}
 
 	private synchronized void checkThread() {
@@ -75,6 +78,18 @@ public class SpyCache extends SpyObject {
 	}
 
 	/** 
+	 * Set the delegate for this SpyCache.
+	 * 
+	 * @param del 
+	 */
+	public void setDelegate(CacheDelegate del) {
+		if(del == null) {
+			throw new NullPointerException("Invalid delegate <null>");
+		}
+		delegate=del;
+	}
+
+	/** 
 	 * Store a Cachable object in the cache.
 	 * 
 	 * @param key the key for storing this object
@@ -86,6 +101,7 @@ public class SpyCache extends SpyObject {
 			value.cachedEvent(key);
 			cacheStore.put(key, value);
 		}
+		delegate.cachedObject(key, value);
 	}
 
 	/**
@@ -138,11 +154,13 @@ public class SpyCache extends SpyObject {
 	 * @param key key to remove
 	 */
 	public void uncache(String key) {
+		Cachable unc=null;
 		synchronized(cacheStore) {
-			Cachable unc=(Cachable)cacheStore.remove(key);
-			if(unc!=null) {
-				unc.uncachedEvent(key);
-			}
+			unc=(Cachable)cacheStore.remove(key);
+		}
+		if(unc!=null) {
+			unc.uncachedEvent(key);
+			delegate.uncachedObject(key, unc);
 		}
 	}
 
@@ -164,6 +182,7 @@ public class SpyCache extends SpyObject {
 					i.remove();
 					Cachable c=(Cachable)me.getValue();
 					c.uncachedEvent(key);
+					delegate.uncachedObject(key, c);
 				}
 			} // for loop
 		} // lock
@@ -210,13 +229,17 @@ public class SpyCache extends SpyObject {
 		private void cleanup() throws Exception {
 			long now=System.currentTimeMillis();
 			synchronized(cacheStore) {
-				for(Iterator i=cacheStore.values().iterator(); i.hasNext();){
-					Cachable it=(Cachable)i.next();
+				for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext();){
+					Map.Entry me=(Map.Entry)i.next();
+					String key=(String)me.getKey();
+					Cachable it=(Cachable)me.getValue();
 					if(it.isExpired()) {
 						if(getLogger().isDebugEnabled()) {
 							getLogger().debug(it.getCacheKey() + " expired");
 						}
 						i.remove();
+						it.uncachedEvent(key);
+						delegate.uncachedObject(key, it);
 					}
 				}
 			}
@@ -291,7 +314,16 @@ public class SpyCache extends SpyObject {
 			getLogger().info("Shutting down.");
 
 			// OK, we're about to bail, let's dump the cache and go.
-			cacheStore.clear();
+			synchronized(cacheStore) {
+				for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext();){
+					Map.Entry me=(Map.Entry)i.next();
+					String key=(String)me.getKey();
+					Cachable it=(Cachable)me.getValue();
+					i.remove();
+					it.uncachedEvent(key);
+					delegate.uncachedObject(key, it);
+				}
+			}
 
 			// Tell the multicast listener to stop if we have one
 			if(listener!=null) {
@@ -337,5 +369,13 @@ public class SpyCache extends SpyObject {
 		}
 
 	} // SpyCacheItem
+
+	// This allows us to always have a delegate object registered.
+	private static class DummyDelegate extends Object implements CacheDelegate {
+		public void cachedObject(String key, Cachable value) {
+		}
+		public void uncachedObject(String key, Cachable value) {
+		}
+	}
 
 }
