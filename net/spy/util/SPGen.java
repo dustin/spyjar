@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.11 2002/09/17 22:49:35 dustin Exp $
+// $Id: SPGen.java,v 1.12 2002/10/02 16:43:31 dustin Exp $
 
 package net.spy.util;
 
@@ -37,7 +37,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.11 $";
+	private String version="$Revision: 1.12 $";
 	private long cachetime=0;
 	private ArrayList sqlquery=null;
 	private ArrayList required=null;
@@ -712,6 +712,10 @@ public class SPGen extends Object {
 				// enough, and without a EOL before the EOF...very odd case
 				description="";
 			}
+		}
+
+		public String toString() {
+			return("{Parameter " + name + "}");
 		}
 
 		public String getName() {
