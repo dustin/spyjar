@@ -68,7 +68,7 @@ public class ThreadPool extends ThreadGroup {
 	// The threads we're managing.
 	private Collection threads=null;
 	// The tasks for the threads to do.
-	private LimitedList tasks=null;
+	private LinkedList tasks=null;
 
 	// This is what we monitor for things being checked out (otherwise we
 	// can't tell the difference between adds and check outs).
@@ -350,9 +350,13 @@ public class ThreadPool extends ThreadGroup {
 			throw new IllegalArgumentException(
 				"Value must be greater than or equal to zero.");
 		}
+		if(tasks != null && !(tasks instanceof LimitedList)) {
+			throw new IllegalArgumentException("Tasks is not a limited list");
+		}
 		this.maxTaskQueueSize=mtqs;
 		if(tasks != null) {
-			tasks.setLimit(maxTaskQueueSize);
+			LimitedList ll=(LimitedList)tasks;
+			ll.setLimit(maxTaskQueueSize);
 		}
 	}
 
