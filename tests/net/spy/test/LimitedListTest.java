@@ -1,11 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LimitedListTest.java,v 1.1 2002/12/05 08:07:04 dustin Exp $
+// $Id: LimitedListTest.java,v 1.2 2002/12/05 08:24:03 dustin Exp $
 
 package net.spy.test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -100,6 +101,32 @@ public class LimitedListTest extends TestCase {
 		ll.removeFirst();
 		ll.add(new Integer(11));
 
+	}
+
+	/** 
+	 * Verify the thing works like a Queue should.
+	 *
+	 * This means stuff should come out in insert order, and you can't get
+	 * more than you have.
+	 */
+	public void testQueue() {
+		LimitedList ll=new LimitedList(10);
+		for(int i=0; i<10; i++) {
+			ll.add(new Integer(i));
+		}
+
+		for(int i=0; i<10; i++) {
+			Integer tmpI=(Integer)ll.removeFirst();
+			int tmp=tmpI.intValue();
+			assertEquals("Error on value " + i, i, tmp);
+		}
+
+		try {
+			ll.removeFirst();
+			fail("Allowed me to remove more entries than I added.");
+		} catch(NoSuchElementException e) {
+			// OK
+		}
 	}
 
 }
