@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyDB.java,v 1.6 2003/08/05 09:01:02 dustin Exp $
+ * $Id: SpyDB.java,v 1.7 2003/08/10 20:13:56 dustin Exp $
  */
 
 package net.spy;
@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.StringTokenizer;
 
 import net.spy.db.ConnectionSource;
+import net.spy.db.DBInitException;
 
 /**
  * SpyDB is an abstraction of both net.spy.pool and java.sql.
@@ -36,7 +37,7 @@ public class SpyDB extends SpyObject {
 	private ConnectionSource source=null;
 
 	// Exceptions that occur during initialization.
-	private Exception initializationException=null;
+	private DBInitException initializationException=null;
 
 	/** 
 	 * Initialization type for SpyDB initialized from a config.
@@ -228,8 +229,10 @@ public class SpyDB extends SpyObject {
 			source=(ConnectionSource)connectionSourceClass.newInstance();
 		} catch(Exception e) {
 			e.fillInStackTrace();
-			initializationException=e;
 			getLogger().error("Problem initializing spydb", e);
+			initializationException=new DBInitException(
+				"Initialization exception:  " + e);
+			initializationException.fillInStackTrace();
 		}
 		init();
 	}
@@ -251,8 +254,7 @@ public class SpyDB extends SpyObject {
 		// Different behavior whether we're using a pool or not
 
 		if(initializationException!=null) {
-			throw new SQLException("Initialization exception:  "
-				+ initializationException);
+			throw initializationException;
 		}
 
 		// Get the connection from the source.
