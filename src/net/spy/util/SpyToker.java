@@ -20,13 +20,6 @@ import java.util.Map;
  */
 public class SpyToker extends Object {
 
-	/**
-	 * @deprecated give it a File instead.
-	 */
-	public String tokenize(String file, Map m) {
-		return(tokenize(new File(file), m));
-	}
-
 	/** 
 	 * Tokenize a String, return the tokenized results.
 	 * 

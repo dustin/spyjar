@@ -81,13 +81,6 @@ public class SpyUtil {
 		return(ret);
 	}
 
-	/**
-	 * @deprecated use getFileData(File)
-	 */
-	public static String getFileData(String file) throws IOException {
-		return(getFileData(new File(file)));
-	}
-
 	/** 
 	 * Load the contents of the given reader as a String.
 	 * 

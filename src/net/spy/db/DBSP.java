@@ -874,42 +874,6 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	}
 
 	/**
-	 * Get the required arguments.
-	 *
-	 * @deprecated use getParameters() or getParameters(int) instead
-	 *
-	 * @return a List of {@link Parameter}s representing the required
-	 * 	arguments in the order in which they will be passed into the query
-	 */
-	public List getRequiredArgs() {
-		return(getParameters(Parameter.REQUIRED));
-	}
-
-	/**
-	 * Get the optional arguments.
-	 *
-	 * @deprecated use getParameters() or getParameters(int) instead
-	 *
-	 * @return a List of {@link Parameter}s representing the optional
-	 * 	arguments in the order in which they will be passed into the query
-	 */
-	public List getOptionalArgs() {
-		return(getParameters(Parameter.OPTIONAL));
-	}
-
-	/**
-	 * Get the output arguments.
-	 *
-	 * @deprecated use getParameters() or getParameters(int) instead
-	 *
-	 * @return a List of {@link Parameter}s representing the output
-	 * 	arguments in the order in which they will be passed into the query
-	 */
-	public List getOutputArgs() {
-		return(getParameters(Parameter.OUTPUT));
-	}
-
-	/**
 	 * Get the {@link java.sql.Types} type of the given parameter.
 	 *
 	 * @return the type, or -1 if there's no such variable

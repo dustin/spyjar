@@ -125,15 +125,6 @@ public class DiskCache extends AbstractMap {
 		return(rv);
 	}
 
-    /** 
-     * Old API for storing.
-	 *
-	 * @deprecated use put(Object,Object) instead
-     */
-    public void storeObject(String key, Object o) throws IOException {
-		put(key, o);
-	}
-
 	/**
 	 * Get an object from the cache.
 	 *
@@ -219,15 +210,6 @@ public class DiskCache extends AbstractMap {
 		}
 
 		return(rv);
-	}
-
-    /** 
-     * Old API for getting objects.
-	 *
-	 * @deprecated use get(Object) instead
-     */
-    public Object getObject(String key) {
-		return(get(key));
 	}
 
 	private class WalkerDiskCacheRanger extends HashSet {

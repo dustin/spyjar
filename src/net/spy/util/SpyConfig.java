@@ -40,15 +40,6 @@ public class SpyConfig extends Properties {
 	}
 
 	/**
-	 * Construct a new SpyConfig object describing a config file.
-	 *
-	 * @deprecated Give it a File object instead.
-	 */
-	public SpyConfig(String conffile) {
-		this(new File(conffile));
-	}
-
-	/**
 	 * Construct a new SpyConfig object without a config file.
 	 */
 	public SpyConfig() {
@@ -93,25 +84,6 @@ public class SpyConfig extends Properties {
 		}
 
 		return(loaded);
-	}
-
-	/**
-	 * Try to load a config file.  This function allows an object to load a
-	 * config file from a list of files.  Only the first file in the list
-	 * that works is actually loaded.
-	 *
-	 * @param confFiles an array of config file paths to attempt to load
-	 *
-	 * @return true if a config file was loaded
-	 *
-	 * @deprecated Use the File one instead.
-	 */
-	public boolean loadConfig(String confFiles[]) {
-		boolean gotit=false;
-		for(int i=0; i<confFiles.length && gotit==false; i++) {
-			gotit=loadConfig(new File(confFiles[i]));
-		}
-		return(gotit);
 	}
 
 	/**

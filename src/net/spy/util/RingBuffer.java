@@ -52,15 +52,6 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 		}
 	}
 
-	/** 
-	 * Add a new object to the ring.
-	 *
-	 * @deprecated use add()
-	 */
-	public void addObject(Object o) {
-		add(o);
-	}
-
 	/**
 	 * Add an object to the ring buffer (if it's full, it'll cycle the
 	 * oldest one out).
@@ -122,15 +113,6 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 
 	/**
 	 * Get the number of objects in this RingBuffer.
-	 *
-	 * @deprecated use the Collections implementation instead
-	 */
-	public int getSize() {
-		return(size);
-	}
-
-	/**
-	 * Get the number of objects in this RingBuffer.
 	 */
 	public int size() {
 		return(size);
@@ -151,14 +133,6 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 	 */
 	public Iterator iterator() {
 		return (new RingBufferIterator());
-	}
-
-	/** 
-	 * Get the collection of data in this list.
-	 * @deprecated this is a Collection now.
-	 */
-	public Collection getData() {
-		return(this);
 	}
 
 	// Iterator implementation

@@ -816,9 +816,7 @@ public class SPGen extends SpyObject {
 					// System.out.println("Working on section " + section);
 
 					// Handlers for things that occur when a section is begun
-					if(section.equals("debug")) {
-						System.err.println("debug is deprecated");
-					} else if (section.equals("genresults")) {
+					if (section.equals("genresults")) {
 						wantsResultSet=true;
 					} else if (section.equals("cursor")) {
 						wantsCursor=true;

@@ -33,35 +33,6 @@ public class HTTPFetch extends Object {
 
 	private Map headers=null;
 
-	/**
-	 * Create a new HTTPFetch object for a given string representation of a
-	 * URL.
-	 * 
-	 * @param u String representation of the URL we'll be connecting to.
-	 *
-	 * @exception MalformedURLException Thrown if the URL cannot be parsed.
-	 *
-	 * @deprecated don't pass Strings, pass URLs
-	 */
-	public HTTPFetch(String u) throws MalformedURLException {
-		this(new URL(u), null);
-	}
-
-	/**
-	 * Create a new HTTPFetch object for a given string representation of a
-	 * URL, including a Map describing extra headers to add.
-	 * 
-	 * @param u String representation of the URL we'll be connecting to.
-	 * @param head Map containing headers to set.
-	 *
-	 * @exception MalformedURLException Thrown if the URL cannot be parsed.
-	 *
-	 * @deprecated don't pass Strings, pass URLs
-	 */
-	public HTTPFetch(String u, Map head) throws MalformedURLException {
-		this(new URL(u), head);
-	}
-
 	/** 
 	 * Get an HTTPFetch instance for the given URL.
 	 * 
@@ -152,7 +123,7 @@ public class HTTPFetch extends Object {
 	}
 
 	public static void main(String args[]) throws Exception {
-		HTTPFetch hf=new HTTPFetch(args[0]);
+		HTTPFetch hf=new HTTPFetch(new URL(args[0]));
 		System.out.println(hf.getStrippedData());
 	}
 }
