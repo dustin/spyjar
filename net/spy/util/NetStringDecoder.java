@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NetStringDecoder.java,v 1.1 2003/05/07 07:45:11 dustin Exp $
+// $Id: NetStringDecoder.java,v 1.2 2003/05/07 08:04:22 dustin Exp $
 
 package net.spy.util;
 
@@ -13,7 +13,7 @@ import net.spy.SpyObject;
 /**
  * Decode netstrings.
  *
- * @see http://cr.yp.to/proto/netstrings.txt
+ * See <a href="http://cr.yp.to/proto/netstrings.txt">netstring spec</a>.
  */
 public class NetStringDecoder extends SpyObject {
 
@@ -35,9 +35,10 @@ public class NetStringDecoder extends SpyObject {
 	/** 
 	 * Pull a netstring from the given InputStream and decode it.
 	 * 
-	 * @param is 
-	 * @return 
-	 * @throws IOException 
+	 * @param is a stream containing a netstring
+	 * @return the String representing the netstring at the beginning of
+	 * 			this stream
+	 * @throws IOException if there is a problem decoding the netstring
 	 */
 	public String decodeString(InputStream is) throws IOException {
 		StringBuffer sizeBuf=new StringBuffer(10);

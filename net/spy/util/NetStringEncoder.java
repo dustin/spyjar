@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NetStringEncoder.java,v 1.1 2003/05/07 07:45:11 dustin Exp $
+// $Id: NetStringEncoder.java,v 1.2 2003/05/07 08:04:23 dustin Exp $
 
 package net.spy.util;
 
@@ -10,7 +10,7 @@ import java.io.OutputStream;
 /**
  * Encode netstrings.
  *
- * @see http://cr.yp.to/proto/netstrings.txt
+ * See <a href="http://cr.yp.to/proto/netstrings.txt">netstring spec</a>.
  */
 public class NetStringEncoder extends Object {
 
