@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePreparedStatementStub.java,v 1.2 2002/11/07 03:30:22 dustin Exp $
+ * $Id: CachePreparedStatementStub.java,v 1.3 2003/03/28 20:30:11 knitterb Exp $
  */
 
 package net.spy.db;
@@ -148,50 +148,56 @@ public class CachePreparedStatementStub extends Object {
 
 		// Set allllllll the types
 		for(int i=0; i<args.length; i++) {
-			switch(types[i]) {
-				case Types.BIT:
-					pst.setBoolean(i+1, ((Boolean)args[i]).booleanValue());
-					break;
-				case Types.DATE:
-					pst.setDate(i+1, (Date)args[i]);
-					break;
-				case Types.DOUBLE:
-					pst.setDouble(i+1, ((Double)args[i]).doubleValue());
-					break;
-				case Types.FLOAT:
-					pst.setFloat(i+1, ((Float)args[i]).floatValue());
-					break;
-				case Types.INTEGER:
-					pst.setInt(i+1, ((Integer)args[i]).intValue());
-					break;
-				case Types.BIGINT:
-					pst.setLong(i+1, ((Long)args[i]).longValue());
-					break;
-				case Types.TINYINT:
-					pst.setShort(i+1, (short)((Integer)args[i]).intValue());
-					break;
-				case Types.NULL:
-					pst.setNull(i+1, ((Integer)args[i]).intValue());
-					break;
-				case Types.OTHER:
-					pst.setObject(i+1, args[i]);
-					break;
-				case Types.VARCHAR:
-					pst.setString(i+1, (String)args[i]);
-					break;
-				case Types.TIME:
-					pst.setTime(i+1, (Time)args[i]);
-					break;
-				case Types.TIMESTAMP:
-					pst.setTimestamp(i+1, (Timestamp)args[i]);
-					break;
-				case Types.DECIMAL:
-					pst.setBigDecimal(i+1, (BigDecimal)args[i]);
-					break;
-				default:
-					throw new SQLException("Whoops, type "
-						+ types[i] + " (" + TypeNames.getTypeName(types[i])
-						+ ") seems to have been overlooked.");
+			try {
+				switch(types[i]) {
+					case Types.BIT:
+						pst.setBoolean(i+1, ((Boolean)args[i]).booleanValue());
+						break;
+					case Types.DATE:
+						pst.setDate(i+1, (Date)args[i]);
+						break;
+					case Types.DOUBLE:
+						pst.setDouble(i+1, ((Double)args[i]).doubleValue());
+						break;
+					case Types.FLOAT:
+						pst.setFloat(i+1, ((Float)args[i]).floatValue());
+						break;
+					case Types.INTEGER:
+						pst.setInt(i+1, ((Integer)args[i]).intValue());
+						break;
+					case Types.BIGINT:
+						pst.setLong(i+1, ((Long)args[i]).longValue());
+						break;
+					case Types.TINYINT:
+						pst.setShort(i+1, (short)((Integer)args[i]).intValue());
+						break;
+					case Types.NULL:
+						pst.setNull(i+1, ((Integer)args[i]).intValue());
+						break;
+					case Types.OTHER:
+						pst.setObject(i+1, args[i]);
+						break;
+					case Types.VARCHAR:
+						pst.setString(i+1, (String)args[i]);
+						break;
+					case Types.TIME:
+						pst.setTime(i+1, (Time)args[i]);
+						break;
+					case Types.TIMESTAMP:
+						pst.setTimestamp(i+1, (Timestamp)args[i]);
+						break;
+					case Types.DECIMAL:
+						pst.setBigDecimal(i+1, (BigDecimal)args[i]);
+						break;
+					default:
+						throw new SQLException("Whoops, type "
+							+ types[i] + " (" + TypeNames.getTypeName(types[i])
+							+ ") seems to have been overlooked.");
+				}
+			} catch (NullPointerException ex) {
+				System.err.println("error with "+args[i]+" in type "+
+					types[i]+" at param postition "+i);
+				throw ex;
 			}
 		}
 
