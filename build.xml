@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.7 2002/09/13 17:27:48 dustin Exp $
+	$Id: build.xml,v 1.8 2002/10/02 05:46:35 dustin Exp $
 
 	-->
 
@@ -97,8 +97,8 @@
 	</target>
 
 	<!-- install everywhere -->
-	<target name="full-install" depends="install,spy-install"
-		description="Full install (install and spy-install)"/>
+	<target name="full-install" depends="install,spy-install,install-docs"
+		description="Full install (install, spy-install, install-docs)"/>
 
 	<!-- Install various locations I use the jar around the house. -->
 	<target name="spy-install" depends="spy.jar">
@@ -111,6 +111,8 @@
 			tofile="/afs/.spy.net/misc/web/root/photo/WEB-INF/lib/spy.jar"/>
 		<copy file="spy.jar"
 			tofile="/afs/.spy.net/misc/web/root/beckerphoto/WEB-INF/lib/spy.jar"/>
+		<copy file="spy.jar"
+			tofile="/afs/.spy.net/misc/web/root/photodemo/WEB-INF/lib/spy.jar"/>
 	</target>
 
 	<!-- Regular install -->
