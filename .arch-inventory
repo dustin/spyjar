@@ -1,2 +1,2 @@
-precious ^(build.properties|spy.jar|spy-big.jar|testsuite.jar)$
+precious ^(build.properties|spy.*.jar|testsuite.jar)$
 
