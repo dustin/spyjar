@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.8 2002/12/06 09:05:41 dustin Exp $
+// $Id: ThreadPool.java,v 1.9 2003/04/05 02:07:14 dustin Exp $
 
 package net.spy.util;
 
@@ -26,8 +26,8 @@ import net.spy.log.LoggerFactory;
  * // create too many objects that aren't ready to be used.
  * for(int i=0; i&lt;1000000; i++) {
  *     // Don't have more than 32 unclaimed tasks
- *     if(tp.waitForTaskCount(32)) {
- *         tp.addTask(new MyRunnableClass());
+ *     tp.waitForTaskCount(32);
+ *     tp.addTask(new MyRunnableClass());
  *     }
  * }
  * tp.waitForCompletion();
