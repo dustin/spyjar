@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetPK.java,v 1.2 2002/11/04 19:55:06 knitterb Exp $
+// $Id: GetPK.java,v 1.3 2002/11/18 20:59:34 knitterb Exp $
 
 package net.spy.db;
 
@@ -105,22 +105,51 @@ public class GetPK extends Object {
 		throws SQLException {
 
 		SpyDB db=new SpyDB(conf);
-		BigDecimal pk=getPrimaryKey(db, table.toLowerCase());
+		BigDecimal pk=getPrimaryKey(db, table.toLowerCase(),
+			makeDbTableKey(conf, table));
 		db.close();
 		return(pk);
 	}
 
+	// make the key to be used for identifying this table and connection
+	// source
+	private String makeDbTableKey (SpyConfig conf, String table) {
+		StringBuffer rc=new StringBuffer(512);
+		
+		// shove in typical stuff
+		rc.append(conf.get("dbSource"));
+		rc.append(";");
+		rc.append(conf.get("dbConnectionSource"));
+		rc.append(";");
+		rc.append(conf.get("dbDriverName"));
+		rc.append(";");
+		rc.append(conf.get("dbUser"));
+		rc.append(";");
+		rc.append(conf.get("dbPass"));
+		rc.append(";");
+		rc.append(conf.get("dbPoolName"));
+		rc.append(";");
+
+		// just a little conf helper in case we ever require this
+		rc.append(conf.get("dbPkKey"));
+		rc.append(";");
+
+		// and add the table
+		rc.append(table);
+
+		return(rc.toString());
+	}
+
 	// Get the key (usually from the cache)
-	private BigDecimal getPrimaryKey(SpyDB db, String table)
+	private BigDecimal getPrimaryKey(SpyDB db, String table, String key) 
 		throws SQLException {
 
 		BigDecimal rv=null;
-		String key=table;
 		try {
 			KeyStore ks=(KeyStore)caches.get(key);
 			// If we didn't get the key store, go get it now
 			if(ks == null) {
-				getKeysFromDB(db, table);
+				getKeysFromDB(db, table, key);
 				ks=(KeyStore)caches.get(key);
 				if(ks==null) {
 					throw new SQLException("Couldn't get initial keys for "
@@ -130,7 +159,7 @@ public class GetPK extends Object {
 			rv=ks.nextKey();
 		} catch(OverDrawnException ode) {
 			// Overdrawn, need to fetch the cache.
-			getKeysFromDB(db, table);
+			getKeysFromDB(db, table, key);
 			// Get the new key store
 			KeyStore ks=(KeyStore)caches.get(key);
 			try {
@@ -209,7 +238,8 @@ public class GetPK extends Object {
 	}
 
 	// get keys from a database
-	private void getKeysFromDB(SpyDB db, String table) throws SQLException {
+	private void getKeysFromDB(SpyDB db, String table, String key)
+			throws SQLException {
 		Connection conn=null;
 		boolean complete=false;
 
@@ -247,7 +277,7 @@ public class GetPK extends Object {
 			dbsp.close();
 
 			synchronized(caches) {
-				caches.put(table, new KeyStore(start, end));
+				caches.put(key, new KeyStore(start, end));
 			}
 
 			complete=true;
