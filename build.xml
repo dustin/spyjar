@@ -311,7 +311,7 @@
 
 	<!-- End optional components -->
 
-	<target name="compile" depends="generate,rmic,dbstuff">
+	<target name="compile" depends="generate,dbstuff">
 		<javac
 			srcdir="${SRCDIR}"
 			destdir="${BUILDDIR}"
@@ -578,21 +578,6 @@
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
 			<classpath refid="myclasses"/>
 			<include name="net/spy/util/ProxyInterfaceImplementor.java"/>
-		</javac>
-	</target>
-
-	<target name="rmic" depends="pre-rmic">
-		<rmic base="${BUILDDIR}" classname="net.spy.rmi.RObjectImpl">
-			<classpath refid="myclasses"/>
-		</rmic>
-	</target>
-
-	<target name="pre-rmic">
-		<javac
-			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
-			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
-			<classpath refid="myclasses"/>
-			<include name="net/spy/rmi/RObjectImpl.java"/>
 		</javac>
 	</target>
 
