@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MainJob.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
+// $Id: MainJob.java,v 1.3 2003/04/19 03:50:06 dustin Exp $
 
 package net.spy.cron;
 
@@ -8,10 +8,12 @@ import java.util.Date;
 
 import net.spy.SpyUtil;
 
+import net.spy.util.ThreadPoolRunnable;
+
 /**
  * A job that invokes a class's main() method at run time.
  */
-public class MainJob extends Job {
+public class MainJob extends Job implements ThreadPoolRunnable {
 
 	// The classname and the args to run.
 	private String classname=null;

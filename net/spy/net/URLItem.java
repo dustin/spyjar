@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLItem.java,v 1.3 2003/04/18 08:28:54 dustin Exp $
+// $Id: URLItem.java,v 1.4 2003/04/19 03:50:06 dustin Exp $
 
 package net.spy.net;
 
@@ -15,10 +15,12 @@ import net.spy.cron.Job;
 import net.spy.cron.TimeIncrement;
 import net.spy.cron.SimpleTimeIncrement;
 
+import net.spy.util.ThreadPoolRunnable;
+
 /**
  * A particular URL that's being watched.
  */
-public class URLItem extends Job {
+public class URLItem extends Job implements ThreadPoolRunnable {
 
 	// How long a URL will be watched if nobody wants it (defaults to a
 	// half hour).
