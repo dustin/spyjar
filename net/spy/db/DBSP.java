@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.21 2003/07/31 21:44:39 knitterb Exp $
+// $Id: DBSP.java,v 1.22 2003/08/01 03:34:11 dustin Exp $
 
 package net.spy.db;
 
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.spy.SpyConfig;
+import net.spy.SpyUtil;
 
 /**
  * Super class for all stored procedure calls.
@@ -594,11 +595,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 */
 	public void set(String which,boolean a1) 
 		throws SQLException {
-		// only works in jdk 1.4
-		//setArg(which, Boolean.valueOf(a1), Types.BIT);
-
-		// works in jdk 1.3 and later
-		setArg(which, new Boolean(a1), Types.BIT);
+		setArg(which, SpyUtil.getBoolean(a1), Types.BIT);
 
 	}
 
@@ -954,7 +951,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			// Value is not null, parse it and call the proper set method
 			switch(type) {
 				case Types.BIT:
-					set(var, Boolean.valueOf(value).booleanValue());
+					set(var, SpyUtil.getBoolean(value).booleanValue());
 					break;
 				case Types.DOUBLE:
 					set(var, new Double(value).doubleValue());

@@ -1,0 +1,18 @@
+#
+# $Id: BooleanTest.spt,v 1.1 2003/08/01 03:34:11 dustin Exp $
+#
+
+@package
+net.spy.test.db
+
+@description
+Test query for boolean operations.
+
+@sql
+select ? as a_boolean
+
+@params
+a_boolean required BIT just a bit
+
+@results
+a_boolean BIT the input value

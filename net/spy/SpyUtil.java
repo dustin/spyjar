@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyUtil.java,v 1.3 2003/05/20 07:49:48 dustin Exp $
+// $Id: SpyUtil.java,v 1.4 2003/08/01 03:34:10 dustin Exp $
 
 package net.spy;
 
@@ -28,6 +28,16 @@ import net.spy.util.Enumeriterator;
  */
 
 public class SpyUtil {
+
+	/** 
+	 * True boolean.
+	 */
+	public static final Boolean TRUE=new Boolean(true);
+	/** 
+	 * False boolean.
+	 */
+	public static final Boolean FALSE=new Boolean(false);
+
 	/**
 	 * Shuffle (unsort) an array.
 	 *
@@ -248,5 +258,40 @@ public class SpyUtil {
 			}
 		}
 
+	}
+
+	/** 
+	 * Returns a Boolean with a value represented by the specified String.
+	 * The Boolean returned represents the value true if the string
+	 * argument is not null  and is equal, ignoring case, to the string
+	 * "true".
+	 * 
+	 * @param s the string
+	 * @return the Boolean instance
+	 */
+	public static Boolean getBoolean(String s) {
+		Boolean rv=FALSE;
+
+		if(s != null && s.equalsIgnoreCase("true")) {
+			rv=TRUE;
+		}
+
+		return(rv);
+	}
+
+	/** 
+	 * Get a boolean instance.
+	 * 
+	 * @param b the type of Boolean instance you want
+	 * @return a shared instance of Boolean
+	 */
+	public static Boolean getBoolean(boolean b) {
+		Boolean rv=null;
+		if(b) {
+			rv=TRUE;
+		} else {
+			rv=FALSE;
+		}
+		return(rv);
 	}
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTest.java,v 1.9 2003/04/07 00:07:38 dustin Exp $
+// $Id: DBTest.java,v 1.10 2003/08/01 03:34:11 dustin Exp $
 
 package net.spy.test;
 
@@ -30,6 +30,7 @@ import net.spy.test.db.DumpTestTable;
 import net.spy.test.db.GetTestByNumber;
 import net.spy.test.db.CallTestFunc;
 import net.spy.test.db.ThreeColumnTest;
+import net.spy.test.db.BooleanTest;
 
 /**
  * Test various DB functionality.
@@ -325,6 +326,42 @@ public class DBTest extends TestCase {
 
 		assertEquals("Incorrect number of rows returned for number match",
 			nrows, 2);
+	}
+
+	/** 
+	 * Test boolean functionality.
+	 */
+	public void testBoolean() throws SQLException {
+		BooleanTest bt=new BooleanTest(conf);
+		bt.setABoolean(true);
+		booleanTestCheck(bt, true);
+		bt.close();
+
+		bt=new BooleanTest(conf);
+		bt.setABoolean(false);
+		booleanTestCheck(bt, false);
+		bt.close();
+
+		bt=new BooleanTest(conf);
+		bt.setABoolean(new Boolean(true));
+		booleanTestCheck(bt, true);
+		bt.close();
+
+		bt=new BooleanTest(conf);
+		bt.setABoolean(new Boolean(false));
+		booleanTestCheck(bt, false);
+		bt.close();
+	}
+
+	private void booleanTestCheck(BooleanTest bt, boolean expected)
+		throws SQLException {
+
+		ResultSet rs=bt.executeQuery();
+		assertTrue("Too few results", rs.next());
+		boolean val=rs.getBoolean(1);
+		assertEquals("Incorrect return", val, expected);
+		assertTrue("Too many results", (!rs.next()));
+		rs.close();
 	}
 
 	/** 
