@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TTL.java,v 1.2 2002/11/19 19:27:05 dustin Exp $
+// $Id: TTL.java,v 1.3 2002/11/26 09:36:12 dustin Exp $
 
 package net.spy.util;
 
@@ -125,7 +125,12 @@ public class TTL extends Object {
 		return(isClosed);
 	}
 
-	private boolean isExpired() {
+	/** 
+	 * Ask a TTL if it's expired.
+	 * 
+	 * @return true if the TTL is expired
+	 */
+	public boolean isExpired() {
 		boolean rv=false;
 		long now=System.currentTimeMillis();
 

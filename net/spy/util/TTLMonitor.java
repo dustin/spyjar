@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TTLMonitor.java,v 1.3 2002/11/20 04:52:34 dustin Exp $
+// $Id: TTLMonitor.java,v 1.4 2002/11/26 09:36:12 dustin Exp $
 
 package net.spy.util;
 
@@ -17,6 +17,7 @@ import net.spy.SpyThread;
 public class TTLMonitor extends SpyThread {
 
 	private ArrayList ttls=null;
+	private int expiredTTLs=0;
 
 	private static final long NAPTIME=5000;
 	private long lastAddition=0;
@@ -31,7 +32,7 @@ public class TTLMonitor extends SpyThread {
 		super();
 		ttls=new ArrayList();
 		lastAddition=System.currentTimeMillis();
-		setName("DB TTL Monitor");
+		setName("TTL Monitor");
 		setDaemon(true);
 		start();
 	}
@@ -66,6 +67,8 @@ public class TTLMonitor extends SpyThread {
 		sb.append(super.toString());
 		sb.append(" - Outstanding TTLs:  ");
 		sb.append(ttls.size());
+		sb.append(", expired=");
+		sb.append(expiredTTLs);
 		return(sb.toString());
 	}
 
@@ -80,9 +83,18 @@ public class TTLMonitor extends SpyThread {
 	public void run() {
 		while(shouldIKeepRunning()) {
 			synchronized(ttls) {
+				// Reset the expired count
+				expiredTTLs=0;
+				// Flip through the TTLs
 				for(Iterator i=ttls.iterator(); i.hasNext(); ) {
 					TTL ttl=(TTL)i.next();
+					// Update the expired count if it's expired
+					if(ttl.isExpired()) {
+						expiredTTLs++;
+					}
+					// Have it report itself
 					ttl.report();
+					// If it's done, remove it
 					if(ttl.isClosed()) {
 						i.remove();
 					} // closed
