@@ -95,8 +95,10 @@ public class InterfaceImplementorTask extends Task {
 			i.setOutputClass(outClass);
 			i.writeSourceToFile(outDir);
 		} catch(IOException e) {
+			e.printStackTrace();
 			throw new BuildException("Couldn't generate class", e);
 		} catch(ClassNotFoundException e) {
+			e.printStackTrace();
 			throw new BuildException("Couldn't generate class", e);
 		}
 	}
