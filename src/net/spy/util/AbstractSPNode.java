@@ -10,10 +10,12 @@ import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.Collections;
 
+import net.spy.SpyObject;
+
 /**
  * Abstract implementation of SPNode to make implementation a bit easier.
  */
-public abstract class AbstractSPNode extends Object implements SPNode {
+public abstract class AbstractSPNode extends SpyObject implements SPNode {
 
 	private SortedSet links=null;
 	private Map nextHops=null;

@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import java.util.MissingResourceException;
 import java.text.MessageFormat;
 
+import net.spy.SpyObject;
+
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
 
@@ -21,7 +23,7 @@ import net.spy.log.LoggerFactory;
  *  {@link Logger}.
  * </p>
  */
-public class TTL extends Object {
+public class TTL extends SpyObject {
 
 	private static final int DEFAULT_REPORT_INTERVAL=300000;
 	private static final int DEFAULT_N_REPORTS=10;
@@ -170,14 +172,13 @@ public class TTL extends Object {
 	 * @param msg message format string to print when the TTL expires
 	 */
 	protected void reportWithFormat(String msg) {
-		Logger logger=LoggerFactory.getLogger(TTL.class);
 		long now=System.currentTimeMillis();
 		Object args[]={new Long(now-startTime), new Long(ttl), extraInfo};
 
 		MessageFormat mf=new MessageFormat(msg);
 		String toLog=mf.format(args);
 
-		logger.warn(toLog, e);
+		getLogger().warn(toLog, e);
 	}
 
 	/** 
