@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Saver.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: Saver.java,v 1.2 2002/10/03 18:38:41 dustin Exp $
 
 package net.spy.db;
 
@@ -121,24 +121,22 @@ public class Saver extends Object {
 
 			// Get the savables
 			Collection c=o.getSavables(context);
-			if(c==null) {
-				throw new NullPointerException(
-					"Got a null savable list from " + o.getClass().getName());
-			}
+			if(c!=null) {
 
-			// Deal with the savables
-			for(Iterator i=c.iterator(); i.hasNext(); ) {
-				Savable s=(Savable)i.next();
-				// verify the object isn't null, if it is, report it here
-				// so we can figure out what gave it to us
-				if(s==null) {
-					throw new NullPointerException("Got a null object from "
-						+ o);
-				}
+				// Deal with the savables
+				for(Iterator i=c.iterator(); i.hasNext(); ) {
+					Savable s=(Savable)i.next();
+					// verify the object isn't null, if it is, report it here
+					// so we can figure out what gave it to us
+					if(s==null) {
+						throw new NullPointerException("Got a null object from "
+							+ o);
+					}
 
-				rsave(s);
-			}
-		}
+					rsave(s);
+				} // Flipping through the savables
+			} // getSavables returned a collection
+		} // Haven't seen this object
 
 		rdepth--;
 	}

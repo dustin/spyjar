@@ -32,13 +32,12 @@ saving and calling their appropriate DBSPs.
 
 Any object which implements the Savable interface can make use of the Saver
 transaction management.  Saver will start by determining if the object has
-changed, and if it has, then the Saver object will find all child objects
-requiring saving as well.  From here, the deepest child is saved, and then
-Saver will continue to traverse the tree upwards until the initial object
-is saved.  Saver works will in saving object that have associations which
-much be saved at once.  A good example would be an order in an order
-processing system, where the header and line item details much be saved
-atomically, or not at all.
-
-
+changed, and if it has, then the Saver object call the object's save method
+so the object can save itself.  will find all child objects requiring
+saving as well.  Next, the getSavables method will be called to find out
+what dependent objects need to be saved, and the process will repeat for
+each dependent object.  Saver works well in saving object that have
+associations which much be saved at once.  A good example would be an order
+in an order processing system, where the header and line item details much
+be saved atomically, or not at all.
 
