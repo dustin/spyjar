@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.25 2003/08/29 17:46:50 dustin Exp $
+// $Id: DBSP.java,v 1.26 2003/08/29 20:08:41 dustin Exp $
 
 package net.spy.db;
 
@@ -337,7 +337,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 * Set the maximum number of rows that should be returned from this
 	 * query.  See JDBC Statement documentation.
 	 */
-	public void setMaxRows(int timeout) {
+	public void setMaxRows(int maxRows) {
 		this.maxRows=maxRows;
 	}
 
