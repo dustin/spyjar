@@ -646,7 +646,9 @@
 			<fileset dir="${SRCDIR}">
 				<include name="net/spy/**/*.java"/>
 				<include name="net/spy/**/*.ojava"/>
+				<!-- Exclude Coder things. -->
 				<exclude name="**/Base64.java"/>
+				<exclude name="**/UUInputStream.java"/>
 			</fileset>
 		</checkstyle>
 

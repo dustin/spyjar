@@ -93,7 +93,7 @@ public class UUInputStream extends ByteConverionInputStream {
 		}
 
 		while(r!=-1 && r!='\n' && r!='\r') {
-			// XXX:  OK, I have no idea why this is happening, but it is...
+			// OK, I have no idea why this is happening, but it is...
 			if(r!=0) {
 				sb.append((char)r);
 			}
