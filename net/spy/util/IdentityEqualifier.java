@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: IdentityEqualifier.java,v 1.1 2003/04/19 03:33:19 dustin Exp $
+// $Id: IdentityEqualifier.java,v 1.2 2003/05/06 17:22:07 dustin Exp $
 
 package net.spy.util;
 
@@ -51,10 +51,10 @@ public class IdentityEqualifier extends Object {
 	/** 
 	 * The hashcode of this object.
 	 * 
-	 * @return the hashcode of the class of the wrapped object
+	 * @return System.identityHashCode for this object.
 	 */
 	public int hashCode() {
-		return(o.getClass().hashCode());
+		return(System.identityHashCode(o));
 	}
 
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: URLItem.java,v 1.4 2003/04/19 03:50:06 dustin Exp $
+// $Id: URLItem.java,v 1.5 2003/05/06 17:22:07 dustin Exp $
 
 package net.spy.net;
 
@@ -42,7 +42,7 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 	 * @param u URL to watch
 	 */
 	public URLItem(URL u) {
-		this(u, new Date(), new SimpleTimeIncrement(900000));
+		this(u, new Date(), new SimpleTimeIncrement(1800000));
 	}
 
 	/** 
