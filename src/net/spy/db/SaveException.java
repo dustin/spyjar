@@ -4,12 +4,10 @@
 
 package net.spy.db;
 
-import net.spy.util.NestedException;
-
 /**
  * Exception thrown when a Saver save fails.
  */
-public class SaveException extends NestedException {
+public class SaveException extends Exception {
 
 	/**
 	 * Get an instance of SaveException with a message.

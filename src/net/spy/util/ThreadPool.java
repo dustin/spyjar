@@ -185,16 +185,16 @@ public class ThreadPool extends ThreadGroup {
 			getLogger().info("Starting the thread pool manager");
 			poolManager.start();
 		} catch(NoSuchMethodException e) {
-			throw new NestedRuntimeException(
+			throw new RuntimeException(
 				"Problem starting ThreadPoolManager", e);
 		} catch(IllegalAccessException e) {
-			throw new NestedRuntimeException(
+			throw new RuntimeException(
 				"Problem starting ThreadPoolManager", e);
 		} catch(InvocationTargetException e) {
-			throw new NestedRuntimeException(
+			throw new RuntimeException(
 				"Problem starting ThreadPoolManager", e);
 		} catch(InstantiationException e) {
-			throw new NestedRuntimeException(
+			throw new RuntimeException(
 				"Problem starting ThreadPoolManager", e);
 		}
 

@@ -24,7 +24,6 @@ import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
 
 import net.spy.util.SpyUtil;
-import net.spy.util.NestedRuntimeException;
 
 /**
  * Simple local disk caching.
@@ -120,7 +119,7 @@ public class DiskCache extends AbstractMap {
 			p.close();
 			ostream.close();
 		} catch(IOException e) {
-			throw new NestedRuntimeException("Error storing object", e);
+			throw new RuntimeException("Error storing object", e);
 		}
 
 		return(rv);
@@ -214,9 +213,9 @@ public class DiskCache extends AbstractMap {
 		try {
 			rv=new WalkerDiskCacheRanger();
 		} catch(ClassNotFoundException e) {
-			throw new NestedRuntimeException("Error getting set", e);
+			throw new RuntimeException("Error getting set", e);
 		} catch(IOException e) {
-			throw new NestedRuntimeException("Error getting set", e);
+			throw new RuntimeException("Error getting set", e);
 		}
 
 		return(rv);
@@ -380,9 +379,9 @@ public class DiskCache extends AbstractMap {
 
 				rv=val;
 			} catch(IOException e) {
-				throw new NestedRuntimeException("Error getting object",e);
+				throw new RuntimeException("Error getting object",e);
 			} catch(ClassNotFoundException e) {
-				throw new NestedRuntimeException("Error getting object",e);
+				throw new RuntimeException("Error getting object",e);
 			}
 
 			return(rv);

@@ -7,7 +7,7 @@ package net.spy.util;
 /**
  * Report on a broken promise.
  */
-public class BrokenPromiseException extends NestedException {
+public class BrokenPromiseException extends Exception {
 
 	/**
 	 * Get an instance of BrokenPromiseException with a message.

@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import net.spy.util.NestedRuntimeException;
-
 /**
  * Factory to get logger instances.
  * The system property <code>net.spy.log.LoggerImpl</code> should point to
@@ -78,7 +76,7 @@ public final class LoggerFactory extends Object {
 			try {
 				rv=getNewInstance(name);
 			} catch(Exception e) {
-				throw new NestedRuntimeException("Problem getting logger", e);
+				throw new RuntimeException("Problem getting logger", e);
 			}
 			// Remember it for later
 			instances.put(name, rv);
