@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DefaultQuerySelector.java,v 1.2 2002/10/30 08:16:34 dustin Exp $
+// $Id: DefaultQuerySelector.java,v 1.3 2002/10/30 20:11:06 dustin Exp $
 
 package net.spy.db;
 
@@ -19,6 +19,25 @@ import net.spy.SpyConfig;
  * the given Connection by package name.  If given a SpyConfig, it looks
  * for either an entry called <code>queryName</code> or a prefix match
  * against the driver name as specified for SpyDB.
+ *
+ * <p>
+ *
+ * The following driver prefixes are mapped to their respective names in
+ * this implementation:
+ *
+ * <table border="1">
+ *  <tr>
+ *   <th>Driver class prefix</th><th>Query Name</th>
+ *  </tr>
+ *  <tr>
+ *   <td>org.postgresql.</td><td>pgsql</td>
+ *  </tr>
+ *  <tr>
+ *   <td>com.ashna.jturbo.</td><td>mssql</td>
+ *  </tr>
+ * </table>
+ *
+ * </p>
  *
  * @see net.spy.SpyDB
  */
@@ -41,6 +60,7 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 	 */
 	protected void initNameMap() {
 		registerNameMapping("org.postgresql.", "pgsql");
+		registerNameMapping("com.ashna.jturbo.", "mssql");
 	}
 
 	/** 
