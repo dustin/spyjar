@@ -95,13 +95,13 @@
 	</dist>
 
 	<dist>
-		<disturl>../soft/spy-1.0.35.jar</disturl>
-		<distversion>1.0.35</distversion>
+		<disturl>../soft/spy-1.0.36.jar</disturl>
+		<distversion>1.0.36</distversion>
 	</dist>
 
 	<dist>
-		<disturl>../soft/spy-big-1.0.35.jar</disturl>
-		<distversion>1.0.35</distversion>
+		<disturl>../soft/spy-big-1.0.36.jar</disturl>
+		<distversion>1.0.36</distversion>
 		<note>*big*: source, documentation, and test suite included</note>
 	</dist>
 
