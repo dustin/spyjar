@@ -1,3 +1,7 @@
+
+pooling
+	push configurable pre/post checkout checks to PoolAble, set by PoolContainer
+
 junit tests
 	base64
 --
