@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DBTest.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// $Id: DBTest.java,v 1.2 2002/08/28 06:41:10 dustin Exp $
 
 package net.spy.test;
 
@@ -21,9 +21,10 @@ import net.spy.db.SpyCacheDB;
 
 import net.spy.test.db.DumpTestTable;
 import net.spy.test.db.GetTestByNumber;
+import net.spy.test.db.CallTestFunc;
 
 /**
- * 
+ * Test various DB functionality.
  */
 public class DBTest extends TestCase {
 
@@ -199,6 +200,21 @@ public class DBTest extends TestCase {
 
 		assertEquals("Incorrect number of rows returned for number match",
 			nrows, 2);
+	}
+
+	/** 
+	 * Test DBCP functionality.
+	 */
+	public void testDBCP() throws SQLException {
+		CallTestFunc gtf=new CallTestFunc(conf);
+		gtf.set("num", 5);
+		ResultSet rs=gtf.executeQuery();
+		assertTrue("Too few results", rs.next());
+		int rv=rs.getInt(1);
+		assertEquals(rv, 6);
+		assertTrue("Too many results", (!rs.next()));
+		rs.close();
+		gtf.close();
 	}
 	
 }

@@ -51,3 +51,8 @@ create table primary_keys(
 
 insert into primary_keys(table_name) values('test_table');
 insert into primary_keys(table_name, incr) values('test_table2', 1000);
+
+drop function testFuncWithArg(INTEGER);
+create function testFuncWithArg(INTEGER) returns INTEGER as
+	'select $1 + 1 as result'
+	language 'sql';

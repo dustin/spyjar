@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBCP.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: DBCP.java,v 1.2 2002/08/28 06:41:10 dustin Exp $
 
 package net.spy.db;
 
@@ -244,6 +244,7 @@ public abstract class DBCP extends DBSP {
 			} else {
 				pst=prepareCall(query);
 			}
+			setPreparedStatement(pst);
 		}
 
 		// Fill in the arguments.
