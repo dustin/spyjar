@@ -44,6 +44,9 @@ public class JobQueue extends ArrayList {
 	 * Add a job.
 	 */
 	public synchronized void addJob(Job j) {
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Adding job:  " + j);
+		}
 		add(j);
 		notify();
 	}
