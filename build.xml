@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.18 2002/12/08 08:09:08 dustin Exp $
+	$Id: build.xml,v 1.19 2002/12/19 07:12:45 dustin Exp $
 
 	-->
 
@@ -362,9 +362,9 @@
     </java>
   </target>
 
-  <target name="tests-bitarray" depends="test-suite"
-		description="Test the BitArray implementation.">
-    <java classname="net.spy.test.BitArrayTest" fork="yes">
+  <target name="tests-diskcache" depends="test-suite"
+		description="Test the Disk Cache implementation.">
+    <java classname="net.spy.test.DiskCacheTest" fork="yes">
 			<classpath refid="myclasses"/>
 			<classpath refid="junitclasses"/>
       <classpath>

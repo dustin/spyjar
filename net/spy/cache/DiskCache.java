@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: DiskCache.java,v 1.5 2002/12/05 08:03:51 dustin Exp $
+// $Id: DiskCache.java,v 1.6 2002/12/19 07:12:45 dustin Exp $
 
 package net.spy.cache;
 
@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.AbstractMap;
 
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
+
 import net.spy.util.NestedRuntimeException;
 
 /**
@@ -33,13 +36,29 @@ public class DiskCache extends AbstractMap {
 
 	// Base directory for hashing
 	private String basedir = null;
+	private LRUCache lruCache=null;
+
+	private static final int DEFAULT_LRU_CACHE_SIZE=100;
 
 	/**
 	 * Get an DiskObject using the given directory.
 	 */
 	public DiskCache(String basedir) {
+		this(basedir, DEFAULT_LRU_CACHE_SIZE);
+	}
+
+	/** 
+	 * Get a DiskCache using the given directory with a backing LRU cache
+	 * of the specified size.
+	 * 
+	 * @param basedir the base directory for the disk cache
+	 * @param lruCacheSize the size of the LRU cache holding recently accessed
+	 *		objects
+	 */
+	public DiskCache(String basedir, int lruCacheSize) {
 		super();
 		this.basedir=basedir;
+		lruCache=new LRUCache(lruCacheSize);
 	}
 
 	/** 
@@ -126,6 +145,19 @@ public class DiskCache extends AbstractMap {
 			throw new NullPointerException("Name not provided");
 		}
 
+		rv=lruCache.get(key);
+		if(rv==null) {
+			rv=getFromDiskCache(key);
+			lruCache.put(key, rv);
+		}
+
+		return(rv);
+	}
+
+	private Object getFromDiskCache(Object key) {
+
+		Object rv=null;
+
 		try {
 			FileInputStream istream = new FileInputStream(getPath(key));
 			ObjectInputStream p = new ObjectInputStream(istream);
@@ -144,10 +176,13 @@ public class DiskCache extends AbstractMap {
 		} catch(FileNotFoundException e) {
             // System.err.println(e.toString());
 		} catch(Exception e) {
-			e.printStackTrace();
+			Logger logger=LoggerFactory.getLogger(getClass());
+			logger.warn("Error getting " + key + " from disk cache", e);
 		}
+
 		return(rv);
 	}
+
 
 	public Set entrySet() {
 		Set rv=null;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2002  Dustin Sallings
  *
- * $Id: DiskCacheTest.java,v 1.3 2002/09/13 17:27:49 dustin Exp $
+ * $Id: DiskCacheTest.java,v 1.4 2002/12/19 07:12:45 dustin Exp $
  */
 
 package net.spy.test;
@@ -129,7 +129,10 @@ public class DiskCacheTest extends TestCase {
 		for(Iterator i=pairs.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
 
+			// Try it twice (test the LRU)
 			assertEquals(me.getValue(), cache.getObject((String)me.getKey()));
+			// Second time, use the new API, 'cuz why not?  :)
+			assertEquals(me.getValue(), cache.get(me.getKey()));
 		}
 	}
 
