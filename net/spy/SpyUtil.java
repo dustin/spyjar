@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SpyUtil.java,v 1.6 2003/08/05 09:01:02 dustin Exp $
+// $Id: SpyUtil.java,v 1.7 2003/09/05 16:24:01 dustin Exp $
 
 package net.spy;
 
@@ -288,5 +288,33 @@ public class SpyUtil {
 			rv=Boolean.FALSE;
 		}
 		return(rv);
+	}
+
+	/** 
+	 * Remove HTML tags from a string.
+	 * 
+	 * @param contents the string whose HTML tags need removed.
+	 * @return the deHTMLed string
+	 */
+	public static String deHTML(String contents) {
+		int inTag=0;
+		StringBuffer sb=new StringBuffer(contents.length());
+
+		char chars[]=contents.toCharArray();
+
+		for(int i=0; i<chars.length; i++) {
+			if(chars[i]=='<') {
+				inTag++;
+			} else if( chars[i]=='>' && inTag>0) {
+				if(inTag>=1) {
+					inTag--;
+				}
+			} else {
+				if(inTag==0) {
+					sb.append(chars[i]);
+				}
+			}
+		}
+		return(sb.toString());
 	}
 }

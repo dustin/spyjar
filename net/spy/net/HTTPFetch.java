@@ -17,6 +17,8 @@ import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.spy.SpyUtil;
+
 /**
  * Oversimplified HTTP document fetcher.
  */
@@ -126,25 +128,7 @@ public class HTTPFetch extends Object {
 	public String getStrippedData() throws Exception {
 		getData();
 		if(stripped==null) {
-			int inTag=0;
-			StringBuffer sb=new StringBuffer(contents.length());
-
-			char chars[]=contents.toCharArray();
-
-			for(int i=0; i<chars.length; i++) {
-				if(chars[i]=='<') {
-					inTag++;
-				} else if( chars[i]=='>' && inTag>0) {
-					if(inTag>=1) {
-						inTag--;
-					}
-				} else {
-					if(inTag==0) {
-						sb.append(chars[i]);
-					}
-				}
-			}
-			stripped=sb.toString();
+			stripped=SpyUtil.deHTML(contents);
 		}
 		return(stripped);
 	}
