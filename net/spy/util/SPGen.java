@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.27 2003/04/07 08:17:06 dustin Exp $
+// $Id: SPGen.java,v 1.28 2003/05/27 05:10:17 dustin Exp $
 
 package net.spy.util;
 
@@ -49,7 +49,7 @@ public class SPGen extends Object {
 	private String pkg="";
 	private String superclass=null;
 	private String superinterface=null;
-	private String version="$Revision: 1.27 $";
+	private String version="$Revision: 1.28 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -384,7 +384,7 @@ public class SPGen extends Object {
 			for(Iterator i=getRequiredArgs(false).iterator(); i.hasNext(); ) {
 				Parameter p=(Parameter)i.next();
 				out.print(" * <li>" + p.getName() + " - "
-					+ "{@link java.sql.Types#" + p.getType() + " "
+					+ "{@link java.sql.Types#" + p.getShortType() + " "
 						+ p.getType() + "}\n * "
 					+ " - " + p.getDescription());
 				Default d=p.getDefaultValue();
@@ -410,7 +410,7 @@ public class SPGen extends Object {
 			for(Iterator i=getOptionalArgs().iterator(); i.hasNext(); ) {
 				Parameter p=(Parameter)i.next();
 				out.println(" * <li>" + p.getName() + " - "
-					+ "{@link java.sql.Types#" + p.getType() + " "
+					+ "{@link java.sql.Types#" + p.getShortType() + " "
 						+ p.getType() + "}\n * "
 					+ " - " + p.getDescription() + "</li>");
 			}
@@ -432,7 +432,7 @@ public class SPGen extends Object {
 				for(Iterator i=getOutputParameters().iterator(); i.hasNext();) {
 					Parameter p=(Parameter)i.next();
 					out.println(" * <li>" + p.getName() + " - "
-						+ "{@link java.sql.Types#" + p.getType() + " "
+						+ "{@link java.sql.Types#" + p.getShortType() + " "
 							+ p.getType() + "}\n * "
 						+ " - " + p.getDescription() + "</li>");
 				}
@@ -455,7 +455,7 @@ public class SPGen extends Object {
 				out.print(" *  <li>"
 					+ r.getName() + " - ");
 				if(isValidJDBCType(r.getType())) {
-					out.print("{@link java.sql.Types#" + r.getType() + " "
+					out.print("{@link java.sql.Types#" + r.getShortType() + " "
 						+ r.getType() + "}\n *   ");
 				} else {
 					out.print(r.getType());
@@ -972,6 +972,15 @@ public class SPGen extends Object {
 			return(type);
 		}
 
+		public String getShortType() {
+			String rv=type;
+			int i=type.lastIndexOf('.');
+			if(i>0) {
+				rv=type.substring(i+1);
+			}
+			return(rv);
+		}
+
 		public String getJavaType() {
 			String rv=(String)javaTypes.get(type);
 			if(rv==null) {
@@ -1107,6 +1116,15 @@ public class SPGen extends Object {
 
 		public String getType() {
 			return(type);
+		}
+
+		public String getShortType() {
+			String rv=type;
+			int i=type.lastIndexOf('.');
+			if(i>0) {
+				rv=type.substring(i+1);
+			}
+			return(rv);
 		}
 
 		public String getDescription() {
