@@ -13,8 +13,6 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-import net.spy.util.NestedRuntimeException;
-
 /**
  * Information regarding this spy.jar build.
  *
@@ -64,7 +62,7 @@ public class BuildInfo extends Properties {
 		try {
 			rv=sdf.parse(getProperty("build.date"));
 		} catch(ParseException pe) {
-			throw new NestedRuntimeException(
+			throw new RuntimeException(
 				"Invalid date from build properties file", pe);
 		}
 		return(rv);
