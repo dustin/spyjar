@@ -38,6 +38,7 @@ public class PoolContainer extends SpyObject {
 	private int minObjects=-1;
 	private int initObjects=-1;
 	private int maxObjects=-1;
+	private long maxAge=0;
 
 	// The percentage at which we start making people wait before giving
 	// them new connections.
@@ -300,6 +301,9 @@ public class PoolContainer extends SpyObject {
 			* (float)getPropertyInt("yellow_line",
 				DEFAULT_YELLOW_LINE)/PERCENT);
 
+		// Set up the max age
+		maxAge=(long)getPropertyInt("max_age", 0);
+
 		// Set the hashcode of this pool for consistent debug output.
 		filler.setPoolHash(hashCode());
 
@@ -387,7 +391,7 @@ public class PoolContainer extends SpyObject {
 	// compensation.
 	private long calculateMaxAge() {
 		// Default to whatever's in the config
-		long rv=(long)getPropertyInt("max_age", 0);
+		long rv=maxAge;
 		synchronized(pool) {
 			int poolSize=totalObjects();
 			// Only create a new maxAge if we're above our minimum threshold

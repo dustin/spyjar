@@ -14,11 +14,61 @@ import net.spy.util.SpyConfig;
 /**
  * PoolFiller object to fill a pool with JDBC PoolAbles
  */
-
 public class JDBCPoolFiller extends PoolFiller {
 
-	public JDBCPoolFiller(String name, SpyConfig conf) {
+	private String source=null;
+	private Properties dbProps=null;
+	private long maxAge=0;
+
+	/** 
+	 * Instantiate the JDBCPoolFiller.
+	 */
+	public JDBCPoolFiller(String name, SpyConfig conf) throws PoolException {
 		super(name, conf);
+
+		initialize();
+	}
+
+	// Extract db options from various properties.
+	private void setDBOptions(Properties from, Properties tmpconf,
+		String base) {
+		for(Enumeration e=from.propertyNames(); e.hasMoreElements(); ) {
+			String pname=(String)e.nextElement();
+			if(pname.startsWith(base)) {
+				String oname=pname.substring(base.length());
+				String ovalue=from.getProperty(pname);
+				tmpconf.put(oname, ovalue);
+			}
+		}
+	}
+
+	private void initialize() throws PoolException {
+		try {
+			// Load the JDBC driver
+			String classname=getProperty("dbDriverName");
+			if(classname==null) {
+				throw new Exception("No dbDriverName property given");
+			}
+			Class.forName(classname);
+
+			source=getProperty("dbSource");
+			if(source==null) {
+				throw new Exception("No dbSource property given");
+			}
+
+			dbProps=new Properties();
+			dbProps.put("user", getProperty("dbUser", ""));
+			dbProps.put("password", getProperty("dbPass", ""));
+
+			// Set the system-wide and local DB properties here.
+			Properties sysprop=System.getProperties();
+			setDBOptions(sysprop, dbProps, "dboption.");
+			setDBOptions(getConfig(), dbProps, getName()+".dboption.");
+
+			maxAge=(long)getPropertyInt("max_age", 0);
+		} catch(Exception e) {
+			throw new PoolException("Problem initializing pool filler", e);
+		}
 	}
 
 	/**
@@ -45,33 +95,8 @@ public class JDBCPoolFiller extends PoolFiller {
 	public PoolAble getObject() throws PoolException {
 		JDBCPoolAble p = null;
 		try {
-			String classname=null, source=null, user=null, pass=null;
-
-			// Load the JDBC driver
-			classname=getProperty("dbDriverName");
-			if(classname==null) {
-				throw new Exception("No dbDriverName property given");
-			}
-			Class.forName(classname);
-
-			source=getProperty("dbSource");
-			if(source==null) {
-				throw new Exception("No dbSource property given");
-			}
-
-			Properties prop=new Properties();
-			prop.put("user", getProperty("dbUser", ""));
-			prop.put("password", getProperty("dbPass", ""));
-
-			// Set the system-wide and local DB properties here.
-			Properties sysprop=System.getProperties();
-			setDBOptions(sysprop, prop, "dboption.");
-			setDBOptions(getConfig(), prop, getName()+".dboption.");
-
-			long maxAge=(long)getPropertyInt("max_age", 0);
-
 			// Grab a connection.
-			Connection db = DriverManager.getConnection(source, prop);
+			Connection db = DriverManager.getConnection(source, dbProps);
 			// Create the PoolAble object
 			p=new JDBCPoolAble(db, maxAge, getPoolHash());
 		} catch(Exception e) {
@@ -82,18 +107,5 @@ public class JDBCPoolFiller extends PoolFiller {
 		}
 
 		return(p);
-	}
-
-	// Extract db options from various properties.
-	private void setDBOptions(Properties from, Properties tmpconf,
-		String base) {
-		for(Enumeration e=from.propertyNames(); e.hasMoreElements(); ) {
-			String pname=(String)e.nextElement();
-			if(pname.startsWith(base)) {
-				String oname=pname.substring(base.length());
-				String ovalue=from.getProperty(pname);
-				tmpconf.put(oname, ovalue);
-			}
-		}
 	}
 }
