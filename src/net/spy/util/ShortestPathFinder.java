@@ -126,15 +126,23 @@ public class ShortestPathFinder extends SpyObject {
 	private void calculatePathsWithoutClearing(SPNode node, Set seen) {
 		if(!seen.contains(node)) {
 			seen.add(node);
+
 			// Add all connections
 			for(Iterator i=node.getConnections().iterator(); i.hasNext();) {
 				SPVertex spv=(SPVertex)i.next();
 				SPNode spn=spv.getTo();
 
-				// Make sure the sub's performed his calculations
-				calculatePathsWithoutClearing(spn, seen);
-
 				node.addNextHop(spn, spv);
+			}
+
+			// Flip through the list again for recursing
+			for(Iterator i=node.getConnections().iterator(); i.hasNext();) {
+				SPVertex spv=(SPVertex)i.next();
+				SPNode spn=spv.getTo();
+				// Make sure the sub's performed his calculations
+				if(spn.getNextHops().size() == 0) {
+					calculatePathsWithoutClearing(spn, seen);
+				}
 
 				// Add all of the stuff from the next hop with the prefix delta
 				for(Iterator hi=spn.getNextHops().entrySet().iterator();
