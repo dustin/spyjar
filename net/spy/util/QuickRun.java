@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: QuickRun.java,v 1.2 2002/11/20 04:52:33 dustin Exp $
+// $Id: QuickRun.java,v 1.3 2003/04/18 07:50:16 dustin Exp $
 
 package net.spy.util;
 
@@ -83,7 +83,7 @@ public class QuickRun extends SpyThread {
 		cmd=line.substring(0, colon);
 		args=line.substring(colon+1);
 
-		System.err.println("Got command:  " + cmd + " args:  " + args);
+		getLogger().info("Got command:  " + cmd + " args:  " + args);
 
 		if(cmd.equals("RUN")) {
 			runClass(SpyUtil.split(" ", args));
@@ -117,7 +117,7 @@ public class QuickRun extends SpyThread {
 	 */
 	public void goServer() throws Exception {
 		server=new ServerSocket(port);
-		System.err.println("QuickRun server listening on port " + port);
+		getLogger().info("QuickRun server listening on port " + port);
 
 		while(true) {
 			Socket client=server.accept();

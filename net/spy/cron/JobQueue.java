@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: JobQueue.java,v 1.2 2002/11/20 04:32:07 dustin Exp $
+// $Id: JobQueue.java,v 1.3 2003/04/18 07:50:14 dustin Exp $
 
 package net.spy.cron;
 
@@ -43,7 +43,7 @@ public class JobQueue extends ArrayList {
 	public synchronized void addJob(Job j) {
 		add(j);
 		synchronized(this) {
-			notifyAll();
+			notify();
 		}
 	}
 
@@ -61,7 +61,7 @@ public class JobQueue extends ArrayList {
 			if(j.isReady()) {
 				v.add(j);
 			} else if(j.isTrash()) {
-				System.err.println("JobQueue: Removing " + j);
+				getLogger().info("JobQueue: Removing " + j);
 				i.remove();
 			}
 		}

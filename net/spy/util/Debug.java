@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Beyond.com <dustin@beyond.com>
 //
-// $Id: Debug.java,v 1.2 2002/11/20 04:32:08 dustin Exp $
+// $Id: Debug.java,v 1.3 2003/04/18 07:50:15 dustin Exp $
 
 package net.spy.util;
 
@@ -10,13 +10,15 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Hashtable;
 
+import net.spy.SpyObject;
+
 /**
  * Generic Debug logger.  Logs to a file that's listed in a System
  * property, or does not log if the System property is not set.
  *
  * @deprecated use {@link net.spy.log.Logger} instead
  */
-public class Debug extends Object {
+public class Debug extends SpyObject {
 
 	// Storage for all the file thingies
 	private static Hashtable debugs=null;
@@ -50,8 +52,7 @@ public class Debug extends Object {
 						debugOut.println(getTimestamp() + ":  Initialized.");
 						debugs.put(propname, debugOut);
 					} catch(Exception e) {
-						System.err.println("Cannot initialize debugging:  "
-							+ e);
+						getLogger().warn("Cannot initialize debugging", e);
 						e.printStackTrace();
 					}
 				} // Got a filename

@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: DiskCache.java,v 1.6 2002/12/19 07:12:45 dustin Exp $
+// $Id: DiskCache.java,v 1.7 2003/04/18 07:50:13 dustin Exp $
 
 package net.spy.cache;
 
@@ -39,6 +39,8 @@ public class DiskCache extends AbstractMap {
 	private LRUCache lruCache=null;
 
 	private static final int DEFAULT_LRU_CACHE_SIZE=100;
+
+	private Logger logger = null;
 
 	/**
 	 * Get an DiskObject using the given directory.
@@ -154,6 +156,14 @@ public class DiskCache extends AbstractMap {
 		return(rv);
 	}
 
+	private Logger getLogger() {
+		if(logger==null) {
+			logger=LoggerFactory.getLogger(getClass());
+				logger=LoggerFactory.getLogger(getClass());
+		}
+		return(logger);
+	}
+
 	private Object getFromDiskCache(Object key) {
 
 		Object rv=null;
@@ -174,10 +184,11 @@ public class DiskCache extends AbstractMap {
 			p.close();
 			istream.close();
 		} catch(FileNotFoundException e) {
-            // System.err.println(e.toString());
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("File not found loading disk cache", e);
+			}
 		} catch(Exception e) {
-			Logger logger=LoggerFactory.getLogger(getClass());
-			logger.warn("Error getting " + key + " from disk cache", e);
+			getLogger().warn("Error getting " + key + " from disk cache", e);
 		}
 
 		return(rv);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000 Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyLogQueue.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+ * $Id: SpyLogQueue.java,v 1.2 2003/04/18 07:50:15 dustin Exp $
  */
 
 package net.spy.log;
@@ -9,11 +9,13 @@ package net.spy.log;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import net.spy.SpyObject;
+
 /**
  * This class performs the actual queue management for the SpyLog system.
  * It should probably not be referenced directly.
  */
-public class SpyLogQueue extends Object {
+public class SpyLogQueue extends SpyObject {
 	private static Hashtable queues=null;
 	private static String queueMutex="Log Mutex";
 	private String queueName=null;
@@ -79,13 +81,11 @@ public class SpyLogQueue extends Object {
 				}
 			} catch(InterruptedException e) {
 				// If we are going to return too early, pause just a sec
-				System.err.println("SpyLogQueue.waitForQueue got exception:  "
-					+ e);
+				getLogger().warn("SpyLogQueue.waitForQueue got exception", e);
 				try {
 					Thread.sleep(1000);
 				} catch(InterruptedException e2) {
-					System.err.println("Wow, this sucks, got another one: "
-						+ e2);
+					getLogger().warn("Wow, this sucks, got another one", e2);
 				}
 			}
 		} // if we have no data

@@ -5,7 +5,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.21 2003/03/11 09:10:02 dustin Exp $
+	$Id: build.xml,v 1.22 2003/04/18 07:50:12 dustin Exp $
 
 	-->
 
@@ -378,6 +378,7 @@
   <target name="tests-gui" depends="test-suite"
 		description="Start the JUnit GUI">
     <java classname="junit.swingui.TestRunner" fork="yes">
+			<sysproperty key="net.spy.log.LoggerImpl" value="${loggerimpl}"/> 
 			<classpath refid="myclasses"/>
 			<classpath refid="junitclasses"/>
       <classpath>

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBCP.java,v 1.5 2002/11/20 04:32:07 dustin Exp $
+// $Id: DBCP.java,v 1.6 2003/04/18 07:50:14 dustin Exp $
 
 package net.spy.db;
 
@@ -107,15 +107,15 @@ public abstract class DBCP extends DBSP {
 
 			try {
 				if(getParameterType(arg.getName()) == Parameter.OUTPUT) {
-					if (isDebugEnabled()) {
-						System.err.println("OUT -> Setting column "
+					if (getLogger().isDebugEnabled()) {
+						getLogger().debug("OUT -> Setting column "
 							+arg+"("+i+") type "+type);
 					}
 					CallableStatement cst=(CallableStatement)pst;
 					cst.registerOutParameter(i, type);
 				} else {
-					if (isDebugEnabled()) {
-						System.err.println("IN -> Setting column "
+					if (getLogger().isDebugEnabled()) {
+						getLogger().debug("IN -> Setting column "
 							+arg+"("+i+") type "+type);
 					}
 					switch(type) {
@@ -216,8 +216,8 @@ public abstract class DBCP extends DBSP {
 
 		String query=querySb.toString().trim();
 
-		if (isDebugEnabled()) {
-			System.err.println("Query: "+query);
+		if (getLogger().isDebugEnabled()) {
+			getLogger().debug("Query: "+query);
 		}
 
 		PreparedStatement pst=getPreparedStatement();

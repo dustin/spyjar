@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.15 2003/04/16 01:04:02 dustin Exp $
+// $Id: ThreadPool.java,v 1.16 2003/04/18 07:50:16 dustin Exp $
 
 package net.spy.util;
 
@@ -89,6 +89,7 @@ public class ThreadPool extends ThreadGroup {
 
 	private Logger logger=null;
 
+	private int minTotalThreads=0;
 	private int minIdleThreads=0;
 	private int maxTotalThreads=0;
 	private int startThreads=0;
@@ -312,6 +313,28 @@ public class ThreadPool extends ThreadGroup {
 				"Value must be greater than or equal to zero.");
 		}
 		this.maxTaskQueueSize=maxTaskQueueSize;
+	}
+
+	/** 
+	 * Get the minimum number of threads that may exist in the thread pool
+	 * at any moment.
+	 */
+	public int getMinTotalThreads() {
+		return(minTotalThreads);
+	}
+
+	/** 
+	 * Set the minimum number of threads that may exist in the thread pool
+	 * at any moment.
+	 * 
+	 * @param minTotalThreads a value &ge; 0
+	 */
+	public void setMinTotalThreads(int minTotalThreads) {
+		if(minTotalThreads < 0) {
+			throw new IllegalArgumentException(
+				"Value must be greater than or equal to zero.");
+		}
+		this.minTotalThreads=minTotalThreads;
 	}
 
 	/** 
@@ -539,6 +562,9 @@ public class ThreadPool extends ThreadGroup {
 	 */
 	public void shutdown() {
 		getLogger().info("Shutting down this thread pool.");
+		if(shutdown) {
+			throw new IllegalStateException("Already shut down");
+		}
 		for(Iterator i=threads.iterator(); i.hasNext(); ) {
 			RunThread t=(RunThread)i.next();
 			t.shutdown();
@@ -744,11 +770,6 @@ public class ThreadPool extends ThreadGroup {
 				// Record the runnable
 				running=r;
 				start=System.currentTimeMillis();
-				// Notify the runnable that it's been accepted and we're
-				// ready to run it.
-				synchronized(r) {
-					r.notify();
-				}
 				// Run the runnable.
 				r.run();
 			} catch(Throwable t) {

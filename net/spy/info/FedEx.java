@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FedEx.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: FedEx.java,v 1.2 2003/04/18 07:50:15 dustin Exp $
 
 package net.spy.info;
 
@@ -49,7 +49,7 @@ public class FedEx extends PackageInfo {
 			}
 		} catch(Exception e) {
 			// Who cares.
-			System.err.println("Exception on FedEx.toString():  " + e);
+			getLogger().warn("Exception on FedEx.toString()", e);
 		}
 		return(ret);
 	}

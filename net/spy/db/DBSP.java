@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSP.java,v 1.15 2002/12/24 09:27:35 dustin Exp $
+// $Id: DBSP.java,v 1.16 2003/04/18 07:50:14 dustin Exp $
 
 package net.spy.db;
 
@@ -88,14 +88,14 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		ResultSet rs=null;
 
 		if (debug) {
-			System.out.println("Setting timeout to: "+timeout);
+			getLogger().debug("Setting timeout to: "+timeout);
 		}
 		pst.setQueryTimeout(timeout);
 
 		rs=pst.executeQuery();
 
 		if (debug) {
-			System.err.print("Returned: ");
+			getLogger().debug("Returned: ");
 			ResultSetMetaData rsmd=rs.getMetaData();
 			String cols="";
 			for (int x=1; x<=rsmd.getColumnCount(); x++) {
@@ -104,7 +104,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 				}
 				cols+=rsmd.getColumnName(x)+"="+rsmd.getColumnTypeName(x);
 			}
-			System.err.println(cols);
+			getLogger().debug(cols);
 		}
 
 		return(rs);
@@ -327,9 +327,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	protected void checkArgs() throws SQLException {
 
 		if(debug) {
-			System.err.println("Checking");
-			System.err.println("Parameters:  "+ parameters);
-			System.err.println("Args:  "+ arguments);
+			getLogger().debug("Checking");
+			getLogger().debug("Parameters:  "+ parameters);
+			getLogger().debug("Args:  "+ arguments);
 		}
 
 		// Now, verify all of the arguments we have are correctly typed.
@@ -481,7 +481,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			int type=arg.getJavaType();
 
 			if(isDebugEnabled()) {
-				System.err.println("arg[" + i + "] = " + arg);
+				getLogger().debug("arg[" + i + "] = " + arg);
 			}
 
 			try {
@@ -650,7 +650,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	public void set(String which,Integer a1) 
 		throws SQLException {
 		if (debug) {
-			System.err.println("Adding Integer->INTEGER for "+which);
+			getLogger().debug("Adding Integer->INTEGER for "+which);
 		}
 		setArg(which, a1, Types.INTEGER);
 	}
@@ -712,7 +712,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	/*
 	public void set(String which,java.lang.Object a1) 
 		throws SQLException {
-		System.err.println("Setting OTHER for "+which);
+		getLogger().debug("Setting OTHER for "+which);
 		setArg(which, a1, Types.OTHER);
 	}
 	*/
@@ -765,7 +765,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	public void set(String which,java.lang.String a1) 
 		throws SQLException {
 		if (debug) {
-			System.err.println("Adding String->VARCHAR for "+which);
+			getLogger().debug("Adding String->VARCHAR for "+which);
 		}
 		setArg(which, a1, Types.VARCHAR);
 	}

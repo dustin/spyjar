@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPoolManager.java,v 1.2 2003/04/11 09:05:06 dustin Exp $
+// $Id: ThreadPoolManager.java,v 1.3 2003/04/18 07:50:16 dustin Exp $
 
 package net.spy.util;
 
@@ -101,10 +101,12 @@ public class ThreadPoolManager extends LoopingThread {
 	 */
 	protected void checkTooManyThreads() {
 		int idleThreads=tp.getIdleThreadCount();
+		int minThreads=tp.getMinTotalThreads();
 		int minIdle=tp.getMinIdleThreads();
 		int totalThreads=tp.getActiveThreadCount();
 
-		if(idleThreads > minIdle) {
+		// Figure out if we can kill any off.
+		if( (idleThreads > minIdle) && (totalThreads > minThreads)) {
 			getLogger().info("Shutting down a thread (bring us down to "
 				+ (totalThreads - 1) + ")");
 			tp.destroyThread();

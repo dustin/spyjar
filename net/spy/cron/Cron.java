@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Cron.java,v 1.4 2003/03/28 20:29:30 knitterb Exp $
+// $Id: Cron.java,v 1.5 2003/04/18 07:50:14 dustin Exp $
 
 package net.spy.cron;
 
@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import net.spy.SpyThread;
+import net.spy.util.ThreadPool;
 
 /**
  * Watches a JobQueue and invokes the Jobs when they're ready.
@@ -19,6 +20,7 @@ public class Cron extends SpyThread {
 
 	private JobQueue jq=null;
 	private boolean stillRunning=true;
+	private ThreadPool threads=null;
 
 	// How long we can go idle.
 	private long maxIdleTime=900000;
@@ -34,17 +36,38 @@ public class Cron extends SpyThread {
 		this("Cron", jq);
 	}
 
+	/** 
+	 * Get a new Cron instance with a name, JobQueue and the default thread
+	 * pool.
+	 * 
+	 * @param name name of the cron instance
+	 * @param jq the queue to watch
+	 */
+	public Cron(String name, JobQueue jq) {
+		this(name, jq, null);
+	}
+
 	/**
 	 * Get a new Cron object operating on the given queue.
 	 *
 	 * @param name thread name
 	 * @param jq job queue to watch
+	 * @param tp the thread pool
 	 */
-	public Cron(String name, JobQueue jq) {
+	public Cron(String name, JobQueue jq, ThreadPool tp) {
 		super();
 		this.jq=jq;
 		setDaemon(true);
 		setName(name);
+
+		if(tp==null) {
+			tp=new ThreadPool(name + "Pool");
+			tp.setStartThreads(5);
+			tp.setMinIdleThreads(0);
+			tp.setMinTotalThreads(1);
+			tp.setMaxTotalThreads(100);
+		}
+		threads=tp;
 
 		start();
 		validJobFound=System.currentTimeMillis();
@@ -61,26 +84,34 @@ public class Cron extends SpyThread {
 	 * Shut down the queue.
 	 */
 	public void shutdown() {
+		if(!isRunning()) {
+			throw new IllegalStateException("Already shut down");
+		}
 		stillRunning=false;
+		threads.shutdown();
+		// XXX:  Write up why I did this.
 		synchronized(jq) {
 			jq.notify();
 		}
 	}
 
+	/** 
+	 * True if this Cron instance is still running.
+	 */
 	public boolean isRunning() {
 		return(this.stillRunning);
 	}
 
+	/** 
+	 * Do the run thing.
+	 */
 	public void run() {
 		while(stillRunning) {
 			// Check all the running jobs.
 			for(Iterator i=jq.getReadyJobs(); i.hasNext(); ) {
 				Job j=(Job)i.next();
 				getLogger().info("Starting job " + j);
-				Thread t=new Thread(j);
-				t.setName(j.getName());
-				t.setDaemon(true);
-				t.start();
+				threads.addTask(j);
 			}
 
 			// Just to slow things down a bit.

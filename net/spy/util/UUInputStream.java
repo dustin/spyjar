@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UUInputStream.java,v 1.1 2002/08/28 00:34:57 dustin Exp $
+// $Id: UUInputStream.java,v 1.2 2003/04/18 07:50:16 dustin Exp $
 
 package net.spy.util;
 
@@ -11,6 +11,9 @@ import java.io.InputStream;
 import java.io.IOException;
 
 import java.util.StringTokenizer;
+
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
 
 /**
  * This class decodes uuencoded files.
@@ -26,6 +29,8 @@ public class UUInputStream extends FilterInputStream {
 
 	private boolean started=false;
 	private boolean finished=false;
+
+	private Logger logger = null;
 
 	/**
 	 * Get a UUInputStream decoding the given InputStream.
@@ -132,6 +137,13 @@ public class UUInputStream extends FilterInputStream {
 		return(rv);
 	}
 
+	private Logger getLogger() {
+		if(logger==null) {
+			logger=LoggerFactory.getLogger(getClass());
+		}
+		return(logger);
+	}
+
 	private void decodeMore() throws IOException {
 
 		while(!started) {
@@ -156,7 +168,7 @@ public class UUInputStream extends FilterInputStream {
 		String temp = readLine();
 
 		if (temp == null) {
-			System.err.println("uudecode warning: finished due to null line");
+			getLogger().warn("uudecode warning: finished due to null line");
 			finished=true;
 		} else if (!temp.equalsIgnoreCase("end")
 			&& !temp.equals("") && !temp.equals("`")) {

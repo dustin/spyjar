@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: TimeIncrement.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: TimeIncrement.java,v 1.2 2003/04/18 07:50:14 dustin Exp $
 
 package net.spy.cron;
 
@@ -76,7 +76,6 @@ public class TimeIncrement extends Object {
 			rv=calendar.getTime();
 		}
 
-		// System.err.println("Old time:  " + d + " new time " + rv);
 		return(rv);
 	}
 
