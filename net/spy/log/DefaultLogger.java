@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: DefaultLogger.java,v 1.3 2002/11/05 07:36:19 dustin Exp $
+// $Id: DefaultLogger.java,v 1.4 2002/11/20 06:20:01 dustin Exp $
 
 package net.spy.log;
 
@@ -22,9 +22,12 @@ public class DefaultLogger extends AbstractLogger {
 	/** 
 	 * @see AbstractLogger
 	 */
-	protected void logAt(int level, Object message, Throwable e) {
-		if(level > INFO) {
-			System.err.println(getName() + " (" + levelToString(level)
+	public void log(Level level, Object message, Throwable e) {
+		if(level == Level.INFO
+			|| level == Level.WARN
+			|| level == Level.ERROR
+			|| level == Level.FATAL) {
+			System.err.println(getName() + " (" + level.getName()
 				+ "): " + message);
 			if(e != null) {
 				e.printStackTrace();

@@ -1,19 +1,17 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MessageOutputStream.java,v 1.1 2002/08/28 00:34:56 dustin Exp $
+// $Id: MessageOutputStream.java,v 1.2 2002/11/20 06:20:01 dustin Exp $
 
 package net.spy.log;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 
 import java.net.InetAddress;
 
 /**
  * Send SpyMessages when stuff goes to this OutputStream.
  */
-public class MessageOutputStream extends OutputStream {
+public class MessageOutputStream extends LineGettingOutputStream {
 
 	private MCastLog mcl=null;
 
@@ -25,43 +23,15 @@ public class MessageOutputStream extends OutputStream {
 		this.mcl=mcl;
 	}
 
-	/**
-	 * Write a byte.
+	/** 
+	 * Send this chunk as a SpyMessage.
+	 * 
+	 * @param chunk 
+	 * @throws IOException 
 	 */
-	public void write(int b) throws IOException {
-		byte ba[]=new byte[1];
-		ba[0]=(byte)b;
-		write(ba, 0, 0);
-	}
-
-	/**
-	 * Do the actual writing.
-	 */
-	public void write(byte b[], int offset, int length) throws IOException {
-		// Make a string and get rid of the extra space at the ends.
-		// String msgS=new String(b, offset, length).trim();
-		while(length>=offset && ( b[length]=='\r' || b[length]=='\n')) {
-			length--;
-		}
-		String msgS=new String(b, offset, length);
-		if(msgS.trim().length() > 0 ) {
-			SpyMessage msg=new SpyMessage(msgS);
-			mcl.sendMessage(msg);
-		}
-	}
-
-	/**
-	 * Redefine stderr to send messages via this thing.
-	 */
-	public void setErr() {
-		System.setErr(new PrintStream(this));
-	}
-
-	/**
-	 * Redefine stdout to send messages via this thing.
-	 */
-	public void setOut() {
-		System.setOut(new PrintStream(this));
+	protected void processChunk(String chunk) throws IOException {
+		SpyMessage msg=new SpyMessage(chunk);
+		mcl.sendMessage(msg);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: Logger.java,v 1.3 2002/11/05 06:06:52 dustin Exp $
+// $Id: Logger.java,v 1.4 2002/11/20 06:20:01 dustin Exp $
 
 package net.spy.log;
 
@@ -32,6 +32,23 @@ public interface Logger {
 	 * @return true if info messages would be displayed
 	 */
 	boolean isInfoEnabled();
+
+	/** 
+	 * Log a message at the specified level.
+	 * 
+	 * @param level the level at which to log
+	 * @param message the message to log
+	 * @param exception an exception that caused the message
+	 */
+	void log(Level level, Object message, Throwable exception);
+
+	/** 
+	 * Log a message at the specified level.
+	 * 
+	 * @param level the level at which to log
+	 * @param message the message to log
+	 */
+	void log(Level level, Object message);
 
 	/** 
 	 * Log a message at debug level.

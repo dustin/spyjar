@@ -1,6 +1,6 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
 //
-// $Id: AbstractLogger.java,v 1.3 2002/11/15 11:12:06 dustin Exp $
+// $Id: AbstractLogger.java,v 1.4 2002/11/20 06:20:01 dustin Exp $
 
 package net.spy.log;
 
@@ -9,27 +9,6 @@ package net.spy.log;
  * framework.
  */
 public abstract class AbstractLogger implements Logger {
-
-	/** 
-	 * Value representing the abstract debug level.
-	 */
-	protected final static int DEBUG=1;
-	/** 
-	 * Value representing the abstract info level.
-	 */
-	protected final static int INFO=2;
-	/** 
-	 * Value representing the abstract warning level.
-	 */
-	protected final static int WARN=3;
-	/** 
-	 * Value representing the abstract error level.
-	 */
-	protected final static int ERROR=4;
-	/** 
-	 * Value representing the abstract fatal level.
-	 */
-	protected final static int FATAL=5;
 
 	private String name=null;
 
@@ -42,37 +21,6 @@ public abstract class AbstractLogger implements Logger {
 			throw new NullPointerException("Logger name may not be null.");
 		}
 		this.name=name;
-	}
-
-	/** 
-	 * Get the String value of a particular log level.
-	 * 
-	 * @param level the log level to get
-	 * @return the name of that log level
-	 */
-	protected String levelToString(int level) {
-		String rv=null;
-		switch(level) {
-			case DEBUG:
-				rv="DEBUG";
-				break;
-			case INFO:
-				rv="INFO";
-				break;
-			case WARN:
-				rv="WARN";
-				break;
-			case ERROR:
-				rv="ERROR";
-				break;
-			case FATAL:
-				rv="FATAL";
-				break;
-			default:
-				throw new IllegalArgumentException(level
-					+ " is an invalid log type.");
-		}
-		return (rv);
 	}
 
 	/** 
@@ -109,7 +57,7 @@ public abstract class AbstractLogger implements Logger {
 	 * @param exception the exception that caused the message to be generated
 	 */
 	public void debug(Object message, Throwable exception) {
-		logAt(DEBUG, message, exception);
+		log(Level.DEBUG, message, exception);
 	}
 	/** 
 	 * Log a message at debug level.
@@ -127,7 +75,7 @@ public abstract class AbstractLogger implements Logger {
 	 * @param exception the exception that caused the message to be generated
 	 */
 	public void info(Object message, Throwable exception) {
-		logAt(INFO, message, exception);
+		log(Level.INFO, message, exception);
 	}
 	/** 
 	 * Log a message at info level.
@@ -145,7 +93,7 @@ public abstract class AbstractLogger implements Logger {
 	 * @param exception the exception that caused the message to be generated
 	 */
 	public void warn(Object message, Throwable exception) {
-		logAt(WARN, message, exception);
+		log(Level.WARN, message, exception);
 	}
 	/** 
 	 * Log a message at warning level.
@@ -163,7 +111,7 @@ public abstract class AbstractLogger implements Logger {
 	 * @param exception the exception that caused the message to be generated
 	 */
 	public void error(Object message, Throwable exception) {
-		logAt(ERROR, message, exception);
+		log(Level.ERROR, message, exception);
 	}
 	/** 
 	 * Log a message at error level.
@@ -181,7 +129,7 @@ public abstract class AbstractLogger implements Logger {
 	 * @param exception the exception that caused the message to be generated
 	 */
 	public void fatal(Object message, Throwable exception) {
-		logAt(FATAL, message, exception);
+		log(Level.FATAL, message, exception);
 	}
 
 	/** 
@@ -194,6 +142,16 @@ public abstract class AbstractLogger implements Logger {
 	}
 
 	/** 
+	 * Log a message at the given level.
+	 * 
+	 * @param level the level
+	 * @param message the message
+	 */
+	public void log(Level level, Object message) {
+		log(level, message, null);
+	}
+
+	/** 
 	 * Subclasses should implement this method to determine what to do when
 	 * a client wants to log at a particular level.
 	 * 
@@ -201,6 +159,6 @@ public abstract class AbstractLogger implements Logger {
 	 * @param message the message to log
 	 * @param e the exception that caused the message (or null)
 	 */
-	protected abstract void logAt(int level, Object message, Throwable e);
+	public abstract void log(Level level, Object message, Throwable e);
 
 }
