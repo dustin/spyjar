@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.6 2002/12/06 08:25:11 dustin Exp $
+// $Id: ThreadPool.java,v 1.7 2002/12/06 08:58:42 dustin Exp $
 
 package net.spy.util;
 
@@ -314,7 +314,13 @@ public class ThreadPool extends ThreadGroup {
 					sb.append(" - idle");
 				} else {
 					sb.append(" - running ");
-					sb.append(running.getClass().getName());
+					// Figure out whether we should call toString() or
+					// display the class type.
+					if(running instanceof ThreadPoolRunnable) {
+						sb.append(running.toString());
+					} else {
+						sb.append(running.getClass().getName());
+					}
 					sb.append(" for ");
 					sb.append(System.currentTimeMillis() - start);
 					sb.append("ms");
