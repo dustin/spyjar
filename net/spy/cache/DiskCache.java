@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: DiskCache.java,v 1.2 2002/09/13 05:54:33 dustin Exp $
+// $Id: DiskCache.java,v 1.3 2002/09/13 06:52:23 dustin Exp $
 
 package net.spy.cache;
 
@@ -13,6 +13,15 @@ import java.io.ObjectOutputStream;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import java.util.Map;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.AbstractMap;
+import java.util.AbstractSet;
+
+import net.spy.util.NestedRuntimeException;
 
 /**
  * Simple local disk caching.
@@ -43,19 +52,25 @@ public class DiskCache extends Object {
 	}
 
 	// Get the path of an object for the given key
-	private String getPath(String key) {
+	private String getPath(Object key) {
 		MessageDigest md=null;
 		try {
 			md=MessageDigest.getInstance("SHA");
 		} catch(NoSuchAlgorithmException e) {
 			throw new Error("There's no SHA?");
 		}
-		md.update(key.getBytes());
+		if(key instanceof String) {
+			String k=(String)key;
+			md.update(k.getBytes());
+		} else {
+			String tmpkey=key.getClass().getName() + key.hashCode();
+			md.update(tmpkey.getBytes());
+		}
 
 		String hashed=net.spy.SpyUtil.byteAToHexString(md.digest());
 
 		String base=basedir+"/"+hashed.substring(0,2);
-		String path=basedir+"/"+hashed.substring(0,2)+"/"+hashed;
+		String path=base+"/"+hashed;
 
 		File f=new File(base);
 		if(!f.isDirectory()) {
@@ -67,16 +82,38 @@ public class DiskCache extends Object {
 
 	/**
 	 * Store an object in the cache.
+	 *
+     * @param k object key
+     * @param v value
+     * @return the old object stored in that location (if any)
 	 */
-    public void storeObject(String name, Object o) throws IOException {
-		String pathto=getPath(name);
+    public Object put(Object k, Object v) {
+		Object rv=get(k);
 
-		FileOutputStream ostream = new FileOutputStream(pathto);
-		ObjectOutputStream p = new ObjectOutputStream(ostream);
-		p.writeObject(name);
-		p.writeObject(o);
-		p.flush();
-		ostream.close();
+		String pathto=getPath(k);
+
+		try {
+			FileOutputStream ostream = new FileOutputStream(pathto);
+			ObjectOutputStream p = new ObjectOutputStream(ostream);
+			p.writeObject(k);
+			p.writeObject(v);
+			p.flush();
+			p.close();
+			ostream.close();
+		} catch(IOException e) {
+			throw new NestedRuntimeException("Error storing object", e);
+		}
+
+		return(rv);
+	}
+
+    /** 
+     * Old API for storing.
+	 *
+	 * @deprecated use put(Object,Object) instead
+     */
+    public void storeObject(String key, Object o) throws IOException {
+		put(key, o);
 	}
 
 	/**
@@ -84,32 +121,43 @@ public class DiskCache extends Object {
 	 *
 	 * @return the object, or null if there's no such object
 	 */
-    public Object getObject(String name) {
+    public Object get(Object key) {
 		Object rv=null;
 
-		if(name==null) {
+		if(key==null) {
 			throw new NullPointerException("Name not provided");
 		}
 
 		try {
-			FileInputStream istream = new FileInputStream(getPath(name));
+			FileInputStream istream = new FileInputStream(getPath(key));
 			ObjectInputStream p = new ObjectInputStream(istream);
 			String storedName = (String)p.readObject();
 			Object o = p.readObject();
 
-			if(!name.equals(storedName)) {
+			if(!key.equals(storedName)) {
 				throw new Exception("Key value did not match ("
-					+ storedName + " != " + name + ")");
+					+ storedName + " != " + key + ")");
 			}
 
 			rv=o;
+
+			p.close();
+			istream.close();
 		} catch(FileNotFoundException e) {
-            // If it's file not found, just print the path, no need for a
-            // full stack.
-            System.err.println(e.toString());
+            // System.err.println(e.toString());
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		return(rv);
 	}
+
+    /** 
+     * Old API for getting objects.
+	 *
+	 * @deprecated use get(Object) instead
+     */
+    public Object getObject(String key) {
+		return(get(key));
+	}
+
 }

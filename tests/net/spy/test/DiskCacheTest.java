@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2002  Dustin Sallings
  *
- * $Id: DiskCacheTest.java,v 1.1 2002/09/13 05:49:09 dustin Exp $
+ * $Id: DiskCacheTest.java,v 1.2 2002/09/13 06:52:23 dustin Exp $
  */
 
 package net.spy.test;
@@ -121,7 +121,28 @@ public class DiskCacheTest extends TestCase {
 		for(Iterator i=pairs.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
 
-			assertEquals(me.getValue(), pairs.get(me.getKey()));
+			assertEquals(me.getValue(), cache.getObject((String)me.getKey()));
+		}
+	}
+
+	/** 
+	 * Test basic functionality of the disk cache.
+	 */
+	public void testBasicDiskCacheNew() throws Exception {
+		PwGen gen=new PwGen();
+		HashMap pairs=new HashMap();
+
+		for(int i=0; i<1000; i++) {
+			String key=gen.getPass(8);
+			String value=gen.getPass(8);
+			pairs.put(key, value);
+			cache.put(key, value);
+		}
+
+		for(Iterator i=pairs.entrySet().iterator(); i.hasNext(); ) {
+			Map.Entry me=(Map.Entry)i.next();
+
+			assertEquals(me.getValue(), cache.get(me.getKey()));
 		}
 	}
 
