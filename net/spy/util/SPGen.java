@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.13 2002/10/30 08:16:34 dustin Exp $
+// $Id: SPGen.java,v 1.14 2002/11/04 20:26:57 knitterb Exp $
 
 package net.spy.util;
 
@@ -42,7 +42,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="DBSP";
-	private String version="$Revision: 1.13 $";
+	private String version="$Revision: 1.14 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -559,7 +559,7 @@ public class SPGen extends Object {
 			// Don't do anything if the line is empty
 			if(tmp.length() > 0) {
 				if(tmp.charAt(0) == '@') {
-					section=tmp.substring(1);
+					section=tmp.substring(1).trim().toLowerCase();
 					// System.out.println("Working on section " + section);
 
 					// Handlers for things that occur when a section is begun
@@ -621,7 +621,7 @@ public class SPGen extends Object {
 					} else if(section.equals("cachetime")) {
 						cachetime=Long.parseLong(tmp);
 					} else {
-						throw new Exception("Unknown section:  " + section);
+						throw new Exception("Unknown section: ``"+section+"''");
 					}
 
 				}
