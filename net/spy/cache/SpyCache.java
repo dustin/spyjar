@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: SpyCache.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+ * $Id: SpyCache.java,v 1.2 2002/09/04 23:27:57 dustin Exp $
  */
 
 package net.spy.cache;
@@ -47,14 +47,9 @@ public class SpyCache extends Object {
 		cacheStore=new TimeStampedHash();
 	}
 
-	private void checkThread() {
+	private synchronized void checkThread() {
 		if(cacheCleaner==null || (!cacheCleaner.isAlive())) {
-			// Do the same thing synchronized
-			synchronized(SpyCache.class) {
-				if(cacheCleaner==null || (!cacheCleaner.isAlive())) {
-					cacheCleaner=new SpyCacheCleaner(cacheStore);
-				}
-			}
+			cacheCleaner=new SpyCacheCleaner(cacheStore);
 		}
 	}
 
@@ -63,13 +58,9 @@ public class SpyCache extends Object {
 	 *
 	 * @return the instance of SpyCache, or a new instance if required
 	 */
-	public static SpyCache getInstance() {
-		if(instance == null) {
-			synchronized(SpyCache.class) {
-				if(instance==null) {
-					instance=new SpyCache();
-				}
-			}
+	public synchronized static SpyCache getInstance() {
+		if(instance==null) {
+			instance=new SpyCache();
 		}
 
 		instance.checkThread();
