@@ -1,12 +1,13 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DefaultQuerySelector.java,v 1.4 2002/10/30 20:29:44 dustin Exp $
+// $Id: DefaultQuerySelector.java,v 1.5 2002/10/30 20:40:59 dustin Exp $
 
 package net.spy.db;
 
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.NoSuchElementException;
 
 import java.sql.Connection;
 
