@@ -21,7 +21,7 @@ import junit.framework.TestSuite;
 
 import net.spy.cache.DiskCache;
 import net.spy.util.Digest;
-import net.spy.SpyUtil;
+import net.spy.util.SpyUtil;
 import net.spy.util.PwGen;
 
 /**
@@ -114,7 +114,7 @@ public class DiskCacheTest extends TestCase {
 			String key=gen.getPass(8);
 			String value=gen.getPass(8);
 			pairs.put(key, value);
-			cache.storeObject(key, value);
+			cache.put(key, value);
 		}
 
 		return(pairs);
@@ -130,8 +130,7 @@ public class DiskCacheTest extends TestCase {
 			Map.Entry me=(Map.Entry)i.next();
 
 			// Try it twice (test the LRU)
-			assertEquals(me.getValue(), cache.getObject((String)me.getKey()));
-			// Second time, use the new API, 'cuz why not?  :)
+			assertEquals(me.getValue(), cache.get(me.getKey()));
 			assertEquals(me.getValue(), cache.get(me.getKey()));
 		}
 	}

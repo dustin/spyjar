@@ -12,7 +12,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 import net.spy.db.GetPK;
 
 /**

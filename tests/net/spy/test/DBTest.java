@@ -23,8 +23,8 @@ import net.spy.db.ConnectionSource;
 import net.spy.db.DBSP;
 import net.spy.db.ObjectPoolConnectionSource;
 import net.spy.db.SpyCacheDB;
-import net.spy.SpyConfig;
-import net.spy.SpyDB;
+import net.spy.util.SpyConfig;
+import net.spy.db.SpyDB;
 
 import net.spy.test.db.DumpTestTable;
 import net.spy.test.db.GetTestByNumber;
