@@ -1,10 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ShortestPathTest.java,v 1.1 2002/10/18 07:11:04 dustin Exp $
+// $Id: ShortestPathTest.java,v 1.2 2002/10/19 08:32:21 dustin Exp $
 
 package net.spy.test;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.SortedSet;
 import java.util.Iterator;
@@ -14,7 +15,11 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import net.spy.util.SPNode;
+import net.spy.util.AbstractSPNode;
 import net.spy.util.SPVertex;
+import net.spy.util.ShortestPathFinder;
+import net.spy.util.ShortestPath;
+import net.spy.util.NoPathException;
 
 /**
  * Test a weak hash set.
@@ -22,6 +27,11 @@ import net.spy.util.SPVertex;
 public class ShortestPathTest extends TestCase {
 
 	private Map nodes=null;
+	private StringNode a=null;
+	private StringNode b=null;
+	private StringNode c=null;
+	private StringNode d=null;
+	private StringNode e=null;
 
 	/**
 	 * Get an instance of ShortestPathTest.
@@ -50,11 +60,11 @@ public class ShortestPathTest extends TestCase {
 	protected void setUp() {
 		nodes=new java.util.TreeMap();
 
-		StringNode a=new StringNode("A");
-		StringNode b=new StringNode("B");
-		StringNode c=new StringNode("C");
-		StringNode d=new StringNode("D");
-		StringNode e=new StringNode("E");
+		a=new StringNode("A");
+		b=new StringNode("B");
+		c=new StringNode("C");
+		d=new StringNode("D");
+		e=new StringNode("E");
 
 		// Add the nodes to the collection
 		nodes.put("A", a);
@@ -63,9 +73,9 @@ public class ShortestPathTest extends TestCase {
 		nodes.put("D", d);
 		nodes.put("E", e);
 
-		// A -> B    A -> C
+		// A -> B    A -> C (cost 15)
 		a.linkTo(b);
-		a.linkTo(c);
+		a.linkTo(c, 15);
 
 		// B -> C
 		b.linkTo(c);
@@ -76,22 +86,108 @@ public class ShortestPathTest extends TestCase {
 
 		// D -> E
 		// d.linkTo(e);
+		// D -> C at a higher cost, giving it a path to E
+		d.linkTo(c, 100);
+
+		// calculate the paths
+		ShortestPathFinder spf=new ShortestPathFinder();
+		spf.calculatePaths(nodes.values());
+	}
+
+	// verify a link matches the way we want
+	private void assertLinkMatch(SPNode a, SPNode b, SPNode expectedNextHop,
+		int cost) {
+
+		SPVertex nextHop=a.getNextHop(b);
+		if(expectedNextHop == null) {
+			assertNull("Expected no link from " + a + " to " + b, nextHop);
+		} else {
+			assertNotNull("Expected a link from " + a + " to " + b, nextHop);
+			assertSame("Expected link from " + a + " to " + b
+				+ " to be via " + expectedNextHop
+				+ ", got " + nextHop.getTo(), nextHop.getTo(), expectedNextHop);
+			assertEquals("Incorrect cost for " + a + " -> " + b,
+				cost, nextHop.getCost());
+		}
 	}
 
 	/** 
 	 * Test a basic SP find.
 	 */
 	public void testSPFind() {
-		// System.out.println(nodes);
-
+		// Print out links...this is kinda big and ugly
+		/*
 		for(Iterator i=nodes.values().iterator(); i.hasNext();) {
 			StringNode sn=(StringNode)i.next();
-			sn.dump(0);
+			sn.dump();
 		}
+		*/
+
+		// These are manual tests.  Based on the way I configured the graph
+		// above, these are all of the expected values (least costly
+		// next-hops).
+
+		// A -> B == 10 via B
+		assertLinkMatch(a, b, b, 10);
+		// A -> C == 15 via C
+		assertLinkMatch(a, c, c, 15);
+		// A -> D == 30 via B
+		assertLinkMatch(a, d, c, 25);
+		// A -> E == 60 via B
+		assertLinkMatch(a, e, c, 25);
+
+		// B -> A -- doesn't exist
+		assertLinkMatch(b, a, null, 0);
+		// B -> C == 10 via C
+		assertLinkMatch(b, c, c, 10);
+		// B -> D == 20 via C
+		assertLinkMatch(b, d, c, 20);
+		// B -> E == 20 via C
+		assertLinkMatch(b, e, c, 20);
+
+		// C -> A won't go
+		assertLinkMatch(c, a, null, 0);
+		// C -> B won't go
+		assertLinkMatch(c, b, null, 0);
+		// C -> D == 10 via D
+		assertLinkMatch(c, d, d, 10);
+		// C -> E == 10 via E
+		assertLinkMatch(c, e, e, 10);
+
+		// D -> A won't go
+		assertLinkMatch(d, a, null, 0);
+		// D -> B won't go
+		assertLinkMatch(d, b, null, 0);
+		// D -> C via C
+		assertLinkMatch(d, c, c, 100);
+		// D -> E via C
+		assertLinkMatch(d, e, c, 110);
+
+		// E Goes nowhere
+		assertLinkMatch(e, a, null, 0);
+		assertLinkMatch(e, b, null, 0);
+		assertLinkMatch(e, c, null, 0);
+		assertLinkMatch(e, d, null, 0);
 	}
 
-	private class StringNode implements SPNode {
-		private TreeSet ts=null;
+	/** 
+	 * Do a couple of quick ShortestPath tests.
+	 */
+	public void testShortestPath() throws NoPathException {
+		ShortestPath sp=new ShortestPath(a, b);
+		assertEquals("ShortestPath from A -> B", 1, sp.size());
+		sp=new ShortestPath(a, c);
+		assertEquals("ShortestPath from A -> C", 1, sp.size());
+		sp=new ShortestPath(a, d);
+		assertEquals("ShortestPath from A -> D", 2, sp.size());
+		sp=new ShortestPath(a, e);
+		assertEquals("ShortestPath from A -> E", 2, sp.size());
+
+		sp=new ShortestPath(d, e);
+		assertEquals("ShortestPath from D -> E", 2, sp.size());
+	}
+
+	private class StringNode extends AbstractSPNode {
 		private String str=null;
 
 		public StringNode(String s) {
@@ -100,11 +196,6 @@ public class ShortestPathTest extends TestCase {
 				throw new NullPointerException("s can't be null");
 			}
 			str=s;
-			ts=new TreeSet();
-		}
-
-		public SortedSet getConnections() {
-			return(ts);
 		}
 
 		public String toString() {
@@ -115,8 +206,12 @@ public class ShortestPathTest extends TestCase {
 			return(str);
 		}
 
+		public void linkTo(StringNode x, int cost) {
+			super.linkTo(x, cost);
+		}
+
 		public void linkTo(StringNode x) {
-			ts.add(new SPVertex(this, x));
+			super.linkTo(x);
 		}
 
 		private String indent(int indentation) {
@@ -127,28 +222,36 @@ public class ShortestPathTest extends TestCase {
 			return (sb.toString());
 		}
 
-		public void dump(int indentation) {
+		public void dump() {
+			Set s=new java.util.HashSet();
+			dump(0, s);
+		}
+
+		public void dump(int indentation, Set s) {
 			System.out.println(indent(indentation) + this);
+			// Find out what we have maps to
+			for(Iterator i=nodes.values().iterator(); i.hasNext(); ) {
+				StringNode sn=(StringNode)i.next();
+				SPVertex vert=getNextHop(sn);
+				if(vert != null) {
+					System.out.println(indent(indentation + 4)
+						+ " --> " + sn.getString() + " via "
+						+ vert.getTo() + "@" + vert.getCost());
+				}
+			}
+			// Dump out the connections
 			for(Iterator i=getConnections().iterator(); i.hasNext(); ) {
 				SPVertex spv=(SPVertex)i.next();
-				StringNode sn=(StringNode)spv.getTo();
-				sn.dump(indentation+2);
+				if (! s.contains(spv.getTo())) {
+					s.add(spv.getTo());
+					StringNode sn=(StringNode)spv.getTo();
+					sn.dump(indentation+2, s);
+				}
 			}
 		}
 
 		public int hashCode() {
 			return(str.hashCode());
-		}
-
-		public boolean equals(Object o) {
-			boolean rv=false;
-
-			if(o instanceof StringNode) {
-				StringNode sn=(StringNode)o;
-				rv=str.equals(sn.getString());
-			}
-
-			return (rv);
 		}
 
 		public int compareTo(Object o) {

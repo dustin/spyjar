@@ -1,16 +1,18 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPVertex.java,v 1.1 2002/10/18 07:11:04 dustin Exp $
+// $Id: SPVertex.java,v 1.2 2002/10/19 08:32:21 dustin Exp $
 
 package net.spy.util;
+
+import java.lang.ref.WeakReference;
 
 /**
  * A weighted connection to a SPNode.
  */
 public class SPVertex extends Object implements Comparable {
 
-	private SPNode from=null;
-	private SPNode to=null;
+	// A weak reference to the next spnode
+	private WeakReference to=null;
 	private int cost=0;
 
 	public static final int DEFAULT_COST=10;
@@ -18,46 +20,48 @@ public class SPVertex extends Object implements Comparable {
 	/**
 	 * Get an instance of SPVertex.
 	 *
-	 * @param from the source node
 	 * @param to the destination node
 	 * @param cost the cost
 	 */
-	public SPVertex(SPNode from, SPNode to, int cost) {
+	public SPVertex(SPNode to, int cost) {
 		super();
-		if(from == null) {
-			throw new NullPointerException("Source node may not be null.");
-		}
-		this.from=from;
 		if(to == null) {
 			throw new NullPointerException("Destination node may not be null.");
 		}
-		this.to=to;
+		this.to=new WeakReference(to);
 		this.cost=cost;
+	}
+
+	/** 
+	 * String me.
+	 */
+	public String toString() {
+		StringBuffer sb=new StringBuffer(32);
+
+		sb.append("{SPVertex cost=");
+		sb.append(cost);
+		sb.append(" dest=");
+		sb.append(to.get());
+		sb.append("}");
+
+		return(sb.toString());
 	}
 
 	/** 
 	 * Get an instance of SPVertex linking the two nodes with the default
 	 * cost.
 	 * 
-	 * @param from the source node
 	 * @param to the destination node
 	 */
-	public SPVertex(SPNode from, SPNode to) {
-		this(from, to, DEFAULT_COST);
-	}
-
-	/** 
-	 * Get the source node.
-	 */
-	public SPNode getFrom() {
-		return(from);
+	public SPVertex(SPNode to) {
+		this(to, DEFAULT_COST);
 	}
 
 	/** 
 	 * Get the destination node.
 	 */
 	public SPNode getTo() {
-		return(to);
+		return( (SPNode)to.get());
 	}
 
 	/** 
