@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ReferenceSet.java,v 1.1 2002/10/16 05:46:39 dustin Exp $
+// $Id: ReferenceSet.java,v 1.2 2002/10/17 04:44:23 dustin Exp $
 
 package net.spy.util;
 
@@ -93,6 +93,15 @@ public abstract class ReferenceSet extends AbstractSet {
 
 	/** 
 	 * Obtain the desired type of reference to the given object.
+	 *
+	 *  <p>
+	 * Unfortunately, java doesn't give me a way to enforce this in the
+	 * language (i.e. at compile time), but subclasses of ReferenceSet
+	 * must implement hashCode() and equals() in such a way that they
+	 * return what the referenced object would return if the object were
+	 * not a reference.  If the reference has disappeared, equals() should
+	 * return false, and hashCode should return 0.
+	 * </p>
 	 * 
 	 * @param o an object
 	 * @return a reference to that object
