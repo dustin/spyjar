@@ -58,7 +58,7 @@ public class BuildInfo extends Properties {
 	public Date getBuildDate() {
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		Date rv=null;
-		
+
 		try {
 			rv=sdf.parse(getProperty("build.date"));
 		} catch(ParseException pe) {
@@ -86,6 +86,10 @@ public class BuildInfo extends Properties {
 		sb.append(getProperty("os.name"));
 		sb.append(" version ");
 		sb.append(getProperty("os.version"));
+		if(getProperty("tree.version") != null) {
+			sb.append("\nTree version:  ");
+			sb.append(getProperty("tree.version"));
+		}
 
 		return(sb.toString());
 	}

@@ -23,7 +23,7 @@
 			<include name="log4j*.jar"/>
 		</fileset>
 		<pathelement path="${java.class.path}"/>
-		<pathelement path="."/>
+		<pathelement path="${BUILDDIR}"/>
 	</path>
 
 	<path id="junitclasses">
@@ -40,61 +40,37 @@
 	<!-- end setup -->
 
 	<target name="clean" description="Clean up all generated files.">
-		<delete>
-			<fileset dir="${BUILDDIR}/net">
-				<include name="**/*.class"/>
-				<include name="spy/build.properties"/>
-				<include name="spy/db/TypeNames.java"/>
-				<include name="spy/db/CachePreparedStatement.java"/>
-				<include name="spy/db/CachedResultSet.java"/>
-				<include name="spy/db/ProxyResultSet.java"/>
-				<include name="spy/db/sp/*.java"/>
-				<include name="spy/log/SunLogger.java"/>
-				<include name="spy/log/Log4JLogger.java"/>
-			</fileset>
-			<!--
-				Get rid of the installed one since it keeps messing with my
-				tests
-			-->
-			<fileset dir="${JARPATH}">
-				<include name="spy.jar"/>
-			</fileset>
-			<fileset dir="${TBUILDDIR}">
-				<include name="**/*.class"/>
-				<include name="net/spy/test/db/*.java"/>
-			</fileset>
-			<fileset dir=".">
-				<include name="spy.jar"/>
-				<include name="spy-big.jar"/>
-				<include name="docs.jar"/>
-				<include name="testsuite.jar"/>
-				<include name="checkstyle.txt"/>
-				<include name="build.properties"/>
-			</fileset>
-		</delete>
+		<delete dir="=build"/>
+		<delete file="spy.jar"/>
 	</target>
 
 	<target name="docs" depends="all,properties" unless="docs.upToDate">
-		<mkdir dir="docs"/>
+		<mkdir dir="${DOCDEST}"/>
 		<javadoc destdir="${DOCDEST}"
 			author="true"
 			version="true"
+            sourcepath="${SRCDIR}"
 			use="true"
-			sourcePath="${SRCDIR}"
 			protected="true"
 			packagenames="net.spy.*"
 			windowtitle="Spy.jar Documentation - build ${build.number} from ${build.date}"
 			doctitle="Spy.jar Documentation - build ${build.number} from ${build.date}">
 			<link href="http://java.sun.com/j2se/1.4/docs/api/"/>
 		</javadoc>
-		<mkdir dir="docs/images"/>
-		<copy file="etc/graphtest.png" tofile="docs/images/graphtest.png"/>
+        <!--
+        <sourcepath>
+            <include name="${SRCDIR}"/>
+            <include name="${GENDIR}"/>
+        </sourcepath>
+        -->
+		<mkdir dir="${DOCDEST}/images"/>
+		<copy file="etc/graphtest.png" tofile="${DOCDEST}/images/graphtest.png"/>
 		<property name="docs.upToDate" value="true"/>
 	</target>
 
 	<target name="docs.jar" depends="docs" unless="docs.jar.upToDate">
 		<jar jarfile="docs.jar">
-			<fileset dir="docs">
+			<fileset dir="${DOCDEST}">
 				<include name="**/*.html"/>
 				<include name="**/*.css"/>
 				<include name="**/*.png"/>
@@ -143,7 +119,7 @@
 
 	<target name="install-docs" depends="docs">
 		<copy todir="/afs/spy.net/home/dustin/public_html/spyjar/j2/doc/">
-			<fileset dir="docs">
+			<fileset dir="${DOCDEST}">
 				<include name="**/*.html"/>
 				<include name="**/*.css"/>
 				<include name="**/*.png"/>
@@ -155,7 +131,7 @@
 	<target name="spy.jar" depends="all,properties"
 		description="Create a lightweight jar (no docs or source)"
 		unless="spy.jar.upToDate">
-		<jar jarfile="spy.jar" basedir="." index="true">
+		<jar jarfile="spy.jar" basedir="${BUILDDIR}" index="true">
 			<manifest>
 				<attribute name="Main-Class" value="net.spy.BuildInfo"/>
 			</manifest>
@@ -169,14 +145,14 @@
 	<target name="spy-big.jar" unless="spy-big.jar.upToDate"
 		depends="all,properties,docs,testjar"
 		description="Build the big jar - classes, sources, docs, oh my!">
-		<jar jarfile="spy-big.jar" basedir="." index="true">
+		<jar jarfile="spy-big.jar" basedir="${BUILDDIR}" index="true">
 			<manifest>
 				<attribute name="Main-Class" value="net.spy.BuildInfo"/>
 			</manifest>
 			<include name="build.xml"/>
-			<include name="docs/**/*.html"/>
-			<include name="docs/**/*.css"/>
-			<include name="docs/package-list"/>
+			<include name="${DOCDEST}/**/*.html"/>
+			<include name="${DOCDEST}/**/*.css"/>
+			<include name="${DOCDEST}/package-list"/>
 			<include name="net/spy/**/*.class"/>
 			<include name="net/spy/**/*.java"/>
 			<include name="net/spy/**/*.properties"/>
@@ -199,6 +175,8 @@
 	<target name="properties" unless="properties.upToDate">
 		<delete file="${BUILDDIR}/net/spy/build.properties"/>
 		<buildnumber file="etc/build.number"/>
+		<!-- Find the current patch level of this tree -->
+		<exec executable="./etc/tree-version" outputproperty="tree.version"/>
 		<propertyfile file="${BUILDDIR}/net/spy/build.properties">
 			<entry key="java.vendor" value="${java.vendor}"/>
 			<entry key="java.version" value="${java.version}"/>
@@ -206,6 +184,7 @@
 			<entry key="os.version" value="${os.version}"/>
 			<entry key="build.number" value="${build.number}"/>
 			<entry key="build.date" type="date" value="now"/>
+			<entry key="tree.version" value="${tree.version}"/>
 		</propertyfile>
 		<property file="${BUILDDIR}/net/spy/build.properties"/>
 		<property name="properties.upToDate" value="true"/>
@@ -219,11 +198,13 @@
 	<target name="buildprops" unless="hasBuildProps" depends="checkBuildProps"
 		description="Create a build.properties file *** MUST BE DONE FIRST ***">
 		<propertyfile file="build.properties">
-			<entry key="SRCDIR" value="."/>
-			<entry key="BUILDDIR" value="."/>
+			<entry key="SRCDIR" value="src"/>
+			<entry key="BUILDTOP" value="=build"/>
+			<entry key="BUILDDIR" value="${BUILDTOP}/classes"/>
+			<entry key="GENDIR" value="${BUILDTOP}/gen"/>
 			<entry key="TSRCDIR" value="tests"/>
 			<entry key="TBUILDDIR" value="tests"/>
-			<entry key="DOCDEST" value="docs"/>
+			<entry key="DOCDEST" value="${BUILDDIR}/docs"/>
 			<entry key="DEPRECATION" value="on"/>
 			<entry key="DEBUG" value="on"/>
 			<entry key="VERBOSE" value="off"/>
@@ -240,8 +221,14 @@
 
 	</target>
 
+	<target name="prepare">
+		<mkdir dir="${BUILDTOP}"/>
+		<mkdir dir="${BUILDDIR}"/>
+		<mkdir dir="${GENDIR}"/>
+	</target>
+
 	<!-- this is a bit of indirection to allow the compile to require props -->
-	<target name="all" depends="buildprops" if="hasBuildProps">
+	<target name="all" depends="prepare,buildprops" if="hasBuildProps">
 		<antcall target="compile"/>
 	</target>
 
@@ -253,7 +240,7 @@
 
 	<target name="optional-sunlog" depends="check-sunlog" if="has.sunlog">
 		<copy file="${SRCDIR}/net/spy/log/SunLogger.ojava"
-			tofile="${SRCDIR}/net/spy/log/SunLogger.java"/>
+			tofile="${GENDIR}/net/spy/log/SunLogger.java"/>
 	</target>
 
 	<target name="check-log4j">
@@ -264,7 +251,7 @@
 
 	<target name="optional-log4j" depends="check-log4j" if="has.log4j">
 		<copy file="${SRCDIR}/net/spy/log/Log4JLogger.ojava"
-			tofile="${SRCDIR}/net/spy/log/Log4JLogger.java"/>
+			tofile="${GENDIR}/net/spy/log/Log4JLogger.java"/>
 	</target>
 
 
@@ -281,7 +268,6 @@
 			verbose="${VERBOSE}">
 
 			<classpath refid="myclasses"/>
-			<include name="net/spy/**/*.java"/>
 		</javac>
 	</target>
 
@@ -392,6 +378,7 @@
 
 	<!-- type name map -->
 	<target name="types">
+		<mkdir dir="${GENDIR}/net/spy/db"/>
 		<javac
 			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
@@ -399,23 +386,42 @@
 			<include name="net/spy/util/TypeNameGen.java"/>
 		</javac>
 		<java classname="net.spy.util.TypeNameGen">
-			<arg value="net/spy/db/TypeNames.java"/>
+			<arg value="${GENDIR}/net/spy/db/TypeNames.java"/>
 			<classpath refid="myclasses"/>
 		</java>
+		<javac
+			srcdir="${GENDIR}" destdir="${BUILDDIR}"
+			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
+			<classpath refid="myclasses"/>
+			<include name="net/spy/db/TypeNames.java"/>
+		</javac>
 	</target>
 
 	<target name="spfiles" depends="spgen">
-		<spgen srcdir="${SRCDIR}" destdir="${BUILDDIR}"/>
+		<spgen srcdir="${SRCDIR}" destdir="${GENDIR}"/>
+		<!-- Go ahead and compile the stuff -->
+		<javac
+			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
+			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
+			<classpath refid="myclasses"/>
+			<include name="net/spy/db/DB*java"/>
+		</javac>
+		<javac
+			srcdir="${GENDIR}" destdir="${BUILDDIR}"
+			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
+			<classpath refid="myclasses"/>
+			<include name="net/spy/db/**"/>
+		</javac>
 	</target>
 
 	<!-- Build the result set -->
 	<target name="checkrsupdate">
 		<uptodate property="crs.uptodate"
-			srcfile="net/spy/db/CachedResultSetStub.java"
-			targetfile="net/spy/db/CachedResultSet.java"/>
+			srcfile="${SRCDIR}/net/spy/db/CachedResultSetStub.java"
+			targetfile="${GENDIR}/net/spy/db/CachedResultSet.java"/>
 		<uptodate property="prs.uptodate"
-			srcfile="net/spy/util/ProxyInterfaceImplementor.java"
-			targetfile="net/spy/db/ProxyResultSet.java"/>
+			srcfile="${SRCDIR}/net/spy/util/ProxyInterfaceImplementor.java"
+			targetfile="${GENDIR}/net/spy/db/ProxyResultSet.java"/>
 	</target>
 
 	<!-- Targets for result sets -->
@@ -437,8 +443,16 @@
 				<arg value="net.spy.db.CachedResultSetStub"/>
 			<arg value="-outputclass"/>
 				<arg value="net.spy.db.CachedResultSet"/>
+			<arg value="-outputdir"/>
+				<arg value="${GENDIR}"/>
 			<classpath refid="myclasses"/>
 		</java>
+		<javac
+			srcdir="${GENDIR}" destdir="${BUILDDIR}"
+			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
+			<classpath refid="myclasses"/>
+			<include name="net/spy/db/CachedResultSet.java"/>
+		</javac>
 	</target>
 
 	<target name="proxyrs" unless="prs.uptodate"
@@ -450,8 +464,16 @@
 				<arg value="net.spy.SpyObject"/>
 			<arg value="-outputclass"/>
 				<arg value="net.spy.db.ProxyResultSet"/>
+			<arg value="-outputdir"/>
+				<arg value="${GENDIR}"/>
 			<classpath refid="myclasses"/>
 		</java>
+		<javac
+			srcdir="${GENDIR}" destdir="${BUILDDIR}"
+			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
+			<classpath refid="myclasses"/>
+			<include name="net/spy/db/ProxyResultSet.java"/>
+		</javac>
 	</target>
 
 	<!-- Build the prepared statement set -->
@@ -477,8 +499,16 @@
 				<arg value="net.spy.db.CachePreparedStatementStub"/>
 			<arg value="-outputclass"/>
 				<arg value="net.spy.db.CachePreparedStatement"/>
+			<arg value="-outputdir"/>
+				<arg value="${GENDIR}"/>
 			<classpath refid="myclasses"/>
-	</java>
+		</java>
+		<javac
+			srcdir="${GENDIR}" destdir="${BUILDDIR}"
+			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
+			<classpath refid="myclasses"/>
+			<include name="net/spy/db/CachePreparedStatement.java"/>
+		</javac>
 
 	</target>
 
@@ -501,7 +531,7 @@
 	</target>
 
 	<target name="rmic" depends="pre-rmic">
-		<rmic base="." classname="net.spy.rmi.RObjectImpl">
+		<rmic base="${BUILDDIR}" classname="net.spy.rmi.RObjectImpl">
 			<classpath refid="myclasses"/>
 		</rmic>
 	</target>
