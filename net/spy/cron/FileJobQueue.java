@@ -1,10 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: FileJobQueue.java,v 1.1 2002/08/28 00:34:55 dustin Exp $
+// $Id: FileJobQueue.java,v 1.2 2002/10/08 21:44:47 dustin Exp $
 
 package net.spy.cron;
 
 import java.io.File;
+import java.io.Reader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -37,22 +38,34 @@ import net.spy.SpyUtil;
  */
 public class FileJobQueue extends JobQueue {
 
-	private File sourceFile=null;
-
 	/**
 	 * Get a new FileJobQueue based on what's in the given file.
+	 * @param f the file to read
+	 * @throws IOException if there's a problem reading the jobs
 	 */
 	public FileJobQueue(File f) throws IOException {
 		super();
-		this.sourceFile=f;
 
-		initQueue();
+		FileReader fr=new FileReader(f);
+		initQueue(fr);
+		fr.close();
+	}
+
+	/** 
+	 * Get a new FileJobQueue from a Reader.
+	 * 
+	 * @param r the reader
+	 * @throws IOException if there's a problem reading the jobs
+	 */
+	public FileJobQueue(Reader r) throws IOException {
+		super();
+
+		initQueue(r);
 	}
 
 	// Init the job queue.
-	private void initQueue() throws IOException {
-		FileReader fr=new FileReader(sourceFile);
-		LineNumberReader lnr=new LineNumberReader(fr);
+	private void initQueue(Reader r) throws IOException {
+		LineNumberReader lnr=new LineNumberReader(r);
 
 		String line=lnr.readLine();
 		while(line!=null) {
