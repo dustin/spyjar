@@ -1,5 +1,5 @@
 //
-// $Id: PoolAble.java,v 1.3 2003/07/26 07:46:53 dustin Exp $
+// $Id: PoolAble.java,v 1.4 2003/08/01 07:16:53 dustin Exp $
 
 package net.spy.pool;
 
@@ -189,7 +189,7 @@ public abstract class PoolAble extends SpyObject {
 	/**
 	 * Mark this object as unavailable.
 	 */
-	protected void setUnavailable() {
+	protected synchronized void setUnavailable() {
 		available=false;
 	}
 

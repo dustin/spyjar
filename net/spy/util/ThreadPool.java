@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.20 2003/07/31 21:49:16 knitterb Exp $
+// $Id: ThreadPool.java,v 1.21 2003/08/01 07:16:53 dustin Exp $
 
 package net.spy.util;
 
@@ -567,7 +567,7 @@ public class ThreadPool extends ThreadGroup {
 	/**
 	 * Find out how many threads are still active (not shut down) in the pool.
 	 */
-	public int getActiveThreadCount() {
+	public synchronized int getActiveThreadCount() {
 		int rv=0;
 		for(Iterator i=threads.iterator(); i.hasNext(); ) {
 			RunThread t=(RunThread)i.next();
@@ -582,7 +582,7 @@ public class ThreadPool extends ThreadGroup {
 	 * Tell all the threads to shut down after they finish their current
 	 * tasks.
 	 */
-	public void shutdown() {
+	public synchronized void shutdown() {
 		getLogger().info("Shutting down this thread pool.");
 		if(shutdown) {
 			throw new IllegalStateException("Already shut down");

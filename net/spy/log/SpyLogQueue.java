@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000 Dustin Sallings <dustin@spy.net>
  *
- * $Id: SpyLogQueue.java,v 1.2 2003/04/18 07:50:15 dustin Exp $
+ * $Id: SpyLogQueue.java,v 1.3 2003/08/01 07:16:53 dustin Exp $
  */
 
 package net.spy.log;
@@ -17,7 +17,6 @@ import net.spy.SpyObject;
  */
 public class SpyLogQueue extends SpyObject {
 	private static Hashtable queues=null;
-	private static String queueMutex="Log Mutex";
 	private String queueName=null;
 
 	/**
@@ -29,25 +28,20 @@ public class SpyLogQueue extends SpyObject {
 		init();
 	}
 
-	private void init() {
-		synchronized(queueMutex) {
-			if(queues==null) {
-				queues=new Hashtable();
-			}
+	private synchronized void init() {
+		if(queues==null) {
+			queues=new Hashtable();
+		}
 
-			Vector v=(Vector)queues.get(queueName);
-			if(v==null) {
-				v=new Vector();
-				queues.put(queueName, v);
-			}
+		Vector v=(Vector)queues.get(queueName);
+		if(v==null) {
+			v=new Vector();
+			queues.put(queueName, v);
 		}
 	}
 
-	private Vector getQueue() {
-		Vector v=null;
-		synchronized(queueMutex) {
-			v=(Vector)queues.get(queueName);
-		}
+	private synchronized Vector getQueue() {
+		Vector v=(Vector)queues.get(queueName);
 		return(v);
 	}
 
@@ -56,15 +50,13 @@ public class SpyLogQueue extends SpyObject {
 	 *
 	 * @param e item to be added
 	 */
-	public void addToQueue(SpyLogEntry e) {
-		synchronized(queueMutex) {
-			Vector v=getQueue();
-			synchronized(v) {
-				v.addElement(e);
-				v.notify();
-			}
-			queueMutex.notify();
+	public synchronized void addToQueue(SpyLogEntry e) {
+		Vector v=getQueue();
+		synchronized(v) {
+			v.addElement(e);
+			v.notify();
 		}
+		notify();
 	}
 
 	/**
@@ -76,8 +68,8 @@ public class SpyLogQueue extends SpyObject {
 		if(size()<=0) {
 			// Only do this if we don't already think we have data
 			try {
-				synchronized(queueMutex) {
-					queueMutex.wait(ms);
+				synchronized(this) {
+					wait(ms);
 				}
 			} catch(InterruptedException e) {
 				// If we are going to return too early, pause just a sec
@@ -95,12 +87,9 @@ public class SpyLogQueue extends SpyObject {
 	 * Return the current size of the queue.  This may change before you
 	 * can do anything about it, so use it wisely.
 	 */
-	public int size() {
-		int size=-1;
-		synchronized(queueMutex) {
-			Vector logBuffer=getQueue();
-			size=logBuffer.size();
-		}
+	public synchronized int size() {
+		Vector logBuffer=getQueue();
+		int size=logBuffer.size();
 		return(size);
 	}
 
@@ -108,14 +97,12 @@ public class SpyLogQueue extends SpyObject {
 	 * Flush the current log entries -- DO NOT CALL THIS.  This is for
 	 * SpyLogFlushers only.
 	 */
-	public Vector flush() {
+	public synchronized Vector flush() {
 		Vector ret=null;
-		synchronized(queueMutex) {
-			Vector logBuffer=getQueue();
-			ret=logBuffer;          // Copy the old vector's reference.
-			logBuffer=new Vector(); // Create a new one.
-			queues.put(queueName, logBuffer);
-		}
+		Vector logBuffer=getQueue();
+		ret=logBuffer;          // Copy the old vector's reference.
+		logBuffer=new Vector(); // Create a new one.
+		queues.put(queueName, logBuffer);
 		return(ret);
 	}
 }

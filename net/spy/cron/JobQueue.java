@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: JobQueue.java,v 1.5 2003/04/21 02:57:46 dustin Exp $
+// $Id: JobQueue.java,v 1.6 2003/08/01 07:16:52 dustin Exp $
 
 package net.spy.cron;
 
@@ -45,9 +45,7 @@ public class JobQueue extends ArrayList {
 	 */
 	public synchronized void addJob(Job j) {
 		add(j);
-		synchronized(this) {
-			notify();
-		}
+		notify();
 	}
 
 	/**
