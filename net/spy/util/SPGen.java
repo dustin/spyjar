@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.21 2003/01/03 18:47:11 dustin Exp $
+// $Id: SPGen.java,v 1.22 2003/01/03 19:04:17 dustin Exp $
 
 package net.spy.util;
 
@@ -37,13 +37,15 @@ public class SPGen extends Object {
 	private BufferedReader in=null;
 	private PrintWriter out=null;
 	private String classname=null;
+	private boolean isInterface=true;
 
 	private String section="";
 	private String description="";
 	private String procname="";
 	private String pkg="";
 	private String superclass=null;
-	private String version="$Revision: 1.21 $";
+	private String superinterface=null;
+	private String version="$Revision: 1.22 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -217,9 +219,14 @@ public class SPGen extends Object {
 				+ "\t * @param to the value to which to set the parameter\n"
 				+ "\t */\n"
 				+ "\tpublic void set" + methodName + "(" + type + " to)\n"
-				+ "\t\tthrows SQLException {\n\n"
-				+ "\t\tset(\"" + p.getName() + "\", to);\n"
-				+ "\t}\n";
+				+ "\t\tthrows SQLException";
+			if(isInterface) {
+				rv+=";\n";
+			} else {
+				rv+=" {\n\n"
+					+ "\t\tset(\"" + p.getName() + "\", to);\n"
+					+ "\t}\n";
+			}
 		}
 	
 		return(rv);
@@ -244,7 +251,6 @@ public class SPGen extends Object {
 			+ "import java.sql.SQLException;\n"
 			+ "import java.util.Map;\n"
 			+ "import java.util.HashMap;\n"
-			+ "import " + superclass + ";\n"
 			+ "import net.spy.SpyConfig;\n");
 
 		// Generate the documentation.
@@ -273,13 +279,13 @@ public class SPGen extends Object {
 		}
 
 		// Different stuff for different classes
-		if(superclass.equals("net.spy.db.DBSP")) {
+		if("net.spy.db.DBSP".equals(superclass)) {
 			out.println(" * <b>Procedure Name</b>\n"
 				+ " *\n"
 				+ " * <ul>\n"
 				+ " *  <li>" + procname + "</li>\n"
 				+ " * </ul>");
-		} else if (superclass.equals("net.spy.db.DBCP")) {
+		} else if ("net.spy.db.DBCP".equals(superclass)) {
 			out.println(" * <b>Callable Name</b>\n"
 				+ " *\n"
 				+ " * <ul>\n"
@@ -335,7 +341,7 @@ public class SPGen extends Object {
 			+ " * <p>\n"
 			+ " *");
 
-		if (superclass.equals("net.spy.db.DBCP")) {
+		if ("net.spy.db.DBCP".equals(superclass)) {
 			// Output parameters
 			out.println(" *\n"
 				+ " * <b>Output Parameters</b>\n"
@@ -400,7 +406,9 @@ public class SPGen extends Object {
 			+ " */");
 
 		// Actual code generation
-		out.print("public class " + classname + " extends " + superclass);
+		out.print("public " + (isInterface?"interface ":"class ")
+			+ classname + " extends "
+				+ (isInterface?superinterface:superclass));
 		if(interfaces.size() > 0) {
 			out.print("\n\timplements " + SpyUtil.join(interfaces, ", "));
 		}
@@ -408,98 +416,100 @@ public class SPGen extends Object {
 
 		// The map (staticially initialized)
 
-		out.println("\tprivate static final Map queries=getQueries();\n");
+		if(!isInterface) {
+			out.println("\tprivate static final Map queries=getQueries();\n");
 
-		// Constructor documentation
-		out.println("\t/**\n"
-			+ "\t * Construct a DBSP which will get its connections from\n"
-			+ "\t *   SpyDB using the given config.\n"
-			+ "\t * @param conf the configuration to use\n"
-			+ "\t * @exception SQLException if there's a failure to "
-			+ "construct\n"
-			+ "\t */");
+			// Constructor documentation
+			out.println("\t/**\n"
+				+ "\t * Construct a DBSP which will get its connections from\n"
+				+ "\t *   SpyDB using the given config.\n"
+				+ "\t * @param conf the configuration to use\n"
+				+ "\t * @exception SQLException if there's a failure to "
+				+ "construct\n"
+				+ "\t */");
 
-		// SpyConfig constructor
-		out.println("\tpublic " + classname + "(SpyConfig conf) "
-			+ "throws SQLException {\n"
-			+ "\t\t// Super constructor\n"
-			+ "\t\tsuper(conf);\n"
-			+ "\t\tspinit();\n"
-			+ "\t}\n");
+			// SpyConfig constructor
+			out.println("\tpublic " + classname + "(SpyConfig conf) "
+				+ "throws SQLException {\n"
+				+ "\t\t// Super constructor\n"
+				+ "\t\tsuper(conf);\n"
+				+ "\t\tspinit();\n"
+				+ "\t}\n");
 
-		// Constructor documentation
-		out.println("\t/**\n"
-			+ "\t * Construct a DBSP which use the existing Connection\n"
-			+ "\t *   for database operations.\n"
-			+ "\t * @param conn the connection to use\n"
-			+ "\t * @exception SQLException if there's a failure to "
-			+ "construct\n"
-			+ "\t */");
+			// Constructor documentation
+			out.println("\t/**\n"
+				+ "\t * Construct a DBSP which use the existing Connection\n"
+				+ "\t *   for database operations.\n"
+				+ "\t * @param conn the connection to use\n"
+				+ "\t * @exception SQLException if there's a failure to "
+				+ "construct\n"
+				+ "\t */");
 
-		// Connection constructor
-		out.println("\tpublic " + classname + "(Connection conn) "
-			+ "throws SQLException {\n"
-			+ "\t\t// Super constructor\n"
-			+ "\t\tsuper(conn);\n"
-			+ "\t\tspinit();\n"
-			+ "\t}\n");
+			// Connection constructor
+			out.println("\tpublic " + classname + "(Connection conn) "
+				+ "throws SQLException {\n"
+				+ "\t\t// Super constructor\n"
+				+ "\t\tsuper(conn);\n"
+				+ "\t\tspinit();\n"
+				+ "\t}\n");
 
-		// Initializer
-		out.println("\tprivate void spinit() throws SQLException {");
+			// Initializer
+			out.println("\tprivate void spinit() throws SQLException {");
 
-		// Set the debug mode if we're supposed to
-		if(debug) {
-			out.println("\t\t// Debug is on for this DBSP\n"
-				+ "\t\tsetDebug(true);\n");
-		}
+			// Set the debug mode if we're supposed to
+			if(debug) {
+				out.println("\t\t// Debug is on for this DBSP\n"
+					+ "\t\tsetDebug(true);\n");
+			}
 
-		// set the timeout variable
-		out.println("\t\tsetQueryTimeout("+timeout+");\n");
+			// set the timeout variable
+			out.println("\t\tsetQueryTimeout("+timeout+");\n");
 
-		// Figure out whether we're a DBSP or a DBSQL
-		if(superclass.equals("net.spy.db.DBSP") ||
-				superclass.equals("net.spy.db.DBCP")) {
-			out.println("\t\t// Set the stored procedure name\n"
-				+ "\t\tsetSPName(\"" + procname + "\");");
-		} else {
-			out.println("\t\t// Register the SQL queries");
-			out.println("\t\tsetRegisteredQueryMap(queries);");
-		}
+			// Figure out whether we're a DBSP or a DBSQL
+			if("net.spy.db.DBSP".equals(superclass) ||
+					"net.spy.db.DBCP".equals(superclass)) {
+				out.println("\t\t// Set the stored procedure name\n"
+					+ "\t\tsetSPName(\"" + procname + "\");");
+			} else {
+				out.println("\t\t// Register the SQL queries");
+				out.println("\t\tsetRegisteredQueryMap(queries);");
+			}
 
-		if (args.size()>0) {
-			out.println("\n\t\t// Set the parameters.");
-			for (Iterator i=args.iterator(); i.hasNext(); ) {
-				Parameter p=(Parameter)i.next();
-				if (p.isRequired()) {
-					if (!p.isOutput()) {
-						out.println("\t\tsetRequired(\"" + p.getName() + "\", "
-							+ p.getType() + ");");
+			if (args.size()>0) {
+				out.println("\n\t\t// Set the parameters.");
+				for (Iterator i=args.iterator(); i.hasNext(); ) {
+					Parameter p=(Parameter)i.next();
+					if (p.isRequired()) {
+						if (!p.isOutput()) {
+							out.println("\t\tsetRequired(\"" + p.getName() + "\", "
+								+ p.getType() + ");");
+						} else {
+							out.println("\t\tsetOutput(\"" + p.getName() + "\", "
+								+ p.getType() + ");");
+						}
 					} else {
-						out.println("\t\tsetOutput(\"" + p.getName() + "\", "
+						out.println("\t\tsetOptional(\"" + p.getName() + "\", "
 							+ p.getType() + ");");
 					}
-				} else {
-					out.println("\t\tsetOptional(\"" + p.getName() + "\", "
-						+ p.getType() + ");");
 				}
 			}
+
+			// Set the cachetime, if there is one
+			if(cachetime>0) {
+				out.println("\n\t\t// Set the default cache time.");
+				out.println("\t\tsetCacheTime(" + cachetime + ");");
+			}
+
+			// End of spinit
+			out.println("\t}\n");
+
+			// Create the static initializers
+			out.println("\t// Static initializer for query map.");
+			out.println("\tprivate static Map getQueries() {");
+			out.println("\t\t" + getJavaQueries());
+			out.println("\n\t\treturn(rv);");
+			out.println("\t}\n");
 		}
-
-		// Set the cachetime, if there is one
-		if(cachetime>0) {
-			out.println("\n\t\t// Set the default cache time.");
-			out.println("\t\tsetCacheTime(" + cachetime + ");");
-		}
-
-		// End of spinit
-		out.println("\t}\n");
-
-		// Create the static initializers
-		out.println("\t// Static initializer for query map.");
-		out.println("\tprivate static Map getQueries() {");
-		out.println("\t\t" + getJavaQueries());
-		out.println("\n\t\treturn(rv);");
-		out.println("\t}\n");
 
 		// Create set methods for all the individual parameters
 		for(Iterator i=args.iterator(); i.hasNext(); ) {
@@ -642,6 +652,7 @@ public class SPGen extends Object {
 						System.err.println("Warning, stuff in debug section:  "
 							+ tmp);
 					} else if(section.equals("sql")) {
+						isInterface=false;
 						if (superclass==null) {
 							superclass="net.spy.db.DBSQL";
 						}
@@ -653,11 +664,13 @@ public class SPGen extends Object {
 						}
 						sqlquery.add(tmp);
 					} else if(section.equals("procname")) {
+						isInterface=false;
 						procname+=tmp;
 						if (superclass==null) {
 							superclass="net.spy.db.DBSP";
 						}
 					} else if(section.equals("callable")) {
+						isInterface=false;
 						procname+=tmp;
 						if (superclass==null) {
 							superclass="net.spy.db.DBCP";
@@ -701,10 +714,19 @@ public class SPGen extends Object {
 			
 			tmp=in.readLine();
 		}
+
+		// Make sure a superinterface got defined
+		if(superinterface == null) {
+			superinterface="net.spy.db.DBSPLike";
+		}
 		
 		// if the user over-rode (like your mom) the superclass, use it!!
 		if (user_superclass!=null) {
-			superclass=user_superclass.toString();
+			if(isInterface) {
+				superinterface=user_superclass.toString();
+			} else {
+				superclass=user_superclass.toString();
+			}
 		}
 
 	}

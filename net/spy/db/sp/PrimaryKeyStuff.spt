@@ -1,0 +1,18 @@
+#
+# Copyright (c) 2002  2wire, Inc.
+#
+# $Id: PrimaryKeyStuff.spt,v 1.1 2003/01/03 19:04:15 dustin Exp $
+#
+
+@package
+net.spy.db.sp
+
+@description
+ @author <a href="mailto:dsallings@2wire.com">Dustin Sallings</a>
+
+@params
+table_name required VARCHAR The name of the table owning the primary key
+
+@results
+result TYPE Description
+

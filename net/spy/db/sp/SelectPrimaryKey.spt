@@ -1,9 +1,12 @@
 #
-# $Id: SelectPrimaryKey.spt,v 1.2 2003/01/03 01:19:54 dustin Exp $
+# $Id: SelectPrimaryKey.spt,v 1.3 2003/01/03 19:04:16 dustin Exp $
 #
 
 @package
 net.spy.db.sp
+
+@implements
+net.spy.db.sp.PrimaryKeyStuff
 
 @description
 Select the current value from the primary key table.
