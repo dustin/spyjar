@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: WeakHashSet.java,v 1.1 2002/10/16 05:46:39 dustin Exp $
+// $Id: WeakHashSet.java,v 1.2 2003/04/16 05:03:57 dustin Exp $
 
 package net.spy.util;
 
@@ -8,17 +8,25 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
 import java.util.Collection;
+import java.util.WeakHashMap;
+import java.util.AbstractSet;
+import java.util.Iterator;
 
 /**
- * Implementation of ReferenceSet that uses weak references.
+ * HashSet backed by a WeakHashMap.
  */
-public class WeakHashSet extends ReferenceSet {
+public class WeakHashSet extends AbstractSet {
+
+	private transient WeakHashMap map=null;
+
+	private static final Object PRESENT=new Object();
 
 	/**
 	 * Get an instance of WeakHashSet.
 	 */
 	public WeakHashSet() {
 		super();
+		map=new WeakHashMap();
 	}
 
 	/** 
@@ -27,7 +35,8 @@ public class WeakHashSet extends ReferenceSet {
 	 * @param n the capacity
 	 */
 	public WeakHashSet(int n) {
-		super(n);
+		super();
+		map=new WeakHashMap(n);
 	}
 
 	/** 
@@ -36,42 +45,65 @@ public class WeakHashSet extends ReferenceSet {
 	 * @param c the collection
 	 */
 	public WeakHashSet(Collection c) {
-		super(c);
+		this();
+		addAll(c);
 	}
 
 	/** 
-	 * Return a weak reference.
+	 * Get the Iterator for the backing Map.
 	 */
-	protected Reference getReference(Object o) {
-		return(new MyWeakReference(o));
+	public Iterator iterator() {
+		return(map.keySet().iterator());
 	}
 
-	private class MyWeakReference extends WeakReference {
+	/** 
+	 * Get the number of keys currently contained in this Set.
+	 */
+	public int size() {
+		return(map.size());
+	}
 
-		public MyWeakReference(Object o) {
-			super(o);
-		}
+	/** 
+	 * True if this set contains no elements.
+	 */
+	public boolean isEmpty() {
+		return(map.isEmpty());
+	}
 
-		public int hashCode() {
-			int rv=0;
-			Object o=get();
-			if (o != null) {
-				rv=o.hashCode();
-			}
+	/** 
+	 * True if this Set contains the given Object.
+	 */
+	public boolean contains(Object o) {
+		return(map.containsKey(o));
+	}
 
-			return (rv);
-		}
+	/** 
+	 * Add this object to this Set if it's not already present.
+	 * 
+	 * @param o the object to add
+	 * @return true if this object was just added, false if it already existed
+	 */
+	public boolean add(Object o) {
+		Object old=map.put(o, PRESENT);
+		return(old == null);
+	}
 
-		public boolean equals(Object o) {
-			boolean rv=false;
-			Object me=get();
-			if(me!=null) {
-				rv=me.equals(o);
-			}
+	/** 
+	 * Remove the given object from this Set.
+	 * 
+	 * @param o Object to be removed
+	 * @return true if the Set did contain this object (but now doesn't)
+	 */
+	public boolean remove(Object o) {
+		Object old=map.remove(o);
+		return(o==PRESENT);
+	}
 
-			return(rv);
-		}
-
+	/** 
+	 * Remove all entries from this Set.
+	 */
+	public void clear() {
+		map.clear();
 	}
 
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ReferenceSet.java,v 1.2 2002/10/17 04:44:23 dustin Exp $
+// $Id: ReferenceSet.java,v 1.3 2003/04/16 05:03:57 dustin Exp $
 
 package net.spy.util;
 
@@ -86,6 +86,10 @@ public abstract class ReferenceSet extends AbstractSet {
 
 	/** 
 	 * Get an iterator.
+	 *
+	 * This iterator does not support removing entries due to limitations
+	 * with HashMap and Iterator that would otherwise require me to
+	 * duplicate all of HashMap.
 	 */
 	public Iterator iterator() {
 		return(new ReferenceIterator(contents.iterator()));
@@ -133,7 +137,8 @@ public abstract class ReferenceSet extends AbstractSet {
 		}
 
 		public void remove() {
-			contents.remove(currentRef);
+			throw new UnsupportedOperationException(
+				"This is currently not supported");
 		}
 
 		private void findNext() {
