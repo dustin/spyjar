@@ -1,17 +1,19 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPool.java,v 1.10 2003/04/11 00:57:05 dustin Exp $
+// $Id: ThreadPool.java,v 1.11 2003/04/11 09:05:05 dustin Exp $
 
 package net.spy.util;
 
 import java.util.Iterator;
-import java.util.Random;
 import java.util.Collection;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
+
+import net.spy.SpyThread;
 
 /**
  * A thread pool for easy parallelism.
@@ -43,7 +45,7 @@ public class ThreadPool extends ThreadGroup {
 	// The threads we're managing.
 	private Collection threads=null;
 	// The tasks for the threads to do.
-	private Collection tasks=null;
+	private LinkedList tasks=null;
 
 	// This is what we monitor for things being checked out (otherwise we
 	// can't tell the difference between adds and check outs).
@@ -63,6 +65,17 @@ public class ThreadPool extends ThreadGroup {
 	// The priority for all threads we create
 	private int priority=Thread.NORM_PRIORITY;
 
+	private Logger logger=null;
+
+	private int minIdleThreads=0;
+	private int maxTotalThreads=0;
+	private int startThreads=0;
+	private int maxTaskQueueSize=DEFAULT_LIST_LIMIT;
+
+	// Pool manager stuff.
+	private Class poolManagerClass=ThreadPoolManager.class;
+	private ThreadPoolManager poolManager=null;
+
 	/**
 	 * Get an instance of ThreadPool.
 	 *
@@ -79,6 +92,10 @@ public class ThreadPool extends ThreadGroup {
 				+ " is an invalid priority.");
 		}
 		setPriority(priority);
+
+		minIdleThreads=n;
+		maxTotalThreads=n;
+		startThreads=n;
 	}
 
 	/**
@@ -91,6 +108,27 @@ public class ThreadPool extends ThreadGroup {
 		this(name, n, Thread.NORM_PRIORITY);
 	}
 
+	/**
+	 * Get an instance of ThreadPool with five threads and a normal priority.
+	 *
+	 * @param name Name of the pool.
+	 */
+	public ThreadPool(String name) {
+		this(name, 5, Thread.NORM_PRIORITY);
+	}
+
+	// Make sure the thread parameters are within reason
+	private void checkValues() {
+		if(minIdleThreads > maxTotalThreads) {
+			throw new IllegalStateException(
+				"minIdleThreads is greater than maxTotalThreads");
+		}
+		if(startThreads > maxTotalThreads) {
+			throw new IllegalStateException(
+				"startThreads is greater than maxTotalThreads");
+		}
+	}
+
 	/** 
 	 * Start the ThreadPool.
 	 */
@@ -99,31 +137,50 @@ public class ThreadPool extends ThreadGroup {
 		if(started) {
 			throw new IllegalStateException("Already started");
 		}
+		// Make sure the values are reasonable
+		checkValues();
 		// Make sure there's a place to put the tasks
 		if(tasks==null) {
-			tasks=new LimitedList(getListLimit());
+			tasks=new LimitedList(getMaxTaskQueueSize());
 		}
 		// Make sure there's a place to put the threads
 		if(threads==null) {
-			threads=new java.util.ArrayList(getStartSize());
+			threads=new java.util.ArrayList(getStartThreads());
 		}
 		// We'll also need an object monitor
 		if(monitor==null) {
 			monitor=new ThreadPoolObserver();
 		}
-		// Make sure we've got a manager, too
-		if(manager==null) {
-			manager=new ThreadPoolManager();
-		}
+
 		// Set up the manager
-		manager.setThreadPool(this);
-		manager.start();
+		try {
+			poolManager=(ThreadPoolManager)poolManagerClass.newInstance();
+			poolManager.setThreadPool(this);
+			getLogger().info("Starting the thread pool manager");
+			poolManager.start();
+		} catch(IllegalAccessException e) {
+			throw new NestedRuntimeException(
+				"Problem starting ThreadPoolManager", e);
+		} catch(InstantiationException e) {
+			throw new NestedRuntimeException(
+				"Problem starting ThreadPoolManager", e);
+		}
+
+		// Mark it as started.
+		started=true;
+	}
+
+	private Logger getLogger() {
+		if(logger == null) {
+			logger=LoggerFactory.getLogger(getClass());
+		}
+		return(logger);
 	}
 
 	/** 
 	 * Create a new worker thread in the pool.
 	 */
-	void createThread() {
+	synchronized void createThread() {
 		RunThread rt=new RunThread(this, tasks, monitor);
 		rt.setPriority(priority);
 		threads.add(rt);
@@ -136,20 +193,53 @@ public class ThreadPool extends ThreadGroup {
 		boolean shutOneDown=false;
 		// Try to shut down something that doesn't appear to be running
 		// anything (although it may start as we go)
-		for(Iterator i=threads.iterator(); candidate==null && i.hasNext(); ) {
-			RunThread rt=(runThread)i.next();
+		for(Iterator i=threads.iterator();
+			shutOneDown == false && i.hasNext(); ) {
+
+			RunThread rt=(RunThread)i.next();
 			if(!rt.isRunning()) {
 				rt.shutdown();
 				shutOneDown=true;
+				i.remove();
 			}
 
 			// If we haven't shut one down yet, and this is the last one,
 			// shut it down.
 			if((!shutOneDown) && (!i.hasNext())) {
 				rt.shutdown();
-				shutOneDown();
+				shutOneDown=true;
+				i.remove();
 			}
-		}
+		} // loop through all threads
+	}
+
+	/** 
+	 * Find out how many threads are idle.
+	 *
+	 * This is a snapshot, it is subject to change between the time that
+	 * the number is calculated and the time that the value is returned.
+	 * 
+	 * @return the number of threads not currently running a task
+	 */
+	public synchronized int getIdleThreadCount() {
+		int rv=0;
+		for(Iterator i=threads.iterator(); i.hasNext(); ) {
+			RunThread rt=(RunThread)i.next();
+			if(!rt.isRunning()) {
+				rv++;
+			}
+		} // Loop through all threads
+		return(rv);
+	}
+
+	/** 
+	 * Get the total number of threads in this pool.
+	 * 
+	 * @return the number of threads
+	 */
+	public synchronized int getThreadCount() {
+		int rv=threads.size();
+		return(rv);
 	}
 
 	/** 
@@ -163,6 +253,89 @@ public class ThreadPool extends ThreadGroup {
 		sb.append(" tasks queued");
 
 		return(sb.toString());
+	}
+
+	/** 
+	 * Get the maximum size of the task queue.
+	 */
+	public int getMaxTaskQueueSize() {
+		return(maxTaskQueueSize);
+	}
+
+	/** 
+	 * Set the maximum size of the job queue.  This is the number of
+	 * unclaimed tasks that may be queued.  If more than this many tasks
+	 * are queued, exceptions will be thrown.
+	 * 
+	 * @param maxTaskQueueSize a value &gt; 0
+	 */
+	public void setMaxTaskQueueSize(int maxTaskQueueSize) {
+		if(maxTaskQueueSize <= 0) {
+			throw new IllegalArgumentException(
+				"Value must be greater than or equal to zero.");
+		}
+		this.maxTaskQueueSize=maxTaskQueueSize;
+	}
+
+	/** 
+	 * Get the minimum number of idle threads.
+	 */
+	public int getMinIdleThreads() {
+		return(minIdleThreads);
+	}
+
+	/** 
+	 * Set the minimum number of idle threads to maintain.
+	 * 
+	 * @param minIdleThreads a value &ge; 0
+	 */
+	public void setMinIdleThreads(int minIdleThreads) {
+		if(minIdleThreads < 0) {
+			throw new IllegalArgumentException(
+				"Value must be greater than or equal to zero.");
+		}
+		this.minIdleThreads=minIdleThreads;
+	}
+
+	/** 
+	 * Get the maximum number of total threads this pool may have.
+	 */
+	public int getMaxTotalThreads() {
+		return(maxTotalThreads);
+	}
+
+	/** 
+	 * Set the maximum number of threads that may be in this pool.
+	 * 
+	 * @param maxTotalThreads a value &ge; 0
+	 */
+	public void setMaxTotalThreads(int maxTotalThreads) {
+		if(maxTotalThreads < 0) {
+			throw new IllegalArgumentException(
+				"Value must be greater than or equal to zero.");
+		}
+		this.maxTotalThreads=maxTotalThreads;
+	}
+
+	/** 
+	 * Get the number of threads to spin up when bringing up this
+	 * ThreadPool.
+	 */
+	public int getStartThreads() {
+		return(startThreads);
+	}
+
+	/** 
+	 * Set the number of threads to start when bringing up this pool.
+	 * 
+	 * @param startThreads a value &ge; 0
+	 */
+	public void setStartThreads(int startThreads) {
+		if(startThreads < 0) {
+			throw new IllegalArgumentException(
+				"Value must be greater than or equal to zero.");
+		}
+		this.startThreads=startThreads;
 	}
 
 	/** 
@@ -182,24 +355,10 @@ public class ThreadPool extends ThreadGroup {
 	}
 
 	/** 
-	 * Get the list of worker threads belonging to this group.
-	 */
-	Collection getThreads() {
-		return(threads);
-	}
-
-	/** 
-	 * Get the list of tasks yet to be claimed by any worker threads.
-	 */
-	Collection getTasks() {
-		return(tasks);
-	}
-
-	/** 
-	 * Set the collection to contain the tasks on which this ThreadPool
+	 * Set the LinkedList to contain the tasks on which this ThreadPool
 	 * will be listening.
 	 */
-	public void setTasks(Collection tasks) {
+	public void setTasks(LinkedList tasks) {
 		if(started) {
 			throw new IllegalStateException("Can't set tasks after the "
 				+ "pool has started.");
@@ -238,6 +397,10 @@ public class ThreadPool extends ThreadGroup {
 			tasks.add(r);
 			tasks.notify();
 		}
+		// Let pool manager know something's been added.
+		synchronized(poolManager) {
+			poolManager.notify();
+		}
 	}
 
 	/**
@@ -251,13 +414,6 @@ public class ThreadPool extends ThreadGroup {
 			rv=tasks.size();
 		}
 		return(rv);
-	}
-
-	/**
-	 * Find out how many threads are in the pool.
-	 */
-	public int getThreadCount() {
-		return(threads.size());
 	}
 
 	/**
@@ -279,10 +435,12 @@ public class ThreadPool extends ThreadGroup {
 	 * tasks.
 	 */
 	public void shutdown() {
+		getLogger().info("Shutting down this thread pool.");
 		for(Iterator i=threads.iterator(); i.hasNext(); ) {
 			RunThread t=(RunThread)i.next();
 			t.shutdown();
 		}
+		poolManager.requestStop();
 		shutdown=true;
 	}
 
@@ -336,71 +494,24 @@ public class ThreadPool extends ThreadGroup {
 		}
 	}
 
-	// A test task that takes a random amount of time.
-	private static Runnable getTestRunnable() {
-		return(new Runnable() {
-			public void run() {
-				try {
-					Random rand=new Random();
-					long l=Math.abs(rand.nextLong()%15000);
-					System.err.println("Sleeping for " + l);
-					Thread.sleep(l);
-					System.err.println("Done!");
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-			});
-	}
-
 	/**
 	 * Shuts down in case you didn't.
 	 */
 	protected void finalize() throws Throwable {
 		if(!shutdown) {
-			Logger l=LoggerFactory.getLogger(getClass());
-			l.error("********* Shutting down abandoned thread pool *********");
+			getLogger().error(
+				"********* Shutting down abandoned thread pool *********");
 		}
 		shutdown();
-	}
-
-	/**
-	 * Testing and what not.
-	 */
-	public static void main(String args[]) throws Exception {
-		ThreadPool tp=new ThreadPool("TestThreadPool", 15);
-
-		// Toss a hunded tasks into the thing.
-		for(int i=0; i<100; i++) {
-			tp.addTask(getTestRunnable());
-			Thread.currentThread().getThreadGroup().list();
-		}
-
-		// Add another 100 tasks, but only if the task count is below 50
-		for(int i=0; i<100; i++) {
-			tp.waitForTaskCount(50);
-			System.out.println("Adding new task.");
-			tp.addTask(getTestRunnable());
-		}
-
-		// Wait for all of the tasks to finish
-		tp.waitForTaskCount(0);
-		System.out.println("All tasks have been accepted, shutting down.");
-		// I shut 'em down!
-		tp.shutdown();
-		tp.waitForThreads();
-		System.out.println("All threads have been shut down.");
-
-		System.out.println("Done.");
 	}
 
 	// //////////////////////////////////////////////////////////////////////
 	// The threads that make up the pool.
 	// //////////////////////////////////////////////////////////////////////
 
-	private class RunThread extends Thread {
+	private class RunThread extends SpyThread {
 		private ThreadPoolObserver monitor=null;
-		private LimitedList tasks=null;
+		private LinkedList tasks=null;
 		private boolean going=true;
 		private int threadId=0;
 
@@ -408,7 +519,7 @@ public class ThreadPool extends ThreadGroup {
 		private Runnable running=null;
 		private long start=0;
 
-		public RunThread(ThreadGroup tg, LimitedList tasks,
+		public RunThread(ThreadGroup tg, LinkedList tasks,
 			ThreadPoolObserver monitor) {
 
 			super(tg, "RunThread");
@@ -506,6 +617,7 @@ public class ThreadPool extends ThreadGroup {
 					}
 				} // empty stack
 			} // while
+			getLogger().debug("Shutting down.");
 		} // ThreadPool$RunThread.run()
 	} // ThreadPool$RunThread
 } // ThreadPool

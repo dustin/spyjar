@@ -1,12 +1,10 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ThreadPoolManager.java,v 1.1 2003/04/11 00:57:05 dustin Exp $
+// $Id: ThreadPoolManager.java,v 1.2 2003/04/11 09:05:06 dustin Exp $
 
 package net.spy.util;
 
 import java.util.List;
-
-import net.spy.SpyThread;
 
 /**
  * Management thread for managing a ThreadPool.
@@ -15,7 +13,7 @@ import net.spy.SpyThread;
  * can make the decision to spawn more threads, or kill some off if
  * necessary.
  */
-public class ThreadPoolManager extends SpyThread {
+public class ThreadPoolManager extends LoopingThread {
 
 	private ThreadPool tp=null;
 
@@ -23,15 +21,15 @@ public class ThreadPoolManager extends SpyThread {
 	 * Get an instance of ThreadPoolManager.
 	 */
 	public ThreadPoolManager() {
-		super();
+		super("ThreadPoolManager");
 		setDaemon(true);
-		setName("ThreadPoolManager");
+		setMsPerLoop(60000);
 	}
 
 	/** 
 	 * Get the ThreadPool we're watching.
 	 */
-	protected void getThreadPool() {
+	protected ThreadPool getThreadPool() {
 		return(tp);
 	}
 
@@ -40,6 +38,93 @@ public class ThreadPoolManager extends SpyThread {
 	 */
 	public final void setThreadPool(ThreadPool t) {
 		tp=t;
+	}
+
+	/** 
+	 * Initialize this ThreadPoolManager.
+	 */
+	public void start() {
+		if(tp==null) {
+			throw new IllegalStateException("There's no ThreadPool set");
+		}
+		int startThreads=tp.getStartThreads();
+		getLogger().info("Initializing " + startThreads + " threads.");
+		for(int i=0; i<startThreads; i++) {
+			tp.createThread();
+		}
+		// Dah dah dah dah...super start!
+		super.start();
+	}
+
+	/** 
+	 * Check to see if there are too few threads to handle the current work
+	 * load.  If the number of idle threads is below the minIdleThreads
+	 * from the ThreadPool, but not greater than maxTotalThreads, we can
+	 * spin some more threads up.
+	 */
+	protected void checkTooFewThreads() {
+		int idleThreads=tp.getIdleThreadCount();
+		int minIdle=tp.getMinIdleThreads();
+		int totalThreads=tp.getActiveThreadCount();
+		int maxTotal=tp.getMaxTotalThreads();
+
+		// Figure out how many threads we need.
+		int need=0;
+		// Don't bother unless there are fewer idle threads than we want
+		if(idleThreads < minIdle) {
+			need=(minIdle - idleThreads);
+		}
+		// If that would give us more than we are supposed to have, just
+		// get as many as we're supposed to have.
+		if(totalThreads + need > maxTotal) {
+			need = maxTotal - totalThreads;
+		}
+		if(need>0) {
+			getLogger().info("Spinning up " + need + " more threads to get "
+				+ "us to " + (totalThreads + need));
+			getLogger().info("There are " + tp.getTaskCount()
+				+ " tasks queued.");
+			for(int i=0; i<need; i++) {
+				tp.createThread();
+			}
+		}
+	}
+
+	/** 
+	 * Check to see if there are too many idle threads.  If the number of
+	 * idle threads is above minIdleThreads, we can request to kill some
+	 * off here.
+	 *
+	 * <p>
+	 * The shutdown should be slow, no more than one thread per loop.
+	 * </p>
+	 */
+	protected void checkTooManyThreads() {
+		int idleThreads=tp.getIdleThreadCount();
+		int minIdle=tp.getMinIdleThreads();
+		int totalThreads=tp.getActiveThreadCount();
+
+		if(idleThreads > minIdle) {
+			getLogger().info("Shutting down a thread (bring us down to "
+				+ (totalThreads - 1) + ")");
+			tp.destroyThread();
+		}
+	}
+
+	/** 
+	 * Check to see if we should start up or shut down any threads.
+	 */
+	protected void runLoop() {
+		// Wait a second before doing checks (we receive a notify whenever
+		// a task is added so we can deal with it), but we don't want to go
+		// crazy processingt these things, so let's try to sleep
+		try {
+			sleep(1000);
+		} catch(InterruptedException e) {
+			getLogger().warn("Interrutped", e);
+		}
+		checkTooFewThreads();
+		checkTooManyThreads();
 	}
 
 }

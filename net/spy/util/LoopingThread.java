@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoopingThread.java,v 1.1 2003/03/28 01:55:31 dustin Exp $
+// $Id: LoopingThread.java,v 1.2 2003/04/11 09:05:05 dustin Exp $
 
 package net.spy.util;
 
@@ -98,9 +98,14 @@ public abstract class LoopingThread extends SpyThread {
 	 */
 	public void run() {
 		while(keepGoing) {
+			// Normally, we'd want to delay before the run loop, but here
+			// it doesn't so much matter because there's no exception
+			// handling to cause us to hop over the delay.  If the runLoop
+			// throws a RuntimeException, we leave the loop.
 			runLoop();
 			performDelay();
 		}
+		getLogger().info("Thread finishing.");
 	}
 
 }
