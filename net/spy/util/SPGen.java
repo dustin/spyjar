@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SPGen.java,v 1.17 2002/11/10 03:30:42 dustin Exp $
+// $Id: SPGen.java,v 1.18 2002/11/10 04:01:49 dustin Exp $
 
 package net.spy.util;
 
@@ -43,7 +43,7 @@ public class SPGen extends Object {
 	private String procname="";
 	private String pkg="";
 	private String superclass="net.spy.db.DBSP";
-	private String version="$Revision: 1.17 $";
+	private String version="$Revision: 1.18 $";
 	private long cachetime=0;
 	private Map queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
@@ -231,6 +231,8 @@ public class SPGen extends Object {
 		out.println("import java.sql.Types;\n"
 			+ "import java.sql.Connection;\n"
 			+ "import java.sql.SQLException;\n"
+			+ "import java.util.Map;\n"
+			+ "import java.util.HashMap;\n"
 			+ "import " + superclass + ";\n"
 			+ "import net.spy.SpyConfig;\n");
 
@@ -390,6 +392,10 @@ public class SPGen extends Object {
 		out.println("public class " + classname + " extends "
 		+ superclass + " {\n");
 
+		// The map (staticially initialized)
+
+		out.println("\tprivate static final Map queries=getQueries();\n");
+
 		// Constructor documentation
 		out.println("\t/**\n"
 			+ "\t * Construct a DBSP which will get its connections from\n"
@@ -442,8 +448,8 @@ public class SPGen extends Object {
 			out.println("\t\t// Set the stored procedure name\n"
 				+ "\t\tsetSPName(\"" + procname + "\");");
 		} else {
-			out.println("\t\t// Register the SQL queries\n");
-			out.println("\t\t" + getJavaQueries());
+			out.println("\t\t// Register the SQL queries");
+			out.println("\t\tsetRegisteredQueryMap(queries);");
 		}
 
 		if (args.size()>0) {
@@ -471,6 +477,14 @@ public class SPGen extends Object {
 			out.println("\t\tsetCacheTime(" + cachetime + ");");
 		}
 
+		// End of spinit
+		out.println("\t}\n");
+
+		// Create the static initializers
+		out.println("\t// Static initializer for query map.");
+		out.println("\tprivate static Map getQueries() {");
+		out.println("\t\t" + getJavaQueries());
+		out.println("\n\t\treturn(rv);");
 		out.println("\t}\n");
 
 		// Create set methods for all the individual parameters
@@ -539,7 +553,8 @@ public class SPGen extends Object {
 	private String getJavaQueries() {
 		StringBuffer sb=new StringBuffer(1024);
 
-		sb.append("StringBuffer query=null;");
+		sb.append("StringBuffer query=null;\n");
+		sb.append("\t\tMap rv=new HashMap();\n");
 
 		for(Iterator i=queries.entrySet().iterator(); i.hasNext();) {
 
@@ -565,7 +580,7 @@ public class SPGen extends Object {
 				sb.append("\\n\");");
 			}
 
-			sb.append("\n\t\tregisterQuery(\"");
+			sb.append("\n\t\trv.put(\"");
 			sb.append(me.getKey());
 			sb.append("\", ");
 			sb.append("query.toString());\n");

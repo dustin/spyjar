@@ -1,6 +1,6 @@
 // Copyright (c) 2001  SPY internetworking <dustin@spy.net>
 //
-// $Id: DBSQL.java,v 1.3 2002/10/30 08:16:34 dustin Exp $
+// $Id: DBSQL.java,v 1.4 2002/11/10 04:01:49 dustin Exp $
 
 package net.spy.db;
 
@@ -44,6 +44,15 @@ public abstract class DBSQL extends DBSP {
 			registeredQueries=new HashMap();
 		}
 		registeredQueries.put(name, query);
+	}
+
+	/** 
+	 * Set the Map of registered queries.
+	 * 
+	 * @param to the Map of registered queries.
+	 */
+	protected void setRegisteredQueryMap(Map to) {
+		registeredQueries=to;
 	}
 
 	/**
