@@ -71,15 +71,6 @@ public abstract class AbstractSavable extends SpyObject implements Savable {
 	}
 
 	/** 
-	 * Get the dependent objects for this Savable.  The default
-	 * implementation returns null, indicating that there are no dependent
-	 * objects.
-	 */
-	public Collection getSavables(SaveContext context) {
-		return(null);
-	}
-
-	/** 
 	 * Get the objects that need to be saved before this object.
 	 * The default implementation returns null, indicating that there are
 	 * no prerequisite objects.
