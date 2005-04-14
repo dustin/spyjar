@@ -14,7 +14,7 @@ import net.spy.SpyObject;
 public class TransactionPipeline extends SpyObject {
 
 	// Thread pool name
-	private static final String POOL_NAME="TransactionPipelinen Workers ";
+	private static final String POOL_NAME="TransactionPipeline Workers ";
 	// Default size of the transaction pipeline pool
 	private static final int DEFAULT_POOL_SIZE=1;
 
