@@ -94,6 +94,7 @@ public class ShortestPathTest extends TestCase {
 		c.linkTo(d);
 		c.linkTo(e);
 		c.linkTo(f);
+		c.linkTo(g, 100);
 
 		// D -> E
 		// d.linkTo(e);
