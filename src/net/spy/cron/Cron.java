@@ -58,6 +58,8 @@ public final class Cron extends SpyThread {
 		super(new ThreadGroup(name), name);
 		this.jq=jq;
 		setDaemon(true);
+		// Set the thread group to a daemon
+		getThreadGroup().setDaemon(true);
 
 		if(tp==null) {
 			tp=new ThreadPool(name + "Pool");
