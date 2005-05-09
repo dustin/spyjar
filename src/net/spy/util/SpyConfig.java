@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.FileInputStream;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Map;
@@ -26,7 +25,7 @@ import java.util.Map;
  */
 
 public class SpyConfig extends Properties {
-	private static Map configStore=null;
+	private static Map<File, ConfigInfo> configStore=null;
 
 	/**
 	 * Construct a new SpyConfig object describing a config file.
@@ -74,7 +73,7 @@ public class SpyConfig extends Properties {
 			loaded=true;
 		} else {
 			try {
-				Map h = mapConfig(conffile);
+				Map<String, String> h = mapConfig(conffile);
 				record(conffile, h);
 				set(h);
 				loaded=true;
@@ -116,13 +115,12 @@ public class SpyConfig extends Properties {
 	}
 
 	// record stuff to keep up with config file status
-	private void record(File file, Map h) {
+	private void record(File file, Map<String, String> h) {
 		configStore.put(file, new ConfigInfo(h, file.lastModified()));
 	}
 
-	private void set(Map h) {
-		for(Iterator i=h.entrySet().iterator(); i.hasNext();) {
-			Map.Entry me=(Map.Entry)i.next();
+	private void set(Map<String,String> h) {
+		for(Map.Entry<String, String> me : h.entrySet()) {
 			put(me.getKey(), me.getValue());
 		}
 	}
@@ -180,17 +178,22 @@ public class SpyConfig extends Properties {
 		}
 	}
 
-	private Map mapConfig(File file) throws IOException {
+	private Map<String, String> mapConfig(File file) throws IOException {
 		Properties p = new Properties();
-		p.load(new FileInputStream(file));
-		return(p);
+		FileInputStream fis=new FileInputStream(file);
+		try {
+			p.load(fis);
+		} finally {
+			fis.close();
+		}
+		return(new HashMap(p));
 	}
 
 	// Inner class for storing configuration information
 	private static class ConfigInfo extends Object {
 
 		private long timestamp=0;
-		private Map config=null;
+		private Map<String,String> config=null;
 
 		public ConfigInfo(Map m, long ts) {
 			super();

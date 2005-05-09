@@ -50,7 +50,7 @@ import net.spy.util.SpyConfig;
  */
 public class DefaultQuerySelector extends Object implements QuerySelector {
 
-	private SortedMap nameMap=null;
+	private SortedMap<String, String> nameMap=null;
 
 	/** 
 	 * Get an instance of DefaultQuerySelector.
@@ -92,14 +92,14 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 	/** 
 	 * @see QuerySelector
 	 */
-	public String getQuery(Connection conn, Map queryMap) {
+	public String getQuery(Connection conn, Map<String, String> queryMap) {
 		return(getQuery(conn.getClass().getName(), queryMap));
 	}
 
 	/** 
 	 * @see QuerySelector
 	 */
-	public String getQuery(SpyConfig conf, Map queryMap) {
+	public String getQuery(SpyConfig conf, Map<String, String> queryMap) {
 		String rv=null;
 
 		// Find out if there's an explicit mapping in the config
@@ -107,7 +107,7 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 
 		if (tmp != null) {
 			// If there is, use it.
-			rv=(String)queryMap.get(tmp);
+			rv=queryMap.get(tmp);
 		} else {
 			// If there's not, base it on the driver name
 			tmp=conf.get("dbDriverName");
@@ -118,7 +118,7 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 
 		// If we didn't find anything, use the default.
 		if (rv==null) {
-			rv=(String)queryMap.get(DEFAULT_QUERY);
+			rv=queryMap.get(DEFAULT_QUERY);
 		}
 
 		return (rv);
@@ -131,22 +131,22 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 	 * @param queryMap the map containing the queries
 	 * @return the query, or null if one cannot be found
 	 */
-	protected String getQuery(String name, Map queryMap) {
+	protected String getQuery(String name, Map<String, String> queryMap) {
 		String rv=null;
 
 		// First, check to see if the named query is in the map
-		rv=(String)queryMap.get(name);
+		rv=queryMap.get(name);
 		if(rv == null) {
 			// Next, check to see if the name is in our translation map
-			String tmp=(String)nameMap.get(name);
+			String tmp=nameMap.get(name);
 
 			// If we didn't get a key directly, try a fuzzy search in the Map
 			if(tmp == null) {
 				try {
-					SortedMap h=nameMap.headMap(name);
-					String key=(String)h.lastKey();
+					SortedMap<String, String> h=nameMap.headMap(name);
+					String key=h.lastKey();
 					if(name.startsWith(key)) {
-						tmp=(String)nameMap.get(key);
+						tmp=nameMap.get(key);
 					}
 				} catch(NoSuchElementException e) {
 					// It wasn't there, and nothing like it was there, move
@@ -158,12 +158,12 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 			if(tmp == null) {
 				tmp=DEFAULT_QUERY;
 			}
-			rv=(String)queryMap.get(tmp);
+			rv=queryMap.get(tmp);
 
 			// If there wasn't a match, try default
 			if(rv == null) {
 				tmp=DEFAULT_QUERY;
-				rv=(String)queryMap.get(tmp);
+				rv=queryMap.get(tmp);
 			}
 		} // not in query Map
 

@@ -26,14 +26,14 @@ public interface SPNode extends Comparable {
 	 * 
 	 * @return a SortedSet of {@link SPVertex} objects.
 	 */
-	SortedSet getConnections();
+	SortedSet<SPVertex> getConnections();
 
 	/** 
 	 * Get the mapping of SPNode -&gt; SPVertex hops for this SPNode.
 	 * 
 	 * @return an unmodifiable Map representing mapping
 	 */
-	Map getNextHops();
+	Map<SPNode, SPVertex> getNextHops();
 
 	/** 
 	 * Clear out the next hop map.  This should only be called by an

@@ -12,7 +12,7 @@ import java.util.Collection;
 /**
  * Implementation of ReferenceSet that uses soft references.
  */
-public class SoftHashSet extends ReferenceSet {
+public class SoftHashSet<T extends Object> extends ReferenceSet<T> {
 
 	/**
 	 * Get an instance of SoftHashSet.
@@ -35,20 +35,20 @@ public class SoftHashSet extends ReferenceSet {
 	 * 
 	 * @param c the collection
 	 */
-	public SoftHashSet(Collection c) {
+	public SoftHashSet(Collection<T> c) {
 		super(c);
 	}
 
 	/** 
 	 * Return a soft reference.
 	 */
-	protected Reference getReference(Object o) {
+	protected Reference<T> getReference(Object o) {
 		return(new MySoftReference(o));
 	}
 
-	private static class MySoftReference extends SoftReference {
+	private static class MySoftReference<T> extends SoftReference<T> {
 
-		public MySoftReference(Object o) {
+		public MySoftReference(T o) {
 			super(o);
 		}
 

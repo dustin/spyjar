@@ -10,7 +10,7 @@ import java.util.LinkedList;
 /**
  * A LinkedList with a maximum capacity.
  */
-public class LimitedList extends LinkedList {
+public class LimitedList<T extends Object> extends LinkedList<T> {
 
 	private int limit=0;
 
@@ -50,7 +50,7 @@ public class LimitedList extends LinkedList {
 	 * @exception IndexOutOfBoundsException if the limit is exceeded (or
 	 * the parent size thinks it's too big).
 	 */
-	public void add(int index, Object o) {
+	public void add(int index, T o) {
 		checkSizeForNew();
 		super.add(index, o);
 	}
@@ -63,7 +63,7 @@ public class LimitedList extends LinkedList {
 	 * @exception IndexOutOfBoundsException if the limit is exceeded (or
 	 * the parent size thinks it's too big).
 	 */
-	public boolean add(Object o) {
+	public boolean add(T o) {
 		checkSizeForNew();
 		return(super.add(o));
 	}
@@ -76,7 +76,7 @@ public class LimitedList extends LinkedList {
 	 * @exception IndexOutOfBoundsException if the limit is exceeded (or
 	 * the parent size thinks it's too big).
 	 */
-	public void addFirst(Object o) {
+	public void addFirst(T o) {
 		checkSizeForNew();
 		super.addFirst(o);
 	}
@@ -89,7 +89,7 @@ public class LimitedList extends LinkedList {
 	 * @exception IndexOutOfBoundsException if the limit is exceeded (or
 	 * the parent size thinks it's too big).
 	 */
-	public void addLast(Object o) {
+	public void addLast(T o) {
 		checkSizeForNew();
 		super.addLast(o);
 	}
@@ -103,7 +103,7 @@ public class LimitedList extends LinkedList {
 	 * @exception IndexOutOfBoundsException if the limit is exceeded (or
 	 * the parent size thinks it's too big).
 	 */
-	public boolean addAll(int index, Collection c) {
+	public boolean addAll(int index, Collection<? extends T> c) {
 		checkSizeForNew(c.size());
 		return(super.addAll(index, c));
 	}
@@ -116,7 +116,7 @@ public class LimitedList extends LinkedList {
 	 * @exception IndexOutOfBoundsException if the limit is exceeded (or
 	 * the parent size thinks it's too big).
 	 */
-	public boolean addAll(Collection c) {
+	public boolean addAll(Collection<? extends T> c) {
 		checkSizeForNew(c.size());
 		return(super.addAll(c));
 	}

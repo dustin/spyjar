@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.sql.Time;
 
-import java.util.Iterator;
 import java.util.Collection;
 
 import net.spy.util.SpyConfig;
@@ -79,7 +78,7 @@ public abstract class DBCP extends DBSP {
 	 * @param query the query we'll be calling
 	 * @param v the list of Argument objects we need to add, in order
 	 */
-	protected void applyArgs(Collection v) throws SQLException {
+	protected void applyArgs(Collection<Argument> v) throws SQLException {
 
 		PreparedStatement pst=getPreparedStatement();
 		// Get the statement
@@ -93,10 +92,8 @@ public abstract class DBCP extends DBSP {
 		}
 
 		// Use this iterator for the now positional arguments
-		for(Iterator e=getArguments().iterator(); e.hasNext();) {
+		for(Argument arg : getArguments()) {
 			int i=argumentIndex;
-
-			Argument arg=(Argument)e.next();
 			Object o=arg.getValue();
 
 			// Get it as an int so we can switch it
@@ -196,8 +193,7 @@ public abstract class DBCP extends DBSP {
 		querySb.append(" (");
 
 		int nargs=0;
-		for(Iterator i=getArguments().iterator(); i.hasNext();) {
-			Argument arg=(Argument)i.next();
+		for(Argument arg : getArguments()) {
 			querySb.append("?,");
 			nargs++;
 		}

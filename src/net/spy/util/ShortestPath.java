@@ -13,7 +13,7 @@ import java.util.ArrayList;
  *
  * @see ShortestPathFinder
  */
-public class ShortestPath extends ArrayList {
+public class ShortestPath<N extends SPNode> extends ArrayList<N> {
 
 	private int cost=0;
 
@@ -26,7 +26,7 @@ public class ShortestPath extends ArrayList {
 	 * @throws NoPathException if there's no path to the destination
 	 * @throws NullPointerException if from or to is null
 	 */
-	public ShortestPath(SPNode from, SPNode to) throws NoPathException {
+	public ShortestPath(N from, N to) throws NoPathException {
 		super();
 
 		if (from == null) {
@@ -37,12 +37,12 @@ public class ShortestPath extends ArrayList {
 			throw new NullPointerException("To may not be null.");
 		}
 
-		SPVertex v=from.getNextHop(to);
+		SPVertex<N> v=from.getNextHop(to);
 		if(v==null) {
 			throw new NoPathException(from, to);
 		}
 
-		SPNode current=v.getTo();
+		N current=v.getTo();
 		int i=0;
 		while(! current.equals(to)) {
 			if(i>1024) {

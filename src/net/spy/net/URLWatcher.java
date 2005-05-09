@@ -4,8 +4,6 @@
 
 package net.spy.net;
 
-import java.util.Iterator;
-
 import java.net.URL;
 
 import java.io.IOException;
@@ -38,7 +36,7 @@ public final class URLWatcher extends SpyObject {
 	 */
 	private URLWatcher() {
 		super();
-		JobQueue jq=new JobQueue();
+		JobQueue<URLItem> jq=new JobQueue();
 		cron=new Cron("URLWatcher Cron", jq);
 	}
 
@@ -69,12 +67,10 @@ public final class URLWatcher extends SpyObject {
 	private URLItem getURLItem(URL u) {
 		URLItem ui=null;
 
-		JobQueue jq=cron.getJobQueue();
+		JobQueue<URLItem> jq=cron.getJobQueue();
 		synchronized(jq) {
 			// Look at each item for the match
-			for(Iterator i=jq.iterator(); ui==null && i.hasNext();) {
-				URLItem tmp=(URLItem)i.next();
-
+			for(URLItem tmp : jq) {
 				if(tmp.getURL().equals(u)) {
 					ui=tmp;
 				} // It's a match
@@ -100,7 +96,7 @@ public final class URLWatcher extends SpyObject {
 	 * @param u The item to watch
 	 */
 	public void startWatching(URLItem u) {
-		JobQueue jq=cron.getJobQueue();
+		JobQueue<URLItem> jq=cron.getJobQueue();
 		synchronized(jq) {
 			// Don't add it if it's already there
 			if(!isWatching(u.getURL())) {

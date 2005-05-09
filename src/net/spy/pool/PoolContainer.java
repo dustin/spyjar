@@ -33,7 +33,7 @@ public class PoolContainer extends SpyObject {
 	// Buffer length for stringification
 	private static final int TOSTRING_LEN=256;
 
-	private ArrayList pool=null;
+	private ArrayList<PoolAble> pool=null;
 	private SpyConfig conf=null;
 	private String name=null;
 	private PoolFiller filler=null;
@@ -141,16 +141,13 @@ public class PoolContainer extends SpyObject {
 			for(int retry=0; poolable==null && retry<retries; retry++) {
 
 				// Find the next available object.
-				for(Iterator e=pool.iterator();
-					poolable==null && e.hasNext();) {
-
-					PoolAble p=(PoolAble)e.next();
-
+				for(PoolAble p : pool) {
 					// If it's not checked out, and it works, we have our man!
 					if(p.isAvailable() && checkAlive(p, PING_ON_CHECKOUT)) {
 						// Since we got one from the pool, we want to move it
 						// to the end of the vector.
 						poolable=p;
+						break;
 					}
 				} // Flipping through the current pool
 
@@ -162,7 +159,6 @@ public class PoolContainer extends SpyObject {
 
 				// If we didn't get anything, deal with that situation.
 				if(poolable==null) {
-
 					try {
 						if(getLogger().isDebugEnabled()) {
 							getLogger().debug(
@@ -242,9 +238,9 @@ public class PoolContainer extends SpyObject {
 		sb.append('\n');
 
 		synchronized (pool) {
-			for(Iterator i=pool.iterator(); i.hasNext();) {
+			for(PoolAble p : pool) {
 				sb.append("    ");
-				sb.append(i.next());
+				sb.append(p);
 				sb.append("\n");
 			}
 		}
@@ -260,8 +256,7 @@ public class PoolContainer extends SpyObject {
 		int ret=0;
 
 		synchronized (pool) {
-			for(Iterator i=pool.iterator(); i.hasNext();) {
-				PoolAble p=(PoolAble)i.next();
+			for(PoolAble p : pool) {
 				if(p.isAvailable()) {
 					ret++;
 				}
@@ -287,8 +282,8 @@ public class PoolContainer extends SpyObject {
 		synchronized (pool) {
 			int i=0;
 			// Get rid of expired things
-			for(Iterator it=pool.iterator(); it.hasNext();) {
-				PoolAble p=(PoolAble)it.next();
+			for(Iterator<PoolAble> it=pool.iterator(); it.hasNext();) {
+				PoolAble p=it.next();
 				if(p.pruneStatus()>=PoolAble.MUST_CLEAN) {
 					// Tell it that it can go away now.
 					if(getLogger().isDebugEnabled()) {
@@ -344,8 +339,7 @@ public class PoolContainer extends SpyObject {
 		} catch(PoolException e) {
 			// If there was a problem initializing the pool, throw away
 			// what we've got.
-			for(Iterator i=pool.iterator(); i.hasNext();) {
-				PoolAble p=(PoolAble)i.next();
+			for(PoolAble p : pool) {
 				p.discard();
 			}
 			throw e;

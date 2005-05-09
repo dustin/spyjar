@@ -13,9 +13,10 @@ import net.spy.SpyObject;
 /**
  * An implementation of CacheEntry that is backed by a HashMap.
  */
-public class HashCacheEntry extends SpyObject implements CacheEntry {
+public class HashCacheEntry<T extends Instance> extends SpyObject
+	implements CacheEntry<T> {
 
-	private Map cache=null;
+	private Map<Integer, T> cache=null;
 
 	/**
 	 * Get an instance of HashCacheEntry.
@@ -28,8 +29,8 @@ public class HashCacheEntry extends SpyObject implements CacheEntry {
 	/** 
 	 * Cache this instance.
 	 */
-	public void cacheInstance(Instance i) {
-		cache.put(new Integer(i.getId()), i);
+	public void cacheInstance(T i) {
+		cache.put(i.getId(), i);
 	}
 
 	/** 
@@ -37,8 +38,8 @@ public class HashCacheEntry extends SpyObject implements CacheEntry {
 	 * @param id the object ID
 	 * @return the object, or null if there's no object by this ID
 	 */
-	public Object getById(int id) {
-		return(cache.get(new Integer(id)));
+	public T getById(int id) {
+		return(cache.get(id));
 	}
 
 	/** 
@@ -46,7 +47,7 @@ public class HashCacheEntry extends SpyObject implements CacheEntry {
 	 * 
 	 * @return an unmodifiable collection of object instances
 	 */
-	public Collection getAllObjects() {
+	public Collection<T> getAllObjects() {
 		return(Collections.unmodifiableCollection(cache.values()));
 	}
 

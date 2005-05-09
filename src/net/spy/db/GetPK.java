@@ -71,7 +71,7 @@ public class GetPK extends SpyObject {
 
 	private static GetPK instance=null;
 
-	private HashMap caches=null;
+	private HashMap<String, KeyStore> caches=null;
 
 	/** 
 	 * Constructor for an extensible Singleton.
@@ -146,11 +146,11 @@ public class GetPK extends SpyObject {
 
 		BigDecimal rv=null;
 		try {
-			KeyStore ks=(KeyStore)caches.get(key);
+			KeyStore ks=caches.get(key);
 			// If we didn't get the key store, go get it now
 			if(ks == null) {
 				getKeysFromDB(db, table, key);
-				ks=(KeyStore)caches.get(key);
+				ks=caches.get(key);
 				if(ks==null) {
 					throw new SQLException("Couldn't get initial keys for "
 						+ table);
@@ -161,7 +161,7 @@ public class GetPK extends SpyObject {
 			// Overdrawn, need to fetch the cache.
 			getKeysFromDB(db, table, key);
 			// Get the new key store
-			KeyStore ks=(KeyStore)caches.get(key);
+			KeyStore ks=caches.get(key);
 			try {
 				rv=ks.nextKey();
 			} catch(OverDrawnException ode2) {

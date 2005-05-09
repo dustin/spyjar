@@ -8,7 +8,6 @@ import java.io.File;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 
 import net.spy.SpyThread;
 import net.spy.util.ThreadPool;
@@ -18,7 +17,7 @@ import net.spy.util.ThreadPool;
  */
 public final class Cron extends SpyThread {
 
-	private JobQueue jq=null;
+	private JobQueue<?> jq=null;
 	private boolean stillRunning=true;
 	private ThreadPool threads=null;
 
@@ -133,8 +132,7 @@ public final class Cron extends SpyThread {
 		getLogger().info("Starting cron services");
 		while(stillRunning) {
 			// Check all the running jobs.
-			for(Iterator i=jq.getReadyJobs(); i.hasNext(); ) {
-				Job j=(Job)i.next();
+			for(Job j : jq.getReadyJobs()) {
 				getLogger().info("Starting job " + j);
 				threads.addTask(j);
 			}

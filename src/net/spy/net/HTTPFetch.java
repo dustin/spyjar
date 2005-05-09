@@ -13,10 +13,10 @@ import java.net.URLConnection;
 import java.net.HttpURLConnection;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.spy.util.SpyUtil;
 
@@ -31,12 +31,12 @@ public class HTTPFetch extends Object {
 	private String contents=null;
 	private String stripped=null;
 
-	private Map headers=null;
+	private Map<String, List<String>> headers=null;
 	private long ifModifiedSince=0;
 
 	private int status=0;
 	private long lastModified=0;
-	private Map responseHeaders=null;
+	private Map<String, List<String>> responseHeaders=null;
 
 	/** 
 	 * Get an HTTPFetch instance for the given URL.
@@ -53,7 +53,7 @@ public class HTTPFetch extends Object {
 	 * @param u URL to fetch
 	 * @param head Map containing the headers to fetch
 	 */
-	public HTTPFetch(URL u, Map head) {
+	public HTTPFetch(URL u, Map<String, List<String>> head) {
 		super();
 		url=u;
 		headers=head;
@@ -62,7 +62,7 @@ public class HTTPFetch extends Object {
 	/** 
 	 * Get the response headers from the request (will force a content fetch).
 	 */
-	public Map getResponseHeaders() throws IOException {
+	public Map<String, List<String>> getResponseHeaders() throws IOException {
 		getData();
 		return(responseHeaders);
 	}
@@ -96,8 +96,8 @@ public class HTTPFetch extends Object {
 	 *
 	 * @exception Exception thrown when something fails.
 	 */
-	public List getLines() throws IOException {
-		ArrayList a = new ArrayList();
+	public List<String> getLines() throws IOException {
+		ArrayList<String> a = new ArrayList();
 
 		StringTokenizer st=new StringTokenizer(getData(), "\r\n");
 		while(st.hasMoreTokens()) {
@@ -144,11 +144,10 @@ public class HTTPFetch extends Object {
 	private BufferedReader getReader() throws IOException {
 		HttpURLConnection uc = (HttpURLConnection)url.openConnection();
 		if(headers!=null) {
-			for(Iterator i=headers.keySet().iterator(); i.hasNext(); ) {
-				String key=(String)i.next();
-				String value=(String)headers.get(key);
-
-				uc.setRequestProperty(key, value);
+			for(Map.Entry<String, List<String>> me: headers.entrySet()) {
+				for(String val : me.getValue()) {
+					uc.setRequestProperty(me.getKey(), val);
+				}
 			}
 		}
 		// Set the ifModifiedSince if we have one
@@ -158,7 +157,7 @@ public class HTTPFetch extends Object {
 		InputStream i = uc.getInputStream();
 		// Collect some data about this request
 		status=uc.getResponseCode();
-		responseHeaders=uc.getHeaderFields();
+		responseHeaders=new HashMap(uc.getHeaderFields());
 		lastModified=uc.getLastModified();
 
 		BufferedReader br =

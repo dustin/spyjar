@@ -40,7 +40,7 @@ import net.spy.SpyObject;
 public class InterfaceImplementor extends SpyObject {
 
 	// Functions that are already defined.
-	private HashSet definedFunctions=null;
+	private HashSet<String> definedFunctions=null;
 	private Class interfaceClass=null;
 	private Class superClass=null;
 	private String outpackage=null;

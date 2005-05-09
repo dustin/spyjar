@@ -8,23 +8,23 @@ import java.util.Collection;
 /**
  * Interface for factory cache implementations.
  */
-public interface CacheEntry {
+public interface CacheEntry<T extends Instance> {
 
 	/** 
 	 * Cache the given instance.
 	 */
-	void cacheInstance(Instance i);
+	void cacheInstance(T i);
 
 	/** 
 	 * Get an object by id.
 	 * @param id the object ID
 	 * @return the object, or null if there's no object by this ID
 	 */
-	Object getById(int id);
+	T getById(int id);
 
 	/** 
 	 * Get all objects in this cache.
 	 */
-	Collection getAllObjects();
+	Collection<T> getAllObjects();
 
 }

@@ -27,7 +27,7 @@ public interface QuerySelector {
 	 * @param queryMap the Map of queries by name
 	 * @return the query (as a String), null if a suitable query can't be found
 	 */
-	String getQuery(Connection conn, Map queryMap);
+	String getQuery(Connection conn, Map<String, String> queryMap);
 
 	/** 
 	 * Get the query for the given config.
@@ -36,6 +36,6 @@ public interface QuerySelector {
 	 * @param queryMap the Map of queries by name
 	 * @return the query (as a String), null if a suitable query can't be found
 	 */
-	String getQuery(SpyConfig conf, Map queryMap);
+	String getQuery(SpyConfig conf, Map<String, String> queryMap);
 
 }

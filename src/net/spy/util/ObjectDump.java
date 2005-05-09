@@ -7,7 +7,6 @@ package net.spy.util;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.IdentityHashMap;
 import java.lang.reflect.Field;
 
@@ -31,11 +30,11 @@ public class ObjectDump extends SpyObject {
 
 	// Get all of the fields available to this class or any of its super
 	// classes.
-    private void getAllFields(Class c, Set s) throws Exception {
+    private void getAllFields(Class c, Set<Field> s) throws Exception {
         Field fields[]=c.getDeclaredFields();
-        for(int i=0; i<fields.length; i++) {
-            fields[i].setAccessible(true);
-            s.add(fields[i]);
+		for(Field field : fields) {
+            field.setAccessible(true);
+            s.add(field);
         }
         if(c.getSuperclass() != null) {
             getAllFields(c.getSuperclass(), s);
@@ -96,7 +95,8 @@ public class ObjectDump extends SpyObject {
 	}
 
 	// Dump this object
-    private void dumpObject(Object o, String path, int depth, Map seen) {
+    private void dumpObject(Object o, String path, int depth,
+		Map<Object, String> seen) {
         try {
             if(!seen.containsKey(o)) {
                 seen.put(o, path);
@@ -104,11 +104,9 @@ public class ObjectDump extends SpyObject {
 
 				reportExamining(path, o);
 
-                Set fields=new HashSet();
+                Set<Field> fields=new HashSet();
                 getAllFields(c, fields);
-                for(Iterator i=fields.iterator(); i.hasNext(); ) {
-                    Field field=(Field)i.next();
-
+				for(Field field : fields) {
                     Class fieldType=field.getType();
                     String fieldName=field.getName();
 

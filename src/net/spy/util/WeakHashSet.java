@@ -12,9 +12,9 @@ import java.util.Iterator;
 /**
  * HashSet backed by a WeakHashMap.
  */
-public class WeakHashSet extends AbstractSet {
+public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 
-	private transient WeakHashMap map=null;
+	private transient WeakHashMap<T, Object> map=null;
 
 	private static final Object PRESENT=new Object();
 
@@ -41,7 +41,7 @@ public class WeakHashSet extends AbstractSet {
 	 * 
 	 * @param c the collection
 	 */
-	public WeakHashSet(Collection c) {
+	public WeakHashSet(Collection<T> c) {
 		this();
 		addAll(c);
 	}
@@ -49,7 +49,7 @@ public class WeakHashSet extends AbstractSet {
 	/** 
 	 * Get the Iterator for the backing Map.
 	 */
-	public Iterator iterator() {
+	public Iterator<T> iterator() {
 		return(map.keySet().iterator());
 	}
 
@@ -80,7 +80,7 @@ public class WeakHashSet extends AbstractSet {
 	 * @param o the object to add
 	 * @return true if this object was just added, false if it already existed
 	 */
-	public boolean add(Object o) {
+	public boolean add(T o) {
 		Object old=map.put(o, PRESENT);
 		return(old == null);
 	}

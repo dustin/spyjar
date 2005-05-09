@@ -48,7 +48,7 @@ public class ObjectPool extends SpyObject {
 	private static ObjectPoolCleaner cleaner=null;
 	// This is static because we want everyone to see the same pools, of
 	// course.
-	private static TimeStampedHashMap pools=null;
+	private static TimeStampedHashMap<String, PoolContainer> pools=null;
 
 	public ObjectPool(SpyConfig conf) {
 		super();
@@ -148,15 +148,15 @@ public class ObjectPool extends SpyObject {
 	 */
 	public String toString() {
 		StringBuffer out=new StringBuffer(TOSTRING_LEN);
-		ArrayList a=new ArrayList();
+		ArrayList<PoolContainer> a=new ArrayList();
 		synchronized (pools) {
-			for(Iterator i=pools.values().iterator(); i.hasNext();) {
-				a.add(i.next());
+			for(PoolContainer pc : pools.values()) {
+				a.add(pc);
 			}
 		}
 		// This is broken out to get out of the lock fast...
-		for(Iterator i=a.iterator(); i.hasNext();) {
-			out.append(i.next());
+		for(PoolContainer pc : a) {
+			out.append(a);
 		}
 		return(out.toString());
 	}
@@ -168,7 +168,7 @@ public class ObjectPool extends SpyObject {
 	 * @exception PoolException if something bad happens
 	 */
 	public void prune() throws PoolException {
-		ArrayList a=new ArrayList(pools.size());
+		ArrayList<PoolContainer> a=new ArrayList(pools.size());
 		// Clean up any pools that are empty
 		synchronized (pools) {
 			for(Iterator i=pools.values().iterator(); i.hasNext();) {
@@ -185,8 +185,7 @@ public class ObjectPool extends SpyObject {
 		}
 		// A second loop (out of the synchronized block) to ask each individual
 		// pool to clean itself.
-		for(Iterator i=a.iterator(); i.hasNext();) {
-			PoolContainer pc=(PoolContainer)i.next();
+		for(PoolContainer pc : a) {
 			pc.prune();
 		}
 	}

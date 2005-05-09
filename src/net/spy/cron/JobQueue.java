@@ -5,6 +5,7 @@
 package net.spy.cron;
 
 import java.util.Date;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ import net.spy.log.LoggerFactory;
 /**
  * This is where all the jobs go.
  */
-public class JobQueue extends ArrayList {
+public class JobQueue<T extends Job> extends ArrayList<T> {
 
 	private Logger logger=null;
 
@@ -40,7 +41,7 @@ public class JobQueue extends ArrayList {
 	/**
 	 * Add a job.
 	 */
-	public synchronized void addJob(Job j) {
+	public synchronized void addJob(T j) {
 		if(getLogger().isDebugEnabled()) {
 			getLogger().debug("Adding job:  " + j);
 		}
@@ -51,12 +52,12 @@ public class JobQueue extends ArrayList {
 	/**
 	 * Get an Iterator of Jobs that are ready to run.
 	 */
-	public synchronized Iterator getReadyJobs() {
+	public synchronized Collection<Job> getReadyJobs() {
 		ArrayList v=new ArrayList();
 
 		// Flip through all of the jobs and see what we've got to do.
-		for(Iterator i=iterator(); i.hasNext();) {
-			Job j=(Job)i.next();
+		for(Iterator<T> i=iterator(); i.hasNext();) {
+			Job j=i.next();
 
 			// Add a job if it's ready.
 			if(j.isReady()) {
@@ -69,7 +70,7 @@ public class JobQueue extends ArrayList {
 			}
 		}
 
-		return(v.iterator());
+		return(v);
 	}
 
 	/**
@@ -79,8 +80,7 @@ public class JobQueue extends ArrayList {
 		Date next=null;
 		long soonestJob=Long.MAX_VALUE;
 		long now=System.currentTimeMillis();
-		for(Iterator i=iterator(); i.hasNext();) {
-			Job j=(Job)i.next();
+		for(Job j : this) {
 			Date jdate=j.getStartTime();
 			if(jdate!=null) {
 				long t=jdate.getTime()-now;

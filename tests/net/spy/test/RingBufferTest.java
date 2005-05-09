@@ -39,18 +39,17 @@ public class RingBufferTest extends TestCase {
 		junit.textui.TestRunner.run(suite());
 	}
 
-	private void verify(RingBuffer rb) {
-		ArrayList a=new ArrayList(rb);
+	private void verify(RingBuffer<Integer> rb) {
+		ArrayList<Integer> a=new ArrayList(rb);
 
 		// The buffer should be at capacity here
 		assertTrue("Size is incorrect.", (rb.size() == a.size()));
 		assertTrue("Capacity not filled.", (rb.size() == rb.getCapacity()));
 
 		int i=((Integer)a.get(0)).intValue();
-		for(Iterator it=a.iterator(); it.hasNext(); i++) {
-			Integer itmp=(Integer)it.next();
-			int tmp=itmp.intValue();
+		for(int tmp : a) {
 			assertEquals("Out of sequence", tmp, i);
+			i++;
 		}
 	}
 
@@ -59,16 +58,16 @@ public class RingBufferTest extends TestCase {
 	 */
 	public void testRingBuffer() {
 		int cap=256;
-		RingBuffer rb=new RingBuffer(cap);
+		RingBuffer<Integer> rb=new RingBuffer(cap);
 
 		// Fill 'er up
 		for(int i=1; i<cap; i++) {
-			rb.add(new Integer(i));
+			rb.add(i);
 			assertTrue("Capacity filled prematurely", rb.size() < cap);
 		}
 
 		for(int i=cap; i<2048; i++) {
-			rb.add(new Integer(i));
+			rb.add(i);
 			assertTrue("Exceeded capacity", rb.size() <= cap);
 			verify(rb);
 		}

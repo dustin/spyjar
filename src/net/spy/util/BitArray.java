@@ -6,7 +6,6 @@ package net.spy.util;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Collections;
 
 /**
@@ -16,7 +15,7 @@ import java.util.Collections;
  */
 public class BitArray extends Object {
 
-	private List bitList=null;
+	private List<Integer> bitList=null;
 
 	/**
 	 * Get an instance of BitArray with storage for a given number of bits.
@@ -46,9 +45,9 @@ public class BitArray extends Object {
 		this(bitString.length());
 
 		char acters[]=bitString.toCharArray();
-		for(int i=0; i<acters.length; i++) {
-			if(!Character.isWhitespace(acters[i])) {
-				switch(acters[i]) {
+		for(char c : acters) {
+			if(!Character.isWhitespace(c)) {
+				switch(c) {
 					case '0':
 						add(false);
 						break;
@@ -70,9 +69,9 @@ public class BitArray extends Object {
 	 */
 	public void add(boolean value) {
 		if(value) {
-			bitList.add(new Integer(1));
+			bitList.add(1);
 		} else {
-			bitList.add(new Integer(0));
+			bitList.add(0);
 		}
 	}
 
@@ -83,13 +82,13 @@ public class BitArray extends Object {
 	 * @param numBits the number of bits to add.
 	 */
 	public void addBits(int bitSet, int numBits) {
-		List bitsToAdd=new ArrayList(numBits);
+		List<Integer> bitsToAdd=new ArrayList(numBits);
 
 		for(int i=0; i<numBits; i++) {
 			if( (bitSet&0x1) == 0) {
-				bitsToAdd.add(new Integer(0));
+				bitsToAdd.add(0);
 			} else {
-				bitsToAdd.add(new Integer(1));
+				bitsToAdd.add(1);
 			}
 			bitSet>>=1;
 		}
@@ -144,13 +143,12 @@ public class BitArray extends Object {
 
 		int rv=0;
 		// Get a sublist to walk
-		List l=bitList.subList(from, from+number);
-		for(Iterator i=l.iterator(); i.hasNext();) {
-			Integer iTmp=(Integer)i.next();
+		List<Integer> l=bitList.subList(from, from+number);
+		for(int iTmp : l) {
 			// Make room for the new bit
 			rv<<=1;
 			// Add it
-			rv|=iTmp.intValue();
+			rv|=iTmp;
 		}
 
 		return(rv);
@@ -195,8 +193,8 @@ public class BitArray extends Object {
 	public String toString() {
 		StringBuffer sb=new StringBuffer(bitList.size());
 
-		for(Iterator i=bitList.iterator(); i.hasNext(); ) {
-			sb.append(i.next());
+		for(int i : bitList) {
+			sb.append(i);
 		}
 
 		return(sb.toString());

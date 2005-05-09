@@ -14,22 +14,22 @@ import java.sql.SQLException;
 import net.spy.util.SpyConfig;
 
 /**
-	 * Superclass for dynamic SQL calls.
+ * Superclass for dynamic SQL calls.
+ */
+public abstract class DBSQL extends DBSP {
+
+	private Map<String, String> registeredQueries=null;
+
+	/**
+	 * Get a DBSQL object with the given DBConfig.
 	 */
-	public abstract class DBSQL extends DBSP {
+	public DBSQL(SpyConfig conf) throws SQLException {
+		super(conf);
+	}
 
-		private Map registeredQueries=null;
-
-		/**
-		 * Get a DBSQL object with the given DBConfig.
-		 */
-		public DBSQL(SpyConfig conf) throws SQLException {
-			super(conf);
-		}
-
-		/**
-		 * Get a DBSQL object with the given Connection.
-		 */
+	/**
+	 * Get a DBSQL object with the given Connection.
+	 */
 	public DBSQL(Connection conn) throws SQLException {
 		super(conn);
 	}
@@ -52,7 +52,7 @@ import net.spy.util.SpyConfig;
 	 * 
 	 * @param to the Map of registered queries.
 	 */
-	protected void setRegisteredQueryMap(Map to) {
+	protected void setRegisteredQueryMap(Map<String, String> to) {
 		registeredQueries=to;
 	}
 

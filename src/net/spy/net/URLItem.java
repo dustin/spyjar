@@ -4,6 +4,7 @@
 
 package net.spy.net;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 
 	private URL url=null;
 
-	private Map lastHeaders=null;
+	private Map<String, List<String>> lastHeaders=null;
 	private String content=null;
 	private long lastModified=0;
 
@@ -77,15 +78,17 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 	 * Ask the URL to update itself if it needs to.
 	 */
 	public void runJob() {
-		HashMap headers=new HashMap();
+		HashMap<String, List<String>> headers=new HashMap();
 		// make sure the stuff isn't cached
-		headers.put("Pragma", "no-cache");
+		ArrayList<String> tmp=new ArrayList();
+		tmp.add("no-cache");
+		headers.put("Pragma", tmp);
 		// But don't request something if we know we already have it.
 		if(lastHeaders != null) {
-			List eTags=(List)lastHeaders.get("ETag");
+			List<String> eTags=lastHeaders.get("ETag");
 			if(eTags != null) {
-				// Put the first etag in the none-match
-				headers.put("If-None-Match", eTags.get(0));
+				// Put the etags in the none-match
+				headers.put("If-None-Match", eTags);
 			}
 		}
 
@@ -96,7 +99,8 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 			hf.setIfModifiedSince(lastModified);
 
 			if(hf.getStatus() == HttpURLConnection.HTTP_OK) {
-				setContent(hf.getData(), hf.getResponseHeaders(), hf.getLastModified());
+				setContent(hf.getData(), hf.getResponseHeaders(),
+					hf.getLastModified());
 			} else {
 				getLogger().info("Not saving content due to response status "
 					+ hf.getStatus());
@@ -106,7 +110,8 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 		}
 	}
 
-	private synchronized void setContent(String to, Map headers, long lastMod) {
+	private synchronized void setContent(String to,
+		Map<String, List<String>> headers, long lastMod) {
 		content=to;
 		// Big chunk of debug logging.
 		if(getLogger().isDebugEnabled()) {
@@ -116,7 +121,8 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 			} else {
 				contentDesc=to.length() + " bytes";
 			}
-			getLogger().debug("Setting content for " + this + ":  " + contentDesc);
+			getLogger().debug("Setting content for " + this
+				+ ":  " + contentDesc);
 		}
 		lastModified=lastMod;
 		lastHeaders=headers;

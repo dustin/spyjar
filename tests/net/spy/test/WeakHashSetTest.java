@@ -43,12 +43,12 @@ public class WeakHashSetTest extends TestCase {
 	 * Test the basic functionality of the weak hash set.
 	 */
 	public void testBasicWeakHash() {
-		Set s=new java.util.HashSet();
+		Set<String> s=new java.util.HashSet();
 		for(int i=0; i<1000; i++) {
 			s.add("Blah" + i);
 		}
 
-		WeakHashSet whs=new WeakHashSet(s);
+		WeakHashSet<String> whs=new WeakHashSet(s);
 
 		assertEquals("Size didn't match", whs.size(), s.size());
 

@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.SortedSet;
-import java.util.Iterator;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -30,7 +29,7 @@ import net.spy.util.NoPathException;
  */
 public class ShortestPathTest extends TestCase {
 
-	private Map nodes=null;
+	private Map<String, StringNode> nodes=null;
 	private StringNode a=null;
 	private StringNode b=null;
 	private StringNode c=null;
@@ -136,8 +135,7 @@ public class ShortestPathTest extends TestCase {
 	public void testSPFind() {
 		// Print out links...this is kinda big and ugly
 		/*
-		for(Iterator i=nodes.values().iterator(); i.hasNext();) {
-			StringNode sn=(StringNode)i.next();
+		for(StringNode : nodes) {
 			sn.dump();
 		}
 		*/
@@ -1753,8 +1751,7 @@ public class ShortestPathTest extends TestCase {
 		public void dump(int indentation, Set s) {
 			System.out.println(indent(indentation) + this);
 			// Find out what we have maps to
-			for(Iterator i=nodes.values().iterator(); i.hasNext(); ) {
-				StringNode sn=(StringNode)i.next();
+			for(StringNode sn : nodes.values()) {
 				SPVertex vert=getNextHop(sn);
 				if(vert != null) {
 					System.out.println(indent(indentation + 4)
@@ -1763,8 +1760,7 @@ public class ShortestPathTest extends TestCase {
 				}
 			}
 			// Dump out the connections
-			for(Iterator i=getConnections().iterator(); i.hasNext(); ) {
-				SPVertex spv=(SPVertex)i.next();
+			for(SPVertex spv : getConnections()) {
 				if (! s.contains(spv.getTo())) {
 					s.add(spv.getTo());
 					StringNode sn=(StringNode)spv.getTo();

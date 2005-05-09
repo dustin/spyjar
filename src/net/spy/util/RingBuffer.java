@@ -19,9 +19,10 @@ import java.util.ConcurrentModificationException;
  * but may not otherwise be modified.  Individual entries may not be
  * accessed directly, only via the iterator.
  */
-public class RingBuffer extends AbstractCollection implements Serializable {
+public class RingBuffer<T extends Object> extends AbstractCollection<T>
+	implements Serializable {
 
-	private Object buf[]=null;
+	private T buf[]=null;
 	private int start=0;
 	private int end=0;
 	private boolean wrapped=false;
@@ -34,7 +35,7 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 	 */
 	public RingBuffer(int s) {
 		super();
-		buf=new Object[s];
+		buf=(T[])new Object[s];
 		Arrays.fill(buf, null);
 	}
 
@@ -45,10 +46,10 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 	 * @param s the maximum number of objects to be held in the ring
 	 * @param fill a Collection whose elements will be used to fill the buffer
 	 */
-	public RingBuffer(int s, Collection fill) {
+	public RingBuffer(int s, Collection<T> fill) {
 		this(s);
-		for(Iterator i=fill.iterator(); i.hasNext();) {
-			add(i.next());
+		for(T ob : fill) {
+			add(ob);
 		}
 	}
 
@@ -59,7 +60,7 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 	 * @param o the object to add
 	 * @return true
 	 */
-	public boolean add(Object o) {
+	public boolean add(T o) {
 		if(end>=buf.length) {
 			// Will get set to 0
 			end=0;
@@ -100,8 +101,8 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 		sb.append(", e=");
 		sb.append(end);
 		sb.append(" [");
-		for(int i=0; i<buf.length; i++) {
-			sb.append(buf[i]);
+		for(T ob : buf) {
+			sb.append(ob);
 			sb.append(" ");
 		}
 		sb.append("]\n\t");
@@ -131,14 +132,14 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 	 * 
 	 * @return an iterator
 	 */
-	public Iterator iterator() {
+	public Iterator<T> iterator() {
 		return (new RingBufferIterator());
 	}
 
 	// Iterator implementation
 
 	private class RingBufferIterator extends Object
-		implements Iterator, Serializable {
+		implements Iterator<T>, Serializable {
 
 		private int pos=0;
 		private int startPos=0;
@@ -160,7 +161,7 @@ public class RingBuffer extends AbstractCollection implements Serializable {
 			return(remaining > 0);
 		}
 
-		public Object next() {
+		public T next() {
 			if(!hasNext()) {
 				throw new NoSuchElementException("Your buffer runneth under.");
 			}

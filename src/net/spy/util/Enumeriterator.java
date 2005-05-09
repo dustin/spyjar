@@ -10,14 +10,14 @@ import java.util.Iterator;
 /**
  * Wrap an Enumeration to provide an Iterator interface.
  */
-public class Enumeriterator extends Object implements Iterator {
+public class Enumeriterator<T> extends Object implements Iterator<T> {
 
-	private Enumeration e=null;
+	private Enumeration<T> e=null;
 
 	/**
 	 * Get an instance of Enumeriterator.
 	 */
-	public Enumeriterator(Enumeration src) {
+	public Enumeriterator(Enumeration<T> src) {
 		super();
 		this.e=src;
 	}
@@ -36,7 +36,7 @@ public class Enumeriterator extends Object implements Iterator {
 	 * 
 	 * @return the next Object
 	 */
-	public Object next() {
+	public T next() {
 		return(e.nextElement());
 	}
 

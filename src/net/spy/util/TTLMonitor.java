@@ -16,7 +16,7 @@ import net.spy.SpyThread;
  */
 public final class TTLMonitor extends SpyThread {
 
-	private ArrayList ttls=null;
+	private ArrayList<TTL> ttls=null;
 	private int expiredTTLs=0;
 
 	private static final long NAPTIME=5000;
@@ -86,8 +86,8 @@ public final class TTLMonitor extends SpyThread {
 				// Reset the expired count
 				expiredTTLs=0;
 				// Flip through the TTLs
-				for(Iterator i=ttls.iterator(); i.hasNext();) {
-					TTL ttl=(TTL)i.next();
+				for(Iterator<TTL> i=ttls.iterator(); i.hasNext();) {
+					TTL ttl=i.next();
 					// Update the expired count if it's expired
 					if(ttl.isExpired()) {
 						expiredTTLs++;

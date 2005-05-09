@@ -4,7 +4,6 @@
 package net.spy.factory;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.spy.SpyObject;
 import net.spy.cache.SpyCache;
@@ -12,7 +11,7 @@ import net.spy.cache.SpyCache;
 /**
  * Generic object instance cache.
  */
-public abstract class GenFactory extends SpyObject {
+public abstract class GenFactory<T extends Instance> extends SpyObject {
 
 	private String cacheKey=null;
 	private long cacheTime=0;
@@ -43,8 +42,8 @@ public abstract class GenFactory extends SpyObject {
 	 * 
 	 * @return a CacheEntry
 	 */
-	protected CacheEntry getCache() {
-		CacheEntry rv=null;
+	protected CacheEntry<T> getCache() {
+		CacheEntry<T> rv=null;
 		SpyCache sc=SpyCache.getInstance();
 		rv=(CacheEntry)sc.get(cacheKey);
 		if(rv == null) {
@@ -54,11 +53,9 @@ public abstract class GenFactory extends SpyObject {
 	}
 
 	// Set the cache
-	private CacheEntry setCache() {
-		CacheEntry rv=getNewCacheEntry();
-		Collection allEntries=getInstances();
-		for(Iterator i=allEntries.iterator(); i.hasNext(); ) {
-			Instance inst=(Instance)i.next();
+	private CacheEntry<T> setCache() {
+		CacheEntry<T> rv=getNewCacheEntry();
+		for(T inst : getInstances()) {
 			rv.cacheInstance(inst);
 		}
 		SpyCache sc=SpyCache.getInstance();
@@ -74,14 +71,14 @@ public abstract class GenFactory extends SpyObject {
 	 * 
 	 * @return an empty CacheEntry instance.
 	 */
-	protected CacheEntry getNewCacheEntry() {
+	protected CacheEntry<T> getNewCacheEntry() {
 		return new HashCacheEntry();
 	}
 
 	/** 
 	 * Get the collection of all Instance objects to be cached.
 	 */
-	protected abstract Collection getInstances();
+	protected abstract Collection<T> getInstances();
 
 	/** 
 	 * This method is called whenever getObject would return null.  The result
@@ -91,7 +88,7 @@ public abstract class GenFactory extends SpyObject {
 	 * @param id the ID of the object that was requested.
 	 * @return null
 	 */
-	protected Object handleNullLookup(int id) {
+	protected T handleNullLookup(int id) {
 		return(null);
 	}
 
@@ -101,9 +98,9 @@ public abstract class GenFactory extends SpyObject {
 	 * @param id the object ID
 	 * @return the object instance, or null if there's no such object
 	 */
-	public Object getObject(int id) {
-		CacheEntry ce=getCache();
-		Object rv=ce.getById(id);
+	public T getObject(int id) {
+		CacheEntry<T> ce=getCache();
+		T rv=ce.getById(id);
 		if(rv == null) {
 			rv=handleNullLookup(id);
 		}
@@ -113,8 +110,8 @@ public abstract class GenFactory extends SpyObject {
 	/** 
 	 * Get all objects cached by this factory.
 	 */
-	public Collection getObjects() {
-		CacheEntry ce=getCache();
+	public Collection<T> getObjects() {
+		CacheEntry<T> ce=getCache();
 		return(ce.getAllObjects());
 	}
 

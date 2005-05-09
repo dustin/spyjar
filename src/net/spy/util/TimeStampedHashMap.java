@@ -10,7 +10,7 @@ import java.util.HashMap;
  * A HashMap that remembers when it was accessed.  Good for caching and
  * stuff like that.
  */
-public class TimeStampedHashMap extends HashMap {
+public class TimeStampedHashMap<K, V> extends HashMap<K, V> {
 
 	// Where we keep up with usage.
 	private long timestamp=0;
@@ -38,9 +38,9 @@ public class TimeStampedHashMap extends HashMap {
 	 * @param key the object to get
 	 * @return the object, or null if it's missing
 	 */
-	public Object get(Object key) {
+	public V get(Object key) {
 		markGet();
-		Object o=super.get(key);
+		V o=super.get(key);
 		if(o==null) {
 			misses++;
 		} else {
@@ -56,8 +56,8 @@ public class TimeStampedHashMap extends HashMap {
 	 * @param value the value to store
 	 * @return the object that got displaced for this store, or null
 	 */
-	public Object put(Object key, Object value) {
-		Object rv=super.put(key, value);
+	public V put(K key, V value) {
+		V rv=super.put(key, value);
 		markPut();
 		return(rv);
 	}

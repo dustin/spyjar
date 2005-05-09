@@ -66,9 +66,9 @@ import net.spy.SpyThread;
 public class ThreadPool extends ThreadGroup {
 
 	// The threads we're managing.
-	private Collection threads=null;
+	private Collection<RunThread> threads=null;
 	// The tasks for the threads to do.
-	private LinkedList tasks=null;
+	private LinkedList<Task> tasks=null;
 
 	// This is what we monitor for things being checked out (otherwise we
 	// can't tell the difference between adds and check outs).
@@ -247,9 +247,10 @@ public class ThreadPool extends ThreadGroup {
 		boolean shutOneDown=false;
 		// Try to shut down something that doesn't appear to be running
 		// anything (although it may start as we go)
-		for(Iterator i=threads.iterator(); !shutOneDown && i.hasNext();) {
+		for(Iterator<RunThread> i=threads.iterator();
+			!shutOneDown && i.hasNext();) {
 
-			RunThread rt=(RunThread)i.next();
+			RunThread rt=i.next();
 			if(!rt.isRunning()) {
 				rt.shutdown();
 				shutOneDown=true;
@@ -276,8 +277,7 @@ public class ThreadPool extends ThreadGroup {
 	 */
 	public synchronized int getIdleThreadCount() {
 		int rv=0;
-		for(Iterator i=threads.iterator(); i.hasNext();) {
-			RunThread rt=(RunThread)i.next();
+		for(RunThread rt : threads) {
 			if(!rt.isRunning()) {
 				rv++;
 			}
@@ -463,7 +463,7 @@ public class ThreadPool extends ThreadGroup {
 	 * Set the LinkedList to contain the tasks on which this ThreadPool
 	 * will be listening.
 	 */
-	public void setTasks(LinkedList t) {
+	public void setTasks(LinkedList<Task> t) {
 		if(started) {
 			throw new IllegalStateException("Can't set tasks after the "
 				+ "pool has started.");
@@ -592,8 +592,7 @@ public class ThreadPool extends ThreadGroup {
 	 */
 	public synchronized int getActiveThreadCount() {
 		int rv=0;
-		for(Iterator i=threads.iterator(); i.hasNext();) {
-			RunThread t=(RunThread)i.next();
+		for(RunThread t : threads) {
 			if(t.isAlive()) {
 				rv++;
 			}
@@ -614,8 +613,7 @@ public class ThreadPool extends ThreadGroup {
 		// threads
 		poolManager.requestStop();
 		// Now, tell all of the known threads that we don't need them anymore
-		for(Iterator i=threads.iterator(); i.hasNext();) {
-			RunThread t=(RunThread)i.next();
+		for(RunThread t : threads) {
 			t.shutdown();
 		}
 		shutdown=true;
@@ -744,7 +742,7 @@ public class ThreadPool extends ThreadGroup {
 
 	private static class RunThread extends SpyThread {
 		private ThreadPoolObserver monitor=null;
-		private LinkedList tasks=null;
+		private LinkedList<Task> tasks=null;
 		private boolean going=true;
 		private int threadId=0;
 
@@ -752,7 +750,7 @@ public class ThreadPool extends ThreadGroup {
 		private Runnable running=null;
 		private long start=0;
 
-		public RunThread(ThreadGroup tg, LinkedList tsks,
+		public RunThread(ThreadGroup tg, LinkedList<Task> tsks,
 			ThreadPoolObserver mntr) {
 
 			super(tg, "RunThread");

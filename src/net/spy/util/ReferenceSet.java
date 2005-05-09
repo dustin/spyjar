@@ -15,9 +15,9 @@ import java.util.NoSuchElementException;
 /**
  * This class aids in implementing sets of references.
  */
-public abstract class ReferenceSet extends AbstractSet {
+public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 
-	private HashSet contents=null;
+	private HashSet<Reference <T>> contents=null;
 
 	/**
 	 * Get an instance of ReferenceSet.
@@ -43,7 +43,7 @@ public abstract class ReferenceSet extends AbstractSet {
 	 * 
 	 * @param c the collection
 	 */
-	public ReferenceSet(Collection c) {
+	public ReferenceSet(Collection<T> c) {
 		super();
 		if (c == null) {
 			throw new NullPointerException(
@@ -53,8 +53,8 @@ public abstract class ReferenceSet extends AbstractSet {
 		contents = new HashSet(c.size() * 2);
 
 		// Copy references into the content map
-		for(Iterator i=c.iterator(); i.hasNext();) {
-			add(i.next());
+		for(Object o : c) {
+			add(c);
 		}
 	}
 
@@ -65,7 +65,7 @@ public abstract class ReferenceSet extends AbstractSet {
 	 * @return true if the object did not already exist
 	 */
 	public boolean add(Object o) {
-		boolean rv=contents.add(getReference(o));
+		boolean rv=contents.add(getReference((T)o));
 
 		return (rv);
 	}
@@ -110,16 +110,17 @@ public abstract class ReferenceSet extends AbstractSet {
 	 * @param o an object
 	 * @return a reference to that object
 	 */
-	protected abstract Reference getReference(Object o);
+	protected abstract Reference<T> getReference(T o);
 
-	private static class ReferenceIterator extends Object implements Iterator {
+	private static class ReferenceIterator<T> extends Object
+		implements Iterator<T> {
 
-		private Iterator backIterator=null;
+		private Iterator<Reference <T>> backIterator=null;
 		private boolean hasNext=false;
-		private Object current=null;
-		private Reference currentRef=null;
+		private T current=null;
+		private Reference<T> currentRef=null;
 
-		public ReferenceIterator(Iterator i) {
+		public ReferenceIterator(Iterator<Reference <T>> i) {
 			super();
 
 			this.backIterator=i;
@@ -130,11 +131,11 @@ public abstract class ReferenceSet extends AbstractSet {
 			return(hasNext);
 		}
 
-		public Object next() throws NoSuchElementException {
+		public T next() throws NoSuchElementException {
 			if(!hasNext) {
 				throw new NoSuchElementException("All out.");
 			}
-			Object rv=current;
+			T rv=current;
 			findNext();
 			return(rv);
 		}
@@ -147,7 +148,7 @@ public abstract class ReferenceSet extends AbstractSet {
 		private void findNext() {
 			current=null;
 			while(current==null && backIterator.hasNext()) {
-				currentRef=(Reference)backIterator.next();
+				currentRef=backIterator.next();
 				current=currentRef.get();
 				// If the reference is dead, get rid of our copy
 				if(current==null) {

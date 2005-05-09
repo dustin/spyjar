@@ -34,7 +34,7 @@ public class SpyToker extends Object {
 	 * @param m the map of tokens (without percents)
 	 * @return the tokenized string
 	 */
-	public String tokenizeString(String input, Map m) {
+	public String tokenizeString(String input, Map<String, String> m) {
 		StringBuffer output=new StringBuffer(input.length() + 256);
 		int which;
 
@@ -69,7 +69,7 @@ public class SpyToker extends Object {
 	 *
 	 * @return tokenized data from the file.
 	 */
-	public String tokenize(File file, Map m) {
+	public String tokenize(File file, Map<String, String> m) {
 		String input=null;
 
 		// Get our mofo data.

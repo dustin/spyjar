@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.ArrayList;
 
 import net.spy.util.SpyUtil;
@@ -178,9 +177,7 @@ public class FileJobQueue extends JobQueue {
 		} else {
 
 			// Flip through all of the known formats until we get a match
-			for(Iterator i=getFormats().iterator(); i.hasNext() && rv==null;) {
-				TimeFormat tf=(TimeFormat)i.next();
-
+			for(TimeFormat tf : getFormats()) {
 				SimpleDateFormat sdf=tf.getFormat();
 				try {
 					Date d=sdf.parse(in);
@@ -200,8 +197,8 @@ public class FileJobQueue extends JobQueue {
 
 	// These are the supported formats, and the fields we should remember
 	// from them.
-	private Collection getFormats() {
-		Collection rv=new ArrayList();
+	private Collection<TimeFormat> getFormats() {
+		Collection<TimeFormat> rv=new ArrayList();
 
 		int f1[]={Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH,
 					Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};

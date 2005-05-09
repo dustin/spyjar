@@ -17,8 +17,8 @@ import net.spy.SpyObject;
  */
 public abstract class AbstractSPNode extends SpyObject implements SPNode {
 
-	private SortedSet links=null;
-	private Map nextHops=null;
+	private SortedSet<SPVertex> links=null;
+	private Map<SPNode, SPVertex> nextHops=null;
 
 	/**
 	 * Get an instance of AbstractSPNode holding its links in the given
@@ -60,14 +60,14 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	/** 
 	 * @see SPNode 
 	 */
-	public SortedSet getConnections() {
+	public SortedSet<SPVertex> getConnections() {
 		return( Collections.unmodifiableSortedSet(links));
 	}
 
 	/** 
 	 * @see SPNode
 	 */
-	public Map getNextHops() {
+	public Map<SPNode, SPVertex> getNextHops() {
 		return(Collections.unmodifiableMap(nextHops));
 	}
 

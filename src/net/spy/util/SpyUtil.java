@@ -213,8 +213,8 @@ public class SpyUtil {
 	public static String byteAToHexString(byte me[]) {
 		StringBuffer sb=new StringBuffer(me.length*2);
 
-		for(int i=0; i<me.length; i++) {
-			int bai=(int)me[i] & 0xff;
+		for(byte b : me) {
+			int bai=(int)b & 0xff;
 			if(bai<0x10) {
 				sb.append('0');
 			}
@@ -305,16 +305,16 @@ public class SpyUtil {
 
 		char chars[]=contents.toCharArray();
 
-		for(int i=0; i<chars.length; i++) {
-			if(chars[i]=='<') {
+		for(char c : chars) {
+			if(c == '<') {
 				inTag++;
-			} else if( chars[i]=='>' && inTag>0) {
+			} else if( c == '>' && inTag>0) {
 				if(inTag>=1) {
 					inTag--;
 				}
 			} else {
 				if(inTag==0) {
-					sb.append(chars[i]);
+					sb.append(c);
 				}
 			}
 		}

@@ -31,7 +31,7 @@ import net.spy.util.TimeStampedHashMap;
  */
 public class SpyCache extends SpyObject {
 
-	private TimeStampedHashMap cacheStore=null;
+	private TimeStampedHashMap<String, Cachable> cacheStore=null;
 	private SpyCacheCleaner cacheCleaner=null;
 
 	private CacheDelegate delegate=null;
@@ -132,7 +132,7 @@ public class SpyCache extends SpyObject {
 		Object ret=null;
 		long t=System.currentTimeMillis();
 		synchronized(cacheStore) {
-			Cachable i=(Cachable)cacheStore.get(key);
+			Cachable i=cacheStore.get(key);
 			if(i!=null && (!i.isExpired())) {
 				// mark the object as seen
 				i.setAccessTime(t);
@@ -156,7 +156,7 @@ public class SpyCache extends SpyObject {
 	public void uncache(String key) {
 		Cachable unc=null;
 		synchronized(cacheStore) {
-			unc=(Cachable)cacheStore.remove(key);
+			unc=cacheStore.remove(key);
 		}
 		if(unc!=null) {
 			unc.uncachedEvent(key);
@@ -172,15 +172,17 @@ public class SpyCache extends SpyObject {
 	 */
 	public void uncacheLike(String keystart) {
 		synchronized(cacheStore) {
-			for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext();) {
-				Map.Entry me=(Map.Entry)i.next();
+			for(Iterator i=cacheStore.entrySet().iterator();
+				i.hasNext();) {
 
-				String key=(String)me.getKey();
+				Map.Entry<String, Cachable> me=(Map.Entry)i.next();
+
+				String key=me.getKey();
 
 				// If this matches, kill it.
 				if(key.startsWith(keystart)) {
 					i.remove();
-					Cachable c=(Cachable)me.getValue();
+					Cachable c=me.getValue();
 					c.uncachedEvent(key);
 					delegate.uncachedObject(key, c);
 				}
@@ -230,9 +232,9 @@ public class SpyCache extends SpyObject {
 			long now=System.currentTimeMillis();
 			synchronized(cacheStore) {
 				for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext();){
-					Map.Entry me=(Map.Entry)i.next();
-					String key=(String)me.getKey();
-					Cachable it=(Cachable)me.getValue();
+					Map.Entry<String, Cachable> me=(Map.Entry)i.next();
+					String key=me.getKey();
+					Cachable it=me.getValue();
 					if(it.isExpired()) {
 						if(getLogger().isDebugEnabled()) {
 							getLogger().debug(it.getCacheKey() + " expired");
@@ -316,9 +318,9 @@ public class SpyCache extends SpyObject {
 			// OK, we're about to bail, let's dump the cache and go.
 			synchronized(cacheStore) {
 				for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext();){
-					Map.Entry me=(Map.Entry)i.next();
-					String key=(String)me.getKey();
-					Cachable it=(Cachable)me.getValue();
+					Map.Entry<String, Cachable> me=(Map.Entry)i.next();
+					String key=me.getKey();
+					Cachable it=me.getValue();
 					i.remove();
 					it.uncachedEvent(key);
 					delegate.uncachedObject(key, it);

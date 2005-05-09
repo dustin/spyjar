@@ -40,6 +40,8 @@ public class QuickTests extends TestSuite {
 		rv.addTest(IdentityEqualifierTest.suite());
 		rv.addTest(NetStringTest.suite());
 		rv.addTest(RangeTest.suite());
+		rv.addTest(BitArrayTest.suite());
+		rv.addTest(FactoryTest.suite());
 		return(rv);
 	}
 

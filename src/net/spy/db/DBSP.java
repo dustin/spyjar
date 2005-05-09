@@ -20,12 +20,9 @@ import java.math.BigDecimal;
 
 import java.util.Collections;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import net.spy.util.SpyConfig;
 import net.spy.util.SpyUtil;
@@ -42,10 +39,10 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	private static final int BD_SCALE=4;
 
 	// The set of parameters available to this DBSP (defined in the subclass)
-	private NamedObjectStorage parameters=null;
+	private LinkedHashMap<String, Parameter>  parameters=null;
 
 	// The set of arguments provided to this DBSP at runtime
-	private NamedObjectStorage arguments=null;
+	private LinkedHashMap<String, Argument> arguments=null;
 
 	// SP name
 	private String spname=null;
@@ -87,8 +84,8 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 	// Initialize hashtables
 	private void initsp() {
-		this.parameters=new NamedObjectStorage();
-		this.arguments=new NamedObjectStorage();
+		this.parameters=new LinkedHashMap();
+		this.arguments=new LinkedHashMap();
 		// Inherit debug flag from the logger.
 		debug=getLogger().isDebugEnabled();
 	}
@@ -227,13 +224,13 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 * @throws SQLException if the parameter has already been added
 	 */
 	protected void addParameter(Parameter p) throws SQLException {
-		if(parameters.contains(p.getName())) {
+		if(parameters.containsKey(p.getName())) {
 			throw new SQLException(
 				"parameter ``" + p + "'' already provided.");
 		}
 
 		// Save it.
-		parameters.add(p);
+		parameters.put(p.getName(), p);
 	}
 
 	/**
@@ -291,7 +288,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	protected void setArg(String which, Object what, int type)
 		throws SQLException {
 
-		arguments.add(new Argument(type, which, what));
+		arguments.put(which, new Argument(type, which, what));
 	}
 
 	/**
@@ -299,12 +296,10 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 *
 	 * @return an unmodifiable list of {@link Argument} objects
 	 */
-	public List getArguments() {
-		ArrayList al=new ArrayList(arguments.size());
-		for(Iterator i=getParameters().iterator(); i.hasNext();) {
-			Parameter p=(Parameter)i.next();
-
-			Argument arg=(Argument)arguments.get(p.getName());
+	public Collection<Argument> getArguments() {
+		ArrayList<Argument> al=new ArrayList(arguments.size());
+		for(Parameter p : getParameters()) {
+			Argument arg=arguments.get(p.getName());
 			if(arg==null && p.getParamType()==Parameter.REQUIRED) {
 				throw new NullPointerException("Missing argument for " + p);
 			}
@@ -317,13 +312,13 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	}
 
 	/**
-	 * Get a List of all of the parameters in the order in which they were
+	 * Get a Collection of all of the parameters in the order in which they were
 	 * defined.
 	 *
-	 * @return a List of {@link Parameter} objects.
+	 * @return a Collection of {@link Parameter} objects.
 	 */
-	protected List getParams() {
-		return(parameters.getObjectList());
+	protected Collection<Parameter> getParams() {
+		return(parameters.values());
 	}
 
 	/**
@@ -383,11 +378,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		// Now, verify all of the arguments we have are correctly typed.
-		for(Iterator i=arguments.getObjectList().iterator(); i.hasNext();) {
-			Argument arg=(Argument)i.next();
-
+		for(Argument arg : arguments.values()) {
 			// Find the matching parameter.
-			Parameter p=(Parameter)parameters.get(arg.getName());
+			Parameter p=parameters.get(arg.getName());
 
 			// Verify the argument exists
 			if(p==null) {
@@ -414,9 +407,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		// Next, verify all of the required arguments are there.
-		for(Iterator i=parameters.getObjectList().iterator(); i.hasNext();) {
-			Parameter p=(Parameter)i.next();
-
+		for(Parameter p : parameters.values()) {
 			if(p.getParamType() == Parameter.REQUIRED) {
 				if(arguments.get(p.getName()) == null) {
 					throw new SQLException("Required argument "
@@ -443,9 +434,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		querySb.append(" ");
 
 		int nargs=0;
-		for(Iterator e=getArguments().iterator(); e.hasNext();) {
-			Argument arg=(Argument)e.next();
-
+		for(Argument arg : getArguments()) {
 			querySb.append("\t@");
 			querySb.append(arg.getName());
 			querySb.append("=?,\n");
@@ -514,7 +503,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 * @param query the query we'll be calling
 	 * @param v the list of Parameters we need to add, in order
 	 */
-	protected void applyArgs(Collection v) throws SQLException {
+	protected void applyArgs(Collection<Argument> v) throws SQLException {
 
 		// Get the statement
 		if(getCacheTime()>0) {
@@ -525,8 +514,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 		// Use this iterator for the now positional arguments
 		int i=1;
-		for(Iterator e=v.iterator(); e.hasNext();) {
-			Argument arg=(Argument)e.next();
+		for(Argument arg : v) {
 			Object o=arg.getValue();
 			int type=arg.getJavaType();
 
@@ -853,25 +841,24 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	}
 
 	/**
-	 * Get a List containing all parameters.
+	 * Get a Collection containing all parameters.
 	 *
-	 * @return an umodifiable List of {@link Parameter} objects.
+	 * @return an umodifiable Collection of {@link Parameter} objects.
 	 */
-	public List getParameters() {
-		return(parameters.getObjectList());
+	public Collection<Parameter> getParameters() {
+		return(parameters.values());
 	}
 
 	/**
-	 * Get a List of parameters of a specific type.
+	 * Get a Collection of parameters of a specific type.
 	 *
 	 * @param type the Parameter type.
 	 * @return a list of {@link Parameter}s of the specified type.
 	 */
-	public List getParameters(int type) {
-		ArrayList al=new ArrayList();
+	public Collection<Parameter> getParameters(int type) {
+		ArrayList<Parameter> al=new ArrayList();
 
-		for(Iterator i=getParameters().iterator(); i.hasNext();) {
-			Parameter p=(Parameter)i.next();
+		for(Parameter p : getParameters()) {
 			if(p.getJavaType() == type) {
 				al.add(p);
 			}
@@ -1049,109 +1036,6 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			System.out.println("Warning:  " + warn);
 			warn=warn.getNextWarning();
 		}
-	}
-
-	// Generic container for named objects.  Ideally, I'd like to use a
-	// LinkedHashMap, but I don't have them before java 1.4, so here we go
-	private static class NamedObjectStorage extends Object {
-
-		private Map byName=null;
-		private List byPosition=null;
-
-		/**
-		 * Get a NamedObjectStorage instance.
-		 */
-		public NamedObjectStorage() {
-			super();
-			byName=new HashMap();
-			byPosition=new LinkedList();
-		}
-
-		/**
-		 * String me.
-		 */
-		public String toString() {
-			return(byPosition.toString());
-		}
-
-		/**
-		 * Get the number of objects stored in this object.
-		 *
-		 * @return number of objects
-		 */
-		public int size() {
-			return(byPosition.size());
-		}
-
-		/**
-		 * Add the object to the list.
-		 *
-		 * @param no the NamedObject to add
-		 */
-		public void add(NamedObject no) {
-			// First, get rid of an existing one if there is one.
-			if(byName.containsKey(no.getName())) {
-				byName.remove(no.getName());
-
-				for(Iterator i=byPosition.iterator(); i.hasNext();) {
-					NamedObject sno=(NamedObject)i.next();
-					if(no.getName().equals(sno.getName())) {
-						i.remove();
-					}
-				}
-			}
-			// Now add the new one
-			byName.put(no.getName(), no);
-			byPosition.add(no);
-		}
-
-		/**
-		 * Get the named object.
-		 *
-		 * @param name the name of the object to get
-		 * @return the NamedObject with that name, or null if there isn't one
-		 */
-		public NamedObject get(String name) {
-			return((NamedObject)byName.get(name));
-		}
-
-		/**
-		 * Determine whether the storage contains an object with the given
-		 * name.
-		 *
-		 * @param name the name of the object we're looking for
-		 * @return true if the object is here
-		 */
-		public boolean contains(String name) {
-			return(byName.containsKey(name));
-		}
-
-		/**
-		 * Get a Map of object names to objects.
-		 *
-		 * @return an unmodifable map mapping object names to objects
-		 */
-		public Map getObjectMap() {
-			return(Collections.unmodifiableMap(byName));
-		}
-
-		/**
-		 * Get a List of objects in insert order.
-		 *
-		 * @return an unmodifiable list of objects in insert order
-		 */
-		public List getObjectList() {
-			return(Collections.unmodifiableList(byPosition));
-		}
-
-		/**
-		 * Get rid of all objects.
-		 */
-		public void clear() {
-			byName.clear();
-			byPosition.clear();
-		}
-
 	}
 
 	/**
