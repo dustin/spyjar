@@ -107,7 +107,8 @@
 
 	<target name="jars" depends="spy.jar,spy-big.jar"/>
 
-	<target name="versioned-spy.jar" depends="spy.jar">
+	<target name="versioned-spy.jar" depends="spy.jar"
+		description="Build a versioned spy.jar">
 		<copy file="spy.jar" tofile="spy-${tree.version.short}.jar"/>
 	</target>
 	<target name="versioned-spy-big.jar" depends="spy-big.jar">
