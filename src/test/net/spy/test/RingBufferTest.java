@@ -6,6 +6,8 @@ package net.spy.test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.ConcurrentModificationException;
+import java.util.NoSuchElementException;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -51,6 +53,7 @@ public class RingBufferTest extends TestCase {
 			assertEquals("Out of sequence", tmp, i);
 			i++;
 		}
+		String.valueOf(rb);
 	}
 
 	/** 
@@ -63,13 +66,63 @@ public class RingBufferTest extends TestCase {
 		// Fill 'er up
 		for(int i=1; i<cap; i++) {
 			rb.add(i);
+			assertFalse(rb.hasWrapped());
 			assertTrue("Capacity filled prematurely", rb.size() < cap);
 		}
 
-		for(int i=cap; i<2048; i++) {
+		rb.add(cap);
+
+		for(int i=cap+1; i<2048; i++) {
 			rb.add(i);
-			assertTrue("Exceeded capacity", rb.size() <= cap);
+			assertTrue("Exceeded capacity", rb.size() == cap);
+			assertTrue(rb.hasWrapped());
 			verify(rb);
+		}
+	}
+
+	public void testRingBufferFromArray() {
+		int cap=256;
+
+		ArrayList<Integer> a=new ArrayList(cap*2);
+		for(int i=0; i<cap*2; i++) {
+			a.add(i);
+		}
+		RingBuffer<Integer> rb=new RingBuffer(cap, a);
+		verify(rb);
+
+		assertTrue(rb.hasWrapped());
+	}
+
+	public void testIterator() {
+		int cap=256;
+		ArrayList<Integer> a=new ArrayList(cap*2);
+		for(int i=0; i<cap*2; i++) {
+			a.add(i);
+		}
+		RingBuffer<Integer> rb=new RingBuffer(cap, a);
+
+		Iterator itmp=rb.iterator();
+		rb.add(1);
+		try {
+			itmp.hasNext();
+		} catch(ConcurrentModificationException e) {
+			// pass
+		}
+
+		for(itmp=rb.iterator(); itmp.hasNext(); ) {
+			itmp.next();
+			try {
+				itmp.remove();
+				fail("RingBuffer iterator allowed me to remove an item");
+			} catch(UnsupportedOperationException e) {
+				// pass
+			}
+		}
+		try {
+			itmp.next();
+			fail("RingBuffer iterator allowed me to get more than it had");
+		} catch(NoSuchElementException e) {
+			// pass
 		}
 	}
 

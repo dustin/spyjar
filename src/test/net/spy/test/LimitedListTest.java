@@ -7,6 +7,7 @@ package net.spy.test;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Collections;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -44,7 +45,7 @@ public class LimitedListTest extends TestCase {
 	 * Verify limited list limits properly.
 	 */
 	public void testLimitedList() {
-		LimitedList ll=new LimitedList(10);
+		LimitedList<Integer> ll=new LimitedList(10);
 
 		// These should all work
 		for(int i=0; i<10; i++) {
@@ -52,6 +53,7 @@ public class LimitedListTest extends TestCase {
 		}
 
 		assertEquals(10, ll.size());
+		assertEquals(10, ll.getLimit());
 
 		// This should fail
 		try {
@@ -101,6 +103,22 @@ public class LimitedListTest extends TestCase {
 		ll.removeFirst();
 		ll.add(new Integer(11));
 
+		// Add some more
+		ll.setLimit(26);
+
+		// These should all work
+		for(int i=0; i<5; i++) {
+			ll.addFirst(new Integer(i));
+			ll.addAll(Collections.singleton(new Integer(i)));
+			ll.addAll(7, Collections.singleton(new Integer(i)));
+		}
+
+		assertEquals(25, ll.size());
+		assertEquals(26, ll.getLimit());
+
+		// Test adding a value at a specific location
+		ll.add(3, 17);
+		assertEquals(new Integer(17), ll.get(3));
 	}
 
 	/** 

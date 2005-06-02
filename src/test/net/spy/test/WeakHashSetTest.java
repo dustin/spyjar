@@ -42,7 +42,7 @@ public class WeakHashSetTest extends TestCase {
 	/** 
 	 * Test the basic functionality of the weak hash set.
 	 */
-	public void testBasicWeakHash() {
+	public void testGCWeakHash() {
 		Set<String> s=new java.util.HashSet();
 		for(int i=0; i<1000; i++) {
 			s.add("Blah" + i);
@@ -66,6 +66,58 @@ public class WeakHashSetTest extends TestCase {
 
 		// Recompare the sizes.
 		assertEquals("Size didn't match after removals", whs.size(), s.size());
+	}
+
+	/** 
+	 * Verify equality (lookup, etc...) works.
+	 */
+	public void testEquality() {
+		WeakHashSet<String> whs=new WeakHashSet(100);
+
+		Set<String> s=new java.util.HashSet();
+		for(int i=0; i<1000; i++) {
+			s.add("Blah" + i);
+		}
+
+		assertTrue(whs.isEmpty());
+		whs.addAll(s);
+		assertFalse(whs.isEmpty());
+
+		// Recompare the sizes.
+		assertEquals("Size didn't match after adds", whs.size(), s.size());
+
+		for(String ob : s) {
+			assertTrue(whs.contains(ob));
+		}
+
+		for(String ob : whs) {
+			assertTrue(s.contains(ob));
+		}
+	}
+
+	public void testRemoval() {
+		WeakHashSet<String> whs=new WeakHashSet(100);
+
+		Set<String> s=new java.util.HashSet();
+		for(int i=0; i<1000; i++) {
+			s.add("Blah" + i);
+		}
+
+		assertTrue(whs.isEmpty());
+		whs.addAll(s);
+		assertFalse(whs.isEmpty());
+
+		assertFalse(whs.remove("TestObject"));
+		for(String ob : s) {
+			assertTrue(whs.remove(ob));
+		}
+
+		assertTrue(whs.isEmpty());
+		whs.addAll(s);
+		assertFalse(whs.isEmpty());
+
+		whs.clear();
+		assertTrue(whs.isEmpty());
 	}
 
 }

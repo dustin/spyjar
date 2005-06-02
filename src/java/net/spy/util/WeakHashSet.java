@@ -93,7 +93,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	 */
 	public boolean remove(Object o) {
 		Object old=map.remove(o);
-		return(o==PRESENT);
+		return(old==PRESENT);
 	}
 
 	/** 
