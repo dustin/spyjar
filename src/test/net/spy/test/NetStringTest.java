@@ -64,6 +64,12 @@ public class NetStringTest extends TestCase {
 		encoded=os.toString(encoding);
 		assertEquals("Encoded string not correct", encoded,
 			"1:a,2:bc,3:def,");
+
+		try {
+			nse.encodeString(null, os);
+		} catch(NullPointerException e) {
+			assertNotNull(e.getMessage());
+		}
 	}
 
 	/** 
@@ -118,6 +124,7 @@ public class NetStringTest extends TestCase {
 		negativeTest("2a:a,");
 		negativeTest("135235226232:a,");
 		negativeTest("70000:a,");
+		negativeTest("700");
 	}
 
 }

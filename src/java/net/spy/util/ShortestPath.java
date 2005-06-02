@@ -42,10 +42,13 @@ public class ShortestPath<N extends SPNode> extends ArrayList<N> {
 			throw new NoPathException(from, to);
 		}
 
+		// This will be the cost for the complete path
+		cost=v.getCost();
+
 		N current=v.getTo();
 		int i=0;
 		while(! current.equals(to)) {
-			if(i>1024) {
+			if(++i>1024) {
 				throw new NoPathException(from, to, "Too deep!");
 			}
 

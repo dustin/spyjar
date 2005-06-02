@@ -42,13 +42,17 @@ public class BitArrayTest extends TestCase {
 	public void testSimple() {
 		BitArray bitArray=new BitArray();
 		bitArray.add(true);
+		assertEquals(1, bitArray.size());
 		assertEquals("True didn't work.", "1", bitArray.toString());
 		bitArray=new BitArray();
 		bitArray.add(false);
+		assertEquals(1, bitArray.size());
 		assertEquals("False didn't work.", "0", bitArray.toString());
 		bitArray.add(true);
+		assertEquals(2, bitArray.size());
 		assertEquals("False+True didn't work.", "01", bitArray.toString());
 		bitArray.add(true);
+		assertEquals(3, bitArray.size());
 		assertEquals("False+True+True didn't work.", "011",
 			bitArray.toString());
 	}
@@ -75,12 +79,16 @@ public class BitArrayTest extends TestCase {
 		BitArray bitArray=new BitArray();
 		// 1101011
 		bitArray.addBits(0x6b, 7);
+		assertEquals(7, bitArray.size());
 		assertEquals("One didn't work", 1, bitArray.getMSBBits(1));
 		bitArray.removeMSBBits(1);
+		assertEquals(6, bitArray.size());
 		assertEquals("Two didn't work", 2, bitArray.getMSBBits(2));
 		bitArray.removeMSBBits(2);
+		assertEquals(4, bitArray.size());
 		assertEquals("Three didn't work", 5, bitArray.getMSBBits(3));
 		bitArray.removeMSBBits(3);
+		assertEquals(1, bitArray.size());
 
 		try {
 			bitArray.getMSBBits(16);

@@ -60,12 +60,4 @@ public class PwGen extends Object {
 		return(sb.toString());
 	}
 
-	/**
-	 * Testing and what not.
-	 */
-	public static void main(String args[]) throws Exception {
-		String s=getPass(Integer.parseInt(args[0]));
-		System.out.println("Got " + s);
-	}
-
 }

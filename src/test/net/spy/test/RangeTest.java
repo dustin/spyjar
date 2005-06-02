@@ -6,6 +6,8 @@ package net.spy.test;
 
 import java.util.Collections; 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.HashSet;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -45,9 +47,14 @@ public class RangeTest extends TestCase {
 	public void testRangeSorting() {
 		Integer a=new Integer(1);
 		Integer b=new Integer(2);
+		Integer c=new Integer(3);
+		Integer d=new Integer(4);
+		Integer e=new Integer(5);
+		Integer f=new Integer(6);
 
 		String sortedVals[]={
-			"null-1", "null-2", "1-1", "1-2", "1-null", "2-2", "2-null"
+			"null-1", "null-2", "1-1", "1-2", "1-null", "2-2",
+			"2-3", "2-null", "3-3", "3-4", "4-4", "4-5", "5-5", "5-6", "6-6"
 			};
 
 		ArrayList al=new ArrayList();
@@ -58,6 +65,14 @@ public class RangeTest extends TestCase {
 		al.add(new Range(a, null));
 		al.add(new Range(b, b));
 		al.add(new Range(b, null));
+		al.add(new Range(b, c));
+		al.add(new Range(c, c));
+		al.add(new Range(c, d));
+		al.add(new Range(d, d));
+		al.add(new Range(d, e));
+		al.add(new Range(e, e));
+		al.add(new Range(e, f));
+		al.add(new Range(f, f));
 
 		// Unsort
 		Collections.shuffle(al);
@@ -74,6 +89,45 @@ public class RangeTest extends TestCase {
 		}
 	}
 
+	public void testSimpleCompare() {
+		Integer a=new Integer(1);
+		Integer b=new Integer(2);
+
+		assertEquals(0, new Range(a, b).compareTo(new Range(a, b)));
+		assertEquals(1, new Range(a, null).compareTo(new Range(a, b)));
+		assertEquals(-1, new Range(a, b).compareTo(new Range(a, null)));
+		assertEquals(0, new Range(a, null).compareTo(new Range(a, null)));
+		assertEquals(-1, new Range(null, a).compareTo(new Range(a, null)));
+		assertEquals(1, new Range(a, null).compareTo(new Range(null, a)));
+	}
+
+	public void testRangeEquality() {
+		ArrayList al=new ArrayList();
+		Integer a=new Integer(1);
+		Integer b=new Integer(2);
+		al.add(new Range(null, a));
+		al.add(new Range(null, b));
+		al.add(new Range(a, a));
+		al.add(new Range(a, b));
+		al.add(new Range(a, null));
+		al.add(new Range(b, b));
+		al.add(new Range(b, null));
+
+		HashSet hs=new HashSet(al);
+
+		assertEquals(al.size(), hs.size());
+
+		// Make sure they can all be looked up
+		for(Iterator i=al.iterator(); i.hasNext();) {
+			assertTrue(hs.contains(i.next()));
+		}
+	}
+
+	public void testForeignEquality() {
+		Range r=new Range(new Integer(0), new Integer(1));
+		assertFalse(r.equals("x"));
+	}
+
 	// Verify r.contains(c)
 	private void assertRangeHit(Range r, Comparable c) {
 		// System.out.println("Expecting " + c + " in " + r);
@@ -84,6 +138,48 @@ public class RangeTest extends TestCase {
 	private void assertRangeMiss(Range r, Comparable c) {
 		// System.out.println("Not expecting " + c + " in " + r);
 		assertTrue(r + " should not contain " + c, (!r.contains(c)));
+	}
+
+	private void assertInvalidConstruct(Comparable l, Comparable h) {
+		try {
+			Range r=new Range(l, h);
+			fail("Allowed to make range from " + l + " to " + h + ": " + r);
+		} catch(IllegalArgumentException e) {
+			// pass
+		}
+	}
+
+	public void testBadConstructors() {
+		assertInvalidConstruct(null, null);
+		assertInvalidConstruct(new Integer(2), new Integer(1));
+	}
+
+	public void testDefaultParams() {
+		Range r=new Range(new Integer(0), new Integer(100));
+		assertEquals(Range.INCLUSIVE, r.getLowMatch());
+		assertEquals(Range.INCLUSIVE, r.getHighMatch());
+	}
+
+	public void testInvalidMatchCatch() {
+		Range r=new Range(new Integer(0), new Integer(100));
+		for(int i=-100; i<100; i++) {
+			if(i == Range.INCLUSIVE || i == Range.EXCLUSIVE) {
+				// Skip these
+			} else {
+				try {
+					r.setLowMatch(i);
+					fail("Allowed to set low match to " + i);
+				} catch(IllegalArgumentException e) {
+					// pass
+				}
+				try {
+					r.setHighMatch(i);
+					fail("Allowed to set high match to " + i);
+				} catch(IllegalArgumentException e) {
+					// pass
+				}
+			}
+		}
 	}
 
 	public void testRangeOperations() {

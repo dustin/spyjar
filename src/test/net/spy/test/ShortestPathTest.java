@@ -129,6 +129,35 @@ public class ShortestPathTest extends TestCase {
 		}
 	}
 
+	public void testSPVertexStuff() {
+
+		StringNode sn1=new StringNode("String1");
+		StringNode sn2=new StringNode("String2");
+
+		SPVertex<StringNode> v1=new SPVertex(sn1);
+		SPVertex<StringNode> v2=new SPVertex(sn1, 100);
+		SPVertex<StringNode> v3=new SPVertex(sn2);
+		SPVertex<StringNode> v4=new SPVertex(sn2);
+
+		assertEquals(SPVertex.DEFAULT_COST, v1.getCost());
+		String.valueOf(v1);
+
+		assertEquals(0, v1.compareTo(v1));
+		assertEquals(-1, v1.compareTo(v2));
+		assertEquals(1, v2.compareTo(v1));
+		assertEquals(-1, v1.compareTo(v3));
+		assertEquals(0, v3.compareTo(v4));
+
+		assertNotSame(v3, v4);
+
+		try {
+			SPVertex<StringNode> v=new SPVertex((StringNode)null);
+			fail("Allowed me to make a null SPVertex:  " + v);
+		} catch(NullPointerException e) {
+			assertNotNull(e.getMessage());
+		}
+	}
+
 	/** 
 	 * Test a basic SP find.
 	 */
@@ -158,6 +187,7 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(a, f, c, 25);
 		// A -> G == 35 via C
 		assertLinkMatch(a, g, c, 35);
+		assertEquals(6, a.getNextHops().size());
 
 		// B -> A -- doesn't exist
 		assertLinkMatch(b, a, null, 0);
@@ -173,6 +203,7 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(b, f, c, 20);
 		// B -> G == 30 via C
 		assertLinkMatch(b, g, c, 30);
+		assertEquals(6, b.getNextHops().size());
 
 		// C -> A won't go
 		assertLinkMatch(c, a, null, 0);
@@ -188,6 +219,7 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(c, f, f, 10);
 		// C -> G == 20 via F
 		assertLinkMatch(c, g, f, 20);
+		assertEquals(6, c.getNextHops().size());
 
 		// D -> A won't go
 		assertLinkMatch(d, a, null, 0);
@@ -203,6 +235,7 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(d, f, c, 110);
 		// D -> G via C
 		assertLinkMatch(d, g, c, 120);
+		assertEquals(6, d.getNextHops().size());
 
 		// E Goes nowhere except E
 		assertLinkMatch(e, a, null, 0);
@@ -212,6 +245,7 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(e, e, e, 10);
 		assertLinkMatch(e, f, null, 0);
 		assertLinkMatch(e, g, null, 0);
+		assertEquals(1, e.getNextHops().size());
 
 		// F Goes to G and B
 		assertLinkMatch(f, a, null, 0);
@@ -221,6 +255,7 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(f, e, b, 220);
 		assertLinkMatch(f, f, b, 220);
 		assertLinkMatch(f, g, g, 10);
+		assertEquals(6, f.getNextHops().size());
 
 		// G Goes to nowhere
 		assertLinkMatch(g, a, null, 0);
@@ -230,6 +265,7 @@ public class ShortestPathTest extends TestCase {
 		assertLinkMatch(g, e, null, 0);
 		assertLinkMatch(g, f, null, 0);
 		assertLinkMatch(g, g, null, 0);
+		assertEquals(0, g.getNextHops().size());
 	}
 
 	/** 
@@ -244,18 +280,65 @@ public class ShortestPathTest extends TestCase {
 		} catch(NoPathException e) {
 			// Success
 		}
+
+		try {
+			sp=new ShortestPath(null, a);
+			fail("Expected to not find a path from null -> A, found " + sp);
+		} catch(NullPointerException e) {
+			assertNotNull(e.getMessage());
+		}
+
+		try {
+			sp=new ShortestPath(a, null);
+			fail("Expected to not find a path from A -> null, found " + sp);
+		} catch(NullPointerException e) {
+			assertNotNull(e.getMessage());
+		}
+
 		sp=new ShortestPath(a, c);
 		assertEquals("ShortestPath from A -> C:  " + sp, 1, sp.size());
+		assertEquals(15, sp.getCost());
 		sp=new ShortestPath(a, d);
 		assertEquals("ShortestPath from A -> D:  " + sp, 2, sp.size());
+		assertEquals(25, sp.getCost());
 		sp=new ShortestPath(a, e);
 		assertEquals("ShortestPath from A -> E:  " + sp, 2, sp.size());
+		assertEquals(25, sp.getCost());
 
 		sp=new ShortestPath(d, e);
 		assertEquals("ShortestPath from D -> E:  " + sp, 2, sp.size());
+		assertEquals(110, sp.getCost());
 
 		sp=new ShortestPath(e, e);
 		assertEquals("ShortestPath from E -> E:  " + sp, 1, sp.size());
+		assertEquals(10, sp.getCost());
+	}
+
+	public void testLongShortestPath() throws Exception {
+		ArrayList al=new ArrayList(1051);
+
+		StringNode sn=new StringNode("starting node");
+		al.add(sn);
+
+		StringNode lastNode=sn;
+		for(int i=0; i<1050; i++) {
+			StringNode newNode=new StringNode(String.valueOf(i));
+			al.add(newNode);
+			lastNode.linkTo(newNode);
+			lastNode=newNode;
+		}
+
+		ShortestPathFinder spf=new ShortestPathFinder();
+		spf.calculatePaths(al);
+
+		try {
+			ShortestPath sp=new ShortestPath(sn, lastNode);
+			fail("Expected path to be too deep from " + sn + " to "
+				+ lastNode + ", but found" + sp);
+		} catch(NoPathException e) {
+			assertEquals("No path from " + sn + " to " + lastNode
+				+ " - Too deep!", e.getMessage());
+		}
 	}
 
 	/** 

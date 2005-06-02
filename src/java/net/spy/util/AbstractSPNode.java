@@ -23,10 +23,11 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	/**
 	 * Get an instance of AbstractSPNode holding its links in the given
 	 * Set.
+	 * @param l the links.
 	 */
-	protected AbstractSPNode(SortedSet links) {
-		this();
-		this.links=links;
+	protected AbstractSPNode(SortedSet<SPVertex> l) {
+		super();
+		this.links=l;
 		nextHops=new WeakHashMap();
 	}
 
@@ -34,8 +35,7 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	 * Get an instance of AbstractSPNode.
 	 */
 	protected AbstractSPNode() {
-		this.links=new TreeSet();
-		nextHops=new WeakHashMap();
+		this(new TreeSet());
 	}
 
 	/** 

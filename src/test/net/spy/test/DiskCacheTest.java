@@ -196,6 +196,7 @@ public class DiskCacheTest extends TestCase {
 		// Now, walk the cache
 		int n=0;
 		Set s=new HashSet();
+		Map.Entry lastEntry=null;
 		for(Iterator i=cache.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
 
@@ -205,10 +206,24 @@ public class DiskCacheTest extends TestCase {
 			s.add(me.getKey());
 
 			assertEquals(me.getValue(), pairs.get(me.getKey()));
+			assertEquals(me, me);
+			assertFalse(me + " shouldn't equal " + lastEntry,
+				me.equals(lastEntry));
+			assertFalse(me + " shouldn't equal x", me.equals("x"));
+
+			// We shouldn't be allowed to store stuff.
+			try {
+				me.setValue("Test");
+				fail("Entry let me set its value.");
+			} catch(UnsupportedOperationException e) {
+				// pass
+			}
 
 			// Make we don't run over
 			assertTrue("Too many entries!", n<pairs.size());
 			n++;
+
+			lastEntry=me;
 		}
 
 		assertEquals("pairs.size() != cache.size()",

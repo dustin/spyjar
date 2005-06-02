@@ -227,10 +227,8 @@ public class DiskCache extends AbstractMap {
 			if(f.isDirectory()) {
 				// If it's a directory, recurse
 				File stuff[]=f.listFiles();
-				if(stuff!=null) {
-					for(int i=0; i<stuff.length; i++) {
-						init(stuff[i]);
-					}
+				for(int i=0; i<stuff.length; i++) {
+					init(stuff[i]);
 				}
 			} else {
 				// Regular file, open it and read it
@@ -291,10 +289,8 @@ public class DiskCache extends AbstractMap {
 				throw new IllegalStateException("Have not yet begun walking.");
 			}
 
-			if(current!=null) {
-				File f=current.getPath();
-				f.delete();
-			}
+			File f=current.getPath();
+			f.delete();
 			i.remove();
 		}
 

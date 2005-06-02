@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import net.spy.cache.LRUCache;
+import net.spy.cache.CacheListener;
 
 /**
  * Test the LRU cache implementation
@@ -113,6 +114,45 @@ public class LRUTest extends TestCase {
 			if(i>10) {
 				assertNull(cache.get(new Integer(i-10)));
 			}
+		}
+	}
+
+	/** 
+	 * Test cache listener.
+	 */
+	public void testCacheListener() {
+		Integer zero=new Integer(0);
+		LRUCache cache=new LRUCache(10);
+
+		TestListener tl=new TestListener();
+		cache.put("listener", tl);
+		for(int i=1; i<100; i++) {
+			Integer ii=new Integer(i);
+			assertNull(cache.get(ii));
+			cache.put(ii, ii);
+			assertNotNull(cache.get(ii));
+		}
+		assertNull(cache.get("listener"));
+		assertEquals(1, tl.cached);
+		assertEquals(1, tl.uncached);
+	}
+
+	private static final class TestListener extends Object
+		implements CacheListener {
+
+		public int cached=0;
+		public int uncached=0;
+
+		public TestListener() {
+			super();
+		}
+
+		public void cachedEvent(Object key) {
+			cached++;
+		}
+
+		public void uncachedEvent(Object key) {
+			uncached++;
 		}
 	}
 
