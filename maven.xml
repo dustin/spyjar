@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!-- Copyright (c) 2005  Dustin Sallings (dustin@spy.net) -->
+<!-- arch-tag: E12E003D-606A-43E2-A116-EF6E822E890D -->
+
+<project default="jar"
+	xmlns:m="jelly:maven"
+	xmlns:ant="jelly:ant"
+	xmlns:j="jelly:core">
+
+	<preGoal name="java:compile">
+		<attainGoal name="spy:core"/>
+
+		<attainGoal name="tla:versions"/>
+		<attainGoal name="tla:changelog"/>
+	</preGoal>
+
+	<goal name="spy:core">
+		<!-- First stage compile. -->
+		<ant:javac srcdir="${maven.src.dir}/java"
+			destdir="${maven.build.dest}"
+			debug="${maven.compile.debug}"
+			deprecation="${maven.compile.deprecation}"
+			verbose="${maven.compile.verbose}">
+
+			<ant:classpath>
+				<ant:path refid="maven.dependency.classpath"/>
+				<ant:pathelement path="${maven.build.dest}"/>
+			</ant:classpath>
+
+			<include name="net/spy/util/SPGen.java"/>
+			<include name="net/spy/util/InterfaceImplementor.java"/>
+			<include name="net/spy/util/ProxyInterfaceImplementor.java"/>
+			<include name="net/spy/SpyUtil.java"/>
+			<include name="net/spy/SpyToker.java"/>
+			<include name="net/spy/util/TypeNameGen.java"/>
+			<include name="net/spy/db/CachedResultSetStub.java"/>
+			<include name="net/spy/db/ProxyResultSetStub.java"/>
+			<include name="net/spy/ant/*.java"/>
+		</ant:javac>
+
+		<!-- Define the tasks needed to proceed -->
+		<ant:taskdef resource="net/spy/ant/tasks.properties">
+			<ant:classpath>
+				<ant:path refid="maven.dependency.classpath"/>
+				<ant:pathelement path="${maven.build.dest}"/>
+				<ant:pathelement path="${maven.src.dir}/java"/>
+			</ant:classpath>
+		</ant:taskdef>
+
+		<!-- Generating type names -->
+		<ant:mkdir dir="${maven.build.src}/net/spy/db"/>
+		<ant:java classname="net.spy.util.TypeNameGen">
+			<arg value="${maven.build.src}/net/spy/db/TypeNames.java"/>
+			<ant:classpath>
+				<ant:path refid="maven.dependency.classpath"/>
+				<ant:pathelement path="${maven.build.dest}"/>
+			</ant:classpath>
+		</ant:java>
+
+		<!-- Generating result set classes -->
+		<ant:implement interfaceName="java.sql.ResultSet"
+			superClass="net.spy.db.CachedResultSetStub"
+			outClass="net.spy.db.CachedResultSet"
+			outDir="${maven.build.src}"/>
+		<ant:implementproxy interfaceName="java.sql.ResultSet"
+			superClass="net.spy.SpyObject"
+			outClass="net.spy.db.ProxyResultSet"
+			outDir="${maven.build.src}"/>
+
+		<!-- Second stage compile -->
+		<ant:javac
+			destdir="${maven.build.dest}"
+			debug="${maven.compile.debug}"
+			deprecation="${maven.compile.deprecation}"
+			verbose="${maven.compile.verbose}">
+
+			<ant:src>
+				<ant:path refid="maven.compile.src.set"/>
+				<ant:path path="${maven.src.dir}/java"/>
+				<ant:path path="${maven.build.src}"/>
+			</ant:src>
+
+			<ant:classpath>
+				<ant:path refid="maven.dependency.classpath"/>
+				<ant:pathelement path="${maven.build.dest}"/>
+			</ant:classpath>
+
+			<include name="net/spy/db/*Stub.java"/>
+			<include name="net/spy/db/ProxyResultSet.java"/>
+			<include name="net/spy/db/CachedResultSet.java"/>
+		</ant:javac>
+
+		<ant:implement interfaceName="java.sql.PreparedStatement"
+			superClass="net.spy.db.CachePreparedStatementStub"
+			outClass="net.spy.db.CachePreparedStatement"
+			outDir="${maven.build.src}"/>
+
+		<ant:spgen srcdir="${maven.src.dir}/java/" destdir="${maven.build.src}"/>
+		<path id="spyjar.build.src" location="${maven.build.src}"/>
+		<m:addPath id="maven.compile.src.set" refid="spyjar.build.src"/>
+
+	</goal>
+
+	<preGoal name="test:compile">
+		<ant:mkdir dir="${maven.build.dir}/testsrc"/>
+		<ant:spgen srcdir="${maven.src.dir}/test/"
+			destdir="${maven.build.dir}/testsrc"/>
+		<path id="spyjar.test.build.src" location="${maven.build.dir}/testsrc"/>
+		<m:addPath id="maven.test.compile.src.set" refid="spyjar.test.build.src"/>
+	</preGoal>
+
+</project>

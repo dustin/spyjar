@@ -76,13 +76,13 @@ public class RangeTest extends TestCase {
 
 	// Verify r.contains(c)
 	private void assertRangeHit(Range r, Comparable c) {
-		System.out.println("Expecting " + c + " in " + r);
+		// System.out.println("Expecting " + c + " in " + r);
 		assertTrue(r + " should contain " + c, r.contains(c));
 	}
 
 	// Verify !r.contains(c)
 	private void assertRangeMiss(Range r, Comparable c) {
-		System.out.println("Not expecting " + c + " in " + r);
+		// System.out.println("Not expecting " + c + " in " + r);
 		assertTrue(r + " should not contain " + c, (!r.contains(c)));
 	}
 

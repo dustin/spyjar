@@ -82,13 +82,13 @@ public class NetStringTest extends TestCase {
 		}
 
 		String encoded=os.toString(encoding);
-		System.out.println("Encoded " + encoded);
+		// System.out.println("Encoded " + encoded);
 		ByteArrayInputStream is=new ByteArrayInputStream(
 			encoded.getBytes(encoding));
 
 		for(int i=0; i<tmp.length; i++) {
 			String read=nsd.decodeString(is);
-			System.out.println("Read " + read);
+			// System.out.println("Read " + read);
 			assertEquals("Encode and decode do not match", tmp[i], read);
 		}
 	}

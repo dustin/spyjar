@@ -17,7 +17,6 @@
 
 	<path id="myclasses">
 		<fileset dir="${JARPATH}">
-			<include name="jndi.jar"/>
 			<include name="jdbc2_0-stdext.jar"/>
 			<include name="log4j*.jar"/>
 		</fileset>
@@ -178,7 +177,7 @@
 				<include name="docs/package-list"/>
 			</fileset>
 			<fileset dir="${SRCDIR}/../">
-				<include name="src/net/spy/**/*.java"/>
+				<include name="java/net/spy/**/*.java"/>
 			</fileset>
 			<fileset dir="${SRCDIR}">
 				<include name="net/spy/**/*.properties"/>
@@ -235,11 +234,11 @@
 	<target name="buildprops" unless="hasBuildProps" depends="checkBuildProps"
 		description="Create a build.properties file *** MUST BE DONE FIRST ***">
 		<propertyfile file="build.properties">
-			<entry key="SRCDIR" value="src"/>
+			<entry key="SRCDIR" value="src/java"/>
 			<entry key="BUILDTOP" value="=build"/>
 			<entry key="BUILDDIR" value="${BUILDTOP}/classes"/>
 			<entry key="GENDIR" value="${BUILDTOP}/gen"/>
-			<entry key="TSRCDIR" value="tests"/>
+			<entry key="TSRCDIR" value="src/test"/>
 			<entry key="TBUILDDIR" value="${BUILDTOP}/tests"/>
 			<entry key="TGENDIR" value="${BUILDTOP}/tests-gen"/>
 			<entry key="DOCDEST" value="${BUILDTOP}/docs"/>
@@ -277,38 +276,11 @@
 		<antcall target="compile"/>
 	</target>
 
-	<!-- Optional components -->
-
-	<target name="check-sunlog">
-		<available classname="java.util.logging.Logger" property="has.sunlog"/>
-	</target>
-
-	<target name="optional-sunlog" depends="check-sunlog" if="has.sunlog">
-		<copy file="${SRCDIR}/net/spy/log/SunLogger.ojava"
-			tofile="${GENDIR}/net/spy/log/SunLogger.java"/>
-	</target>
-
-	<target name="check-log4j">
-		<available classname="org.apache.log4j.Logger" property="has.log4j">
-			<classpath refid="myclasses"/>
-		</available>
-	</target>
-
-	<target name="optional-log4j" depends="check-log4j" if="has.log4j">
-		<copy file="${SRCDIR}/net/spy/log/Log4JLogger.ojava"
-			tofile="${GENDIR}/net/spy/log/Log4JLogger.java"/>
-	</target>
-
-
-	<target name="optional" depends="optional-sunlog,optional-log4j"/>
-
-	<target name="generate" depends="optional,anttasks">
+	<target name="generate" depends="anttasks">
 		<buildinfo package="net.spy" buildprops="net/spy/build.properties"
 			changelog="net/spy/changelog.txt"
 			destdir="${GENDIR}"/>
 	</target>
-
-	<!-- End optional components -->
 
 	<target name="compile" depends="generate,dbstuff">
 		<javac
@@ -500,7 +472,7 @@
 
 	<!-- real target for the result set -->
 	<target name="cachers" unless="crs.uptodate"
-		depends="anttasks,checkrsupdate,interfaceimplementor">
+		depends="anttasks,checkrsupdate">
 		<javac
 			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
@@ -520,7 +492,7 @@
 	</target>
 
 	<target name="proxyrs" unless="prs.uptodate"
-		depends="anttasks,checkrsupdate,proxyii">
+		depends="anttasks,checkrsupdate">
 		<implementproxy interfaceName="java.sql.ResultSet"
 			superClass="net.spy.SpyObject"
 			outClass="net.spy.db.ProxyResultSet"
@@ -542,7 +514,7 @@
 
 	<!-- The real target for prepared statements -->
 	<target name="preparedstatement" unless="pst.uptodate"
-		depends="anttasks,checkpstupdate,resultsets,interfaceimplementor">
+		depends="anttasks,checkpstupdate,resultsets">
 		<javac
 			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
 			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
@@ -560,24 +532,6 @@
 			<include name="net/spy/db/CachePreparedStatement.java"/>
 		</javac>
 
-	</target>
-
-	<target name="interfaceimplementor">
-		<javac
-			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
-			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
-			<classpath refid="myclasses"/>
-			<include name="net/spy/util/InterfaceImplementor.java"/>
-		</javac>
-	</target>
-
-	<target name="proxyii">
-		<javac
-			srcdir="${SRCDIR}" destdir="${BUILDDIR}"
-			deprecation="${DEPRECATION}" debug="${DEBUG}" verbose="${VERBOSE}">
-			<classpath refid="myclasses"/>
-			<include name="net/spy/util/ProxyInterfaceImplementor.java"/>
-		</javac>
 	</target>
 
 	<!-- import scrubber -->

@@ -1,2 +1,2 @@
-precious ^(build.properties|spy.*.jar|testsuite.jar)$
+precious ^(velocity.log|tags|target|build.properties|spy.*.jar|testsuite.jar)$
 

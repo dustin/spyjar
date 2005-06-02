@@ -99,6 +99,13 @@ public class DiskCacheTest extends TestCase {
 	}
 
 	/** 
+	 * Check getBaseDir.
+	 */
+	public void testGetBaseDir() {
+		assertEquals(getTmpDir(), cache.getBaseDir());
+	}
+
+	/** 
 	 * Test the basic functionality used for testing.
 	 */
 	public void testRmDashRf() throws IOException {
@@ -110,7 +117,7 @@ public class DiskCacheTest extends TestCase {
 		PwGen gen=new PwGen();
 		HashMap pairs=new HashMap();
 
-		for(int i=0; i<1000; i++) {
+		for(int i=0; i<100; i++) {
 			String key=gen.getPass(8);
 			String value=gen.getPass(8);
 			pairs.put(key, value);
@@ -132,6 +139,31 @@ public class DiskCacheTest extends TestCase {
 			// Try it twice (test the LRU)
 			assertEquals(me.getValue(), cache.get(me.getKey()));
 			assertEquals(me.getValue(), cache.get(me.getKey()));
+		}
+	}
+
+	/** 
+	 * Test storing keys that aren't strings.
+	 */
+	public void testNonStringThings() {
+		for(int i=0; i<10; i++) {
+			cache.put(new Integer(i), String.valueOf(i));
+		}
+		for(int i=0; i<10; i++) {
+			String istr=(String)cache.get(new Integer(i));
+			assertEquals(i, Integer.parseInt(istr));
+		}
+	}
+
+	/** 
+	 * Test invalid storage.
+	 */
+	public void testInvalidStore() {
+		try {
+			Object blah=cache.get(null);
+			fail("Asked for null, got " + blah);
+		} catch(NullPointerException e) {
+			assertNotNull(e.getMessage());
 		}
 	}
 
@@ -194,6 +226,14 @@ public class DiskCacheTest extends TestCase {
 		int origsize=cache.size();
 		int newsize=origsize;
 		int n=0;
+
+		try {
+			cacheSet.iterator().remove();
+			fail("Let me remove stuff before we started");
+		} catch(IllegalStateException e) {
+			// pass
+		}
+
 		for(Iterator i=cacheSet.iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
 
