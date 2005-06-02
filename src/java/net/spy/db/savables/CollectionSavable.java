@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import net.spy.db.Savable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 import net.spy.db.AbstractSavable;

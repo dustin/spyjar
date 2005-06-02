@@ -146,10 +146,8 @@ public class SPGenTask extends MatchingTask {
 			File srcFile = new File(srcDir, input[i]);
 			File destFile = getDestFile(input[i]);
 
-			if(destFile.exists()
-				&& destFile.lastModified() > srcFile.lastModified()) {
-				// Already have this file.
-			} else {
+			if(!(destFile.exists()
+				&& destFile.lastModified() > srcFile.lastModified())) {
 				a.add(input[i]);
 			}
 		}

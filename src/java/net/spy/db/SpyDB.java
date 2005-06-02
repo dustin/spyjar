@@ -169,7 +169,6 @@ public class SpyDB extends SpyObject {
 	 */
 	public Connection getConn() throws SQLException {
 		if(conn==null) {
-			// log("New connection");
 			getDBConn();
 		}
 		return(conn);
@@ -241,11 +240,6 @@ public class SpyDB extends SpyObject {
 	 * initialization.
 	 */
 	protected void init() {
-	}
-
-	// This is a debug routine
-	private void log(String msg) {
-		// System.err.println("DB:  " + msg);
 	}
 
 	// Actually dig up a DB connection

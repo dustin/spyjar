@@ -184,14 +184,14 @@ public class DiskCache extends AbstractMap {
 				try {
 					p.close();
 				} catch(IOException e) {
-					// Nothing
+					getLogger().debug("Problem closing " + p, e);
 				}
 			}
 			if(istream != null) {
 				try {
 					istream.close();
 				} catch(IOException e) {
-					// Nothing
+					getLogger().debug("Problem closing " + istream, e);
 				}
 			}
 		}
@@ -353,6 +353,7 @@ public class DiskCache extends AbstractMap {
 				FileInputStream istream = new FileInputStream(path);
 				ObjectInputStream p = new ObjectInputStream(istream);
 				Object key=p.readObject();
+				assert key.equals(k);
 				Object val=p.readObject();
 				p.close();
 				istream.close();
