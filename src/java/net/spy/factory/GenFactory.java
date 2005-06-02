@@ -26,7 +26,7 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 		if(key == null) {
 			throw new NullPointerException("Cache key must not be null.");
 		}
-		if(time == 0) {
+		if(time < 1) {
 			throw new IllegalArgumentException("Invalid cache time:  " + time);
 		}
 		this.cacheKey=key;

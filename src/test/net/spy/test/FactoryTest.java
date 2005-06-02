@@ -18,6 +18,8 @@ import net.spy.factory.GenFactory;
  */
 public class FactoryTest extends TestCase {
 
+	private static final int NUM_OBJECTS=1000;
+
 	/**
 	 * Get an instance of FactoryTest.
 	 */
@@ -46,14 +48,54 @@ public class FactoryTest extends TestCase {
 		TestFactory tf=TestFactory.getInstance();
 
 		// Try all the existing objects
-		for(int i=0; i<1000; i++) {
+		for(int i=0; i<NUM_OBJECTS; i++) {
 			TestInstance ti=tf.getObject(i);
+			assertNotNull("Null at " + i, ti);
 			assertEquals(ti.getId(), i);
 		}
 
+		assertEquals(NUM_OBJECTS, tf.getObjects().size());
+
 		// Try non-existing objects
-		TestInstance ti=tf.getObject(1138);
+		TestInstance ti=tf.getObject(NUM_OBJECTS + 138);
 		assertNull(ti);
+
+		// Get the thing to recache
+		tf.recache();
+
+		// Now that object should be there.
+		ti=tf.getObject(NUM_OBJECTS + 138);
+		assertEquals(ti.getId(), NUM_OBJECTS + 138);
+
+		// And this object shouldn't
+		ti=tf.getObject(138);
+		assertNull(ti);
+	}
+
+	public void testInvalidConstructors() {
+		try {
+			TestFactory tf=new TestFactory(null, 10000);
+			fail("Shouldn't be able to construct a factory with a null name: "
+				+ tf);
+		} catch(NullPointerException e) {
+			assertNotNull(e.getMessage());
+		}
+
+		try {
+			TestFactory tf=new TestFactory("Test", 0);
+			fail("Shouldn't be able to construct a factory with 0 cache time: "
+				+ tf);
+		} catch(IllegalArgumentException e) {
+			assertNotNull(e.getMessage());
+		}
+
+		try {
+			TestFactory tf=new TestFactory("Test", -103);
+			fail("Shouldn't be able to construct a factory with "
+				+ "negative cache time: " + tf);
+		} catch(IllegalArgumentException e) {
+			assertNotNull(e.getMessage());
+		}
 	}
 
 	private static class TestInstance extends Object implements Instance {
@@ -88,8 +130,14 @@ public class FactoryTest extends TestCase {
 
 		private static TestFactory instance=new TestFactory();
 
+		private int lastObject=0;
+
+		public TestFactory(String nm, long t) {
+			super(nm, t);
+		}
+
 		public TestFactory() {
-			super("TestStuff", 10000);
+			this("TestStuff", 10000);
 		}
 
 		public static TestFactory getInstance() {
@@ -98,8 +146,11 @@ public class FactoryTest extends TestCase {
 
 		public Collection<TestInstance> getInstances() {
 			Collection<TestInstance> rv=new ArrayList();
-			for(int i=0; i<1000; i++) {
-				rv.add(new TestInstance(i, "Test#" + i));
+			int startId=lastObject;
+			for(int i=0; i<NUM_OBJECTS; i++) {
+				int id=i + startId;
+				rv.add(new TestInstance(id, "Test#" + id));
+				lastObject=id;
 			}
 			return(rv);
 		}
