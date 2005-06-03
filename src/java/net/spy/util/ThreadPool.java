@@ -121,8 +121,8 @@ public class ThreadPool extends ThreadGroup {
 		super(name);
 		setDaemon(true);
 
-		if(priority<Thread.MIN_PRIORITY || priority>Thread.MAX_PRIORITY) {
-			throw new IllegalArgumentException(priority
+		if(prio<Thread.MIN_PRIORITY || prio>Thread.MAX_PRIORITY) {
+			throw new IllegalArgumentException(prio
 				+ " is an invalid priority.");
 		}
 		setPriority(prio);
@@ -611,10 +611,16 @@ public class ThreadPool extends ThreadGroup {
 		}
 		// First shut down the manager so it doesn't try to create any more
 		// threads
-		poolManager.requestStop();
+		if(poolManager != null) {
+			poolManager.requestStop();
+			poolManager=null;
+		}
 		// Now, tell all of the known threads that we don't need them anymore
-		for(RunThread t : threads) {
-			t.shutdown();
+		if(threads != null) {
+			for(RunThread t : threads) {
+				t.shutdown();
+			}
+			threads.clear();
 		}
 		shutdown=true;
 	}

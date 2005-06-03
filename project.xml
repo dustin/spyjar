@@ -32,7 +32,9 @@ arch-tag: 2A68027B-714D-465F-A2B5-D105CE22459C
 			<excludes>
 				<exclude>**/DBTest.java</exclude>
 				<exclude>**/PKTest.java</exclude>
+				<!--
 				<exclude>**/ThreadPoolTest.java</exclude>
+				-->
 				<exclude>**/db/*.java</exclude>
 			</excludes>
 		</unitTest>

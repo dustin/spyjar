@@ -42,6 +42,28 @@ public class ThreadPoolTest extends TestCase {
 	}
 
 	/** 
+	 * Test the constructors.
+	 */
+	public void testConstructors() {
+		try {
+			ThreadPool tp=new ThreadPool("Test1", 1, Thread.MIN_PRIORITY-1);
+			fail("Was able to set a priority of " + (Thread.MIN_PRIORITY-1));
+			tp.shutdown();
+		} catch(IllegalArgumentException e) {
+			// pass
+		}
+		try {
+			ThreadPool tp=new ThreadPool("Test2", 1, Thread.MAX_PRIORITY+1);
+			fail("Was able to set a priority of " + (Thread.MAX_PRIORITY+1));
+			tp.shutdown();
+		} catch(IllegalArgumentException e) {
+			// pass
+		}
+		ThreadPool tp=new ThreadPool("Test3", 1);
+		tp.shutdown();
+	}
+
+	/** 
 	 * Test the basics of the thread pool.
 	 */
 	public void testBasicThreadPool() throws Exception {
@@ -102,8 +124,6 @@ public class ThreadPoolTest extends TestCase {
 		// Now, verify the task did not start
 		assertTrue("New task shouldn't have started", (!t.wasRun()));
 
-		// Sleep so we can watch it get all tired and stuff.
-		Thread.sleep(65000);
 		tp.shutdown();
 	}
 
