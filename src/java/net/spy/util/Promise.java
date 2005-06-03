@@ -32,10 +32,11 @@ public abstract class Promise extends Object {
 		if(hasRun == false) {
 			try {
 				rv=execute();
-				hasRun=true;
 			} catch(BrokenPromiseException bpe) {
 				this.bpe=bpe;
 				throw bpe;
+			} finally {
+				hasRun=true;
 			}
 		}
 

@@ -33,25 +33,50 @@ public class PromiseTest extends TestCase {
 	}
 
 	/** 
-	 * Run this test.
-	 */
-	public static void main(String args[]) {
-		junit.textui.TestRunner.run(suite());
-	}
-
-	/** 
 	 * Test a promise that returns an int.
 	 */
-	public void testIntPromise() throws BrokenPromiseException {
+	public void testIntPromise() throws Exception {
 		Promise p=new IntPromise(17);
+		assertTrue(String.valueOf(p).indexOf("not yet executed") > 0);
 
 		Integer i1=(Integer)p.getObject();
 		Integer i2=(Integer)p.getObject();
 		assertNotNull(i1);
 		assertNotNull(i2);
 
+		// next time, it should have been executed
+		assertFalse(String.valueOf(p).indexOf("not yet executed") > 0);
+
 		assertEquals("First run", 17, i1.intValue());
 		assertEquals("Second run", 17, i2.intValue());
+
+		assertSame(i1, i2);
+	}
+
+	public void testBrokenPromise() throws Exception {
+		Promise p=new PromiseBreaker();
+		try {
+			Object o=p.getObject();
+			fail("Broken promise gave me a value:  " + o);
+		} catch(BrokenPromiseException e) {
+			// pass
+		}
+		assertTrue("Got: " + String.valueOf(p),
+			String.valueOf(p).indexOf("Broken Promise ") == 0);
+
+		// Second time is a different code path
+		try {
+			Object o=p.getObject();
+			fail("Broken promise gave me a value the second time:  " + o);
+		} catch(BrokenPromiseException e) {
+			// pass
+		}
+	}
+
+	public void testNullPromise() throws Exception {
+		Promise p=new NullPromise();
+		assertNull(p.getObject());
+		assertEquals("Promise {null}", String.valueOf(p));
 	}
 
 	//
@@ -71,6 +96,26 @@ public class PromiseTest extends TestCase {
 			return new Integer(myInt++);
 		}
 
+	}
+
+	private class PromiseBreaker extends Promise {
+		public PromiseBreaker() {
+			super();
+		}
+
+		protected Object execute() throws BrokenPromiseException {
+			throw new BrokenPromiseException("Fail");
+		}
+	}
+
+	private class NullPromise extends Promise {
+		public NullPromise() {
+			super();
+		}
+
+		protected Object execute() throws BrokenPromiseException {
+			return(null);
+		}
 	}
 
 }
