@@ -21,11 +21,23 @@ public class Base64 extends Object {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
 	};
 
+	private static Base64 instance=null;
+
 	/**
 	 * Get a base64 encode/decoder.
 	 */
 	public Base64() {
 		super();
+	}
+
+	/** 
+	 * Get the singleton base64 instance.
+	 */
+	public static synchronized Base64 getInstance() {
+		if(instance == null) {
+			instance=new Base64();
+		}
+		return(instance);
 	}
 
 	/**
@@ -157,30 +169,6 @@ public class Base64 extends Object {
 		}
 
 		return(rv);
-	}
-
-	/**
-	 * Testing.
-	 */
-	public static void main(String args[]) throws Exception {
-		File f=new File(args[0]);
-		System.out.println("Working on " + f + " (" + f.length() + " bytes).");
-		FileInputStream fis=new FileInputStream(f);
-		byte data[]=new byte[(int)f.length()];
-		int size=fis.read(data);
-		fis.close();
-		if(size!=f.length()) {
-			throw new Exception("Didn't read all the data.");
-		}
-
-		Base64 b=new Base64();
-		String tmp=b.encode(data);
-
-		System.out.println(tmp);
-
-		FileOutputStream fos=new FileOutputStream(args[1]);
-		fos.write(b.decode(tmp));
-		fos.close();
 	}
 
 }

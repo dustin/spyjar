@@ -80,20 +80,4 @@ public class Base64OutputStream extends FilterOutputStream {
 		}
 	}
 
-	public static void main(String args[]) throws Exception {
-		FileInputStream fis=new FileInputStream(args[0]);
-		FileOutputStream fos=new FileOutputStream(args[1]);
-		Base64OutputStream bos=new Base64OutputStream(fos);
-
-		byte buffer[]=new byte[8192];
-		int bytesread=fis.read(buffer);
-		while(bytesread>0) {
-			bos.write(buffer, 0, bytesread);
-			bytesread=fis.read(buffer);
-		}
-
-		fis.close();
-		bos.close();
-	}
-
 }

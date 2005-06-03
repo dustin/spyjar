@@ -65,18 +65,14 @@ public class Base64InputStream extends ByteConverionInputStream {
 
 		String todecode=null;
 
-		if(bytesread==0) {
-			outbuffer=new byte[0];
+		if(bytesread<4) {
+			byte tmptmp[]=new byte[bytesread];
+			System.arraycopy(tmp, 0, tmptmp, 0, bytesread);
+			todecode=new String(tmptmp);
 		} else {
-			if(bytesread<4) {
-				byte tmptmp[]=new byte[bytesread];
-				System.arraycopy(tmp, 0, tmptmp, 0, bytesread);
-				todecode=new String(tmptmp);
-			} else {
-				todecode=new String(tmp);
-			}
-			outbuffer=base64.decode(todecode);
+			todecode=new String(tmp);
 		}
+		outbuffer=base64.decode(todecode);
 
 		currentOut=0;
 	}
@@ -90,23 +86,6 @@ public class Base64InputStream extends ByteConverionInputStream {
 		int rv=in.available();
 		rv=(rv*3)/4;
 		return(rv);
-	}
-
-	public static void main(String args[]) throws Exception {
-		FileInputStream fis=new FileInputStream(args[0]);
-		Base64InputStream bis=new Base64InputStream(fis);
-		FileOutputStream fos=new FileOutputStream(args[1]);
-
-		byte buffer[]=new byte[8192];
-		int bytesread=bis.read(buffer);
-		while(bytesread>0) {
-			System.out.println("Read " + bytesread);
-			fos.write(buffer, 0, bytesread);
-			bytesread=bis.read(buffer);
-		}
-
-		bis.close();
-		fos.close();
 	}
 
 }
