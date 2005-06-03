@@ -353,7 +353,7 @@ public class DiskCache extends AbstractMap {
 				FileInputStream istream = new FileInputStream(path);
 				ObjectInputStream p = new ObjectInputStream(istream);
 				Object key=p.readObject();
-				assert key.equals(k);
+				assert(key.equals(k));
 				Object val=p.readObject();
 				p.close();
 				istream.close();
