@@ -56,12 +56,17 @@ public class IdentityEqualifierTest extends TestCase {
 		assertNotSame("=test1+test2", test1, test2);
 		assertFalse("=test1+test2", ie1.equals(test2));
 		assertFalse("=test1+test2", ie1.equals(ie2));
+		assertEquals(System.identityHashCode(test1), ie1.hashCode());
+		assertEquals(System.identityHashCode(test2), ie2.hashCode());
+		assertFalse(System.identityHashCode(test1) == ie2.hashCode());
 
 		assertEquals("=test1+test3", test1, test3);
 		assertSame("=test1+test3", test1, test3);
 		assertNotSame("=test1+test3", ie1, ie3);
 		assertEquals("=test1+test3", ie1, test3);
 		assertEquals("=test1+test3", ie1, ie3);
+		assertSame("=test1+test3", test1, ie1.get());
+		assertSame("=test1+test3", test1, ie3.get());
 
 		assertEquals("=test1+test4", test1, test4);
 		assertNotSame("=test1+test4", test1, test4);
