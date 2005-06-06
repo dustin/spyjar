@@ -12,6 +12,7 @@ import junit.framework.TestSuite;
 
 import net.spy.SpyObject;
 import net.spy.util.ThreadPool;
+import net.spy.util.ThreadPoolManager;
 
 /**
  * Test the ThreadPool.
@@ -60,7 +61,121 @@ public class ThreadPoolTest extends TestCase {
 			// pass
 		}
 		ThreadPool tp=new ThreadPool("Test3", 1);
+		try {
+			tp.setMinIdleThreads(2);
+			tp.start();
+			fail("Was able to start with more min idle than max");
+		} catch(IllegalStateException e) {
+			// pass
+			tp.setMinIdleThreads(1);
+			tp.start();
+			tp.shutdown();
+		}
+		tp=new ThreadPool("Test4", 1);
+		try {
+			tp.setStartThreads(2);
+			tp.start();
+			fail("Was able to start with more start threads than max");
+		} catch(IllegalStateException e) {
+			// pass
+			tp.setStartThreads(1);
+			tp.start();
+			tp.shutdown();
+		}
+		tp=new ThreadPool("Test5", 1);
+		try {
+			tp.setPoolManagerClass(String.class);
+			fail("Was able to set an invalid manager");
+		} catch(IllegalArgumentException e) {
+			// pass
+			tp.setPoolManagerClass(ThreadPoolManager.class);
+			tp.shutdown();
+		}
+		tp=new ThreadPool("Test6", 1);
 		tp.shutdown();
+	}
+
+	/** 
+	 * Test that double-starts fail.
+	 */
+	public void testDoubleStart() throws Exception {
+		ThreadPool tp=new ThreadPool("testDoubleStart");
+		tp.start();
+		try {
+			tp.start();
+			fail("Was allowed to double-start a thread pool.");
+		} catch(IllegalStateException e) {
+			// pass
+		} finally {
+			tp.shutdown();
+		}
+	}
+
+	/** 
+	 * Test double shutdown.
+	 */
+	public void testDoubleShutdown() throws Exception {
+		ThreadPool tp=new ThreadPool("testDoubleShutdown");
+		tp.start();
+		tp.shutdown();
+		try {
+			tp.shutdown();
+			fail("Was allowed to double-shutdown a thread pool.");
+		} catch(IllegalStateException e) {
+			// pass
+		}
+	}
+
+
+	/** 
+	 * Test the mutators.
+	 */
+	public void testMutators() throws Exception {
+		ThreadPool tp=new ThreadPool("testMutators");
+		tp.setMaxTaskQueueSize(5);
+		try {
+			tp.setMaxTaskQueueSize(-5);
+			fail("Allowed me to set a max task queue size to -5");
+		} catch(IllegalArgumentException e) {
+			// pass
+		}
+		tp.setMinTotalThreads(5);
+		try {
+			tp.setMinTotalThreads(-5);
+			fail("Allowed me to set min total threads size to -5");
+		} catch(IllegalArgumentException e) {
+			// pass
+		}
+		tp.setMaxTotalThreads(5);
+		try {
+			tp.setMaxTotalThreads(-5);
+			fail("Allowed me to set min total threads size to -5");
+		} catch(IllegalArgumentException e) {
+			// pass
+		}
+		tp.setMinIdleThreads(5);
+		try {
+			tp.setMinIdleThreads(-5);
+			fail("Allowed me to set min idle threads size to -5");
+		} catch(IllegalArgumentException e) {
+			// pass
+		}
+		tp.setStartThreads(5);
+		try {
+			tp.setStartThreads(-5);
+			fail("Allowed me to set start threads threads size to -5");
+		} catch(IllegalArgumentException e) {
+			// pass
+		}
+		tp.shutdown();
+	}
+
+	private void stringThreads(ThreadPool tp) {
+		Thread threads[]=new Thread[tp.getThreadCount()];
+		tp.enumerate(threads);
+		for(Thread t : threads) {
+			String.valueOf(t);
+		}
 	}
 
 	/** 
@@ -68,16 +183,29 @@ public class ThreadPoolTest extends TestCase {
 	 */
 	public void testBasicThreadPool() throws Exception {
 		ThreadPool tp=new ThreadPool("TestThreadPool");
-		tp.setStartThreads(5);
+		tp.setStartThreads(15);
 		tp.setMaxTotalThreads(20);
-		tp.setMinIdleThreads(5);
+		tp.setMinIdleThreads(15);
+
+		// Test string before start
+		String.valueOf(tp);
+
+		// Starting the pool
 		tp.start();
 
-		// Verify the start threads started.
-		assertEquals("Start threads incorrect", 5, tp.getThreadCount());
+		// Make sure the priority is where we expect it.
+		assertEquals(Thread.NORM_PRIORITY, tp.getPriority());
 
+		// Make sure toString() doesn't error
+		String.valueOf(tp);
+
+		// Verify the start threads started.
+		assertEquals("Start threads incorrect", 15, tp.getThreadCount());
+
+		// Make sure all of the toStrings are happy
+		stringThreads(tp);
 		// Add some tasks
-		for(int i=0; i<50; i++) {
+		for(int i=0; i<25; i++) {
 			tp.addTask(new TestRunnable());
 			// Give it a little time so the threads can ramp up.
 			Thread.sleep(100);
@@ -85,10 +213,13 @@ public class ThreadPoolTest extends TestCase {
 		// Verify the thread count has risen to accommodate.
 		assertEquals("Incorrect thread count", 20, tp.getThreadCount());
 
+		// Make sure all of the threads are still happy
+		stringThreads(tp);
+
 		// Wait long enough for the jobs to all be accepted (at most, they
-		// should be 5 seconds each, 20 at a time, for 50 tasks, giving us
-		// thirty seconds (I think))
-		Thread.sleep(30000);
+		// should be 5 seconds each, 20 at a time, for 25 tasks, giving us
+		// fifteen seconds (I think))
+		Thread.sleep(15000);
 		// Verify they all got accepted
 		assertTrue("Not all jobs accepted", tp.getTaskCount() == 0);
 
@@ -124,10 +255,20 @@ public class ThreadPoolTest extends TestCase {
 		// Now, verify the task did not start
 		assertTrue("New task shouldn't have started", (!t.wasRun()));
 
-		tp.shutdown();
+		tp.addTask(new TestRunnable());
+
+		// make sure we can't wait for the threads before shutting down
+		try {
+			tp.waitForThreads();
+		} catch(IllegalStateException e) {
+			// pass
+		}
+
+		// Happier shutdown
+		tp.waitForCompletion();
 	}
 
-	private class TestRunnable extends SpyObject implements Runnable {
+	private static class TestRunnable extends SpyObject implements Runnable {
 		private int id=0;
 		boolean wasRun=false;
 

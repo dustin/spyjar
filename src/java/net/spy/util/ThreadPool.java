@@ -323,7 +323,7 @@ public class ThreadPool extends ThreadGroup {
 	 * @param pmc a subclass of ThreadPoolManager
 	 */
 	public void setPoolManagerClass(Class pmc) {
-		if(ThreadPoolManager.class.isAssignableFrom(pmc)) {
+		if(!ThreadPoolManager.class.isAssignableFrom(pmc)) {
 			throw new IllegalArgumentException(
 				"PoolManagerClass must be a subclass of "
 				+ "ThreadPoolManager");
