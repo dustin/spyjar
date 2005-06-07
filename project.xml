@@ -21,6 +21,13 @@ arch-tag: 2A68027B-714D-465F-A2B5-D105CE22459C
 			<version>1.6.3</version>
 		</dependency>
 
+		<dependency>
+			<groupId>spy</groupId>
+			<artifactId>maven-tla-plugin</artifactId>
+			<version>1.0</version>
+			<type>plugin</type>
+		</dependency>
+
 	</dependencies>
 
 	<contributors>
