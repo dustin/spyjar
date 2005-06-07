@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<!-- Copyright (c) 2005  Dustin Sallings (dustin@spy.net) -->
+<!-- arch-tag: B017CE13-E7BC-425E-95DF-32AC614A6307 -->
+
+<document>
+	<properties>
+		<author email="dustin@spy.net">Dustin Sallings</author>
+		<title>Spy.jar</title>
+	</properties>
+	<body>
+		<!-- The body of the document contains a number of sections -->
+		<section name="Description">
+
+			<p>
+			spy.jar provides a bunch of utility java classes for me, including the
+			following:
+			<ul>
+			<li>Object instance pooling (including jdbc database pooling, and snpp
+						connection pooling, it's very easy to make more)
+					<a href="apidocs/net/spy/pool/package-summary.html">[docs]</a>
+			</li>
+			<li>
+					Cron functionality
+					<a href="apidocs/net/spy/cron/package-summary.html">[docs]</a>
+			</li>
+			<li>
+					More simplified configuration class
+					<a href="apidocs/net/spy/util/SpyConfig.html">[docs]</a>
+			</li>
+			<li>
+					Abstracted, easy-to-use pooled database connection class
+						<a href="apidocs/net/spy/db/SpyDB.html">[docs]</a>
+			</li>
+			<li>
+					Asynchronous logging, and general abstraction of logging
+					<a href="apidocs/net/spy/log/package-summary.html">[docs]</a>
+				
+			</li>
+			<li>
+					A cheap application server
+					<a href="apidocs/net/spy/util/SpyRunner.html">[docs]</a>
+			</li>
+			<li>
+					An in-memory object cache manager
+					<a href="apidocs/net/spy/cache/package-summary.html">[docs]</a>
+			</li>
+			<li>
+					Syslog client
+					<a href="apidocs/net/spy/log/Syslog.html">[docs]</a>
+			</li>
+			<li>
+					A simple HTTP document fetcher
+					<a href="apidocs/net/spy/net/HTTPFetch.html">[docs]</a>
+			</li>
+			<li>
+					A self-refreshing web page cache
+					<a href="apidocs/net/spy/net/URLWatcher.html">[docs]</a>
+			</li>
+			<li>
+					An SNPP client
+					<a href="apidocs/net/spy/net/SNPP.html">[docs]</a>
+			</li>
+			<li>
+					An algorithm for determining the lowest cost route between two
+					nodes in a graph
+					<a href="apidocs/net/spy/util/ShortestPathFinder.html">[docs]</a>
+				
+			</li>
+				<li>Probably more</li>
+		</ul>
+
+		Basically, anything I write that I plan on reusing goes into this jar.
+		</p>
+	</section>
+
+	<section name="Where to Get">
+		<p>
+			My maven repository has the latest version here:
+
+			<blockquote>
+				http://bleu.west.spy.net/~dustin/repo/
+			</blockquote>
+		</p>
+	</section>
+
+	</body>
+</document>
+

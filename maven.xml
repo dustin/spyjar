@@ -109,4 +109,10 @@
 		<m:addPath id="maven.test.compile.src.set" refid="spyjar.test.build.src"/>
 	</preGoal>
 
+	<preGoal name="site">
+		<ant:mkdir dir="${maven.docs.dest}/apidocs/images"/>
+		<ant:copy file="${basedir}/etc/graphtest.png"
+			tofile="${maven.docs.dest}/apidocs/images/graphtest.png"/>
+	</preGoal>
+
 </project>
