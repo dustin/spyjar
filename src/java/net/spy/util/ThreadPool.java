@@ -500,6 +500,7 @@ public class ThreadPool extends ThreadGroup {
 		checkStarted();
 		synchronized(tasks) {
 			tasks.add(t);
+			getLogger().debug("Added a new task, notifying");
 			tasks.notify();
 		}
 		// Let pool manager know something's been added.
@@ -861,7 +862,11 @@ public class ThreadPool extends ThreadGroup {
 					synchronized(tasks) {
 						try {
 							// Wait for an object to show up
-							tasks.wait(WAIT_TIMEOUT);
+							if(tasks.size() == 0) {
+								getLogger().debug("Waiting for a task(NSEE)");
+								tasks.wait(WAIT_TIMEOUT);
+								getLogger().debug("Finished waiting(NSEE)");
+							}
 						} catch(InterruptedException ie) {
 							// That's OK, we'll try again.
 							getLogger().debug(
