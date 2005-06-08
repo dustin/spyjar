@@ -28,6 +28,12 @@ arch-tag: 2A68027B-714D-465F-A2B5-D105CE22459C
 			<type>plugin</type>
 		</dependency>
 
+		<dependency>
+			<groupId>jmock</groupId>
+			<artifactId>jmock</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<contributors>
