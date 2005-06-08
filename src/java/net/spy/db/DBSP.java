@@ -431,13 +431,13 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 			// Make sure all the arguments are there.
 			checkArgs();
-	
+
 			// Get ready to build our query.
 			StringBuffer querySb=new StringBuffer(TOSTRING_SB_SIZE);
 			querySb.append("exec ");
 			querySb.append(spname);
 			querySb.append(" ");
-	
+
 			int nargs=0;
 			for(Argument arg : getArguments()) {
 				querySb.append("\t@");
@@ -445,25 +445,18 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 				querySb.append("=?,\n");
 				nargs++;
 			}
-	
+
 			// Remove the last comma if we had params
 			if(nargs>0) {
 				querySb=new StringBuffer(querySb.toString().substring(0,
 											querySb.length()-2));
 			}
 			String tmpQuery=querySb.toString().trim();
-	
-			// Get a prepared statement, varies whether it's cachable or not.
-			if(getCacheTime()>0) {
-				pst=prepareStatement(tmpQuery, getCacheTime());
-			} else {
-				pst=prepareStatement(tmpQuery);
-			}
-	
+
 			if (debug) {
 				getLogger().debug("Query: "+tmpQuery);
 			}
-	
+
 			// Fill in the arguments.
 			setQuery(tmpQuery);
 		}
@@ -493,6 +486,15 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 */
 	protected void setQuery(String to) {
 		this.query=to;
+
+		// Get a prepared statement, varies whether it's cachable or not.
+		PreparedStatement tmpPst=null;
+		if(getCacheTime()>0) {
+			tmpPst=prepareStatement(tmpQuery, getCacheTime());
+		} else {
+			tmpPst=prepareStatement(tmpQuery);
+		}
+		setPreparedStatement(tmpPst);
 	}
 
 	/**
