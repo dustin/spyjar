@@ -484,15 +484,15 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	/**
 	 * Set the SQL query to call
 	 */
-	protected void setQuery(String to) {
+	protected void setQuery(String to) throws SQLException {
 		this.query=to;
 
 		// Get a prepared statement, varies whether it's cachable or not.
 		PreparedStatement tmpPst=null;
 		if(getCacheTime()>0) {
-			tmpPst=prepareStatement(tmpQuery, getCacheTime());
+			tmpPst=prepareStatement(to, getCacheTime());
 		} else {
-			tmpPst=prepareStatement(tmpQuery);
+			tmpPst=prepareStatement(to);
 		}
 		setPreparedStatement(tmpPst);
 	}
