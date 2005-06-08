@@ -573,14 +573,20 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 							+ " seems to have been overlooked.");
 				}
 			} catch(SQLException se) {
+				getLogger().warn("SQLException while applying " + arg
+					+ " in prepared statement for type "
+					+ TypeNames.getTypeName(type)
+					+ " " + String.valueOf(o), se);
 				throw se;
 			} catch (Exception applyException) {
-				getLogger().warn("Exception while applying", applyException);
 				String msg="Problem setting " + arg
 					+ " in prepared statement for type "
 					+ TypeNames.getTypeName(type) + " "
-					+ o.toString() + " : " + applyException;
-				throw new SQLException (msg);
+					+ String.valueOf(o) + " : " + applyException;
+				getLogger().warn(msg, applyException);
+				SQLException se=new SQLException(msg);
+				se.initCause(applyException);
+				throw se;
 			}
 
 			i++;
