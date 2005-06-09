@@ -26,7 +26,7 @@ public abstract class LineGettingOutputStream extends OutputStream {
 	public void write(int b) throws IOException {
 		byte ba[]=new byte[1];
 		ba[0]=(byte)b;
-		write(ba, 0, 0);
+		write(ba, 0, 1);
 	}
 
 	/**
@@ -34,12 +34,8 @@ public abstract class LineGettingOutputStream extends OutputStream {
 	 */
 	public void write(byte b[], int offset, int length) throws IOException {
 		// Make a string and get rid of the extra space at the ends.
-		// String msgS=new String(b, offset, length).trim();
-		while(length>=offset && ( b[length]=='\r' || b[length]=='\n')) {
-			length--;
-		}
-		String msgS=new String(b, offset, length);
-		if(msgS.trim().length() > 0 ) {
+		String msgS=new String(b, offset, length).trim();
+		if(msgS.length() > 0 ) {
 			processChunk(msgS);
 		}
 	}

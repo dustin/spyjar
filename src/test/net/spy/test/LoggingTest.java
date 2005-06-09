@@ -3,11 +3,15 @@
 
 package net.spy.test;
 
+import java.io.PrintStream;
+
 import junit.framework.TestCase;
 
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
 import net.spy.log.SunLogger;
+import net.spy.log.Syslog;
+import net.spy.log.LoggingOutputStream;
 
 /**
  * Make sure logging is enabled.
@@ -76,7 +80,52 @@ public class LoggingTest extends TestCase {
 		l.warn("warn message");
 		l.error("error message");
 		l.fatal("fatal message");
+		l.fatal("fatal message with exception", new Exception());
 		l.log(null, "test null", null);
+		l.log(null, "null message with exception and no requestor",
+			new Exception());
+	}
+
+	/** 
+	 * Test syslog.  This test just pretty much makes coverage and stuff.
+	 */
+	public void testSyslog() throws Exception {
+		Syslog syslog=new Syslog("localhost");
+		syslog.log(Syslog.LOCAL0, Syslog.DEBUG, "Test via syslog");
+	}
+
+	/** 
+	 * Test the logging output streams.
+	 * 
+	 * @throws Exception 
+	 */
+	public void testLoggingStreams() throws Exception {
+		PrintStream outSave=System.out;
+		PrintStream errSave=System.err;
+		try {
+			LoggingOutputStream.redefineOutputs();
+			System.out.println("logging via stdout");
+			System.out.println("logging via stdout\nWith multiple lines");
+			System.err.println("logging via stderr");
+			System.out.write('b');
+			System.out.write('y');
+			System.out.write('t');
+			System.out.write('e');
+			System.out.write('\r');
+			System.out.write('\n');
+			System.out.write('t');
+			System.out.write('e');
+			System.out.write('s');
+			System.out.write('t');
+			System.out.write('\r');
+			System.out.write('\n');
+
+			String testString=" byte\rarray\ntest\r\n";
+			System.out.write(testString.getBytes(), 1, testString.length()-1);
+		} finally {
+			System.setOut(outSave);
+			System.setErr(errSave);
+		}
 	}
 
 }

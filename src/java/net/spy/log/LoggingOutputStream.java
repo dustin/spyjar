@@ -44,22 +44,12 @@ public class LoggingOutputStream extends LineGettingOutputStream {
 	 * Redefine stdout and stderr using new logging streams.
 	 */
 	public static void redefineOutputs() {
-		LoggingOutputStream out=new LoggingOutputStream(STDOUT_NAME,
-			Level.INFO);
+		LoggingOutputStream out=new LoggingOutputStream(STDOUT_NAME);
 		LoggingOutputStream err=new LoggingOutputStream(STDERR_NAME,
 			Level.ERROR);
 
 		out.setOut();
 		err.setErr();
-	}
-
-	/** 
-	 * Redefine the outputs to use the logger.
-	 * 
-	 * @param String args[] 
-	 */
-	public static void main(String args[]) {
-		redefineOutputs();
 	}
 
 }
