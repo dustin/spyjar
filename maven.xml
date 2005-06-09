@@ -8,13 +8,15 @@
 	xmlns:j="jelly:core">
 
 	<preGoal name="java:compile">
-		<attainGoal name="spy:core"/>
+		<attainGoal name="spyjar:core"/>
+		<attainGoal name="spyjar:buildprops"/>
+		<attainGoal name="spyjar:buildinfo"/>
 
 		<attainGoal name="tla:versions"/>
 		<attainGoal name="tla:changelog"/>
 	</preGoal>
 
-	<goal name="spy:core">
+	<goal name="spyjar:core">
 		<!-- First stage compile. -->
 		<ant:javac srcdir="${maven.src.dir}/java"
 			destdir="${maven.build.dest}"
@@ -99,6 +101,39 @@
 		<path id="spyjar.build.src" location="${maven.build.src}"/>
 		<m:addPath id="maven.compile.src.set" refid="spyjar.build.src"/>
 
+	</goal>
+
+	<goal name="spyjar:buildprops">
+		<tstamp/>
+		<copy file="${basedir}/etc/properties.in"
+			tofile="${spy.buildinfo.prop.out}"/>
+		<propertyfile file="${spy.buildinfo.prop.out}">
+			<entry key="build.date" type="date" value="now"/>
+			<entry key="build.dstamp" value="${DSTAMP}"/>
+			<entry key="build.tstamp" value="${TSTAMP}"/>
+			<entry key="build.dtstamp" value="${DSTAMP}${TSTAMP}"/>
+			<entry key="java.vendor" value="${java.vendor}"/>
+			<entry key="java.version" value="${java.version}"/>
+			<entry key="os.name" value="${os.name}"/>
+			<entry key="os.version" value="${os.version}"/>
+			<entry key="tla.long.version" value="${tla.long.version}"/>
+			<entry key="tree.version" value="${tla.long.version}"/>
+			<entry key="tla.short.version" value="${tla.short.version}"/>
+		</propertyfile>
+		<property file="${spy.buildinfo.prop.out}"/>
+	</goal>
+
+	<goal name="spyjar:buildinfo" prereqs="spy:buildprops">
+		<taskdef classpathref="maven.dependency.classpath"
+			resource="net/spy/ant/tasks.properties"/>
+		<buildinfo package="${spy.buildinfo.package}"
+			buildprops="${spy.buildinfo.prop.rel}"
+			changelog="${spy.buildinfo.changelog}"
+			destdir="${spy.buildinfo.dest}"/>
+		<path id="spy.buildinfo.generated.src"
+			location="${spy.buildinfo.dest}"/>
+		<m:addPath id="maven.compile.src.set"
+			refid="spy.buildinfo.generated.src"/>
 	</goal>
 
 	<preGoal name="test:compile">
