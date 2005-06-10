@@ -9,11 +9,12 @@
 
 	<preGoal name="java:compile">
 		<attainGoal name="spyjar:core"/>
-		<attainGoal name="spyjar:buildprops"/>
-		<attainGoal name="spyjar:buildinfo"/>
 
 		<attainGoal name="tla:versions"/>
 		<attainGoal name="tla:changelog"/>
+
+		<attainGoal name="spyjar:buildprops"/>
+		<attainGoal name="spyjar:buildinfo"/>
 	</preGoal>
 
 	<goal name="spyjar:core">
