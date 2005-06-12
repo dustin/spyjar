@@ -20,10 +20,10 @@ public class SPTTest extends MockObjectTestCase {
 	private Mock stMock;
 
 	public void setUp() {
-		connMock = new Mock(Connection.class);
+		connMock = mock(Connection.class);
 		conn = (Connection) connMock.proxy();
 
-		stMock = new Mock(PreparedStatement.class);
+		stMock = mock(PreparedStatement.class);
 	}
 
 	private void testCallSequence(boolean[] booleans) throws Exception {
@@ -45,7 +45,7 @@ public class SPTTest extends MockObjectTestCase {
 			bt.setABoolean(aBoolean);
 
 			// Meta data handling
-			Mock rsmdMock=new Mock(ResultSetMetaData.class);
+			Mock rsmdMock=mock(ResultSetMetaData.class);
 			rsmdMock.expects(atLeastOnce())
 				.method("getColumnCount")
 				.will(returnValue(1));
@@ -59,7 +59,7 @@ public class SPTTest extends MockObjectTestCase {
 				.will(returnValue("BIT"));
 
 			// Result set handling
-			Mock rsMock = new Mock(ResultSet.class);
+			Mock rsMock = mock(ResultSet.class);
 			ResultSet rs = (ResultSet) rsMock.proxy();
 			rsMock.expects(once())
 				.method("getMetaData")
