@@ -76,8 +76,12 @@ public class JNDIConnectionSource extends SpyObject
 	/**
 	 * @see ConnectionSource
 	 */
-	public void returnConnection(Connection conn) throws SQLException {
-		conn.close();
+	public void returnConnection(Connection conn) {
+		try {
+			conn.close();
+		} catch(SQLException e) {
+			getLogger().warn("Problem closing connection", e);
+		}
 	}
 
 }

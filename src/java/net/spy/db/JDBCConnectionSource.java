@@ -8,13 +8,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
 
+import net.spy.SpyObject;
 import net.spy.util.SpyConfig;
 
 /**
  * Implementation of ConnectionSource that gets connections directly from
  * JDBC.
  */
-public class JDBCConnectionSource extends Object implements ConnectionSource {
+public class JDBCConnectionSource extends SpyObject
+	implements ConnectionSource {
 
 	/**
 	 * Get a new connection from JDBC.
@@ -61,8 +63,12 @@ public class JDBCConnectionSource extends Object implements ConnectionSource {
 	/**
 	 * @see ConnectionSource
 	 */
-	public void returnConnection(Connection conn) throws SQLException {
-		conn.close();
+	public void returnConnection(Connection conn) {
+		try {
+			conn.close();
+		} catch(SQLException e) {
+			getLogger().warn("Problem closing connection", e);
+		}
 	}
 
 }

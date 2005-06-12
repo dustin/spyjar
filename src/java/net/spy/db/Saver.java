@@ -30,7 +30,7 @@ public class Saver extends SpyObject {
 	// Make sure we don't deal with the same object more than once
 	private Set listedObjects=null;
 
-	private SpyDB db=null;
+	private ConnectionSource connSrc=null;
 	private Connection conn=null;
 
 	/**
@@ -50,6 +50,8 @@ public class Saver extends SpyObject {
 			this.context = new SaveContext();
 		}
 		this.config=config;
+		ConnectionSourceFactory csf=ConnectionSourceFactory.getInstance();
+		connSrc=csf.getConnectionSource(config);
 		this.listedObjects=new HashSet();
 	}
 
@@ -86,8 +88,7 @@ public class Saver extends SpyObject {
 		}
 
 		try {
-			db=new SpyDB(config);
-			conn=db.getConn();
+			conn=connSrc.getConnection(config);
 			if(isoLevel != null) {
 				oldIsolationLevel=conn.getTransactionIsolation();
 				conn.setTransactionIsolation(isoLevel.intValue());
@@ -135,8 +136,8 @@ public class Saver extends SpyObject {
 			} // Dealt with opened connection
 
 			// Return a connection to the pool
-			if(db!=null) {
-				db.close();
+			if(conn != null) {
+				connSrc.returnConnection(conn);
 			}
 		}
 

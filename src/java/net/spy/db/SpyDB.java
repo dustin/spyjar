@@ -73,7 +73,7 @@ public class SpyDB extends SpyObject {
 		this.conf=c;
 
 		initType=INIT_FROM_CONFIG;
-		initialize();
+		source=ConnectionSourceFactory.getInstance().getConnectionSource(c);
 	}
 
 	/**
@@ -186,11 +186,7 @@ public class SpyDB extends SpyObject {
 			// If there's a source, this came from something that will want
 			// to hear that we're done with it.
 			if(conn!=null) {
-				try {
-					source.returnConnection(conn);
-				} catch(SQLException e) {
-					getLogger().warn("Problem returning connection to pool", e);
-				}
+				source.returnConnection(conn);
 			}
 		}
 		isClosed=true;
@@ -201,38 +197,6 @@ public class SpyDB extends SpyObject {
 	 */
 	public void close() {
 		freeDBConn();
-	}
-
-	private void initialize() {
-		String connectionClassName=conf.get("dbConnectionSource",
-			"net.spy.db.ObjectPoolConnectionSource");
-		// Backwards compatibilify 
-		if(connectionClassName == null) {
-			String tmp=conf.get("dbPoolType");
-			if(tmp!=null) {
-				if(tmp.equals("jndi")) {
-					connectionClassName="net.spy.db.JNDIConnectionSource";
-				} else if(tmp.equals("none")) {
-					connectionClassName="net.spy.db.JDBCConnectionSource";
-				} else {
-					// My pool
-					connectionClassName="net.spy.db.ObjectPoolConnectionSource";
-				}
-			}
-		}
-		// OK, we now know *how* we're going to get connections, let's get
-		// the source object.
-		try {
-			Class connectionSourceClass=Class.forName(connectionClassName);
-			source=(ConnectionSource)connectionSourceClass.newInstance();
-		} catch(Exception e) {
-			e.fillInStackTrace();
-			getLogger().error("Problem initializing spydb", e);
-			initializationException=new DBInitException(
-				"Initialization exception:  " + e);
-			initializationException.fillInStackTrace();
-		}
-		init();
 	}
 
 	/**
@@ -300,7 +264,7 @@ public class SpyDB extends SpyObject {
 	 * @return a ConnectionSource instance, or null if this SpyDB instance
 	 * 			was created from a config
 	 */
-	protected ConnectionSource getSource() {
+	public ConnectionSource getSource() {
 		return(source);
 	}
 

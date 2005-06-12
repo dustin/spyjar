@@ -29,6 +29,6 @@ public interface ConnectionSource {
 	 * mechanism is in use that the connection is no longer wanted, or
 	 * needed, or even cared about here.
 	 */
-	void returnConnection(Connection conn) throws SQLException;
+	void returnConnection(Connection conn);
 
 }

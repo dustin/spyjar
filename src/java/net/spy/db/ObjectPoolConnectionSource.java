@@ -103,9 +103,9 @@ public class ObjectPoolConnectionSource extends SpyObject
 	/**
 	 * @see ConnectionSource
 	 */
-	public void returnConnection(Connection conn) throws SQLException {
+	public void returnConnection(Connection conn) {
 		if(object==null) {
-			throw new SQLException("Object is null, already returned?");
+			throw new NullPointerException("Object is null, already returned?");
 		}
 		object.checkIn();
 		object=null;
