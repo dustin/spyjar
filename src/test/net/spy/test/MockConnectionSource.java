@@ -21,7 +21,7 @@ import net.spy.db.ConnectionSource;
 public abstract class MockConnectionSource extends Object
 	implements ConnectionSource {
 
-	private Map<Object, Mock> mocks=null;
+	private Map mocks=null;
 
 	public MockConnectionSource() {
 		super();
@@ -33,14 +33,14 @@ public abstract class MockConnectionSource extends Object
 	}
 
 	public Mock getMock(Object proxy) {
-		return(mocks.get(proxy));
+		return((Mock)mocks.get(proxy));
 	}
 
 	public void clearSeenObjects() {
 		mocks.clear();
 	}
 
-	public Collection<Mock> getSeenObjects() {
+	public Collection getSeenObjects() {
 		return(mocks.values());
 	}
 

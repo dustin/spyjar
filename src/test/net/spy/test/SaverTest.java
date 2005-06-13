@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
@@ -88,7 +89,8 @@ public class SaverTest extends MockObjectTestCase {
 	}
 
 	private void verifySource(MockConnectionSource src) throws Exception {
-		for(Mock m : src.getSeenObjects()) {
+		for(Iterator i=src.getSeenObjects().iterator(); i.hasNext();) {
+			Mock m=(Mock)i.next();
 			m.verify();
 		}
 	}
@@ -297,9 +299,9 @@ public class SaverTest extends MockObjectTestCase {
 
 		// That should yield the following sequence:
 		int seq[]={2, 3, 1, 4, 5, 7, 8, 6, 11, 10, 12, 13};
-		ArrayList<Integer> al=new ArrayList();
-		for(int i : seq) {
-			al.add(i);
+		ArrayList al=new ArrayList();
+		for(int i=0; i<seq.length; i++) {
+			al.add(new Integer(seq[i]));
 		}
 
 		assertEquals(al, context.get("sequence"));

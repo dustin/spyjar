@@ -32,16 +32,16 @@ public class SPTTest extends MockObjectTestCase {
 
 		BooleanTest bt = new BooleanTest(conn);
 
-		boolean tryCursor=false;
-
 		connMock.expects(once())
 				.method("prepareStatement")
 				.with(eq("select ? as a_boolean\n"))
 				.will(returnValue(stMock.proxy()));
+		bt.setMaxRows(10);
 
-		for (boolean aBoolean : booleans) {
+		boolean tryCursor=false;
 
-			bt.setMaxRows(10);
+		for(int i=0; i<booleans.length; i++) {
+			boolean aBoolean=booleans[i];
 
 			bt.setABoolean(aBoolean);
 
