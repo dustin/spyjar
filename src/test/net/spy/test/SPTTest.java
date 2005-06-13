@@ -27,18 +27,19 @@ public class SPTTest extends MockObjectTestCase {
 	}
 
 	private void testCallSequence(boolean[] booleans) throws Exception {
-		stMock.expects(atLeastOnce()).method("setQueryTimeout");
-		stMock.expects(atLeastOnce()).method("setMaxRows").with(eq(10));;
+		stMock.expects(once()).method("setQueryTimeout");
+		stMock.expects(once()).method("setMaxRows").with(eq(10));
 
 		BooleanTest bt = new BooleanTest(conn);
 
 		boolean tryCursor=false;
 
+		connMock.expects(once())
+				.method("prepareStatement")
+				.with(eq("select ? as a_boolean\n"))
+				.will(returnValue(stMock.proxy()));
+
 		for (boolean aBoolean : booleans) {
-			connMock.expects(once())
-					.method("prepareStatement")
-					.with(eq("select ? as a_boolean\n"))
-					.will(returnValue(stMock.proxy()));
 
 			bt.setMaxRows(10);
 

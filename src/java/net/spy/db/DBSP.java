@@ -98,21 +98,6 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 		ResultSet rs=null;
 
-		if (debug) {
-			getLogger().debug("Setting timeout to: "+timeout);
-		}
-		pst.setQueryTimeout(timeout);
-		pst.setMaxRows(maxRows);
-
-		// Set the cursor name if there is one.
-		if(cursorName != null) {
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Setting the pst cursor name to "
-					+ cursorName);
-			}
-			pst.setCursorName(cursorName);
-		}
-
 		rs=pst.executeQuery();
 
 		if (debug && !(this instanceof DBCP)) {
@@ -137,9 +122,6 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	public int executeUpdate() throws SQLException  {
 		int rv=0;
 		prepare();
-
-		getLogger().debug("Setting timeout to: " + timeout);
-		pst.setQueryTimeout(timeout);
 
 		rv=pst.executeUpdate();
 		return(rv);
@@ -175,8 +157,15 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 *
 	 * @param name cursor name (or null to disable cursor handling)
 	 */
-	public void setCursorName(String name) {
+	public void setCursorName(String name) throws SQLException {
 		cursorName=name;
+		if(pst != null) {
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Setting the pst cursor name to "
+					+ cursorName);
+			}
+			pst.setCursorName(cursorName);
+		}
 	}
 
 	/**
@@ -204,11 +193,27 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 *
 	 * @param pst the prepared statement
 	 */
-	protected void setPreparedStatement(PreparedStatement to) {
+	protected void setPreparedStatement(PreparedStatement to)
+		throws SQLException {
+
 		if(this.pst != null) {
 			getLogger().warn("Discarding old prepared statement " + this.pst);
 		}
 		this.pst=to;
+
+		if(debug) {
+			getLogger().debug("Setting timeout to: "+timeout);
+		}
+		pst.setQueryTimeout(timeout);
+		pst.setMaxRows(maxRows);
+
+		// Set the cursor name if there is one.
+		if(cursorName != null) {
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Setting the pst cursor name to "
+					+ cursorName);
+			}
+		}
 	}
 
 	/**

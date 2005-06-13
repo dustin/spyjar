@@ -60,8 +60,10 @@ public abstract class DBSQL extends DBSP {
 	 * Prepare the SQL for execution.
 	 */
 	protected void prepare() throws SQLException {
-		if(registeredQueries!=null) {
-			selectQuery();
+		if(getPreparedStatement() == null) {
+			if(registeredQueries!=null) {
+				selectQuery();
+			}
 		}
 		// Make sure all the arguments are there.
 		checkArgs();
@@ -71,7 +73,7 @@ public abstract class DBSQL extends DBSP {
 	/** 
 	 * Generate (and set) a new cursor name.
 	 */
-	protected void generateCursorName() {
+	protected void generateCursorName() throws SQLException {
 		StringBuffer sb=new StringBuffer();
 
 		int totalSize=32;
