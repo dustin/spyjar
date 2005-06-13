@@ -41,7 +41,7 @@ public class SaverTest extends MockObjectTestCase {
 	private MockConnectionSource successSource=null;
 	private MockConnectionSource failSource=null;
 	private MockConnectionSource isoSource=null;
-	private MockConnectionSource brokenSource=null;
+	private ConnectionSource brokenSource=null;
 
 	/**
 	 * Get an instance of SaverTest.
@@ -58,7 +58,7 @@ public class SaverTest extends MockObjectTestCase {
 
 		successConfig=new SpyConfig();
 		successConfig.put("dbConnectionSource",
-			"net.spy.test.SaverTest$MockConnectionSource");
+			"net.spy.test.SaverTest$SuccessConnectionSource");
 		successSource=
 			(MockConnectionSource)cnf.getConnectionSource(successConfig);
 
@@ -75,8 +75,7 @@ public class SaverTest extends MockObjectTestCase {
 		brokenConfig=new SpyConfig();
 		brokenConfig.put("dbConnectionSource",
 			"net.spy.test.SaverTest$BrokenConnectionSource");
-		brokenSource=
-			(MockConnectionSource)cnf.getConnectionSource(brokenConfig);
+		brokenSource=cnf.getConnectionSource(brokenConfig);
 	}
 
 	/** 
@@ -88,18 +87,16 @@ public class SaverTest extends MockObjectTestCase {
 		failSource.clearSeenObjects();
 	}
 
+	private void verifySource(MockConnectionSource src) throws Exception {
+		for(Mock m : src.getSeenObjects()) {
+			m.verify();
+		}
+	}
+
 	private void verifyAllConnections() throws Exception {
-		for(Mock m : successSource.getSeenObjects()) {
-			m.verify();
-		}
-
-		for(Mock m : failSource.getSeenObjects()) {
-			m.verify();
-		}
-
-		for(Mock m : isoSource.getSeenObjects()) {
-			m.verify();
-		}
+		verifySource(successSource);
+		verifySource(failSource);
+		verifySource(isoSource);
 	}
 
 	/** 
@@ -397,35 +394,9 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * A connection source for mock connections.
 	 */
-	public static class MockConnectionSource extends Object
-		implements ConnectionSource {
+	public static class SuccessConnectionSource extends MockConnectionSource {
 
-		private Map<Object, Mock> mocks=null;
-
-		public MockConnectionSource() {
-			super();
-			mocks=new HashMap();
-		}
-
-		protected void registerMock(Mock m) {
-			mocks.put(m.proxy(), m);
-		}
-
-		public Mock getMock(Object proxy) {
-			return(mocks.get(proxy));
-		}
-
-		public void clearSeenObjects() {
-			mocks.clear();
-		}
-
-		public Collection<Mock> getSeenObjects() {
-			return(mocks.values());
-		}
-
-		public Connection getConnection(SpyConfig conf) throws SQLException {
-			Mock connMock=new Mock(Connection.class);
-
+		protected void setupMock(Mock connMock, SpyConfig conf) {
 			// autocommit will be enabled, and then disabled
 			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
 				.with(new IsEqual(Boolean.FALSE)).id("disableAutocommit");
@@ -435,28 +406,14 @@ public class SaverTest extends MockObjectTestCase {
 				.with(new IsEqual(Boolean.TRUE)).after("commitSuccess");
 
 			connMock.expects(new InvokeOnceMatcher()).method("close");
-
-			registerMock(connMock);
-
-			return((Connection)connMock.proxy());
 		}
 
-		public void returnConnection(Connection conn) {
-			try {
-				conn.close();
-			} catch(SQLException e) {
-				throw new RuntimeException(
-					"jmock threw a SQLException on close", e);
-			}
-		}
 	}
 
 	public static class MockConnectionSourceWithIso
 		extends MockConnectionSource {
 
-		public Connection getConnection(SpyConfig conf) throws SQLException {
-			Mock connMock=new Mock(Connection.class);
-
+		protected void setupMock(Mock connMock, SpyConfig conf) {
 			// autocommit will be enabled, and then disabled
 			connMock.expects(new InvokeOnceMatcher())
 				.method("getTransactionIsolation")
@@ -483,19 +440,13 @@ public class SaverTest extends MockObjectTestCase {
 				.id("resetIsolation");
 
 			connMock.expects(new InvokeOnceMatcher()).method("close");
-
-			registerMock(connMock);
-
-			return((Connection)connMock.proxy());
 		}
 	}
 
 	public static class MockFailingConnectionSource
 		extends MockConnectionSource {
 
-		public Connection getConnection(SpyConfig conf) throws SQLException {
-			Mock connMock=new Mock(Connection.class);
-
+		protected void setupMock(Mock connMock, SpyConfig conf) {
 			// autocommit will be enabled, and then disabled
 			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
 				.with(new IsEqual(Boolean.FALSE)).id("disableAutocommit");
@@ -505,15 +456,11 @@ public class SaverTest extends MockObjectTestCase {
 				.with(new IsEqual(Boolean.TRUE)).after("rollbackFail");
 
 			connMock.expects(new InvokeOnceMatcher()).method("close");
-
-			registerMock(connMock);
-
-			return((Connection)connMock.proxy());
 		}
 	}
 
 	public static class BrokenConnectionSource
-		extends MockConnectionSource {
+		extends Object implements ConnectionSource {
 
 		public Connection getConnection(SpyConfig conf) throws SQLException {
 			throw new SQLException("Can't get a connection");
