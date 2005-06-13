@@ -130,8 +130,19 @@ public class SPTTest extends MockObjectTestCase {
 	/** 
 	 * Test query selection within SPTs.
 	 */
+	public void testQuerySelectionDefaultByDriver() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$GeneralConnectionSource");
+		runQuerySelectorTest(conf);
+	}
+
+	/** 
+	 * Test query selection within SPTs (by driver name).
+	 */
 	public void testQuerySelectionDefault() throws Exception {
 		SpyConfig conf=new SpyConfig();
+		conf.put("dbDriverName", "blah.some.driver.name");
 		conf.put("dbConnectionSource",
 			"net.spy.test.SPTTest$GeneralConnectionSource");
 		runQuerySelectorTest(conf);
@@ -159,6 +170,65 @@ public class SPTTest extends MockObjectTestCase {
 		runQuerySelectorTest(conf);
 	}
 
+	/** 
+	 * Test an existing query selector by driver name for a driver whose query
+	 * we don't have.
+	 */
+	public void testQuerySelectionByMissingDriver() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbDriverName", "org.postgresql.Driver");
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$GeneralConnectionSource");
+		runQuerySelectorTest(conf);
+	}
+
+	/** 
+	 * Test a default query with a name close to another one.
+	 */
+	public void testQuerySelectionCloseToKnownDriver() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbDriverName", "oracle.jdbc.dr");
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$GeneralConnectionSource");
+		runQuerySelectorTest(conf);
+	}
+
+	/** 
+	 * Test an existing query selector by driver name.
+	 */
+	public void testQuerySelectionOracleByDriver() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbDriverName", "oracle.jdbc.driver.Driver");
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$OracleConnectionSource");
+		runQuerySelectorTest(conf);
+	}
+
+	/** 
+	 * Test an existing query selector by driver name (exact).
+	 */
+	public void testQuerySelectionOracleByExactDriverPrefix() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbDriverName", "oracle.jdbc.driver.");
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$OracleConnectionSource");
+		runQuerySelectorTest(conf);
+	}
+
+	/** 
+	 * Test an existing query selector by driver name (exact).
+	 */
+	public void testQuerySelectionOracleByExactDriver() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		// This is a weird case when the key name is the same as a known query.
+		// Perhaps it makes sense if you name your queries directly after
+		// drivers.
+		conf.put("dbDriverName", "oracle");
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$OracleConnectionSource");
+		runQuerySelectorTest(conf);
+	}
+
 	public abstract static class AbsConnSrc extends MockConnectionSource {
 		protected abstract String getQuery();
 
@@ -166,7 +236,7 @@ public class SPTTest extends MockObjectTestCase {
 			Mock rsmdMock=new Mock(ResultSetMetaData.class);
 			rsmdMock.expects(new InvokeAtLeastOnceMatcher())
 				.method("getColumnCount")
-				.will(new ReturnStub(1));
+				.will(new ReturnStub(new Integer(1)));
 			rsmdMock.expects(new InvokeAtLeastOnceMatcher())
 				.method("getColumnName")
 				.with(new IsEqual(new Integer(1)))
@@ -184,9 +254,10 @@ public class SPTTest extends MockObjectTestCase {
 			Mock pstMock=new Mock(PreparedStatement.class);
 			pstMock.expects(new InvokeOnceMatcher()).method("setQueryTimeout");
 			pstMock.expects(new InvokeOnceMatcher()).method("setMaxRows")
-				.with(new IsEqual(0));
+				.with(new IsEqual(new Integer(0)));
 			pstMock.expects(new InvokeOnceMatcher()).method("setInt")
-				  .with(new IsEqual(1), new IsEqual(13));
+				  .with(new IsEqual(new Integer(1)),
+				  	new IsEqual(new Integer(13)));
 			pstMock.expects(new InvokeOnceMatcher()).method("executeQuery")
 				  .will(new ReturnStub(rsMock.proxy()));
 			pstMock.expects(new InvokeOnceMatcher()).method("close");

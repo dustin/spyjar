@@ -12,6 +12,9 @@ Test a query with multiple dialects.
 @sql
 select ? as the_int
 
+@sql.another
+select ? as the_int from unused
+
 @sql.oracle
 select ? as the_int from dual
 
