@@ -74,6 +74,7 @@ public class SpyDB extends SpyObject {
 
 		initType=INIT_FROM_CONFIG;
 		source=ConnectionSourceFactory.getInstance().getConnectionSource(c);
+		init();
 	}
 
 	/**
@@ -85,6 +86,7 @@ public class SpyDB extends SpyObject {
 		super();
 		this.conn=c;
 		initType=INIT_FROM_CONN;
+		init();
 	}
 
 	/** 
