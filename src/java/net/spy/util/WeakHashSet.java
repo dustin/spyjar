@@ -43,6 +43,10 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	 */
 	public WeakHashSet(Collection<T> c) {
 		this();
+		if(c == null) {
+			throw new NullPointerException(
+				"Null collection provided to WeakHashSet");
+		}
 		addAll(c);
 	}
 

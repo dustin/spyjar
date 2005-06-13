@@ -62,16 +62,6 @@ public class SoftHashSet<T extends Object> extends ReferenceSet<T> {
 			return (rv);
 		}
 
-		public boolean equals(Object o) {
-			boolean rv=false;
-			Object me=get();
-			if(me!=null) {
-				rv=me.equals(o);
-			}
-
-			return(rv);
-		}
-
 	}
 
 }

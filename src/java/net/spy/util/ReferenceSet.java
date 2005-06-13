@@ -54,7 +54,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 
 		// Copy references into the content map
 		for(Object o : c) {
-			add(c);
+			add(o);
 		}
 	}
 
@@ -65,7 +65,12 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	 * @return true if the object did not already exist
 	 */
 	public boolean add(Object o) {
-		boolean rv=contents.add(getReference((T)o));
+		boolean rv=false;
+		
+		if(!contains(o)) {
+			contents.add(getReference((T)o));
+			rv=true;
+		}
 
 		return (rv);
 	}
