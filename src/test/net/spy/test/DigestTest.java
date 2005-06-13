@@ -71,4 +71,15 @@ public class DigestTest extends TestCase {
 		}
 	}
 
+	/** 
+	 * Test salt-free hashes.
+	 */
+	public void testSaltFree() throws Exception {
+		Digest d=new Digest();
+		assertEquals("{SHA}qUqP5cyxm6YcTAhz05Hph5gvu9M=",
+			d.getSaltFreeHash("test"));
+		d.prefixHash(false);
+		assertEquals("qUqP5cyxm6YcTAhz05Hph5gvu9M=", d.getSaltFreeHash("test"));
+	}
+
 }
