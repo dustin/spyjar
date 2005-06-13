@@ -8,11 +8,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import net.spy.db.DBSP;
+
+
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
+import org.jmock.core.matcher.InvokeOnceMatcher;
+import org.jmock.core.matcher.InvokeAtLeastOnceMatcher;
+import org.jmock.core.constraint.IsEqual;
+import org.jmock.core.constraint.IsInstanceOf;
+import org.jmock.core.stub.ReturnStub;
 
+import net.spy.db.DBSP;
+import net.spy.util.SpyConfig;
 import net.spy.test.db.BooleanTest;
+import net.spy.test.db.DialectTest;
 
 public class SPTTest extends MockObjectTestCase {
 	private Mock connMock;
@@ -109,4 +118,97 @@ public class SPTTest extends MockObjectTestCase {
 	public void testMultipleCalls() throws Exception {
 		testCallSequence(new boolean[] { false, true });
 	}
+
+	private void runQuerySelectorTest(SpyConfig conf) throws Exception {
+		DialectTest dt=new DialectTest(conf);
+		dt.setAnInt(13);
+		ResultSet rs=dt.executeQuery();
+		rs.close();
+		dt.close();
+	}
+
+	/** 
+	 * Test query selection within SPTs.
+	 */
+	public void testQuerySelectionDefault() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$GeneralConnectionSource");
+		runQuerySelectorTest(conf);
+	}
+
+	/** 
+	 * Test a non-existent query source (should select default).
+	 */
+	public void testQuerySelectionNonExistent() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$GeneralConnectionSource");
+		conf.put("queryName", "martha");
+		runQuerySelectorTest(conf);
+	}
+
+	/** 
+	 * Test an existing query selector.
+	 */
+	public void testQuerySelectionOracle() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("queryName", "oracle");
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$OracleConnectionSource");
+		runQuerySelectorTest(conf);
+	}
+
+	public abstract static class AbsConnSrc extends MockConnectionSource {
+		protected abstract String getQuery();
+
+		protected void setupMock(Mock connMock, SpyConfig conf) {
+			Mock rsmdMock=new Mock(ResultSetMetaData.class);
+			rsmdMock.expects(new InvokeAtLeastOnceMatcher())
+				.method("getColumnCount")
+				.will(new ReturnStub(1));
+			rsmdMock.expects(new InvokeAtLeastOnceMatcher())
+				.method("getColumnName")
+				.with(new IsEqual(new Integer(1)))
+				.will(new ReturnStub("the_int"));
+			rsmdMock.expects(new InvokeAtLeastOnceMatcher())
+				.method("getColumnTypeName")
+				.with(new IsEqual(new Integer(1)))
+				.will(new ReturnStub("INTEGER"));
+
+			Mock rsMock=new Mock(ResultSet.class);
+			rsMock.expects(new InvokeOnceMatcher()).method("close");
+			rsMock.expects(new InvokeOnceMatcher()).method("getMetaData")
+				.will(new ReturnStub(rsmdMock.proxy()));
+
+			Mock pstMock=new Mock(PreparedStatement.class);
+			pstMock.expects(new InvokeOnceMatcher()).method("setQueryTimeout");
+			pstMock.expects(new InvokeOnceMatcher()).method("setMaxRows")
+				.with(new IsEqual(0));
+			pstMock.expects(new InvokeOnceMatcher()).method("setInt")
+				  .with(new IsEqual(1), new IsEqual(13));
+			pstMock.expects(new InvokeOnceMatcher()).method("executeQuery")
+				  .will(new ReturnStub(rsMock.proxy()));
+			pstMock.expects(new InvokeOnceMatcher()).method("close");
+
+			connMock.expects(new InvokeOnceMatcher()).method("prepareStatement")
+				.with(new IsEqual(getQuery()))
+				.will(new ReturnStub(pstMock.proxy()));
+
+			connMock.expects(new InvokeOnceMatcher()).method("close");
+		}
+	}
+
+	public static class GeneralConnectionSource extends AbsConnSrc {
+		public String getQuery() {
+			return("select ? as the_int\n");
+		}
+	}
+
+	public static class OracleConnectionSource extends AbsConnSrc {
+		public String getQuery() {
+			return("select ? as the_int from dual\n");
+		}
+	}
+
 }
