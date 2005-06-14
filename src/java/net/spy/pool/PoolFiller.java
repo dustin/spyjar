@@ -34,7 +34,7 @@ public abstract class PoolFiller extends Object {
 	 * @param conf the config to use
 	 */
 	public PoolFiller(String nm, SpyConfig cnf) {
-		super();
+		this();
 		this.conf=cnf;
 		this.name=nm;
 	}
