@@ -10,8 +10,6 @@ import java.util.ResourceBundle;
 import java.util.MissingResourceException;
 import java.text.MessageFormat;
 
-import net.spy.SpyObject;
-
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
 

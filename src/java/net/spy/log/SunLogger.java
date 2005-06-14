@@ -58,7 +58,10 @@ public class SunLogger extends AbstractLogger {
 		} else if(level==Level.FATAL) {
 			sLevel=java.util.logging.Level.SEVERE;
 		} else {
-			// XXX:  Need to do something here.
+			// I don't know what this is, so consider it fatal
+			sLevel=java.util.logging.Level.SEVERE;
+			sunLogger.log(sLevel, "Unhandled log level:  " + level
+					+ " for the following message");
 		}
 
 		// Figure out who was logging.

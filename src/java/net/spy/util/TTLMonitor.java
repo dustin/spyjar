@@ -17,7 +17,6 @@ public final class TTLMonitor extends SpyObject {
 
 	private static TTLMonitor instance=null;
 
-	private int expiredTTLs=0;
 	private Timer timer=null;
 
 	/**

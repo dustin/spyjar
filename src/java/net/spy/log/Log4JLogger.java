@@ -59,7 +59,11 @@ public class Log4JLogger extends AbstractLogger {
 		} else if(level==Level.FATAL) {
 			pLevel=org.apache.log4j.Level.FATAL;
 		} else {
-			// XXX:  Need to do something here.
+			// I don't know what this is, so consider it fatal
+			pLevel=org.apache.log4j.Level.FATAL;
+			l4jLogger.log("net.spy.log.AbstractLogger", pLevel,
+				"Unhandled log level:  " + level
+					+ " for the following message", null);
 		}
 
 		l4jLogger.log("net.spy.log.AbstractLogger", pLevel, message, e);

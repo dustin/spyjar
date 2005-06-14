@@ -101,11 +101,7 @@ public class SpyRunner extends SpyThread {
 			System.out.println("Started...");
 			// Wait a second before starting each thing, in case there are
 			// dependencies
-			try {
-				Thread.sleep(1000);
-			} catch(Exception e) {
-				// OK, maybe not.
-			}
+			Thread.sleep(1000);
 		}
 		// system.list();
 	}

@@ -4,10 +4,6 @@
 
 package net.spy.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-
 /**
  * Base64 block encoder/decoder.
  */

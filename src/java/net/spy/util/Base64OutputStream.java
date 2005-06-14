@@ -4,8 +4,6 @@
 
 package net.spy.util;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
