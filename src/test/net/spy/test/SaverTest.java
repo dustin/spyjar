@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +29,10 @@ import net.spy.db.Savable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 import net.spy.db.TransactionListener;
+
+import net.spy.db.savables.CollectionSavable;
+import net.spy.db.savables.SavableHashMap;
+import net.spy.db.savables.SavableHashSet;
 
 /**
  * Test savable.
@@ -250,6 +255,13 @@ public class SaverTest extends MockObjectTestCase {
 		failingSaverTest(new SQLException("Testing a failure"));
 	}
 
+	private void assertAllSaved(Collection c) {
+		for(Iterator i=c.iterator(); i.hasNext(); ) {
+			TestSavable ts=(TestSavable)i.next();
+			assertTrue(ts.committed);
+		}
+	}
+
 	/** 
 	 * Test a complex sequence of savables.
 	 */
@@ -391,6 +403,91 @@ public class SaverTest extends MockObjectTestCase {
 			assertTrue(e.getMessage().startsWith("Recursing too deep!"));
 		}
 		verifyAllConnections();
+	}
+
+	/** 
+	 * Test the CollectionSavable implementation.
+	 */
+	public void testCollectionSavable() throws Exception {
+		ArrayList al=new ArrayList();
+		ArrayList expectedSequence=new ArrayList();
+		for(int i=0; i<10; i++) {
+			al.add(new TestSavable(i));
+			expectedSequence.add(new Integer(i));
+		}
+		SaveContext ctx=new SaveContext();
+		ctx.put("sequence", new ArrayList());
+		Saver s=new Saver(successConfig, ctx);
+		s.save(new CollectionSavable(al));
+
+		ArrayList seenSequence=new ArrayList();
+		for(Iterator i=al.iterator(); i.hasNext();) {
+			TestSavable ts=(TestSavable)i.next();
+			seenSequence.add(new Integer(ts.id));
+		}
+		assertAllSaved(al);
+
+		assertEquals("Save order was wrong", expectedSequence, seenSequence);
+	}
+
+	private void populateMapAndTest(SavableHashMap shm) throws Exception {
+		shm.put("1", new TestSavable(1));
+		shm.put("2", new TestSavable(2));
+
+		Saver s=new Saver(successConfig);
+		s.save(shm);
+		assertAllSaved(shm.values());
+	}
+
+	/** 
+	 * Test the savable HashMap implementation.
+	 */
+	public void testSavableHashMap() throws Exception {
+		// Map constructor
+		Map m=new HashMap();
+		m.put("1", new TestSavable(1));
+		m.put("2", new TestSavable(2));
+		SavableHashMap shm=new SavableHashMap(m);
+		shm.save((Connection)mock(Connection.class).proxy(),
+			new SaveContext());
+
+		Saver s=new Saver(successConfig);
+		s.save(shm);
+		assertAllSaved(m.values());
+
+		populateMapAndTest(new SavableHashMap());
+		populateMapAndTest(new SavableHashMap(2));
+		populateMapAndTest(new SavableHashMap(2, 0.5f));
+	}
+
+	private void populateSetAndTest(SavableHashSet shs) throws Exception {
+		shs.add(new TestSavable(1));
+		shs.add(new TestSavable(2));
+
+		Saver s=new Saver(successConfig);
+		s.save(shs);
+		assertAllSaved(shs);
+	}
+
+	/** 
+	 * Test the savable HashSet implementation.
+	 */
+	public void testSavableHashSet() throws Exception {
+		// Map constructor
+		Collection c=new HashSet();
+		c.add(new TestSavable(1));
+		c.add(new TestSavable(2));
+		SavableHashSet shs=new SavableHashSet(c);
+		shs.save((Connection)mock(Connection.class).proxy(),
+			new SaveContext());
+
+		Saver s=new Saver(successConfig);
+		s.save(shs);
+		assertAllSaved(c);
+
+		populateSetAndTest(new SavableHashSet());
+		populateSetAndTest(new SavableHashSet(2));
+		populateSetAndTest(new SavableHashSet(2, 0.5f));
 	}
 
 	/** 
