@@ -87,7 +87,7 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * Shut down the tests.
 	 */
-	protected void shutDown() {
+	protected void tearDown() {
 		successSource.clearSeenObjects();
 		isoSource.clearSeenObjects();
 		failSource.clearSeenObjects();
