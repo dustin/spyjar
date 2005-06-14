@@ -39,7 +39,8 @@ public class SpyUtil {
 	 */
 	public static Object[] shuffle(Object in[]) {
 		Object tmp;
-		Object ret[] = in;
+		Object ret[] = new Object[in.length];
+		System.arraycopy(in, 0, ret, 0, in.length);
 		SecureRandom r = new SecureRandom();
 		int size, i;
 
@@ -154,54 +155,6 @@ public class SpyUtil {
 	 */
 	public static String join(Collection c, String on) {
 		return(join(c.iterator(), on));
-	}
-
-	/**
-	 * Get a stack from an Exception.
-	 *
-	 * @param e Exception from which we'll be extracting the stack.
-	 * @param skip Number of stack entries to skip (usually two or three)
-	 */
-	public static Enumeration getStackEnum(Exception e, int skip) {
-		Vector v=new Vector();
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		PrintWriter writer = new PrintWriter(bytes, true);
-		e.printStackTrace(writer);
-
-		StringTokenizer t = new StringTokenizer(bytes.toString(), "\n");
-		for(int i=0; i<skip; i++) {
-			t.nextToken();
-		}
-
-		while(t.hasMoreTokens()) {
-			v.addElement(t.nextToken().substring(4));
-		}
-
-		return(v.elements());
-	}
-
-	/**
-	 * Get a stack from an exception.
-	 *
-	 * @param e Exception from which we'll be extracting the stack.
-	 * @param skip Number of stack entries to skip (usually two or three)
-	 */
-	public static String getStack(Exception e, int skip) {
-		return(join(getStackEnum(e, skip), ", "));
-	}
-
-	/**
-	 * Dump the current list of threads to stderr.
-	 */
-	public static void dumpThreads() {
-		// Find the system group.
-		ThreadGroup start=null, last=null;
-		for(start=Thread.currentThread().getThreadGroup(); start!=null;) {
-			last=start;
-			start=start.getParent();
-		}
-		// Dump the system group.
-		last.list();
 	}
 
 	/**
