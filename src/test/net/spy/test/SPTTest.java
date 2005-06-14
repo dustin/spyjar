@@ -23,6 +23,10 @@ import net.spy.util.SpyConfig;
 import net.spy.test.db.BooleanTest;
 import net.spy.test.db.DialectTest;
 
+import net.spy.db.sp.PrimaryKeyStuff;
+import net.spy.db.sp.SelectPrimaryKey;
+import net.spy.db.sp.UpdatePrimaryKey;
+
 public class SPTTest extends MockObjectTestCase {
 	private Mock connMock;
 	private Connection conn;
@@ -227,6 +231,44 @@ public class SPTTest extends MockObjectTestCase {
 		conf.put("dbConnectionSource",
 			"net.spy.test.SPTTest$OracleConnectionSource");
 		runQuerySelectorTest(conf);
+	}
+
+	/** 
+	 * Test the primary key selection spt.
+	 */
+	public void testSelectPrimaryKey() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$PKConnectionSource");
+		SelectPrimaryKey spk1=new SelectPrimaryKey(conf);
+		spk1.setTableName("test");
+
+		Mock cMock=mock(Connection.class);
+		SelectPrimaryKey spk2=new SelectPrimaryKey((Connection)cMock.proxy());
+		spk2.setTableName("test");
+	}
+
+	/** 
+	 * Test the primary key update spt.
+	 */
+	public void testUpdatePrimaryKey() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbConnectionSource",
+			"net.spy.test.SPTTest$PKConnectionSource");
+		UpdatePrimaryKey upk1=new UpdatePrimaryKey(conf);
+		upk1.setTableName("test");
+
+		Mock cMock=mock(Connection.class);
+		UpdatePrimaryKey upk2=new UpdatePrimaryKey((Connection)cMock.proxy());
+		upk2.setTableName("test");
+	}
+
+	// A dumb connection source that's just used to make the PK related SPT
+	// constructors happy.
+	public static class PKConnectionSource extends MockConnectionSource {
+		protected void setupMock(Mock connMock, SpyConfig conf) {
+			// nothing
+		}
 	}
 
 	public abstract static class AbsConnSrc extends MockConnectionSource {
