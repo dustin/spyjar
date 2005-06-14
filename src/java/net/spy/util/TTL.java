@@ -4,11 +4,16 @@
 
 package net.spy.util;
 
+import java.util.TimerTask;
+
 import java.util.ResourceBundle;
 import java.util.MissingResourceException;
 import java.text.MessageFormat;
 
 import net.spy.SpyObject;
+
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
 
 /**
  * A TTL object is used to express an intent for a process to finish within
@@ -20,7 +25,7 @@ import net.spy.SpyObject;
  *  {@link Logger}.
  * </p>
  */
-public class TTL extends SpyObject {
+public class TTL extends TimerTask {
 
 	private static final int DEFAULT_REPORT_INTERVAL=300000;
 	private static final int DEFAULT_N_REPORTS=10;
@@ -31,11 +36,13 @@ public class TTL extends SpyObject {
 	private Object extraInfo=null;
 
 	private boolean isClosed=false;
-	private long lastReport=0;
+	private boolean fired=false;
 	private int nReports=0;
 
 	private int reportInterval=DEFAULT_REPORT_INTERVAL;
 	private int maxNReports=DEFAULT_N_REPORTS;
+
+	private Logger logger=null;
 
 	/**
 	 * Get an instance of TTL.
@@ -58,6 +65,16 @@ public class TTL extends SpyObject {
 	}
 
 	/** 
+	 * Get the logger for this TTL.
+	 */
+	protected Logger getLogger() {
+		if(logger==null) {
+			logger=LoggerFactory.getLogger(getClass());
+		}
+		return(logger);
+	}
+
+	/** 
 	 *  Resets the counter by setting the time that the TTL started to
 	 *  <i>right now</i>.
 	 */
@@ -69,7 +86,7 @@ public class TTL extends SpyObject {
 	 * String me.
 	 */
 	public String toString() {
-		return("TTL:  " + ttl);
+		return("TTL:  " + ttl + "@" + System.identityHashCode(this));
 	}
 
 	/** 
@@ -89,6 +106,13 @@ public class TTL extends SpyObject {
 	}
 
 	/** 
+	 * Get the report interval.
+	 */
+	public int getReportInterval() {
+		return(reportInterval);
+	}
+
+	/** 
 	 * Set the maximum number of reports this TTL should issue before
 	 * automatically closing.
 	 */
@@ -99,7 +123,7 @@ public class TTL extends SpyObject {
 	/** 
 	 * True if the TTL object has reported.
 	 */
-	public boolean hasReported() {
+	public synchronized boolean hasReported() {
 		return(nReports>0);
 	}
 
@@ -121,14 +145,15 @@ public class TTL extends SpyObject {
 	 * Calling this method states that we are no longer interested in the
 	 * progress of this TTL.
 	 */
-	public void close() {
+	public synchronized void close() {
 		isClosed=true;
+		cancel();
 	}
 
 	/**
 	 * Return true if this TTL is no longer interesting.
 	 */
-	public boolean isClosed() {
+	public synchronized boolean isClosed() {
 		return(isClosed);
 	}
 
@@ -137,24 +162,8 @@ public class TTL extends SpyObject {
 	 * 
 	 * @return true if the TTL is expired
 	 */
-	public boolean isExpired() {
-		boolean rv=false;
-		long now=System.currentTimeMillis();
-
-		if(!isClosed()) {
-			if(now > startTime+ttl) {
-				rv=true;
-			}
-		}
-
-		return(rv);
-	}
-
-	// Has it been long enough since our last report?
-	private boolean readyForReport() {
-		long now=System.currentTimeMillis();
-
-		return((now-lastReport) > reportInterval);
+	public synchronized boolean isExpired() {
+		return(fired);
 	}
 
 	/** 
@@ -208,7 +217,7 @@ public class TTL extends SpyObject {
 					rv=rb.getString(msgWithArg);
 				}
 			} catch(MissingResourceException e) {
-				rv="ResourceBundle not found while reporting TTL expiration:  "
+				rv="Resource not found while reporting TTL expiration:  "
 					+ e.getKey() + ".  (Expected {1}ms, been {0}ms).";
 			}
 		}
@@ -234,18 +243,14 @@ public class TTL extends SpyObject {
 	 * This is called whenever the TTLMonitor owning this object notices
 	 * the object's TTL has expired.
 	 */
-	public final void report() {
-		if(isExpired() && readyForReport()) {
-			long now=System.currentTimeMillis();
-			lastReport=now;
+	public final synchronized void run() {
+		fired=true;
+		// Call the actual report routine
+		doReport();
 
-			// Call the actual report routine
-			doReport();
-
-			// If we've reported enough times, give up.
-			if(nReports++ >= maxNReports) {
-				close();
-			}
+		// If we've reported enough times, give up.
+		if(nReports++ >= maxNReports) {
+			close();
 		}
 	}
 

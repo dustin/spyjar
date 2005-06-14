@@ -4,37 +4,37 @@
 
 package net.spy.util;
 
-import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.Timer;
 
-import net.spy.SpyThread;
+import net.spy.SpyObject;
 
 /**
  * Monitor TTLs.
  *
  * @see TTL
  */
-public final class TTLMonitor extends SpyThread {
-
-	private ArrayList<TTL> ttls=null;
-	private int expiredTTLs=0;
-
-	private static final long NAPTIME=5000;
-	private long lastAddition=0;
-	private static final long MAX_QUIESCENCE=300000;
+public final class TTLMonitor extends SpyObject {
 
 	private static TTLMonitor instance=null;
+
+	private int expiredTTLs=0;
+	private Timer timer=null;
 
 	/**
 	 * Get an instance of TTLMonitor.
 	 */
 	private TTLMonitor() {
 		super();
-		ttls=new ArrayList();
-		lastAddition=System.currentTimeMillis();
-		setName("TTL Monitor");
-		setDaemon(true);
-		start();
+		// Get a new daemon timer
+		timer=new Timer(true);
+	}
+
+	/** 
+	 * Shutdown the monitor.
+	 */
+	public synchronized void shutdown() {
+		timer.cancel();
+		instance=null;
 	}
 
 	/** 
@@ -43,7 +43,7 @@ public final class TTLMonitor extends SpyThread {
 	 * @return the TTLMonitor instance.
 	 */
 	public static synchronized TTLMonitor getTTLMonitor() {
-		if(instance==null || (!instance.isAlive())) {
+		if(instance==null) {
 			instance=new TTLMonitor();
 		}
 		return(instance);
@@ -53,60 +53,7 @@ public final class TTLMonitor extends SpyThread {
 	 * Add a new TTL to the list we're monitoring.
 	 */
 	public void add(TTL ttl) {
-		lastAddition=System.currentTimeMillis();
-		synchronized(ttls) {
-			ttls.add(ttl);
-		}
-	}
-
-	/**
-	 * String me.
-	 */
-	public String toString() {
-		StringBuffer sb=new StringBuffer(64);
-		sb.append(super.toString());
-		sb.append(" - Outstanding TTLs:  ");
-		sb.append(ttls.size());
-		sb.append(", expired=");
-		sb.append(expiredTTLs);
-		return(sb.toString());
-	}
-
-	private boolean shouldIKeepRunning() {
-		long now=System.currentTimeMillis();
-		return((lastAddition+MAX_QUIESCENCE) > now);
-	}
-
-	/**
-	 * Monitor the TTLs.
-	 */
-	public void run() {
-		while(shouldIKeepRunning()) {
-			synchronized(ttls) {
-				// Reset the expired count
-				expiredTTLs=0;
-				// Flip through the TTLs
-				for(Iterator<TTL> i=ttls.iterator(); i.hasNext();) {
-					TTL ttl=i.next();
-					// Update the expired count if it's expired
-					if(ttl.isExpired()) {
-						expiredTTLs++;
-					}
-					// Have it report itself
-					ttl.report();
-					// If it's done, remove it
-					if(ttl.isClosed()) {
-						i.remove();
-					} // closed
-				} // Iterator
-			} // Lock
-
-			try {
-				sleep(NAPTIME);
-			} catch(InterruptedException e) {
-				getLogger().warn("Hey!  Someone interrupted my sleep!", e);
-			}
-		}
+		timer.scheduleAtFixedRate(ttl, ttl.getTTL(), ttl.getReportInterval());
 	}
 
 }
