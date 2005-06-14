@@ -62,6 +62,14 @@ arch-tag: 2A68027B-714D-465F-A2B5-D105CE22459C
 	</versions>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>${maven.src.dir}/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources>
 		<unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
 		<unitTest>
 			<includes>
