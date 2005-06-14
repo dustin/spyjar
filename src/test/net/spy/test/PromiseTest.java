@@ -79,6 +79,17 @@ public class PromiseTest extends TestCase {
 		assertEquals("Promise {null}", String.valueOf(p));
 	}
 
+	public void testBrokenPromiseException() {
+		BrokenPromiseException e=new BrokenPromiseException("test");
+		assertEquals("test", e.getMessage());
+		assertNull(e.getCause());
+
+		Exception e2=new Exception();
+		e=new BrokenPromiseException("test", e2);
+		assertEquals("test", e.getMessage());
+		assertSame(e2, e.getCause());
+	}
+
 	//
 	// Private inner classes for testing.
 	//
