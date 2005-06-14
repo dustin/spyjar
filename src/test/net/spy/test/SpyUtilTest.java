@@ -16,9 +16,10 @@ import java.io.ByteArrayInputStream;
 import junit.framework.TestCase;
 
 import net.spy.util.SpyUtil;
+import net.spy.util.Enumeriterator;
 
 /**
- * Test various things from net.spy.util.SpyUtil.
+ * Test various things from net.spy.util.
  */
 public class SpyUtilTest extends TestCase {
 
@@ -116,6 +117,65 @@ public class SpyUtilTest extends TestCase {
 		}
 
 		assertTrue("Result after shuffling is too similar.", match < 10);
+	}
+
+	/** 
+	 * Test the Enumeriterator implementation.
+	 */
+	public void testEnumeriterator() throws Exception {
+		Vector v=new Vector();
+		v.add("a");
+		v.add("b");
+		v.add("c");
+		for(Iterator i=new Enumeriterator(v.elements()); i.hasNext(); ) {
+			i.next();
+			try {
+				i.remove();
+			} catch(UnsupportedOperationException e) {
+				assertEquals("No can do, chief.", e.getMessage());
+				// pass
+			}
+		}
+	}
+
+	/** 
+	 * Test the deHTMLer.
+	 */
+	public void testDeHTML() throws Exception {
+		assertEquals("blah", SpyUtil.deHTML("<tag>blah</tag>"));
+		assertEquals("blah", SpyUtil.deHTML("<tag thing=\"<a>\">blah</tag>"));
+	}
+
+	/** 
+	 * Test the run class.
+	 */
+	public void testRunClass() throws Exception {
+		String args[]=new String[0];
+		SpyUtil.runClass("net.spy.test.SpyUtilTest", args);
+
+		args=new String[1];
+		args[0]="java.lang.Exception";
+		try {
+			SpyUtil.runClass("net.spy.test.SpyUtilTest", args);
+			fail("Expected " + args[0]);
+		} catch(Exception e) {
+			// pass
+		}
+
+		// errors don't get thrown...perhaps they should
+		args[0]="java.lang.Error";
+		SpyUtil.runClass("net.spy.test.SpyUtilTest", args);
+	}
+
+	/** 
+	 * Test for runclass.
+	 */
+	public static void main(String args[]) throws Throwable {
+		if(args.length > 0) {
+			Class c=Class.forName(args[0]);
+			Throwable t=(Throwable)c.newInstance();
+			throw t;
+		}
 	}
 
 }
