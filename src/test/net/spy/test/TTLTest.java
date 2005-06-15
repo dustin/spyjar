@@ -42,7 +42,7 @@ public class TTLTest extends TestCase {
 
 		TTL testTTL1=new TTL(timeout, theObject);
 		testTTL1.setMaxReports(2);
-		testTTL1.setReportInterval(150);
+		testTTL1.setReportInterval(250);
 		String.valueOf(testTTL1);
 
 		TTL testTTL2=new TTL(timeout);
@@ -73,7 +73,7 @@ public class TTLTest extends TestCase {
 		testTTL3.close();
 
 		// Wait for some ttls to expire
-		Thread.sleep(600);
+		Thread.sleep(700);
 		assertTrue(testTTL1.isExpired());
 		assertTrue(testTTL2.isExpired());
 		assertTrue(testTTL1.hasReported());
@@ -83,7 +83,7 @@ public class TTLTest extends TestCase {
 		assertFalse(testTTL2.isClosed());
 
 		// Wait for some more ttls
-		Thread.sleep(250);
+		Thread.sleep(350);
 		assertTrue(testTTL1.hasReported());
 		assertTrue(testTTL2.hasReported());
 		assertFalse(testTTL3.hasReported());
