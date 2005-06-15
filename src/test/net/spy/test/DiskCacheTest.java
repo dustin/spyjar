@@ -68,33 +68,17 @@ public class DiskCacheTest extends TestCase {
 	/** 
 	 * Get the cache.
 	 */
-	protected void setUp() {
+	protected void setUp() throws Exception {
 		String tmpdir=getTmpDir();
 		cache=new DiskCache(tmpdir);
-	}
-
-	private void rmdashrf(File tmp) {
-		// System.err.println("rmdashrf " + tmp);
-		File f[]=tmp.listFiles();
-		if(f!=null) {
-			for(int i=0; i<f.length; i++) {
-				if(f[i].isDirectory()) {
-					rmdashrf(f[i]);
-				} else {
-					f[i].delete();
-				}
-			}
-		}
-		// Remove the dir itself
-		tmp.delete();
 	}
 
 	/** 
 	 * Get rid of the cache.
 	 */
-	protected void tearDown() {
+	protected void tearDown() throws Exception {
 		cache = null;
-		rmdashrf(new File(tmpdir));
+		SpyUtil.rmDashR(new File(tmpdir));
 		tmpdir=null;
 	}
 

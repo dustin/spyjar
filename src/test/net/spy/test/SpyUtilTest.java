@@ -9,12 +9,20 @@ import java.util.Vector;
 import java.util.Iterator;
 import java.util.Enumeration;
 
+import java.io.File;
 import java.io.Reader;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 import junit.framework.TestCase;
 
+import net.spy.util.PwGen;
+import net.spy.util.SPGen;
 import net.spy.util.SpyUtil;
 import net.spy.util.Enumeriterator;
 
@@ -165,6 +173,109 @@ public class SpyUtilTest extends TestCase {
 		// errors don't get thrown...perhaps they should
 		args[0]="java.lang.Error";
 		SpyUtil.runClass("net.spy.test.SpyUtilTest", args);
+	}
+
+	/** 
+	 * Test the type name gen.
+	 */
+	public void testTypeNameGen() throws Exception {
+		String tmpFile="/tmp/tn" + PwGen.getPass(12) + ".tmp";
+		String args[]={tmpFile};
+		SpyUtil.runClass("net.spy.util.TypeNameGen", args);
+		File f=new File(tmpFile);
+		f.delete();
+	}
+
+	/** 
+	 * Test the interface implementor.
+	 */
+	public void testInterfaceImplementor() throws Exception {
+		String tmpDir="/tmp/ii" + PwGen.getPass(12);
+		String args[]={"-superclass", "java.util.HashMap",
+			"-interface", "java.sql.ResultSet",
+			"-outputclass", "test.TestResult",
+			"-outputdir", tmpDir};
+		SpyUtil.runClass("net.spy.util.InterfaceImplementor", args);
+
+		SpyUtil.rmDashR(new File(tmpDir));
+	}
+
+	/** 
+	 * Test the proxy interface implementor.
+	 */
+	public void testProxyInterfaceImplementor() throws Exception {
+		String tmpDir="/tmp/pii" + PwGen.getPass(12);
+		String args[]={"-superclass", "java.util.HashMap",
+			"-interface", "java.sql.ResultSet",
+			"-outputclass", "test.TestResult",
+			"-outputdir", tmpDir};
+		SpyUtil.runClass("net.spy.util.ProxyInterfaceImplementor", args);
+
+		SpyUtil.rmDashR(new File(tmpDir));
+	}
+
+	private void generateSPT(String path, boolean override) throws Exception {
+		String baseDir=System.getProperties().getProperty("basedir");
+		assertNotNull(baseDir);
+		File f=new File(baseDir + path);
+		BufferedReader ireader=new BufferedReader(new FileReader(f));
+		PrintWriter out=new PrintWriter(new OutputStreamWriter(
+			new ByteArrayOutputStream()));
+
+		SPGen spg=new SPGen("Tmp", ireader, out);
+		spg.setVerbose(override);
+		if(override) {
+			spg.setSuperclass("net.spy.db.DBSQL");
+			spg.setDbcpSuperclass("net.spy.db.DBCP");
+			spg.setDbspSuperclass("net.spy.db.DBSP");
+		}
+		spg.generate();
+
+		out.close();
+		ireader.close();
+	}
+
+	private void generateSPT(String path) throws Exception {
+		generateSPT(path, true);
+		generateSPT(path, false);
+	}
+
+	/** 
+	 * SPGen test.
+	 */
+	public void testSPGen() throws Exception {
+		generateSPT("/src/test/net/spy/test/db/ThreeColumnTest.spt");
+		generateSPT("/src/test/net/spy/test/db/CallTestFunc.spt");
+		generateSPT("/src/test/net/spy/test/db/DialectTest.spt");
+		generateSPT("/src/test/net/spy/test/db/CacheTest.txt");
+		generateSPT("/src/test/net/spy/test/db/InterfaceTest.txt");
+		generateSPT("/src/test/net/spy/test/db/ImplTest.txt");
+		generateSPT("/src/test/net/spy/test/db/ImplTest2.txt");
+		generateSPT("/src/test/net/spy/test/db/ThreeColumnOptional.txt");
+		generateSPT("/src/test/net/spy/test/db/TestProc.txt");
+		generateSPT("/src/test/net/spy/test/db/TestWithOutput.txt");
+
+		try {
+			generateSPT("/src/test/net/spy/test/db/Bad1.txt");
+			fail("Expected an invalid section on Bad1");
+		} catch(Exception e) {
+			assertEquals("Unknown section: ``wtf''", e.getMessage());
+		}
+
+		try {
+			generateSPT("/src/test/net/spy/test/db/Bad2.txt");
+			fail("Expected an invalid type on Bad2");
+		} catch(Exception e) {
+			assertEquals("Invalid JDBC type: TYPE", e.getMessage());
+		}
+
+		try {
+			generateSPT("/src/test/net/spy/test/db/Bad3.txt");
+			fail("Expected invalid parameter on Bad3");
+		} catch(Exception e) {
+			assertEquals("No parameter for this default:  blah",
+				e.getMessage());
+		}
 	}
 
 	/** 

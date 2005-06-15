@@ -22,6 +22,8 @@ import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import net.spy.log.LoggerFactory;
+
 /**
  * Miscellaneous utilities.
  */
@@ -272,5 +274,28 @@ public class SpyUtil {
 			}
 		}
 		return(sb.toString());
+	}
+
+	/** 
+	 * Recursively remove a path.
+	 */
+	public static void rmDashR(File tmp) {
+		File f[]=tmp.listFiles();
+		if(f!=null) {
+			for(int i=0; i<f.length; i++) {
+				if(f[i].isDirectory()) {
+					rmDashR(f[i]);
+				} else {
+					if(!f[i].delete()) {
+						LoggerFactory.getLogger(SpyUtil.class.getName()).warn(
+							"Couldn't delete " + f[i]);
+					}
+				}
+			}
+		}
+		if(!tmp.delete()) {
+			LoggerFactory.getLogger(SpyUtil.class.getName()).warn(
+				"Couldn't delete " + tmp);
+		}
 	}
 }

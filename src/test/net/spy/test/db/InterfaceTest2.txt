@@ -1,0 +1,50 @@
+#
+# Copyright (c) 2005 Dustin Sallings <dustin@spy.net>
+# arch-tag: 1E2B75DD-57FC-4876-9A0A-0D919F5B0B21
+#
+
+@package
+net.spy.test.db
+
+@superclass
+net.spy.db.DBSPLike
+
+@import
+java.util.HashMap
+java.util.HashSet
+
+@description
+My description.
+
+@params
+param1 required BIT description
+param2 required DATE description
+param3 required DOUBLE description
+param4 required FLOAT description
+param5 required INTEGER description
+param6 required BIGINT description
+param7 required NUMERIC description
+param8 required DECIMAL description
+param9 required SMALLINT description
+param10 required TINYINT description
+param11 required OTHER description
+param12 required VARCHAR description
+param13 required TIME description
+param14 required TIMESTAMP description
+
+@results
+result1 BIT description
+result2 DATE description
+result3 DOUBLE description
+result4 FLOAT description
+result5 INTEGER description
+result6 BIGINT description
+result7 NUMERIC description
+result8 DECIMAL description
+result9 SMALLINT description
+result10 TINYINT description
+result11 OTHER description
+result12 VARCHAR description
+result13 TIME description
+result14 TIMESTAMP description
+result15

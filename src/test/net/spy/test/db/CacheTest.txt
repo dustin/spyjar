@@ -1,0 +1,27 @@
+#
+# Copyright (c) 2005 Dustin Sallings <dustin@spy.net>
+# arch-tag: 57788769-5ED6-4979-B4D0-1C6CD1B10B58
+#
+
+@package
+net.spy.test.db
+
+@import
+java.io.Serializable
+
+@implements
+Serializable
+Cloneable
+
+@description
+Test with cache.
+
+@sql
+select 1
+
+@sql.oracle
+select 1 from oracle
+
+@cachetime
+723739
+
