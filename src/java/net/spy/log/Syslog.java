@@ -79,12 +79,4 @@ public class Syslog extends SpyObject {
 		}
 	}
 
-	/**
-	 * Testing.
-	 */
-	public static void main(String args[]) throws Exception {
-		Syslog l = new Syslog("butterfly");
-
-		l.log(AUTH, NOTICE, args[0]);
-	}
 }

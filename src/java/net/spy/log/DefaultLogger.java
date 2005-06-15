@@ -20,6 +20,13 @@ public class DefaultLogger extends AbstractLogger {
 	}
 
 	/** 
+	 * False.
+	 */
+	public boolean isDebugEnabled() {
+		return(false);
+	}
+
+	/** 
 	 * True.
 	 */
 	public boolean isInfoEnabled() {

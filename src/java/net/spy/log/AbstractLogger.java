@@ -36,9 +36,7 @@ public abstract class AbstractLogger implements Logger {
 	 * 
 	 * @return true if debug messages would be displayed
 	 */
-	public boolean isDebugEnabled() {
-		return(false);
-	}
+	public abstract boolean isDebugEnabled();
 
 	/** 
 	 * True if debug is enabled for this logger.
@@ -46,9 +44,7 @@ public abstract class AbstractLogger implements Logger {
 	 * 
 	 * @return true if info messages would be displayed
 	 */
-	public boolean isInfoEnabled() {
-		return(false);
-	}
+	public abstract boolean isInfoEnabled();
 
 	/** 
 	 * Log a message at debug level.

@@ -7,11 +7,13 @@ import java.io.PrintStream;
 
 import junit.framework.TestCase;
 
+import net.spy.log.Level;
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
 import net.spy.log.SunLogger;
 import net.spy.log.Syslog;
 import net.spy.log.LoggingOutputStream;
+import net.spy.log.DefaultLogger;
 
 /**
  * Make sure logging is enabled.
@@ -58,6 +60,7 @@ public class LoggingTest extends TestCase {
 		logger.error("error message");
 		logger.fatal("fatal message");
 		logger.log(null, "test null", null);
+		assertEquals(getClass().getName(), logger.getName());
 	}
 
 	/** 
@@ -84,6 +87,47 @@ public class LoggingTest extends TestCase {
 		l.log(null, "test null", null);
 		l.log(null, "null message with exception and no requestor",
 			new Exception());
+	}
+
+	/** 
+	 * Test the default logger.
+	 */
+	public void testMyLogger() {
+		Logger l=new DefaultLogger(getClass().getName());
+		assertFalse(l.isDebugEnabled());
+		l.debug("debug message");
+		assertTrue(l.isInfoEnabled());
+		l.info("info message");
+		l.warn("warn message");
+		l.error("error message");
+		l.fatal("fatal message");
+		l.fatal("fatal message with exception", new Exception());
+		l.log(null, "test null", null);
+		l.log(null, "null message with exception and no requestor",
+			new Exception());
+
+		try {
+			l=new DefaultLogger(null);
+			fail("Allowed me to create a logger with null name:  " + l);
+		} catch(NullPointerException e) {
+			assertEquals("Logger name may not be null.", e.getMessage());
+		}
+	}
+
+	/** 
+	 * Test stringing levels.
+	 */
+	public void testLevelStrings() {
+		assertEquals("{LogLevel:  DEBUG}", String.valueOf(Level.DEBUG));
+		assertEquals("{LogLevel:  INFO}", String.valueOf(Level.INFO));
+		assertEquals("{LogLevel:  WARN}", String.valueOf(Level.WARN));
+		assertEquals("{LogLevel:  ERROR}", String.valueOf(Level.ERROR));
+		assertEquals("{LogLevel:  FATAL}", String.valueOf(Level.FATAL));
+		assertEquals("DEBUG", Level.DEBUG.getName());
+		assertEquals("INFO", Level.INFO.getName());
+		assertEquals("WARN", Level.WARN.getName());
+		assertEquals("ERROR", Level.ERROR.getName());
+		assertEquals("FATAL", Level.FATAL.getName());
 	}
 
 	/** 
