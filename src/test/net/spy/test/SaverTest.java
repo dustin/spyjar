@@ -28,6 +28,7 @@ import net.spy.db.Saver;
 import net.spy.db.Savable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
+import net.spy.db.AbstractSavable;
 import net.spy.db.TransactionListener;
 
 import net.spy.db.savables.CollectionSavable;
@@ -286,8 +287,8 @@ public class SaverTest extends MockObjectTestCase {
 		// And one postsavable with a presavable and a postsavable, but it
 		// should, itself, not be saved.
 		TestSavable ts9=new TestSavable(9);
-		ts9.isNew=false;
-		ts9.isModified=false;
+		ts9.setNew(false);
+		ts9.setModified(false);
 		ts9.postSavs.add(new TestSavable(10));
 		ts9.preSavs.add(new TestSavable(11));
 		ts6.postSavs.add(ts9);
@@ -320,6 +321,28 @@ public class SaverTest extends MockObjectTestCase {
 		assertTrue(ts1.committed);
 
 		verifyAllConnections();
+	}
+
+	/** 
+	 * Test an object getting resaved.
+	 */
+	public void testResavable() throws Exception {
+		Saver s=new Saver(successConfig);
+		BasicSavable s1=new BasicSavable();
+		assertFalse(s1.saved);
+		s.save(s1);
+
+		// After the first save, it should be considered saved
+		assertTrue(s1.saved);
+		s1.saved=false;
+		s.save(s1);
+		// A second save should not modify it
+		assertFalse(s1.saved);
+
+		// ...but if we consider it modified, we should be able to save again
+		s1.modify();
+		s.save(s1);
+		assertTrue(s1.saved);
 	}
 
 	/** 
@@ -570,17 +593,37 @@ public class SaverTest extends MockObjectTestCase {
 		}
 	}
 
+	private static class BasicSavable extends AbstractSavable {
+		public boolean saved=false;
+
+		public BasicSavable() {
+			super();
+			setNew(true);
+		}
+
+		public void setNew(boolean to) {
+			super.setNew(to);
+		}
+
+		public void setModified(boolean to) {
+			super.setModified(to);
+		}
+
+		public void save(Connection conn, SaveContext ctx) {
+			saved=true;
+			setSaved();
+		}
+	}
+
 	//
 	// A flexible savable was can set up a predicable test with
 	//
-	private static final class TestSavable extends Object
-		implements Savable, TransactionListener {
+	private static final class TestSavable extends BasicSavable
+		implements TransactionListener {
 
 		public Collection preSavs=null;
 		public Collection postSavs=null;
 		public int id=0;
-		public boolean isNew=false;
-		public boolean isModified=true;
 		public boolean committed=false;
 
 		public TestSavable(int i) {
@@ -598,24 +641,17 @@ public class SaverTest extends MockObjectTestCase {
 			return(postSavs);
 		}
 
-		public boolean isNew() {
-			return(isNew);
-		}
-
-		public boolean isModified() {
-			return(isModified);
+		public void save(Connection conn, SaveContext ctx) {
+			super.save(conn, ctx);
+			Collection sequence=(Collection)ctx.get("sequence");
+			if(sequence != null) {
+				sequence.add(new Integer(id));
+			}
 		}
 
 		public String toString() {
 			return "TestSavable is an object that gets exposes "
 				+ "enough of itself to make for a pretty useful test suite";
-		}
-
-		public void save(Connection conn, SaveContext ctx) {
-			Collection sequence=(Collection)ctx.get("sequence");
-			if(sequence != null) {
-				sequence.add(new Integer(id));
-			}
 		}
 
 		public void transactionCommited() {

@@ -79,6 +79,7 @@ public class Saver extends SpyObject {
 	 */
 	private void save(Savable o, Integer isoLevel) throws SaveException {
 		boolean complete=false;
+		listedObjects.clear();
 
 		int oldIsolationLevel=0;
 
