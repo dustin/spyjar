@@ -3,11 +3,13 @@
 
 package net.spy.test;
 
+import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
 
+import net.spy.util.SpyUtil;
 import net.spy.util.SpyToker;
 
 /**
@@ -44,6 +46,19 @@ public class TokerTest extends TestCase {
 		assertEquals("%t2", toker.tokenizeString("%t2", vars));
 		assertEquals("test1test2", toker.tokenizeString("%t1%%t2%", vars));
 		assertEquals("%", toker.tokenizeString("%", vars));
+	}
+
+	/** 
+	 * Test tokenizing files.
+	 */
+	public void testFileTokenizer() throws Exception {
+		assertNull(toker.tokenize(new File("/some/nonsense/path"), vars));
+
+		String path=System.getProperties().getProperty("basedir")
+			+ "/etc/test.conf";
+		File theFile=new File(path);
+		assertEquals(SpyUtil.getFileData(theFile),
+			toker.tokenize(theFile, vars));
 	}
 
 }
