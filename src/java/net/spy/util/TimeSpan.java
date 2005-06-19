@@ -98,14 +98,4 @@ public class TimeSpan extends Object {
 		return(sb.toString());
 	}
 
-	/**
-	 * Testing and what not.
-	 */
-	public static void main(String args[]) throws Exception {
-		java.text.SimpleDateFormat sdf=new java.text.SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss");
-		TimeSpan ts=new TimeSpan(sdf.parse(args[0]), sdf.parse(args[1]));
-		System.out.println(ts);
-	}
-
 }
