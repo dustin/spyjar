@@ -4,50 +4,42 @@
 
 package net.spy.test;
 
+import java.util.ArrayList;
+
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.PreparedStatement;
 
 import java.math.BigDecimal;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import org.jmock.Mock;
+import org.jmock.core.matcher.InvokeOnceMatcher;
+import org.jmock.core.matcher.InvokeAtLeastOnceMatcher;
+import org.jmock.core.constraint.IsEqual;
+import org.jmock.core.constraint.IsInstanceOf;
+import org.jmock.core.stub.StubSequence;
+import org.jmock.core.stub.ReturnStub;
 
 import net.spy.util.SpyConfig;
 import net.spy.db.GetPK;
+import net.spy.db.ConnectionSourceFactory;
 
 /**
  * Test the primary key implementation.
  */
 public class PKTest extends TestCase {
 
-	private SpyConfig conf=null;
-
-	/**
-	 * Get an instance of PKTest.
-	 */
-	public PKTest(String name) {
-		super(name);
-		conf=new SpyConfig(new java.io.File("test.conf"));
-	}
-
-	/** 
-	 * Get this test.
-	 */
-	public static Test suite() {
-		return new TestSuite(PKTest.class);
-	}
-
-	/** 
-	 * Run this test.
-	 */
-	public static void main(String args[]) {
-		junit.textui.TestRunner.run(suite());
-	}
-
 	/** 
 	 * Test basic primary key functionality.
 	 */
-	public void testPrimaryKeyByConf() throws SQLException {
+	public void testPrimaryKeyByConf() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbConnectionSource",
+			"net.spy.test.PKTest$SuccessConnectionSource");
+
 		GetPK getpk=GetPK.getInstance();
 		BigDecimal previous=getpk.getPrimaryKey(conf, "test_table");
 		BigDecimal one=new BigDecimal(1);
@@ -59,6 +51,173 @@ public class PKTest extends TestCase {
 
 			previous=newKey;
 		}
+
+		ConnectionSourceFactory cnf=ConnectionSourceFactory.getInstance();
+		MockConnectionSource mockSource=
+			(MockConnectionSource)cnf.getConnectionSource(conf);
+
+		mockSource.verifyConnections();
+	}
+
+	/** 
+	 * Test a PK with a missing key (no update).
+	 */
+	public void testPrimaryKeyMissingKey() throws Exception {
+		SpyConfig conf=new SpyConfig();
+		conf.put("dbConnectionSource",
+			"net.spy.test.PKTest$MissingKeySource");
+		GetPK getpk=GetPK.getInstance();
+		try {
+			BigDecimal previous=getpk.getPrimaryKey(conf, "test_table");
+		} catch(SQLException e) {
+			assertEquals("Did not update the correct number of rows for"
+				+ " test_table (got 0)", e.getMessage());
+		}
+	}
+
+	private abstract static class BaseConnectionSource
+		extends MockConnectionSource {
+
+		protected static final String UPDATE=
+			"update primary_key\n"
+			+ "\tset primary_key=primary_key+incr_value\n"
+			+ "\twhere table_name=?\n";
+		protected static final String SELECT=
+			"select\n"
+			+ "\ttable_name,\n"
+			+ "\t(primary_key - (incr_value-1)) as first_key,\n"
+			+ "\tprimary_key as last_key\n"
+			+ "from\n"
+			+ "\tprimary_key\n"
+			+ "where\n"
+			+ "\ttable_name=?\n";
+
+		protected PreparedStatement getUpdateStatementToReturn(int what) {
+			// the prepared statement that will update the record
+			Mock updatePst=new Mock(PreparedStatement.class);
+			updatePst.expects(new InvokeOnceMatcher()).method("setQueryTimeout")
+				.with(new IsEqual(new Integer(0)));
+			updatePst.expects(new InvokeOnceMatcher()).method("setMaxRows")
+				.with(new IsEqual(new Integer(0)));
+			updatePst.expects(new InvokeOnceMatcher()).method("setString")
+				.with(new IsEqual(new Integer(1)), new IsEqual("test_table"));
+			updatePst.expects(new InvokeOnceMatcher()).method("executeUpdate")
+				.will(new ReturnStub(new Integer(what)));
+			updatePst.expects(new InvokeOnceMatcher()).method("close");
+			registerMock(updatePst);
+			return((PreparedStatement)updatePst.proxy());
+		}
+
+		protected ResultSet getResultSetWithRange(
+			BigDecimal from, BigDecimal to) {
+
+			Mock rsmd=new Mock(ResultSetMetaData.class);
+			rsmd.expects(new InvokeAtLeastOnceMatcher())
+				.method("getColumnCount")
+				.will(new ReturnStub(new Integer(2)));
+			rsmd.expects(new InvokeAtLeastOnceMatcher())
+				.method("getColumnName").with(new IsEqual(new Integer(1)))
+				.will(new ReturnStub("first_key"));
+			rsmd.expects(new InvokeAtLeastOnceMatcher())
+				.method("getColumnName").with(new IsEqual(new Integer(2)))
+				.will(new ReturnStub("last_key"));
+			rsmd.expects(new InvokeAtLeastOnceMatcher())
+				.method("getColumnTypeName").with(new IsEqual(new Integer(1)))
+				.will(new ReturnStub("BIGINT"));
+			rsmd.expects(new InvokeAtLeastOnceMatcher())
+				.method("getColumnTypeName").with(new IsEqual(new Integer(2)))
+				.will(new ReturnStub("BIGINT"));
+			registerMock(rsmd);
+
+			Mock rs=new Mock(ResultSet.class);
+			rs.expects(new InvokeOnceMatcher()).method("getMetaData")
+				.will(new ReturnStub(rsmd.proxy()));
+			ArrayList ofResults=new ArrayList();
+			ofResults.add(new ReturnStub(Boolean.TRUE));
+			ofResults.add(new ReturnStub(Boolean.FALSE));
+			rs.expects(new InvokeAtLeastOnceMatcher()).method("next")
+				.will(new StubSequence(ofResults));
+			rs.expects(new InvokeOnceMatcher()).method("getBigDecimal")
+				.with(new IsEqual("first_key"))
+				.will(new ReturnStub(from));
+			rs.expects(new InvokeOnceMatcher()).method("getBigDecimal")
+				.with(new IsEqual("last_key"))
+				.will(new ReturnStub(to));
+			rs.expects(new InvokeOnceMatcher()).method("close");
+			registerMock(rs);
+			return((ResultSet)rs.proxy());
+		}
+
+		protected PreparedStatement getSelectStatementWithRange(
+			BigDecimal from, BigDecimal to) {
+
+			// the prepared statement that will update the record
+			Mock selectPst=new Mock(PreparedStatement.class);
+			selectPst.expects(new InvokeOnceMatcher()).method("setQueryTimeout")
+				.with(new IsEqual(new Integer(0)));
+			selectPst.expects(new InvokeOnceMatcher()).method("setMaxRows")
+				.with(new IsEqual(new Integer(0)));
+			selectPst.expects(new InvokeOnceMatcher()).method("setString")
+				.with(new IsEqual(new Integer(1)), new IsEqual("test_table"));
+			selectPst.expects(new InvokeOnceMatcher()).method("executeQuery")
+				.will(new ReturnStub(getResultSetWithRange(from, to)));
+			selectPst.expects(new InvokeOnceMatcher()).method("close");
+			registerMock(selectPst);
+			return((PreparedStatement)selectPst.proxy());
+		}
+
+		protected void setupSuccesfulGetPK(Mock connMock,
+			BigDecimal first, BigDecimal last) {
+
+			connMock.expects(new InvokeOnceMatcher()).method("prepareStatement")
+				.with(new IsEqual(UPDATE))
+				.will(new ReturnStub(getUpdateStatementToReturn(1)));
+			connMock.expects(new InvokeOnceMatcher()).method("prepareStatement")
+				.with(new IsEqual(SELECT))
+				.will(new ReturnStub(getSelectStatementWithRange(first, last)));
+		}
+	}
+
+	public static class SuccessConnectionSource extends BaseConnectionSource {
+
+		private static final int INCR=100;
+		private static int startPoint=0;
+
+		protected void setupMock(Mock connMock, SpyConfig conf) {
+			// autocommit will be enabled, and then disabled
+			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
+				.with(new IsEqual(Boolean.FALSE)).id("disableAutocommit");
+
+			setupSuccesfulGetPK(connMock, new BigDecimal(startPoint),
+				new BigDecimal((INCR+startPoint) - 1));
+			// Increment the start point
+			startPoint+=INCR;
+
+			connMock.expects(new InvokeOnceMatcher()).method("commit");
+			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
+				.with(new IsEqual(Boolean.TRUE)).id("enableAutocommit");
+			connMock.expects(new InvokeOnceMatcher()).method("close");
+		}
+
+	}
+
+	public static class MissingKeySource extends BaseConnectionSource {
+
+		protected void setupMock(Mock connMock, SpyConfig conf) {
+			// autocommit will be enabled, and then disabled
+			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
+				.with(new IsEqual(Boolean.FALSE)).id("disableAutocommit");
+
+			connMock.expects(new InvokeOnceMatcher()).method("prepareStatement")
+				.with(new IsEqual(UPDATE))
+				.will(new ReturnStub(getUpdateStatementToReturn(0)));
+
+			connMock.expects(new InvokeOnceMatcher()).method("rollback");
+			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
+				.with(new IsEqual(Boolean.TRUE)).id("enableAutocommit");
+			connMock.expects(new InvokeOnceMatcher()).method("close");
+		}
+
 	}
 
 }

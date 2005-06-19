@@ -278,8 +278,13 @@ public class GetPK extends SpyObject {
 			rs.close();
 			dbsp.close();
 
+			KeyStore ks=new KeyStore(start, end);
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Got a new keystore for "
+					+ table + ":  " + ks);
+			}
 			synchronized(caches) {
-				caches.put(key, new KeyStore(start, end));
+				caches.put(key, ks);
 			}
 
 			complete=true;

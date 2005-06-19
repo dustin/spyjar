@@ -94,17 +94,10 @@ public class SaverTest extends MockObjectTestCase {
 		failSource.clearSeenObjects();
 	}
 
-	private void verifySource(MockConnectionSource src) throws Exception {
-		for(Iterator i=src.getSeenObjects().iterator(); i.hasNext();) {
-			Mock m=(Mock)i.next();
-			m.verify();
-		}
-	}
-
 	private void verifyAllConnections() throws Exception {
-		verifySource(successSource);
-		verifySource(failSource);
-		verifySource(isoSource);
+		successSource.verifyConnections();
+		failSource.verifyConnections();
+		isoSource.verifyConnections();
 	}
 
 	/** 

@@ -6,6 +6,7 @@ package net.spy.test;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collection;
+import java.util.Iterator;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -67,5 +68,16 @@ public abstract class MockConnectionSource extends Object
 			throw new RuntimeException(
 				"jmock threw a SQLException on close", e);
 		}
+	}
+
+	/** 
+	 * Verify all of the connections that were handed out.
+	 */
+	public void verifyConnections() throws Exception {
+		for(Iterator i=getSeenObjects().iterator(); i.hasNext(); ) {
+			Mock m=(Mock)i.next();
+			m.verify();
+		}
+		clearSeenObjects();
 	}
 }
