@@ -78,9 +78,13 @@ public class SQLRunner extends SpyObject {
 		LineNumberReader lr=new LineNumberReader(new InputStreamReader(is));
 
 		boolean successful=false;
+		boolean origAutoCommit=true;
 		try {
 			// Set the autocommit setting
-			conn.setAutoCommit(autocommit);
+			origAutoCommit=conn.getAutoCommit();
+			if(origAutoCommit != autocommit) {
+				conn.setAutoCommit(autocommit);
+			}
 
 			// Execute the script
 			executeScript(lr, errok);
@@ -107,9 +111,9 @@ public class SQLRunner extends SpyObject {
 					}
 				}
 				// Reset the autocommit if it was set to false
-				if(!autocommit) {
+				if(origAutoCommit != autocommit) {
 					try {
-						conn.setAutoCommit(true);
+						conn.setAutoCommit(origAutoCommit);
 					} catch(SQLException e) {
 						getLogger().warn("Error resetting autocommit");
 					}
@@ -144,9 +148,10 @@ public class SQLRunner extends SpyObject {
 					} else {
 						throw e;
 					}
+				} finally {
+					st.close();
 				}
 				long stoptime=System.currentTimeMillis();
-				st.close();
 				st=null;
 				String rows=" rows";
 				if(affected == 1) {
@@ -157,12 +162,6 @@ public class SQLRunner extends SpyObject {
 
 				// Clear out the string buffer
 				query.delete(0, query.length() + 1);
-				// This is an assertion, but I want to remain < 1.4
-				// compatible
-				if(query.length() != 0) {
-					throw new Error("Assertion failed:  query.length() == "
-						+ query.length());
-				}
 			} else if(curline.startsWith("--")) {
 				// Comment to be logged
 				getLogger().info(lr.getLineNumber() + ":  " + curline);
