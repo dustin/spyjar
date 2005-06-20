@@ -60,13 +60,6 @@ public class TypeNameGen extends Object {
 		ps.println("\t\treturn(rv);");
 		ps.println("\t}\n");
 
-		// main() method
-		ps.println("\tpublic static void main(String args[]) {");
-		ps.println("\t\tint type=Integer.parseInt(args[0]);\n");
-		ps.println("\t\tSystem.out.println(\"Type \" + type + \"=\" + "
-			+ "getTypeName(type));");
-		ps.println("\t}\n");
-
 		ps.println("}");
 	}
 
