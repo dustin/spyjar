@@ -248,8 +248,8 @@ public class SpyUtilTest extends TestCase {
 		generateSPT("/src/test/net/spy/test/db/CallTestFunc.spt");
 		generateSPT("/src/test/net/spy/test/db/DialectTest.spt");
 		generateSPT("/src/test/net/spy/test/db/CacheTest.txt");
-		generateSPT("/src/test/net/spy/test/db/InterfaceTest.txt");
-		generateSPT("/src/test/net/spy/test/db/ImplTest.txt");
+		generateSPT("/src/test/net/spy/test/db/InterfaceTest.spt");
+		generateSPT("/src/test/net/spy/test/db/ImplTest.spt");
 		generateSPT("/src/test/net/spy/test/db/ImplTest2.txt");
 		generateSPT("/src/test/net/spy/test/db/ThreeColumnOptional.txt");
 		generateSPT("/src/test/net/spy/test/db/TestProc.txt");

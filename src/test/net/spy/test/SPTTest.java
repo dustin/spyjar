@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-
+import java.sql.SQLException;
 
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
@@ -26,6 +26,8 @@ import net.spy.test.db.DialectTest;
 import net.spy.db.sp.PrimaryKeyStuff;
 import net.spy.db.sp.SelectPrimaryKey;
 import net.spy.db.sp.UpdatePrimaryKey;
+
+import net.spy.test.db.ImplTest;
 
 public class SPTTest extends MockObjectTestCase {
 	private Mock connMock;
@@ -261,6 +263,60 @@ public class SPTTest extends MockObjectTestCase {
 		Mock cMock=mock(Connection.class);
 		UpdatePrimaryKey upk2=new UpdatePrimaryKey((Connection)cMock.proxy());
 		upk2.setTableName("test");
+	}
+
+	private void successfulCoercion(DBSP db, String field, String val)
+		throws Exception {
+		db.setCoerced(field, null);
+		db.setCoerced(field, val);
+	}
+
+	private void failedCoercion(DBSP db, String field, String val,
+		Class expectedException, String expectedMessage) throws SQLException {
+		// This should be OK
+		db.setCoerced(field, null);
+		try {
+			db.setCoerced(field, val);
+			fail("Expected exception setting " + field + " to " + val);
+		} catch(Exception e) {
+			assertTrue("Unexpected exception",
+				e.getClass().isAssignableFrom(expectedException));
+			if(expectedMessage != null) {
+				assertEquals(expectedMessage, e.getMessage());
+			}
+		}
+	}
+
+	/** 
+	 * Test coercion routines.
+	 * 
+	 * @throws Exception 
+	 */
+	public void testCoercion() throws Exception {
+		Mock cMock=mock(Connection.class);
+		ImplTest it=new ImplTest((Connection)cMock.proxy());
+		successfulCoercion(it, "param1", "true");
+		successfulCoercion(it, "param1", "false");
+		failedCoercion(it, "param2", "some date", SQLException.class,
+			"Date types not currently handled");
+		successfulCoercion(it, "param3", "13.523");
+		successfulCoercion(it, "param3", "13");
+		successfulCoercion(it, "param4", "35.2352");
+		successfulCoercion(it, "param4", "35");
+		successfulCoercion(it, "param5", "2532");
+		failedCoercion(it, "param5", "3.526", NumberFormatException.class,
+			null);
+		successfulCoercion(it, "param6", "83259252390528");
+		successfulCoercion(it, "param7", "992359236826722.835382");
+		successfulCoercion(it, "param8", "8835823952390523.23852");
+		successfulCoercion(it, "param9", "2");
+		successfulCoercion(it, "param10", "2");
+		successfulCoercion(it, "param11", "some obj");
+		successfulCoercion(it, "param12", "This is a string");
+		failedCoercion(it, "param13", "some date", SQLException.class,
+			"Date types not currently handled");
+		failedCoercion(it, "param14", "some date", SQLException.class,
+			"Date types not currently handled");
 	}
 
 	// A dumb connection source that's just used to make the PK related SPT

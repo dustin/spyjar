@@ -964,6 +964,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 				case Types.DECIMAL:
 					set(var, new BigDecimal(value));
 					break;
+				case Types.SMALLINT:
 				case Types.TINYINT:
 					set(var, (short)Integer.parseInt(value));
 					break;
