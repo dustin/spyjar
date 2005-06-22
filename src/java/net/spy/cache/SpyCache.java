@@ -78,6 +78,16 @@ public class SpyCache extends SpyObject {
 	}
 
 	/** 
+	 * Shut down the cache.
+	 */
+	public static synchronized void shutdown() {
+		if(instance != null && instance.cacheCleaner != null) {
+			instance.cacheCleaner.shutdown();
+		}
+		instance=null;
+	}
+
+	/** 
 	 * Set the delegate for this SpyCache.
 	 * 
 	 * @param del 
@@ -210,11 +220,23 @@ public class SpyCache extends SpyObject {
 		// clearer loop.  It's true by default so we'll try it the first time.
 		private boolean wantMulticastListener=true;
 
+		private boolean shutdown=false;
+
 		public SpyCacheCleaner() {
 			super();
 			setName("SpyCacheCleaner");
 			setDaemon(true);
 			start();
+		}
+
+		public void shutdown() {
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Shutting down " + this);
+			}
+			shutdown=true;
+			synchronized(this) {
+				notify();
+			}
 		}
 
 		public String toString() {
@@ -253,7 +275,7 @@ public class SpyCache extends SpyObject {
 
 			// Return true if the difference between now and the last
 			// time the cache was touched is less than an hour.
-			if((cacheStore.getUseAge()) < (3600*1000)) {
+			if((!shutdown) && (cacheStore.getUseAge()) < (3600*1000)) {
 				rv=true;
 			}
 
@@ -292,14 +314,14 @@ public class SpyCache extends SpyObject {
 		 */
 		public void run() {
 
-			boolean keepgoing=true;
-
 			// It will keep going until nothing's been touched in the cache
 			// for an hour, at which point it'll dump the whole cache and join.
-			while(keepgoing) {
+			while(shouldIContinue()) {
 				try {
 					// Just for throttling, sleep a second.
-					sleep(CACHE_CLEAN_SLEEP_TIME);
+					synchronized(this) {
+						wait(CACHE_CLEAN_SLEEP_TIME);
+					}
 					cleanup();
 					// Check to see if we want a multicast listener
 					if(wantMulticastListener
@@ -309,8 +331,6 @@ public class SpyCache extends SpyObject {
 				} catch(Exception e) {
 					getLogger().warn("Exception in cleanup loop", e);
 				}
-
-				keepgoing=shouldIContinue();
 			}
 
 			getLogger().info("Shutting down.");
@@ -344,11 +364,12 @@ public class SpyCache extends SpyObject {
 		}
 
 		public String toString() {
-			String out="Cached item:  " + getCacheKey();
+			String out="{Cached item:  " + getCacheKey();
 			if(exptime>0) {
-				out+="\nExpires:  " + new java.util.Date(exptime);
+				out+=" Expires:  " + new java.util.Date(exptime)
+					+ " - expired? " + isExpired();
 			}
-			out+="\n";
+			out+="}";
 			return(out);
 		}
 
