@@ -13,6 +13,7 @@ import java.util.zip.GZIPInputStream;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -29,7 +30,7 @@ public class Base64Test extends TestCase {
 
 	private static final String CHARSET="UTF-8";
 
-	private Map<String, String> cases=null;
+	private Map cases=null;
 
 	/**
 	 * Get an instance of Base64Test.
@@ -77,9 +78,10 @@ public class Base64Test extends TestCase {
 	 * Test base64 encoding of strings.
 	 */
 	public void testEncode() throws Exception {
-		for(Map.Entry<String, String> me : cases.entrySet()) {
+		for(Iterator i=cases.entrySet().iterator(); i.hasNext();) {
+			Map.Entry me=(Map.Entry)i.next();
 			assertEquals("Encode " + me.getValue(), me.getKey(),
-				encode(me.getValue()));
+				encode((String)me.getValue()));
 		}
 	}
 
@@ -92,9 +94,10 @@ public class Base64Test extends TestCase {
 	 * Test base64 decodes.
 	 */
 	public void testDecode() throws Exception {
-		for(Map.Entry<String, String> me : cases.entrySet()) {
+		for(Iterator i=cases.entrySet().iterator(); i.hasNext();) {
+			Map.Entry me=(Map.Entry)i.next();
 			assertEquals("Decode " + me.getKey(), me.getValue(),
-				decode(me.getKey()));
+				decode((String)me.getKey()));
 		}
 	}
 
@@ -110,16 +113,17 @@ public class Base64Test extends TestCase {
 			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
 		};
-		Map<Character, Boolean> allChars=new HashMap();
+		Map allChars=new HashMap();
 		for(int i=0; i<65535; i++) {
-			allChars.put( (char)i, false);
+			allChars.put( new Character((char)i), Boolean.FALSE);
 		}
 		for(int i=0; i<CHARMAP.length; i++) {
-			allChars.put(CHARMAP[i], true);
+			allChars.put(new Character(CHARMAP[i]), Boolean.TRUE);
 		}
-		for(Map.Entry<Character, Boolean> me : allChars.entrySet()) {
-			assertEquals(me.getValue().booleanValue(),
-				b64.isValidBase64Char(me.getKey()));
+		for(Iterator i=allChars.entrySet().iterator(); i.hasNext();) {
+			Map.Entry me=(Map.Entry)i.next();
+			assertEquals(((Boolean)me.getValue()).booleanValue(),
+				b64.isValidBase64Char(((Character)me.getKey()).charValue()));
 		}
 	}
 
@@ -128,18 +132,20 @@ public class Base64Test extends TestCase {
 	 */
 	public void testOutputStream() throws Exception {
 		ByteArrayOutputStream bos=new ByteArrayOutputStream();
-		for(Map.Entry<String, String> me : cases.entrySet()) {
+		for(Iterator i=cases.entrySet().iterator(); i.hasNext();) {
+			Map.Entry me=(Map.Entry)i.next();
+
 			bos.reset();
 			Base64OutputStream b64os=new Base64OutputStream(bos);
-			b64os.write(me.getValue().getBytes(CHARSET));
+			b64os.write(((String)me.getValue()).getBytes(CHARSET));
 			b64os.close();
 
 			String result=new String(bos.toByteArray(), CHARSET);
 			// The stream adds a newline to everything that doesn't end in a
 			// newline.
 			String expected=me.getKey() + "\r\n";
-			if(me.getKey().length() % 76 == 0) {
-				expected=me.getKey();
+			if(((String)me.getKey()).length() % 76 == 0) {
+				expected=(String)me.getKey();
 			}
 			assertEquals("Stream Encode ``" + expected + "'' got ``"
 				+ result + "''", expected, result);
@@ -153,8 +159,10 @@ public class Base64Test extends TestCase {
 	public void testInputStream() throws Exception {
 		byte buffer[]=new byte[1024];
 
-		for(Map.Entry<String, String> me : cases.entrySet()) {
-			byte input[]=me.getKey().getBytes(CHARSET);
+		for(Iterator i=cases.entrySet().iterator(); i.hasNext();) {
+			Map.Entry me=(Map.Entry)i.next();
+
+			byte input[]=((String)me.getKey()).getBytes(CHARSET);
 			ByteArrayInputStream bis=new ByteArrayInputStream(input);
 
 			Base64InputStream b64is=new Base64InputStream(bis);
@@ -167,7 +175,7 @@ public class Base64Test extends TestCase {
 			b64is.close();
 
 			String result=new String(buffer, 0, bytesread);
-			String expected=me.getValue();
+			String expected=(String)me.getValue();
 			assertEquals("Stream decode ``" + expected + "'' got ``"
 				+ result + "''", expected, result);
 		}
