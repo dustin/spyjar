@@ -53,6 +53,8 @@ public class Base64OutputStream extends FilterOutputStream {
 			System.arraycopy(buffer, 0, tmp, 0, currentByte);
 			out.write(base64.encode(tmp).getBytes());
 			out.write(crlf);
+			currentByte=0;
+			currentOutput=0;
 		} else {
 			// Unless this is a new line, add a newline.
 			if(currentOutput!=0) {

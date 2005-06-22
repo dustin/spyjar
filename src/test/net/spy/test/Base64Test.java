@@ -6,6 +6,10 @@ package net.spy.test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.GZIPInputStream;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -167,6 +171,106 @@ public class Base64Test extends TestCase {
 			assertEquals("Stream decode ``" + expected + "'' got ``"
 				+ result + "''", expected, result);
 		}
+	}
+
+	/** 
+	 * Test that streaming base64 yields the same result as whole chunk
+	 * encoding.
+	 */
+	public void testBlockOutput() throws Exception {
+		HashMap hm=new HashMap();
+		hm.put("Some Key", new Integer(13));
+		hm.put("Some Other Key", "Another value");
+
+		ByteArrayOutputStream bos1=new ByteArrayOutputStream();
+		Base64OutputStream b64os=new Base64OutputStream(bos1);
+		ObjectOutputStream oos1=new ObjectOutputStream(b64os);
+
+		oos1.writeObject(hm);
+		oos1.close();
+		b64os.close();
+		bos1.close();
+		String encoded1=new String(bos1.toByteArray());
+
+		ByteArrayOutputStream bos2=new ByteArrayOutputStream();
+		ObjectOutputStream oos2=new ObjectOutputStream(bos2);
+		oos2.writeObject(hm);
+		oos2.close();
+		bos2.close();
+
+		String encoded2=Base64.getInstance().encode(bos2.toByteArray());
+
+		assertEquals(encoded2.trim(), encoded1.trim());
+	}
+
+	/** 
+	 * Test that streaming base64 in yields the same result as whole chunk
+	 * decoding.
+	 */
+	public void testBlockInput() throws Exception {
+		HashMap hm=new HashMap();
+		hm.put("Some Key", new Integer(13));
+		hm.put("Some Other Key", "Another value");
+
+		// This will produce our seed data.
+		ByteArrayOutputStream bos=new ByteArrayOutputStream();
+		ObjectOutputStream oos=new ObjectOutputStream(bos);
+		oos.writeObject(hm);
+
+		String src=Base64.getInstance().encode(bos.toByteArray());
+
+		byte b1[]=Base64.getInstance().decode(src);
+
+		ByteArrayInputStream bis=new ByteArrayInputStream(
+			src.getBytes(CHARSET));
+		Base64InputStream b64is=new Base64InputStream(bis);
+		byte b2[]=new byte[b1.length];
+		int bytesRead=b64is.read(b2);
+
+		assertEquals(b1.length, bytesRead);
+		for(int i=0; i<bytesRead; i++) {
+			assertEquals("Differs at " + i, b1[i], b2[i]);
+		}
+	}
+
+	/** 
+	 * Test object serialization and compression and all that into base64.
+	 * This particular case failed in the field.
+	 */
+	public void testSerializingStream() throws Exception {
+		ByteArrayOutputStream bos=new ByteArrayOutputStream();
+		Base64OutputStream b64os=new Base64OutputStream(bos);
+		GZIPOutputStream gzos=new GZIPOutputStream(b64os);
+		ObjectOutputStream oos=new ObjectOutputStream(gzos);
+
+		HashMap hm=new HashMap();
+		hm.put("Some Key", new Integer(13));
+		hm.put("Some Other Key", "Another value");
+
+		oos.writeObject(hm);
+
+		oos.close();
+		gzos.close();
+		b64os.close();
+		bos.close();
+
+		String encoded=new String(bos.toByteArray());
+
+		// Now try to pull them back
+		ByteArrayInputStream bis=new ByteArrayInputStream(
+			encoded.getBytes(CHARSET));
+		Base64InputStream b64is=new Base64InputStream(bis);
+		GZIPInputStream gzis=new GZIPInputStream(b64is);
+		ObjectInputStream ois=new ObjectInputStream(gzis);
+
+		HashMap readMap=(HashMap)ois.readObject();
+
+		ois.close();
+		gzis.close();
+		b64is.close();
+		bis.close();
+
+		assertEquals(hm, readMap);
 	}
 
 }

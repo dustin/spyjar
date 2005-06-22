@@ -36,7 +36,7 @@ public class Base64InputStream extends ByteConverionInputStream {
 		}
 
 		if(outbuffer.length>0) {
-			rv=outbuffer[currentOut++];
+			rv=outbuffer[currentOut++] & 0xff;
 		}
 
 		return(rv);
