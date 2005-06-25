@@ -1,8 +1,11 @@
 
+cron
+	Pass classloaders to instantiation
+
 pooling
 	push configurable pre/post checkout checks to PoolAble, set by PoolContainer
 
 junit tests
-	base64
+
 --
 arch-tag: BF84BDE2-175B-11D9-9AEA-000A957659CC
