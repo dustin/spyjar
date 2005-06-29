@@ -4,6 +4,8 @@
 
 package net.spy.test;
 
+import java.util.Map;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +21,7 @@ import org.jmock.core.constraint.IsInstanceOf;
 import org.jmock.core.stub.ReturnStub;
 
 import net.spy.db.DBSP;
+import net.spy.db.QuerySelector;
 import net.spy.util.SpyConfig;
 import net.spy.test.db.BooleanTest;
 import net.spy.test.db.DialectTest;
@@ -131,6 +134,15 @@ public class SPTTest extends MockObjectTestCase {
 		ResultSet rs=dt.executeQuery();
 		rs.close();
 		dt.close();
+
+		// Validate all of the queries
+		Map queries=dt.getRegisteredQueries();
+		assertEquals("select ? as the_int\n",
+			queries.get(QuerySelector.DEFAULT_QUERY));
+		assertEquals("select ? as the_int from unused\n",
+			queries.get("another"));
+		assertEquals("select ? as the_int from dual\n",
+			queries.get("oracle"));
 	}
 
 	/** 

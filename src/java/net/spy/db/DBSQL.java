@@ -6,6 +6,7 @@ package net.spy.db;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collections;
 import java.util.StringTokenizer;
 
 import java.sql.Connection;
@@ -54,6 +55,14 @@ public abstract class DBSQL extends DBSP {
 	 */
 	protected void setRegisteredQueryMap(Map<String, String> to) {
 		registeredQueries=to;
+	}
+
+	/** 
+	 * Get the registered queries.
+	 * @return an unmodifiable Map showing the registered queries.
+	 */
+	public Map getRegisteredQueries() {
+		return(Collections.unmodifiableMap(registeredQueries));
 	}
 
 	/**
