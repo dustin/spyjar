@@ -3,10 +3,9 @@
 
 package net.spy.db;
 
+import net.spy.SpyObject;
 import net.spy.util.SpyConfig;
 import net.spy.util.ThreadPool;
-
-import net.spy.SpyObject;
 
 /**
  * Asynchronous Saver.

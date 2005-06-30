@@ -4,8 +4,7 @@
 
 package net.spy.db;
 
-import java.lang.reflect.Constructor;
-
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,13 +14,9 @@ import java.sql.SQLWarning;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
-
-import java.math.BigDecimal;
-
-import java.util.Collections;
-import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 
 import net.spy.util.SpyConfig;
@@ -886,7 +881,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	public int getType(String var) {
 		int rv=-1;
 
-		Parameter p=(Parameter)parameters.get(var);
+		Parameter p=parameters.get(var);
 		if(p!=null) {
 			rv=p.getJavaType();
 		}
@@ -904,7 +899,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	public int getParameterType(String var) {
 		int rv=-1;
 
-		Parameter p=(Parameter)parameters.get(var);
+		Parameter p=parameters.get(var);
 		if(p!=null) {
 			rv=p.getParamType();
 		}

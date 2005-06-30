@@ -4,11 +4,11 @@
 
 package net.spy.util;
 
-import java.util.Set;
-import java.util.Map;
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Set;
 
 import net.spy.SpyObject;
 import net.spy.log.Logger;
@@ -124,7 +124,7 @@ public class ObjectDump extends SpyObject {
                     }
                 }
             } else {
-				reportDuplicate(path, (String)seen.get(o), o);
+				reportDuplicate(path, seen.get(o), o);
             }
         } catch(Exception e) {
 			reportException(path, o, e);

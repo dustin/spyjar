@@ -13,15 +13,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import java.util.ArrayList;
+
+import net.spy.util.SPGen;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-
 import org.apache.tools.ant.taskdefs.MatchingTask;
-
-import net.spy.util.SPGen;
 
 /**
  * Generates Java code from SPT files.

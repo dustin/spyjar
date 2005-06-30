@@ -3,11 +3,7 @@
 
 package net.spy.test;
 
-import java.util.Map;
-import java.util.HashMap;
-
 import junit.framework.TestCase;
-
 import net.spy.util.TimeStampedHashMap;
 
 /**

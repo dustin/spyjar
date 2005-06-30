@@ -5,18 +5,15 @@
 package net.spy.test;
 
 import java.lang.ref.SoftReference;
-
-import java.util.Map;
-import java.util.List;
-
 import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import net.spy.cache.LRUCache;
 import net.spy.cache.CacheListener;
+import net.spy.cache.LRUCache;
 
 /**
  * Test the LRU cache implementation

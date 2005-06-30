@@ -4,15 +4,13 @@
 
 package net.spy.db;
 
-import java.util.Hashtable;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Hashtable;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
 import javax.sql.DataSource;
 
 import net.spy.SpyObject;

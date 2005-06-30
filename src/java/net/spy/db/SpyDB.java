@@ -6,13 +6,12 @@
 
 package net.spy.db;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import java.util.StringTokenizer;
 
 import net.spy.SpyObject;

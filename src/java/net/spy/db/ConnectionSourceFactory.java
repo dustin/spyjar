@@ -3,8 +3,8 @@
 
 package net.spy.db;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import net.spy.SpyObject;
 import net.spy.util.SpyConfig;

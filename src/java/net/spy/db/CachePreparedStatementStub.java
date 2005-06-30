@@ -7,7 +7,6 @@
 package net.spy.db;
 
 import java.math.BigDecimal;
-
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,13 +14,11 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
-
 import java.util.Arrays;
 
 import net.spy.SpyObject;
-import net.spy.util.SpyUtil;
-
 import net.spy.cache.SpyCache;
+import net.spy.util.SpyUtil;
 
 /**
  * Prepared statement for executing cached queries

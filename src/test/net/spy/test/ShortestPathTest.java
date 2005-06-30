@@ -5,24 +5,20 @@
 package net.spy.test;
 
 import java.lang.ref.WeakReference;
-
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.SortedSet;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import net.spy.util.SPNode;
 import net.spy.util.AbstractSPNode;
-import net.spy.util.SPVertex;
-import net.spy.util.ShortestPathFinder;
-import net.spy.util.ShortestPath;
 import net.spy.util.NoPathException;
+import net.spy.util.SPNode;
+import net.spy.util.SPVertex;
+import net.spy.util.ShortestPath;
+import net.spy.util.ShortestPathFinder;
 
 /**
  * Test a weak hash set.

@@ -4,12 +4,11 @@
 
 package net.spy.test;
 
-import java.util.Set;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import junit.framework.TestCase;
-
 import net.spy.util.SoftHashSet;
 import net.spy.util.WeakHashSet;
 

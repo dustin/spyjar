@@ -3,9 +3,8 @@
 
 package net.spy.pool;
 
-import net.spy.util.SpyConfig;
-
 import net.spy.net.SNPP;
+import net.spy.util.SpyConfig;
 
 /**
  * PoolFiller object to fill a pool with SNPP PoolAbles
@@ -48,7 +47,7 @@ public class SNPPPoolFiller extends PoolFiller {
 
 			int timeout=getPropertyInt("snppTimeout", 0);
 
-			long maxAge=(long)getPropertyInt("max_age", 0);
+			long maxAge=getPropertyInt("max_age", 0);
 
 			// Grab a connection.
 			SNPP snpp = new SNPP(hostname, port, timeout);

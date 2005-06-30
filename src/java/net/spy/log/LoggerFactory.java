@@ -4,12 +4,11 @@
 
 package net.spy.log;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Factory to get logger instances.

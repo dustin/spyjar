@@ -5,14 +5,12 @@
 package net.spy.ant;
 
 import java.io.IOException;
-
 import java.lang.reflect.Constructor;
 
-import org.apache.tools.ant.BuildException;
-
-import org.apache.tools.ant.Task;
-
 import net.spy.util.InterfaceImplementor;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 /**
  * Task to implement an interface.

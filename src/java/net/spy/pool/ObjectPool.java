@@ -4,13 +4,12 @@
 
 package net.spy.pool;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 import net.spy.SpyObject;
 import net.spy.util.SpyConfig;
-
 import net.spy.util.TimeStampedHashMap;
 
 /**
@@ -156,7 +155,7 @@ public class ObjectPool extends SpyObject {
 		}
 		// This is broken out to get out of the lock fast...
 		for(PoolContainer pc : a) {
-			out.append(a);
+			out.append(pc);
 		}
 		return(out.toString());
 	}
@@ -196,7 +195,7 @@ public class ObjectPool extends SpyObject {
 		PoolContainer ret=null;
 
 		synchronized (pools) {
-			ret=(PoolContainer)pools.get(name);
+			ret=pools.get(name);
 			if(ret==null) {
 				throw new NoSuchPoolException(name);
 			}

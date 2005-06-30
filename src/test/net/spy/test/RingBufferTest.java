@@ -5,14 +5,13 @@
 package net.spy.test;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ConcurrentModificationException;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import net.spy.util.RingBuffer;
 
 /**

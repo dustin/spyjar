@@ -4,12 +4,11 @@
 
 package net.spy.db;
 
+import java.sql.Connection;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.NoSuchElementException;
-
-import java.sql.Connection;
 
 import net.spy.util.SpyConfig;
 

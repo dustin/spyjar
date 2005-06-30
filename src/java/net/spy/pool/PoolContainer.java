@@ -3,8 +3,8 @@
 
 package net.spy.pool;
 
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import net.spy.SpyObject;
 import net.spy.util.SpyConfig;
@@ -280,7 +280,6 @@ public class PoolContainer extends SpyObject {
 			getLogger().debug("Beginning prune.");
 		}
 		synchronized (pool) {
-			int i=0;
 			// Get rid of expired things
 			for(Iterator<PoolAble> it=pool.iterator(); it.hasNext();) {
 				PoolAble p=it.next();
@@ -319,7 +318,7 @@ public class PoolContainer extends SpyObject {
 				DEFAULT_YELLOW_LINE)/PERCENT);
 
 		// Set up the max age
-		maxAge=(long)getPropertyInt("max_age", 0);
+		maxAge=getPropertyInt("max_age", 0);
 
 		// Set the hashcode of this pool for consistent debug output.
 		filler.setPoolHash(hashCode());
@@ -452,10 +451,6 @@ public class PoolContainer extends SpyObject {
 
 	private String getProperty(String what, String def) {
 		return(conf.get(name + "." + what, def));
-	}
-
-	private String getProperty(String what) {
-		return(conf.get(name + "." + what));
 	}
 
 	private static synchronized int nextId() {

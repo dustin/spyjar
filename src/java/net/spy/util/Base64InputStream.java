@@ -4,8 +4,8 @@
 
 package net.spy.util;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A filter stream for decoding Base64 data on an InputStream.

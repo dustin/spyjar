@@ -3,17 +3,16 @@
 
 package net.spy.test;
 
-import java.io.InputStream;
 import java.io.FileInputStream;
-
+import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import net.spy.db.SQLRunner;
 
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-
-import net.spy.db.SQLRunner;
 
 /**
  * Test the SQL Runner.

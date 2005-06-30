@@ -9,7 +9,6 @@ import java.util.HashSet;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import net.spy.util.Digest;
 import net.spy.util.PwGen;
 

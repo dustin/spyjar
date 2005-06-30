@@ -4,9 +4,9 @@
 
 package net.spy.db;
 
-import java.util.Collection;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 
 /**
  * Interface for transactionally savable objects.

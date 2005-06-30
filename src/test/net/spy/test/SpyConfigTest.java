@@ -6,7 +6,6 @@ package net.spy.test;
 import java.io.File;
 
 import junit.framework.TestCase;
-
 import net.spy.util.SpyConfig;
 
 /**

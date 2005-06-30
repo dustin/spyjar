@@ -4,17 +4,16 @@
 
 package net.spy.db;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collection;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import net.spy.SpyObject;
-import net.spy.util.SpyConfig;
-
 import net.spy.util.IdentityEqualifier;
+import net.spy.util.SpyConfig;
 
 /**
  * Transactional object saver.

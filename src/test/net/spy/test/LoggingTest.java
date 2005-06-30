@@ -6,14 +6,13 @@ package net.spy.test;
 import java.io.PrintStream;
 
 import junit.framework.TestCase;
-
+import net.spy.log.DefaultLogger;
 import net.spy.log.Level;
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
+import net.spy.log.LoggingOutputStream;
 import net.spy.log.SunLogger;
 import net.spy.log.Syslog;
-import net.spy.log.LoggingOutputStream;
-import net.spy.log.DefaultLogger;
 
 /**
  * Make sure logging is enabled.

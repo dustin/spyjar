@@ -4,23 +4,17 @@
 
 package net.spy.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Reader;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import java.security.SecureRandom;
-
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import net.spy.log.LoggerFactory;
 
@@ -44,7 +38,7 @@ public class SpyUtil {
 		Object ret[] = new Object[in.length];
 		System.arraycopy(in, 0, ret, 0, in.length);
 		SecureRandom r = new SecureRandom();
-		int size, i;
+		int i;
 
 		for(i=0; i<ret.length; i++) {
 			// Get a random number the size of the length
@@ -169,7 +163,7 @@ public class SpyUtil {
 		StringBuffer sb=new StringBuffer(me.length*2);
 
 		for(byte b : me) {
-			int bai=(int)b & 0xff;
+			int bai=b & 0xff;
 			if(bai<0x10) {
 				sb.append('0');
 			}

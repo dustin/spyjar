@@ -7,13 +7,12 @@
 package net.spy.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileInputStream;
-
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Properties;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * SpyConfig - an abstracted config file maintainer.
@@ -68,7 +67,7 @@ public class SpyConfig extends Properties {
 		// See whether we've cached the config file or not.
 		if(isUpToDate(conffile)) {
 			// We've already generated this, set it here.
-			ConfigInfo ci=(ConfigInfo)configStore.get(conffile);
+			ConfigInfo ci=configStore.get(conffile);
 			set(ci.getConfig());
 			loaded=true;
 		} else {
@@ -105,7 +104,7 @@ public class SpyConfig extends Properties {
 	// Check to see if we have current data on this file.
 	private boolean isUpToDate(File file) {
 		boolean r = false;
-		ConfigInfo ci=(ConfigInfo)configStore.get(file);
+		ConfigInfo ci=configStore.get(file);
 		if(ci!=null) {
 			if(ci.getTimestamp() == file.lastModified()) {
 				r=true;

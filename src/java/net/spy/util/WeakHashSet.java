@@ -4,10 +4,10 @@
 
 package net.spy.util;
 
-import java.util.Collection;
-import java.util.WeakHashMap;
 import java.util.AbstractSet;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.WeakHashMap;
 
 /**
  * HashSet backed by a WeakHashMap.

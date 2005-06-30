@@ -4,9 +4,9 @@
 
 package net.spy.util;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * An array of bits.

@@ -4,28 +4,24 @@
 
 package net.spy.test;
 
-import java.util.ArrayList;
-
-import java.sql.SQLException;
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.PreparedStatement;
-
-import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import junit.framework.TestCase;
+import net.spy.db.ConnectionSourceFactory;
+import net.spy.db.GetPK;
+import net.spy.util.SpyConfig;
 
 import org.jmock.Mock;
-import org.jmock.core.matcher.InvokeOnceMatcher;
-import org.jmock.core.matcher.InvokeAtLeastOnceMatcher;
 import org.jmock.core.constraint.IsEqual;
-import org.jmock.core.constraint.IsInstanceOf;
-import org.jmock.core.stub.StubSequence;
+import org.jmock.core.matcher.InvokeAtLeastOnceMatcher;
+import org.jmock.core.matcher.InvokeOnceMatcher;
 import org.jmock.core.stub.ReturnStub;
-
-import net.spy.util.SpyConfig;
-import net.spy.db.GetPK;
-import net.spy.db.ConnectionSourceFactory;
+import org.jmock.core.stub.StubSequence;
 
 /**
  * Test the primary key implementation.

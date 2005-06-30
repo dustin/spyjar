@@ -4,11 +4,10 @@
 
 package net.spy.util;
 
-import java.util.TimerTask;
-
-import java.util.ResourceBundle;
-import java.util.MissingResourceException;
 import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.TimerTask;
 
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;

@@ -4,24 +4,22 @@
 
 package net.spy.test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ObjectOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.GZIPInputStream;
-
-import java.util.Map;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import net.spy.util.Base64;
-import net.spy.util.Base64OutputStream;
 import net.spy.util.Base64InputStream;
+import net.spy.util.Base64OutputStream;
 
 /**
  * Base64 test.  Derived from the python base64 tests.

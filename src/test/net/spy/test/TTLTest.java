@@ -4,10 +4,9 @@
 package net.spy.test;
 
 import junit.framework.TestCase;
-
+import net.spy.db.DBTTL;
 import net.spy.util.TTL;
 import net.spy.util.TTLMonitor;
-import net.spy.db.DBTTL;
 
 /**
  * Test the TTL implementation.

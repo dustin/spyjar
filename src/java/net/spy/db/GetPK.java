@@ -4,18 +4,16 @@
 
 package net.spy.db;
 
-import java.util.HashMap;
-
+import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Connection;
-
-import java.math.BigDecimal;
+import java.util.HashMap;
 
 import net.spy.SpyObject;
-import net.spy.util.SpyConfig;
-import net.spy.db.sp.UpdatePrimaryKey;
 import net.spy.db.sp.SelectPrimaryKey;
+import net.spy.db.sp.UpdatePrimaryKey;
+import net.spy.util.SpyConfig;
 
 /**
  * Primary key generator.  This is an extensible singleton that provides

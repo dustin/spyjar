@@ -6,7 +6,6 @@ package net.spy.test;
 import java.util.Map;
 
 import junit.framework.TestCase;
-
 import net.spy.util.ObjectDump;
 
 /**

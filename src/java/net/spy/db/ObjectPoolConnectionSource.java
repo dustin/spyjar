@@ -4,19 +4,16 @@
 
 package net.spy.db;
 
-import java.util.Enumeration;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Enumeration;
 
 import net.spy.SpyObject;
-
-import net.spy.util.SpyConfig;
-
-import net.spy.pool.ObjectPool;
-import net.spy.pool.PooledObject;
-import net.spy.pool.PoolException;
 import net.spy.pool.JDBCPoolFiller;
+import net.spy.pool.ObjectPool;
+import net.spy.pool.PoolException;
+import net.spy.pool.PooledObject;
+import net.spy.util.SpyConfig;
 
 /**
  * Connection source to retrieve connections from an ObjectPool.

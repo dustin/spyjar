@@ -4,13 +4,12 @@
 package net.spy.test;
 
 import java.io.File;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
-
-import net.spy.util.SpyUtil;
 import net.spy.util.SpyToker;
+import net.spy.util.SpyUtil;
 
 /**
  * Tokenizer test cases.

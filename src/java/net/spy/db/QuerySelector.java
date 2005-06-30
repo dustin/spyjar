@@ -4,9 +4,8 @@
 
 package net.spy.db;
 
-import java.util.Map;
-
 import java.sql.Connection;
+import java.util.Map;
 
 import net.spy.util.SpyConfig;
 

@@ -8,7 +8,6 @@ package net.spy.util;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.Map;
 
 /**
@@ -47,7 +46,7 @@ public class SpyToker extends Object {
 				String v=null;
 				String tmp = input.substring(0, which);
 				input = input.substring(which+1);
-				if((v=(String)m.get(tmp)) != null) {
+				if((v=m.get(tmp)) != null) {
 					output.append(v);
 				} else {
 					output.append("%" + tmp + "%");

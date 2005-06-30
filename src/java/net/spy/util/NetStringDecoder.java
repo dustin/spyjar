@@ -4,8 +4,8 @@
 
 package net.spy.util;
 
-import java.io.IOException;
 import java.io.EOFException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import net.spy.SpyObject;

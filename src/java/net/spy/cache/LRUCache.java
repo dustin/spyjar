@@ -5,10 +5,9 @@
 package net.spy.cache;
 
 import java.lang.ref.Reference;
-
-import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import net.spy.SpyObject;
 

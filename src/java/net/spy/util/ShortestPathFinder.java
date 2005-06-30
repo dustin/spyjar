@@ -4,10 +4,9 @@
 
 package net.spy.util;
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This is a utility class for finding the least costly paths from each node

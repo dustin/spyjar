@@ -4,15 +4,14 @@
 
 package net.spy.test;
 
-import java.util.Collections; 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import net.spy.util.Range;
 
 /**

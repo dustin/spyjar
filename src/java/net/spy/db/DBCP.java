@@ -4,16 +4,14 @@
 
 package net.spy.db;
 
-import java.sql.PreparedStatement;
-import java.sql.CallableStatement;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.sql.Connection;
-
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Time;
-
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.Collection;
 
 import net.spy.util.SpyConfig;

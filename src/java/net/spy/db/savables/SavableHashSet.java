@@ -6,13 +6,12 @@ package net.spy.db.savables;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
-import java.util.HashSet;
 import java.util.Collection;
+import java.util.HashSet;
 
-import net.spy.db.SaveException;
 import net.spy.db.Savable;
 import net.spy.db.SaveContext;
+import net.spy.db.SaveException;
 
 /**
  * A subclass of HashSet that implements Savable.

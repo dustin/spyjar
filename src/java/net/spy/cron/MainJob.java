@@ -7,7 +7,6 @@ package net.spy.cron;
 import java.util.Date;
 
 import net.spy.util.SpyUtil;
-
 import net.spy.util.ThreadPoolRunnable;
 
 /**

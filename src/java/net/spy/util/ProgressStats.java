@@ -4,8 +4,8 @@
 
 package net.spy.util;
 
-import java.util.Date;
 import java.text.MessageFormat;
+import java.util.Date;
 
 /**
  * A simple class for keeping up with the progress of an operation.
@@ -50,8 +50,8 @@ public class ProgressStats extends Object {
 		done++;
 		totalTime+=lastProcessTime;
 
-		double df=(double)done;
-		double v=(double)lastProcessTime / 1000.0;
+		double df=done;
+		double v=lastProcessTime / 1000.0;
 
 		avg = ((avg * df) + v) / (df + 1);
 	}
@@ -77,7 +77,7 @@ public class ProgressStats extends Object {
 	 * time per unit.
 	 */
 	public double getEstimatedTimeRemaining(double avgProcessTime) {
-		double estimate=avgProcessTime*(double)(todo-done);
+		double estimate=avgProcessTime*(todo-done);
 		return(estimate);
 	}
 

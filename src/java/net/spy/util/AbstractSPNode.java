@@ -4,11 +4,11 @@
 
 package net.spy.util;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
-import java.util.Collections;
 
 import net.spy.SpyObject;
 
@@ -82,7 +82,7 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	 * @see SPNode
 	 */
 	public SPVertex getNextHop(SPNode n) {
-		return( (SPVertex)nextHops.get(n));
+		return(nextHops.get(n));
 	}
 
 	/** 

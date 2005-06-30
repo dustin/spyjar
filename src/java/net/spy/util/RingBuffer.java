@@ -5,14 +5,13 @@
 package net.spy.util;
 
 import java.io.Serializable;
-
 import java.util.AbstractCollection;
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * A circular buffer.  Ring buffers may have new entries appended to them,

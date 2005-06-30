@@ -3,8 +3,6 @@
 
 package net.spy.cache;
 
-import java.lang.ref.SoftReference;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,19 +10,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
+import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import java.util.Map;
-import java.util.Set;
+import java.util.AbstractMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.AbstractMap;
+import java.util.Map;
+import java.util.Set;
 
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
-
 import net.spy.util.SpyUtil;
 
 /**

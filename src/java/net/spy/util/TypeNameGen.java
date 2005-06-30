@@ -5,12 +5,10 @@
 package net.spy.util;
 
 import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.io.IOException;
-
-import java.sql.Types;
-
+import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.sql.Types;
 
 /**
  * Used at compile time to generate {@link net.spy.db.TypeNames}.

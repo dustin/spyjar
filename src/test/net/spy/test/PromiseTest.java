@@ -7,9 +7,8 @@ package net.spy.test;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import net.spy.util.Promise;
 import net.spy.util.BrokenPromiseException;
+import net.spy.util.Promise;
 
 /**
  * Test the promise implementation.

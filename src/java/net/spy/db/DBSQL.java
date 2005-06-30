@@ -4,13 +4,12 @@
 
 package net.spy.db;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
-import java.util.StringTokenizer;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import net.spy.util.SpyConfig;
 

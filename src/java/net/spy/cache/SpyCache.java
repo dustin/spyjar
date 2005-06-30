@@ -6,14 +6,11 @@
 
 package net.spy.cache;
 
-import java.lang.ref.Reference;
-
 import java.io.IOException;
-
+import java.lang.ref.Reference;
 import java.net.InetAddress;
-
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.spy.SpyObject;
 import net.spy.SpyThread;
@@ -251,7 +248,6 @@ public class SpyCache extends SpyObject {
 		}
 
 		private void cleanup() throws Exception {
-			long now=System.currentTimeMillis();
 			synchronized(cacheStore) {
 				for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext();){
 					Map.Entry<String, Cachable> me=(Map.Entry)i.next();

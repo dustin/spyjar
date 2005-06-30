@@ -11,11 +11,9 @@ package net.spy.util;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
 import java.util.HashSet;
 
 import net.spy.SpyObject;

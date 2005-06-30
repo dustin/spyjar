@@ -5,35 +5,33 @@ package net.spy.test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
-import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
-import org.jmock.core.matcher.InvokeOnceMatcher;
-import org.jmock.core.constraint.IsEqual;
-import org.jmock.core.constraint.IsInstanceOf;
-import org.jmock.core.stub.ReturnStub;
-
+import net.spy.db.AbstractSavable;
 import net.spy.db.ConnectionSource;
 import net.spy.db.ConnectionSourceFactory;
-import net.spy.util.SpyConfig;
-
-import net.spy.db.Saver;
 import net.spy.db.Savable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
-import net.spy.db.AbstractSavable;
+import net.spy.db.Saver;
 import net.spy.db.TransactionListener;
-
 import net.spy.db.savables.CollectionSavable;
 import net.spy.db.savables.SavableHashMap;
 import net.spy.db.savables.SavableHashSet;
+import net.spy.util.SpyConfig;
+
+import org.jmock.Mock;
+import org.jmock.MockObjectTestCase;
+import org.jmock.core.constraint.IsEqual;
+import org.jmock.core.constraint.IsInstanceOf;
+import org.jmock.core.matcher.InvokeOnceMatcher;
+import org.jmock.core.stub.ReturnStub;
 
 /**
  * Test savable.

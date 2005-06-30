@@ -5,8 +5,8 @@
 package net.spy.util;
 
 import java.io.FilterInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Super class for all ascii decoding input streams.

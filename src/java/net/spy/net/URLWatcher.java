@@ -4,14 +4,12 @@
 
 package net.spy.net;
 
+import java.io.IOException;
 import java.net.URL;
 
-import java.io.IOException;
-
-import net.spy.cron.JobQueue;
-import net.spy.cron.Cron;
-
 import net.spy.SpyObject;
+import net.spy.cron.Cron;
+import net.spy.cron.JobQueue;
 
 /**
  * URLWatcher watches URLs and provides access to the most recent data from
@@ -22,9 +20,6 @@ public final class URLWatcher extends SpyObject {
 	private static URLWatcher instance=null;
 
 	private Cron cron=null;
-
-	// How long to sleep between updates
-	private static final int NAP_TIME=60000;
 
 	private int numRuns=0;
 

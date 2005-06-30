@@ -4,9 +4,8 @@
 
 package net.spy.util;
 
-import java.util.ArrayList;
-
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 /**
  * Create static proxy implementations of interfaces.

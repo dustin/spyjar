@@ -5,7 +5,6 @@ package net.spy.pool;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -65,7 +64,7 @@ public class JDBCPoolFiller extends PoolFiller {
 			setDBOptions(sysprop, dbProps, "dboption.");
 			setDBOptions(getConfig(), dbProps, getName()+".dboption.");
 
-			maxAge=(long)getPropertyInt("max_age", 0);
+			maxAge=getPropertyInt("max_age", 0);
 		} catch(Exception e) {
 			throw new PoolException("Problem initializing pool filler", e);
 		}

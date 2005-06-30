@@ -48,18 +48,18 @@ public class Base64 extends Object {
 		for(int i=0; i<data.length; i+=3) {
 			int a, b, c, tmpa, tmpb;
 
-			a=((int)data[i] & 0xff);
+			a=(data[i] & 0xff);
 			sb.append(CHARMAP[(a>>2)]);
 			tmpa=((a&0x03)<<4);
 
 			// If there's another byte, grab it and process it
 			if(data.length > i+1) {
-				b=((int)data[i+1] & 0xff);
+				b=(data[i+1] & 0xff);
 				tmpb=(b>>4);
 				sb.append(CHARMAP[(tmpa|tmpb)]);
 				tmpa=((b&0x0f)<<2);
 				if(data.length>i+2) {
-					c=((int)data[i+2] & 0xff);
+					c=(data[i+2] & 0xff);
 					tmpb=((c&0xc0)>>6);
 					sb.append(CHARMAP[(tmpa|tmpb)]);
 					sb.append(CHARMAP[(c&0x3f)]);

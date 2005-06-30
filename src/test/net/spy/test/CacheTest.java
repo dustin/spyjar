@@ -8,13 +8,10 @@ package net.spy.test;
 
 import java.lang.ref.SoftReference;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-import net.spy.cache.SpyCache;
-import net.spy.cache.CacheDelegate;
 import net.spy.cache.Cachable;
+import net.spy.cache.CacheDelegate;
+import net.spy.cache.SpyCache;
 
 /**
  * Test the cache system.

@@ -9,7 +9,6 @@ import java.util.Random;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import net.spy.SpyObject;
 import net.spy.util.ThreadPool;
 import net.spy.util.ThreadPoolManager;

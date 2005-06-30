@@ -6,7 +6,6 @@ package net.spy.util;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-
 import java.util.Collection;
 
 /**
@@ -42,7 +41,7 @@ public class SoftHashSet<T extends Object> extends ReferenceSet<T> {
 	/** 
 	 * Return a soft reference.
 	 */
-	protected Reference<T> getReference(Object o) {
+	protected Reference<T> getReference(T o) {
 		return(new MySoftReference(o));
 	}
 

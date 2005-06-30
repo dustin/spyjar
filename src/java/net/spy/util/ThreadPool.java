@@ -4,17 +4,16 @@
 
 package net.spy.util;
 
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-
-import net.spy.log.Logger;
-import net.spy.log.LoggerFactory;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import net.spy.SpyThread;
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
 
 /**
  * A producer/consumer thread pool for easy parallelism.
@@ -780,11 +779,6 @@ public class ThreadPool extends ThreadGroup {
 			StringBuffer sb=new StringBuffer(TOSTRING_BUFFER_SIZE);
 			sb.append(super.toString());
 
-			int size=0;
-			synchronized(tasks) {
-				size=tasks.size();
-			}
-
 			synchronized(runningMutex) {
 				if(running==null) {
 					sb.append(" - idle");
@@ -841,7 +835,7 @@ public class ThreadPool extends ThreadGroup {
 				try {
 					Task tsk=null;
 					synchronized(tasks) {
-						tsk=(Task)tasks.removeFirst();
+						tsk=tasks.removeFirst();
 					}
 					// Get the runnable from the task (in a specific lock)
 					Runnable rn=null;

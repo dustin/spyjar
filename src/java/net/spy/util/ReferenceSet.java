@@ -5,10 +5,9 @@
 package net.spy.util;
 
 import java.lang.ref.Reference;
-
-import java.util.HashSet;
 import java.util.AbstractSet;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -53,7 +52,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 		contents = new HashSet(c.size() * 2);
 
 		// Copy references into the content map
-		for(Object o : c) {
+		for(T o : c) {
 			add(o);
 		}
 	}
@@ -64,11 +63,11 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	 * @param o the object
 	 * @return true if the object did not already exist
 	 */
-	public boolean add(Object o) {
+	public boolean add(T o) {
 		boolean rv=false;
 		
 		if(!contains(o)) {
-			contents.add(getReference((T)o));
+			contents.add(getReference(o));
 			rv=true;
 		}
 

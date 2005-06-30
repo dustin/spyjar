@@ -8,16 +8,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.HashMap;
 
-import java.net.URL;
+import net.spy.util.SpyToker;
+import net.spy.util.SpyUtil;
 
 import org.apache.tools.ant.BuildException;
-
 import org.apache.tools.ant.Task;
-
-import net.spy.util.SpyUtil;
-import net.spy.util.SpyToker;
 
 /**
  * Task to build a build info class for a package.

@@ -3,14 +3,13 @@
 
 package net.spy.db.savables;
 
-import java.util.Collection;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 
+import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
-import net.spy.db.AbstractSavable;
 
 /**
  * Wrapper to save an existing collection.

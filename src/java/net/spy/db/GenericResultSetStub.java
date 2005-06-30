@@ -7,16 +7,14 @@
 package net.spy.db;
 
 import java.math.BigDecimal;
-
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
-
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import net.spy.SpyObject;
 

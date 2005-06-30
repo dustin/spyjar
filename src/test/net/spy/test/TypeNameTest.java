@@ -3,12 +3,10 @@
 
 package net.spy.test;
 
-import java.sql.Types;
-    
 import java.lang.reflect.Field;
+import java.sql.Types;
 
 import junit.framework.TestCase;
-
 import net.spy.db.TypeNames;
 
 /**

@@ -8,21 +8,18 @@ package net.spy.test;
 
 import java.io.File;
 import java.io.IOException;
-
-import java.util.Set;
-import java.util.Map;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import net.spy.cache.DiskCache;
-import net.spy.util.Digest;
-import net.spy.util.SpyUtil;
 import net.spy.util.PwGen;
+import net.spy.util.SpyUtil;
 
 /**
  * Test the cache system.

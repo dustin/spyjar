@@ -4,33 +4,28 @@
 
 package net.spy.test;
 
-import java.util.Map;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-
-import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
-import org.jmock.core.matcher.InvokeOnceMatcher;
-import org.jmock.core.matcher.InvokeAtLeastOnceMatcher;
-import org.jmock.core.constraint.IsEqual;
-import org.jmock.core.constraint.IsInstanceOf;
-import org.jmock.core.stub.ReturnStub;
+import java.util.Map;
 
 import net.spy.db.DBSP;
 import net.spy.db.QuerySelector;
-import net.spy.util.SpyConfig;
-import net.spy.test.db.BooleanTest;
-import net.spy.test.db.DialectTest;
-
-import net.spy.db.sp.PrimaryKeyStuff;
 import net.spy.db.sp.SelectPrimaryKey;
 import net.spy.db.sp.UpdatePrimaryKey;
-
+import net.spy.test.db.BooleanTest;
+import net.spy.test.db.DialectTest;
 import net.spy.test.db.ImplTest;
+import net.spy.util.SpyConfig;
+
+import org.jmock.Mock;
+import org.jmock.MockObjectTestCase;
+import org.jmock.core.constraint.IsEqual;
+import org.jmock.core.matcher.InvokeAtLeastOnceMatcher;
+import org.jmock.core.matcher.InvokeOnceMatcher;
+import org.jmock.core.stub.ReturnStub;
 
 public class SPTTest extends MockObjectTestCase {
 	private Mock connMock;

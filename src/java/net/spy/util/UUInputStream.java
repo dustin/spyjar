@@ -6,9 +6,9 @@ package net.spy.util;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.util.StringTokenizer;
 
 import net.spy.log.Logger;
@@ -67,7 +67,7 @@ public class UUInputStream extends ByteConverionInputStream {
 		}
 
 		if(count>=currentOut) {
-			rv=(int)(outputBuffer[currentOut++] & 0xffff);
+			rv=(outputBuffer[currentOut++] & 0xffff);
 		}
 
 		return(rv);
@@ -146,7 +146,7 @@ public class UUInputStream extends ByteConverionInputStream {
 			byte[] b = temp.getBytes();
 			outputBuffer = new byte[100];
 			count = 0;
-			int length = (int) ((b[0] - ' ') & 0x3F);
+			int length = (b[0] - ' ') & 0x3F;
 
 			if (!Float.toString(((float) length / 3)).endsWith(".0")) {
 				for (int i = 1, j = 0; j < length; j += 3, i += 4) {

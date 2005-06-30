@@ -9,9 +9,8 @@ import java.util.Collection;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import net.spy.factory.Instance;
 import net.spy.factory.GenFactory;
+import net.spy.factory.Instance;
 
 /**
  * Test the generic factory code.

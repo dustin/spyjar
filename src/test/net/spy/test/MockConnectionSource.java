@@ -3,18 +3,17 @@
 
 package net.spy.test;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collection;
-import java.util.Iterator;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import net.spy.db.ConnectionSource;
+import net.spy.util.SpyConfig;
 
 import org.jmock.Mock;
-
-import net.spy.util.SpyConfig;
-import net.spy.db.ConnectionSource;
 
 /** 
  * Base class for mock connection sources.

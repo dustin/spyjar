@@ -3,19 +3,18 @@
 
 package net.spy.test;
 
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 import junit.framework.TestCase;
-
-import net.spy.util.SpyConfig;
-import net.spy.pool.PoolAble;
 import net.spy.pool.ObjectPool;
+import net.spy.pool.PoolAble;
+import net.spy.pool.PoolException;
 import net.spy.pool.PoolFiller;
 import net.spy.pool.PooledObject;
-import net.spy.pool.PoolException;
+import net.spy.util.SpyConfig;
 
 /**
  * Object pool testing.

@@ -4,16 +4,15 @@
 
 package net.spy.test;
 
-import java.io.IOException;
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import net.spy.util.NetStringEncoder;
 import net.spy.util.NetStringDecoder;
+import net.spy.util.NetStringEncoder;
 
 /**
  * Test the ring buffer functionality.

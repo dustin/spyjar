@@ -5,7 +5,6 @@
 package net.spy.util;
 
 import java.io.File;
-
 import java.lang.reflect.InvocationTargetException;
 
 import net.spy.SpyThread;

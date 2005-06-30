@@ -4,9 +4,9 @@
 
 package net.spy.ant;
 
-import org.apache.tools.ant.BuildException;
-
 import net.spy.util.ProxyInterfaceImplementor;
+
+import org.apache.tools.ant.BuildException;
 
 /**
  * Generate an interface wrapper proxy.

@@ -6,15 +6,14 @@
 
 package net.spy.db;
 
+import java.lang.ref.SoftReference;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.lang.ref.SoftReference;
-
-import net.spy.util.SpyConfig;
 
 import net.spy.cache.SpyCache;
+import net.spy.util.SpyConfig;
 
 /**
  * Extensions to DB that allow for result set caching.  <b>Use wisely!</b>

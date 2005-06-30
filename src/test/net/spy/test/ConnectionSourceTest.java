@@ -4,10 +4,8 @@
 package net.spy.test;
 
 import junit.framework.TestCase;
-
-import net.spy.util.SpyConfig;
-import net.spy.db.ConnectionSource;
 import net.spy.db.ConnectionSourceFactory;
+import net.spy.util.SpyConfig;
 
 /**
  * Test the connection source factory.

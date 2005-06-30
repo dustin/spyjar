@@ -4,18 +4,16 @@
 
 package net.spy.test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
-import net.spy.net.URLWatcher;
-import net.spy.net.URLItem;
-
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.spy.cron.SimpleTimeIncrement;
+import net.spy.net.URLItem;
+import net.spy.net.URLWatcher;
 
 /**
  * Test the URLWatcher thing.
