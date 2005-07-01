@@ -94,7 +94,7 @@ public class HTTPFetch extends Object {
 	 * @exception Exception thrown when something fails.
 	 */
 	public List<String> getLines() throws IOException {
-		ArrayList<String> a = new ArrayList();
+		ArrayList<String> a = new ArrayList<String>();
 
 		StringTokenizer st=new StringTokenizer(getData(), "\r\n");
 		while(st.hasMoreTokens()) {
@@ -154,7 +154,7 @@ public class HTTPFetch extends Object {
 		InputStream i = uc.getInputStream();
 		// Collect some data about this request
 		status=uc.getResponseCode();
-		responseHeaders=new HashMap(uc.getHeaderFields());
+		responseHeaders=new HashMap<String, List<String>>(uc.getHeaderFields());
 		lastModified=uc.getLastModified();
 
 		BufferedReader br =

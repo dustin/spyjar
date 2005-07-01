@@ -46,8 +46,6 @@ public class SaverTest extends MockObjectTestCase {
 	private MockConnectionSource successSource=null;
 	private MockConnectionSource failSource=null;
 	private MockConnectionSource isoSource=null;
-	private ConnectionSource brokenSource=null;
-
 	/**
 	 * Get an instance of SaverTest.
 	 */
@@ -80,7 +78,6 @@ public class SaverTest extends MockObjectTestCase {
 		brokenConfig=new SpyConfig();
 		brokenConfig.put("dbConnectionSource",
 			"net.spy.test.SaverTest$BrokenConnectionSource");
-		brokenSource=cnf.getConnectionSource(brokenConfig);
 	}
 
 	/** 

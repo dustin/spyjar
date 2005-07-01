@@ -190,10 +190,9 @@ public abstract class DBCP extends DBSP {
 		querySb.append(getSPName());
 		querySb.append(" (");
 
-		int nargs=0;
-		for(Argument arg : getArguments()) {
+		int nargs=getArguments().size();
+		for(int i=0; i<nargs; i++) {
 			querySb.append("?,");
-			nargs++;
 		}
 
 		// Remove the last comma if we had params

@@ -31,7 +31,7 @@ import net.spy.SpyObject;
  */
 public class SQLRunner extends SpyObject {
 
-	private Connection conn=null;
+	private Connection connection=null;
 	private int timeout=0;
 
 	/**
@@ -39,14 +39,14 @@ public class SQLRunner extends SpyObject {
 	 */
 	public SQLRunner(Connection conn) {
 		super();
-		this.conn=conn;
+		this.connection=conn;
 	}
 
 	/** 
 	 * Set the query timeout (in seconds).
 	 */
-	public void setTimeout(int timeout) {
-		this.timeout=timeout;
+	public void setTimeout(int to) {
+		this.timeout=to;
 	}
 
 	/** 
@@ -80,9 +80,9 @@ public class SQLRunner extends SpyObject {
 		boolean origAutoCommit=true;
 		try {
 			// Set the autocommit setting
-			origAutoCommit=conn.getAutoCommit();
+			origAutoCommit=connection.getAutoCommit();
 			if(origAutoCommit != autocommit) {
-				conn.setAutoCommit(autocommit);
+				connection.setAutoCommit(autocommit);
 			}
 
 			// Execute the script
@@ -90,7 +90,7 @@ public class SQLRunner extends SpyObject {
 
 			// We're finished, commit
 			if(!autocommit) {
-				conn.commit();
+				connection.commit();
 			}
 			successful=true;
 		} finally {
@@ -100,11 +100,11 @@ public class SQLRunner extends SpyObject {
 
 			// If we weren't successful, but we did at least get a
 			// connection, clean it up.
-			if(conn!=null) {
+			if(connection!=null) {
 				// Stuff to do when we weren't successful
 				if(!successful) {
 					try {
-						conn.rollback();
+						connection.rollback();
 					} catch(SQLException e) {
 						getLogger().warn("Error rolling back", e);
 					}
@@ -112,7 +112,7 @@ public class SQLRunner extends SpyObject {
 				// Reset the autocommit if it was set to false
 				if(origAutoCommit != autocommit) {
 					try {
-						conn.setAutoCommit(origAutoCommit);
+						connection.setAutoCommit(origAutoCommit);
 					} catch(SQLException e) {
 						getLogger().warn("Error resetting autocommit");
 					}
@@ -133,7 +133,7 @@ public class SQLRunner extends SpyObject {
 			if(curline.equals(";")) {
 				// Execute the current query
 
-				Statement st=conn.createStatement();
+				Statement st=connection.createStatement();
 				st.setQueryTimeout(timeout);
 				int affected=0;
 				long starttime=System.currentTimeMillis();

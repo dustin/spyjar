@@ -147,7 +147,7 @@ public class ObjectPool extends SpyObject {
 	 */
 	public String toString() {
 		StringBuffer out=new StringBuffer(TOSTRING_LEN);
-		ArrayList<PoolContainer> a=new ArrayList();
+		ArrayList<PoolContainer> a=new ArrayList<PoolContainer>();
 		synchronized (pools) {
 			for(PoolContainer pc : pools.values()) {
 				a.add(pc);
@@ -167,7 +167,7 @@ public class ObjectPool extends SpyObject {
 	 * @exception PoolException if something bad happens
 	 */
 	public void prune() throws PoolException {
-		ArrayList<PoolContainer> a=new ArrayList(pools.size());
+		ArrayList<PoolContainer> a=new ArrayList<PoolContainer>(pools.size());
 		// Clean up any pools that are empty
 		synchronized (pools) {
 			for(Iterator i=pools.values().iterator(); i.hasNext();) {
@@ -207,7 +207,7 @@ public class ObjectPool extends SpyObject {
 		// Do we have a pool?
 		synchronized(ObjectPool.class) {
 			if(pools==null) {
-				pools=new TimeStampedHashMap();
+				pools=new TimeStampedHashMap<String, PoolContainer>();
 			}
 		}
 

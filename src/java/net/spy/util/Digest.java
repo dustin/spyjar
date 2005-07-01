@@ -8,11 +8,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import net.spy.SpyObject;
+
 /**
  * Digest for getting checksums, hashing passwords, stuff like that.
  */
-public class Digest extends Object {
+public class Digest extends SpyObject {
 
+	private static final String HASH="SHA";
 	private boolean prefixHash=true;
 
 	/**
@@ -42,8 +45,12 @@ public class Digest extends Object {
 	public boolean checkPassword(String pw, String hash) {
 		boolean rv=false;
 
-		String hashtype=hash.substring(0,
+		String htype=hash.substring(0,
 			hash.indexOf('}')+1).toUpperCase();
+		if(!(htype.equals("{" + HASH + "}") || htype.equals("{S" + HASH + "}"))) {
+			getLogger().warn("Invalid hash type ``" + htype + "'' in " + hash
+					+ ", assuming " + HASH);
+		}
 		String data=hash.substring(hash.indexOf('}')+1);
 
 		Base64 base64d=new Base64();
@@ -73,14 +80,14 @@ public class Digest extends Object {
 	protected String getHash(String word, byte salt[]) {
 		MessageDigest md=null;
 		try {
-			md=MessageDigest.getInstance("SHA");
+			md=MessageDigest.getInstance(HASH);
 		} catch(NoSuchAlgorithmException e) {
-			throw new Error("There's no SHA?");
+			throw new Error("There's no " + HASH + "?");
 		}
 		md.update(word.getBytes());
 		md.update(salt);
 		byte pwhash[]=md.digest();
-		String hout = getPrefix("{SSHA}")
+		String hout = getPrefix("{S" + HASH + "}")
 			+ Base64.getInstance().encode(cat(pwhash, salt));
 		return(hout.trim());
 	}
@@ -94,9 +101,9 @@ public class Digest extends Object {
 	public byte[] getSaltFreeHashBytes(String s) {
 		MessageDigest md=null;
 		try {
-			md=MessageDigest.getInstance("SHA");
+			md=MessageDigest.getInstance(HASH);
 		} catch(NoSuchAlgorithmException e) {
-			throw new Error("There's no SHA?");
+			throw new Error("There's no " + HASH + "?");
 		}
 		md.update(s.getBytes());
 		byte hash[]=md.digest();
@@ -108,7 +115,7 @@ public class Digest extends Object {
 	 * checksumming, not passwords.
 	 */
 	public String getSaltFreeHash(String s) {
-		String hout = getPrefix("{SHA}")
+		String hout = getPrefix("{" + HASH + "}")
 			+ Base64.getInstance().encode(getSaltFreeHashBytes(s));
 		return(hout);
 	}

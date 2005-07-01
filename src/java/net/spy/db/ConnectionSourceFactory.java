@@ -23,7 +23,7 @@ public class ConnectionSourceFactory extends SpyObject {
 	 */
 	private ConnectionSourceFactory() {
 		super();
-		sources=new HashMap();
+		sources=new HashMap<String, ConnectionSource>();
 	}
 
 	/** 

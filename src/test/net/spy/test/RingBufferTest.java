@@ -9,9 +9,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.spy.util.RingBuffer;
 
 /**
@@ -26,20 +24,6 @@ public class RingBufferTest extends TestCase {
 		super(name);
 	}
 
-	/**
-	 * Get the test suite.
-	 */
-	public static Test suite() {
-		return new TestSuite(RingBufferTest.class);
-	}
-
-	/**
-	 * Run this test.
-	 */
-	public static void main(String args[]) {
-		junit.textui.TestRunner.run(suite());
-	}
-
 	private void verify(RingBuffer<Integer> rb) {
 		ArrayList<Integer> a=new ArrayList(rb);
 
@@ -47,7 +31,7 @@ public class RingBufferTest extends TestCase {
 		assertTrue("Size is incorrect.", (rb.size() == a.size()));
 		assertTrue("Capacity not filled.", (rb.size() == rb.getCapacity()));
 
-		int i=((Integer)a.get(0)).intValue();
+		int i=a.get(0).intValue();
 		for(int tmp : a) {
 			assertEquals("Out of sequence", tmp, i);
 			i++;

@@ -99,12 +99,9 @@ public class FactoryTest extends TestCase {
 
 	private static class TestInstance extends Object implements Instance {
 		private int oid=0;
-		private String name=null;
-
-		public TestInstance(int id, String s) {
+		public TestInstance(int id) {
 			super();
 			this.oid=id;
-			this.name=s;
 		}
 
 		public int getId() {
@@ -148,7 +145,7 @@ public class FactoryTest extends TestCase {
 			int startId=lastObject;
 			for(int i=0; i<NUM_OBJECTS; i++) {
 				int id=i + startId;
-				rv.add(new TestInstance(id, "Test#" + id));
+				rv.add(new TestInstance(id));
 				lastObject=id;
 			}
 			return(rv);

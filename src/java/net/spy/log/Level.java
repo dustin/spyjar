@@ -32,9 +32,9 @@ public final class Level extends Object {
 
 	private String name=null;
 
-	private Level(String name) {
+	private Level(String nm) {
 		super();
-		this.name=name;
+		this.name=nm;
 	}
 
 	/** 

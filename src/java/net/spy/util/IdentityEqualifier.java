@@ -10,14 +10,14 @@ package net.spy.util;
  */
 public class IdentityEqualifier extends Object {
 
-	private Object o=null;
+	private Object object=null;
 
 	/** 
 	 * Get an IdentityEqualifier wrapping the given object.
 	 */
 	public IdentityEqualifier(Object o) {
 		super();
-		this.o=o;
+		this.object=o;
 	}
 
 	/** 
@@ -26,7 +26,7 @@ public class IdentityEqualifier extends Object {
 	 * @return 
 	 */
 	public Object get() {
-		return(o);
+		return(object);
 	}
 
 	/** 
@@ -40,9 +40,9 @@ public class IdentityEqualifier extends Object {
 		// the same.
 		if(other instanceof IdentityEqualifier) {
 			IdentityEqualifier ie=(IdentityEqualifier)other;
-			rv = (o == ie.o);
+			rv = (object == ie.object);
 		} else {
-			rv = (o == other);
+			rv = (object == other);
 		}
 
 		return(rv);
@@ -54,7 +54,7 @@ public class IdentityEqualifier extends Object {
 	 * @return System.identityHashCode for this object.
 	 */
 	public int hashCode() {
-		return(System.identityHashCode(o));
+		return(System.identityHashCode(object));
 	}
 
 

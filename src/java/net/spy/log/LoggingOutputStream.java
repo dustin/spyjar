@@ -25,10 +25,10 @@ public class LoggingOutputStream extends LineGettingOutputStream {
 	/**
 	 * Get an instance of LoggingOutputStream.
 	 */
-	public LoggingOutputStream(String name, Level level) {
+	public LoggingOutputStream(String name, Level lv) {
 		super();
 		logger=LoggerFactory.getLogger(name);
-		this.level=level;
+		this.level=lv;
 	}
 
 	/** 

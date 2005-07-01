@@ -75,9 +75,9 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 	 * Ask the URL to update itself if it needs to.
 	 */
 	public void runJob() {
-		HashMap<String, List<String>> headers=new HashMap();
+		HashMap<String, List<String>> headers=new HashMap<String, List<String>>();
 		// make sure the stuff isn't cached
-		ArrayList<String> tmp=new ArrayList();
+		ArrayList<String> tmp=new ArrayList<String>();
 		tmp.add("no-cache");
 		headers.put("Pragma", tmp);
 		// But don't request something if we know we already have it.
@@ -184,8 +184,8 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 	 * Set the maximum number of milliseconds this URL will remain in the
 	 * container if nothing requests it.
 	 */
-	public void setMaxIdleTime(int maxIdleTime) {
-		this.maxIdleTime=maxIdleTime;
+	public void setMaxIdleTime(int to) {
+		this.maxIdleTime=to;
 	}
 
 	/** 

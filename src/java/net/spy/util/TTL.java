@@ -43,20 +43,20 @@ public class TTL extends TimerTask {
 
 	/**
 	 * Get an instance of TTL.
-	 * @param ttl Number of milliseconds until the TTL fires
+	 * @param theTTL Number of milliseconds until the TTL fires
 	 */
-	public TTL(long ttl) {
-		this(ttl, null);
+	public TTL(long theTTL) {
+		this(theTTL, null);
 	}
 
 	/** 
 	 * Get an instance of TTL with the given ttl and extra object.
-	 * @param ttl Number of milliseconds until the TTL fires
-	 * @param extraInfo Extra info that will be toString()ed in the log
+	 * @param theTTL Number of milliseconds until the TTL fires
+	 * @param info Extra info that will be toString()ed in the log
 	 */
-	public TTL(long ttl, Object extraInfo) {
-		this.ttl=ttl;
-		this.extraInfo=extraInfo;
+	public TTL(long theTTL, Object info) {
+		this.ttl=theTTL;
+		this.extraInfo=info;
 		this.reset();
 		this.e=new Expired();
 	}
@@ -201,7 +201,7 @@ public class TTL extends TimerTask {
 		ResourceBundle rb=null;
 		try {
 			rb=ResourceBundle.getBundle(bundleName);
-		} catch(MissingResourceException e) {
+		} catch(MissingResourceException ex) {
 			rv="ResourceBundle not found while reporting TTL expiration:  "
 				+ bundleName + ".  (Expected {1}ms, been {0}ms).";
 		}
@@ -213,9 +213,9 @@ public class TTL extends TimerTask {
 				} else {
 					rv=rb.getString(msgWithArg);
 				}
-			} catch(MissingResourceException e) {
+			} catch(MissingResourceException ex) {
 				rv="Resource not found while reporting TTL expiration:  "
-					+ e.getKey() + ".  (Expected {1}ms, been {0}ms).";
+					+ ex.getKey() + ".  (Expected {1}ms, been {0}ms).";
 			}
 		}
 

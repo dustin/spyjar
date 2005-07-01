@@ -16,7 +16,7 @@ import net.spy.util.ThreadPool;
  */
 public final class Cron extends SpyThread {
 
-	private JobQueue<?> jq=null;
+	private JobQueue<?> jobQueue=null;
 	private boolean stillRunning=true;
 	private ThreadPool threads=null;
 
@@ -54,7 +54,7 @@ public final class Cron extends SpyThread {
 	 */
 	public Cron(String name, JobQueue jq, ThreadPool tp) {
 		super(new ThreadGroup(name), name);
-		this.jq=jq;
+		this.jobQueue=jq;
 		setDaemon(true);
 		// Set the thread group to a daemon
 		getThreadGroup().setDaemon(true);
@@ -83,13 +83,13 @@ public final class Cron extends SpyThread {
 	public String toString() {
 		StringBuffer sb=new StringBuffer(128);
 		sb.append(super.toString());
-		if(jq==null) {
+		if(jobQueue==null) {
 			sb.append(" - null jobqueue");
 		} else {
 			sb.append(" - watching ");
-			sb.append(jq.size());
+			sb.append(jobQueue.size());
 			sb.append(" jobs, next up at ");
-			sb.append(jq.getNextStartDate());
+			sb.append(jobQueue.getNextStartDate());
 		}
 
 		return(sb.toString());
@@ -99,7 +99,7 @@ public final class Cron extends SpyThread {
 	 * Get the current job queue.
 	 */
 	public JobQueue getJobQueue() {
-		return(jq);
+		return(jobQueue);
 	}
 
 	/** 
@@ -112,8 +112,8 @@ public final class Cron extends SpyThread {
 		stillRunning=false;
 		threads.shutdown();
 		// XXX:  Write up why I did this.
-		synchronized(jq) {
-			jq.notifyAll();
+		synchronized(jobQueue) {
+			jobQueue.notifyAll();
 		}
 	}
 
@@ -131,14 +131,14 @@ public final class Cron extends SpyThread {
 		getLogger().info("Starting cron services");
 		while(stillRunning) {
 			// Check all the running jobs.
-			for(Job j : jq.getReadyJobs()) {
+			for(Job j : jobQueue.getReadyJobs()) {
 				getLogger().info("Starting job " + j);
 				threads.addTask(j);
 			}
 
 			// Find the soonest job less than a day out.
 			long now=System.currentTimeMillis();
-			Date next=jq.getNextStartDate();
+			Date next=jobQueue.getNextStartDate();
 			long soonestJob=0;
 
 			// If we didn't get a next job start date, the queue is likely
@@ -178,8 +178,8 @@ public final class Cron extends SpyThread {
 					}
 					getLogger().debug("Sleeping for " + soonestJob);
 					// Sleep on the job
-					synchronized(jq) {
-						jq.wait(soonestJob);
+					synchronized(jobQueue) {
+						jobQueue.wait(soonestJob);
 					}
 					// Wait the remaining second
 					sleep(1000);
@@ -199,10 +199,10 @@ public final class Cron extends SpyThread {
 	 * Set the maximum amount of time the cron thread will continue running
 	 * with no jobs.
 	 * 
-	 * @param maxIdleTime maximum amount of time in milliseconds
+	 * @param to maximum amount of time in milliseconds
 	 */
-	public void setMaxIdleTime(long maxIdleTime) {
-		this.maxIdleTime=maxIdleTime;
+	public void setMaxIdleTime(long to) {
+		this.maxIdleTime=to;
 	}
 
 	/** 

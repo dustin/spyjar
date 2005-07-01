@@ -49,7 +49,7 @@ public class SpyCache extends SpyObject {
 	}
 
 	private void init() {
-		cacheStore=new TimeStampedHashMap();
+		cacheStore=new TimeStampedHashMap<String, Cachable>();
 		delegate=new DummyDelegate();
 	}
 
@@ -392,8 +392,10 @@ public class SpyCache extends SpyObject {
 	// This allows us to always have a delegate object registered.
 	private static class DummyDelegate extends Object implements CacheDelegate {
 		public void cachedObject(String key, Cachable value) {
+			// Dummy implementation
 		}
 		public void uncachedObject(String key, Cachable value) {
+			// dummy implementation
 		}
 	}
 

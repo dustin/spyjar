@@ -26,13 +26,13 @@ import net.spy.util.ShortestPathFinder;
 public class ShortestPathTest extends TestCase {
 
 	private Map<String, StringNode> nodes=null;
-	private StringNode a=null;
-	private StringNode b=null;
-	private StringNode c=null;
-	private StringNode d=null;
-	private StringNode e=null;
-	private StringNode f=null;
-	private StringNode g=null;
+	private StringNode nodeA=null;
+	private StringNode nodeB=null;
+	private StringNode nodeC=null;
+	private StringNode nodeD=null;
+	private StringNode nodeE=null;
+	private StringNode nodeF=null;
+	private StringNode nodeG=null;
 
 	/**
 	 * Get an instance of ShortestPathTest.
@@ -61,47 +61,47 @@ public class ShortestPathTest extends TestCase {
 	protected void setUp() {
 		nodes=new java.util.TreeMap();
 
-		a=new StringNode("A");
-		b=new StringNode("B");
-		c=new StringNode("C");
-		d=new StringNode("D");
-		e=new StringNode("E");
-		f=new StringNode("F");
-		g=new StringNode("G");
+		nodeA=new StringNode("A");
+		nodeB=new StringNode("B");
+		nodeC=new StringNode("C");
+		nodeD=new StringNode("D");
+		nodeE=new StringNode("E");
+		nodeF=new StringNode("F");
+		nodeG=new StringNode("G");
 
 		// Add the nodes to the collection
-		nodes.put("A", a);
-		nodes.put("B", b);
-		nodes.put("C", c);
-		nodes.put("D", d);
-		nodes.put("E", e);
-		nodes.put("F", f);
-		nodes.put("G", g);
+		nodes.put("A", nodeA);
+		nodes.put("B", nodeB);
+		nodes.put("C", nodeC);
+		nodes.put("D", nodeD);
+		nodes.put("E", nodeE);
+		nodes.put("F", nodeF);
+		nodes.put("G", nodeG);
 
 		// A -> B    A -> C (cost 15)
-		a.linkTo(b);
-		a.linkTo(c, 15);
+		nodeA.linkTo(nodeB);
+		nodeA.linkTo(nodeC, 15);
 
 		// B -> C
-		b.linkTo(c);
+		nodeB.linkTo(nodeC);
 
 		// C -> D   C -> E  C -> F
-		c.linkTo(d);
-		c.linkTo(e);
-		c.linkTo(f);
-		c.linkTo(g, 100);
+		nodeC.linkTo(nodeD);
+		nodeC.linkTo(nodeE);
+		nodeC.linkTo(nodeF);
+		nodeC.linkTo(nodeG, 100);
 
 		// D -> E
 		// d.linkTo(e);
 		// D -> C at a higher cost, giving it a path to E
-		d.linkTo(c, 100);
+		nodeD.linkTo(nodeC, 100);
 
 		// Link e to itself
-		e.linkTo(e, 10);
+		nodeE.linkTo(nodeE, 10);
 
 		// And f links to g and b
-		f.linkTo(g, 10);
-		f.linkTo(b, 200);
+		nodeF.linkTo(nodeG, 10);
+		nodeF.linkTo(nodeB, 200);
 
 		// calculate the paths
 		ShortestPathFinder spf=new ShortestPathFinder();
@@ -170,142 +170,142 @@ public class ShortestPathTest extends TestCase {
 		// next-hops).
 
 		// A -> A -- no match
-		assertLinkMatch(a, a, null, 0);
+		assertLinkMatch(nodeA, nodeA, null, 0);
 		// A -> B == 10 via B
-		assertLinkMatch(a, b, b, 10);
+		assertLinkMatch(nodeA, nodeB, nodeB, 10);
 		// A -> C == 15 via C
-		assertLinkMatch(a, c, c, 15);
+		assertLinkMatch(nodeA, nodeC, nodeC, 15);
 		// A -> D == 25 via C
-		assertLinkMatch(a, d, c, 25);
+		assertLinkMatch(nodeA, nodeD, nodeC, 25);
 		// A -> E == 25 via C
-		assertLinkMatch(a, e, c, 25);
+		assertLinkMatch(nodeA, nodeE, nodeC, 25);
 		// A -> F == 25 via C
-		assertLinkMatch(a, f, c, 25);
+		assertLinkMatch(nodeA, nodeF, nodeC, 25);
 		// A -> G == 35 via C
-		assertLinkMatch(a, g, c, 35);
-		assertEquals(6, a.getNextHops().size());
+		assertLinkMatch(nodeA, nodeG, nodeC, 35);
+		assertEquals(6, nodeA.getNextHops().size());
 
 		// B -> A -- doesn't exist
-		assertLinkMatch(b, a, null, 0);
+		assertLinkMatch(nodeB, nodeA, null, 0);
 		// B -> B -- via C
-		assertLinkMatch(b, b, c, 220);
+		assertLinkMatch(nodeB, nodeB, nodeC, 220);
 		// B -> C == 10 via C
-		assertLinkMatch(b, c, c, 10);
+		assertLinkMatch(nodeB, nodeC, nodeC, 10);
 		// B -> D == 20 via C
-		assertLinkMatch(b, d, c, 20);
+		assertLinkMatch(nodeB, nodeD, nodeC, 20);
 		// B -> E == 20 via C
-		assertLinkMatch(b, e, c, 20);
+		assertLinkMatch(nodeB, nodeE, nodeC, 20);
 		// B -> F == 20 via C
-		assertLinkMatch(b, f, c, 20);
+		assertLinkMatch(nodeB, nodeF, nodeC, 20);
 		// B -> G == 30 via C
-		assertLinkMatch(b, g, c, 30);
-		assertEquals(6, b.getNextHops().size());
+		assertLinkMatch(nodeB, nodeG, nodeC, 30);
+		assertEquals(6, nodeB.getNextHops().size());
 
 		// C -> A won't go
-		assertLinkMatch(c, a, null, 0);
+		assertLinkMatch(nodeC, nodeA, null, 0);
 		// C -> B via F
-		assertLinkMatch(c, b, f, 210);
+		assertLinkMatch(nodeC, nodeB, nodeF, 210);
 		// C -> C via D?
-		assertLinkMatch(c, c, d, 110);
+		assertLinkMatch(nodeC, nodeC, nodeD, 110);
 		// C -> D == 10 via D
-		assertLinkMatch(c, d, d, 10);
+		assertLinkMatch(nodeC, nodeD, nodeD, 10);
 		// C -> E == 10 via E
-		assertLinkMatch(c, e, e, 10);
+		assertLinkMatch(nodeC, nodeE, nodeE, 10);
 		// C -> F == 10 via F
-		assertLinkMatch(c, f, f, 10);
+		assertLinkMatch(nodeC, nodeF, nodeF, 10);
 		// C -> G == 20 via F
-		assertLinkMatch(c, g, f, 20);
-		assertEquals(6, c.getNextHops().size());
+		assertLinkMatch(nodeC, nodeG, nodeF, 20);
+		assertEquals(6, nodeC.getNextHops().size());
 
 		// D -> A won't go
-		assertLinkMatch(d, a, null, 0);
+		assertLinkMatch(nodeD, nodeA, null, 0);
 		// D -> B via C
-		assertLinkMatch(d, b, c, 310);
+		assertLinkMatch(nodeD, nodeB, nodeC, 310);
 		// D -> C via C
-		assertLinkMatch(d, c, c, 100);
+		assertLinkMatch(nodeD, nodeC, nodeC, 100);
 		// D -> D via C
-		assertLinkMatch(d, d, c, 110);
+		assertLinkMatch(nodeD, nodeD, nodeC, 110);
 		// D -> E via C
-		assertLinkMatch(d, e, c, 110);
+		assertLinkMatch(nodeD, nodeE, nodeC, 110);
 		// D -> F via C
-		assertLinkMatch(d, f, c, 110);
+		assertLinkMatch(nodeD, nodeF, nodeC, 110);
 		// D -> G via C
-		assertLinkMatch(d, g, c, 120);
-		assertEquals(6, d.getNextHops().size());
+		assertLinkMatch(nodeD, nodeG, nodeC, 120);
+		assertEquals(6, nodeD.getNextHops().size());
 
 		// E Goes nowhere except E
-		assertLinkMatch(e, a, null, 0);
-		assertLinkMatch(e, b, null, 0);
-		assertLinkMatch(e, c, null, 0);
-		assertLinkMatch(e, d, null, 0);
-		assertLinkMatch(e, e, e, 10);
-		assertLinkMatch(e, f, null, 0);
-		assertLinkMatch(e, g, null, 0);
-		assertEquals(1, e.getNextHops().size());
+		assertLinkMatch(nodeE, nodeA, null, 0);
+		assertLinkMatch(nodeE, nodeB, null, 0);
+		assertLinkMatch(nodeE, nodeC, null, 0);
+		assertLinkMatch(nodeE, nodeD, null, 0);
+		assertLinkMatch(nodeE, nodeE, nodeE, 10);
+		assertLinkMatch(nodeE, nodeF, null, 0);
+		assertLinkMatch(nodeE, nodeG, null, 0);
+		assertEquals(1, nodeE.getNextHops().size());
 
 		// F Goes to G and B
-		assertLinkMatch(f, a, null, 0);
-		assertLinkMatch(f, b, b, 200);
-		assertLinkMatch(f, c, b, 210);
-		assertLinkMatch(f, d, b, 220);
-		assertLinkMatch(f, e, b, 220);
-		assertLinkMatch(f, f, b, 220);
-		assertLinkMatch(f, g, g, 10);
-		assertEquals(6, f.getNextHops().size());
+		assertLinkMatch(nodeF, nodeA, null, 0);
+		assertLinkMatch(nodeF, nodeB, nodeB, 200);
+		assertLinkMatch(nodeF, nodeC, nodeB, 210);
+		assertLinkMatch(nodeF, nodeD, nodeB, 220);
+		assertLinkMatch(nodeF, nodeE, nodeB, 220);
+		assertLinkMatch(nodeF, nodeF, nodeB, 220);
+		assertLinkMatch(nodeF, nodeG, nodeG, 10);
+		assertEquals(6, nodeF.getNextHops().size());
 
 		// G Goes to nowhere
-		assertLinkMatch(g, a, null, 0);
-		assertLinkMatch(g, b, null, 0);
-		assertLinkMatch(g, c, null, 0);
-		assertLinkMatch(g, d, null, 0);
-		assertLinkMatch(g, e, null, 0);
-		assertLinkMatch(g, f, null, 0);
-		assertLinkMatch(g, g, null, 0);
-		assertEquals(0, g.getNextHops().size());
+		assertLinkMatch(nodeG, nodeA, null, 0);
+		assertLinkMatch(nodeG, nodeB, null, 0);
+		assertLinkMatch(nodeG, nodeC, null, 0);
+		assertLinkMatch(nodeG, nodeD, null, 0);
+		assertLinkMatch(nodeG, nodeE, null, 0);
+		assertLinkMatch(nodeG, nodeF, null, 0);
+		assertLinkMatch(nodeG, nodeG, null, 0);
+		assertEquals(0, nodeG.getNextHops().size());
 	}
 
 	/** 
 	 * Do a couple of quick ShortestPath tests.
 	 */
 	public void testShortestPath() throws NoPathException {
-		ShortestPath sp=new ShortestPath(a, b);
+		ShortestPath sp=new ShortestPath(nodeA, nodeB);
 		assertEquals("ShortestPath from A -> B", 1, sp.size());
 		try {
-			sp=new ShortestPath(a, a);
+			sp=new ShortestPath(nodeA, nodeA);
 			fail("Expected to not find a path from A -> A, found " + sp);
 		} catch(NoPathException e) {
 			// Success
 		}
 
 		try {
-			sp=new ShortestPath(null, a);
+			sp=new ShortestPath(null, nodeA);
 			fail("Expected to not find a path from null -> A, found " + sp);
 		} catch(NullPointerException e) {
 			assertNotNull(e.getMessage());
 		}
 
 		try {
-			sp=new ShortestPath(a, null);
+			sp=new ShortestPath(nodeA, null);
 			fail("Expected to not find a path from A -> null, found " + sp);
 		} catch(NullPointerException e) {
 			assertNotNull(e.getMessage());
 		}
 
-		sp=new ShortestPath(a, c);
+		sp=new ShortestPath(nodeA, nodeC);
 		assertEquals("ShortestPath from A -> C:  " + sp, 1, sp.size());
 		assertEquals(15, sp.getCost());
-		sp=new ShortestPath(a, d);
+		sp=new ShortestPath(nodeA, nodeD);
 		assertEquals("ShortestPath from A -> D:  " + sp, 2, sp.size());
 		assertEquals(25, sp.getCost());
-		sp=new ShortestPath(a, e);
+		sp=new ShortestPath(nodeA, nodeE);
 		assertEquals("ShortestPath from A -> E:  " + sp, 2, sp.size());
 		assertEquals(25, sp.getCost());
 
-		sp=new ShortestPath(d, e);
+		sp=new ShortestPath(nodeD, nodeE);
 		assertEquals("ShortestPath from D -> E:  " + sp, 2, sp.size());
 		assertEquals(110, sp.getCost());
 
-		sp=new ShortestPath(e, e);
+		sp=new ShortestPath(nodeE, nodeE);
 		assertEquals("ShortestPath from E -> E:  " + sp, 1, sp.size());
 		assertEquals(10, sp.getCost());
 	}
@@ -341,11 +341,11 @@ public class ShortestPathTest extends TestCase {
 	 * Verify garbage collection can clean up the instances.
 	 */
 	public void testCleanup() {
-		WeakReference aref=new WeakReference(a);
-		WeakReference bref=new WeakReference(b);
-		WeakReference cref=new WeakReference(c);
-		WeakReference dref=new WeakReference(d);
-		WeakReference eref=new WeakReference(e);
+		WeakReference aref=new WeakReference(nodeA);
+		WeakReference bref=new WeakReference(nodeB);
+		WeakReference cref=new WeakReference(nodeC);
+		WeakReference dref=new WeakReference(nodeD);
+		WeakReference eref=new WeakReference(nodeE);
 
 		// Verify the reference is alive
 		assertNotNull("Reference to A is broken", aref.get());
@@ -356,11 +356,11 @@ public class ShortestPathTest extends TestCase {
 
 		// Kill them all.
 		nodes=null;
-		a=null;
-		b=null;
-		c=null;
-		d=null;
-		e=null;
+		nodeA=null;
+		nodeB=null;
+		nodeC=null;
+		nodeD=null;
+		nodeE=null;
 
 		// Pick up the trash
 		System.gc();

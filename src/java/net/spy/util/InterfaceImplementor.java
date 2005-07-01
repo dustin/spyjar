@@ -104,13 +104,13 @@ public class InterfaceImplementor extends SpyObject {
 	/**
 	 * Set the name of the output class.
 	 */
-	public void setOutputClass(String outclass) {
-		int lastdot=outclass.lastIndexOf(".");
+	public void setOutputClass(String to) {
+		int lastdot=to.lastIndexOf(".");
 		if(lastdot==-1) {
-			this.outclass=outclass;
+			this.outclass=to;
 		} else {
-			outpackage=outclass.substring(0, lastdot);
-			this.outclass=outclass.substring(lastdot+1);
+			outpackage=to.substring(0, lastdot);
+			this.outclass=to.substring(lastdot+1);
 		}
 	}
 

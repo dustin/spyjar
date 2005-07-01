@@ -46,10 +46,10 @@ public abstract class LoopingThread extends SpyThread {
 	 *
 	 * Default is 5000 (five seconds).
 	 * 
-	 * @param msPerLoop number of milliseconds to delay between loops
+	 * @param to number of milliseconds to delay between loops
 	 */
-	public void setMsPerLoop(int msPerLoop) {
-		this.msPerLoop = msPerLoop;
+	public void setMsPerLoop(int to) {
+		this.msPerLoop = to;
 	}
 
 	/** 

@@ -16,7 +16,7 @@ public abstract class Job extends SpyObject implements Runnable {
 	// The next time the job is due to start.
 	private Date nextStart=null;
 	// How to increment the time value in the case of recurring jobs.
-	private TimeIncrement ti=null;
+	private TimeIncrement increment=null;
 	// Whether the job is currently running or not
 	private boolean isrunning=false;
 	// The name of ths thing
@@ -25,19 +25,19 @@ public abstract class Job extends SpyObject implements Runnable {
 	/**
 	 * Get a new Job with the given name and start date.
 	 */
-	public Job(String name, Date startDate) {
-		this(name, startDate, null);
+	public Job(String nm, Date startDate) {
+		this(nm, startDate, null);
 	}
 
 	/**
 	 * Get a new recurring Job with the given name and start date that will
 	 * run on an interval defined by the TimeIncrement.
 	 */
-	public Job(String name, Date startDate, TimeIncrement ti) {
+	public Job(String nm, Date startDate, TimeIncrement ti) {
 		super();
 		nextStart=startDate;
-		this.ti=ti;
-		setName(name);
+		this.increment=ti;
+		setName(nm);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public abstract class Job extends SpyObject implements Runnable {
 	 * @return the TimeIncrement
 	 */
 	protected TimeIncrement getTimeIncrement() {
-		return(ti);
+		return(increment);
 	}
 
 	/**
@@ -144,13 +144,13 @@ public abstract class Job extends SpyObject implements Runnable {
 	 * run.
 	 */
 	public final synchronized void findNextRun() {
-		if(ti == null)  {
+		if(increment == null)  {
 			nextStart = null;
 			getLogger().debug("I have no time increment, not rescheduling");
 		} else {
 			Date now=new Date();
 			while(nextStart.before(now)) {
-				nextStart=ti.nextDate(nextStart);
+				nextStart=increment.nextDate(nextStart);
 			}
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Rescheduled " + this + " for " + nextStart);
@@ -163,7 +163,7 @@ public abstract class Job extends SpyObject implements Runnable {
 	 */
 	protected void stopRunning() {
 		nextStart=null;
-		ti=null;
+		increment=null;
 	}
 
 	/**

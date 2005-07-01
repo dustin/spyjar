@@ -79,8 +79,8 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 	// Initialize hashtables
 	private void initsp() {
-		this.parameters=new LinkedHashMap();
-		this.arguments=new LinkedHashMap();
+		this.parameters=new LinkedHashMap<String, Parameter>();
+		this.arguments=new LinkedHashMap<String, Argument>();
 		// Inherit debug flag from the logger.
 		debug=getLogger().isDebugEnabled();
 	}
@@ -300,7 +300,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 * @return an unmodifiable list of {@link Argument} objects
 	 */
 	public Collection<Argument> getArguments() {
-		ArrayList<Argument> al=new ArrayList(arguments.size());
+		ArrayList<Argument> al=new ArrayList<Argument>(arguments.size());
 		for(Parameter p : getParameters()) {
 			Argument arg=arguments.get(p.getName());
 			if(arg==null && p.getParamType()==Parameter.REQUIRED) {
@@ -862,7 +862,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 * @return a list of {@link Parameter}s of the specified type.
 	 */
 	public Collection<Parameter> getParameters(int type) {
-		ArrayList<Parameter> al=new ArrayList();
+		ArrayList<Parameter> al=new ArrayList<Parameter>();
 
 		for(Parameter p : getParameters()) {
 			if(p.getJavaType() == type) {
@@ -937,6 +937,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		if(value == null) {
 			// if the value is null, send in a null
 			DBNull n=new DBNull(type);
+			set(var, n);
 		} else {
 			// Value is not null, parse it and call the proper set method
 			switch(type) {

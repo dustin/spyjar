@@ -64,7 +64,8 @@ public class PKTest extends TestCase {
 			"net.spy.test.PKTest$MissingKeySource");
 		GetPK getpk=GetPK.getInstance();
 		try {
-			BigDecimal previous=getpk.getPrimaryKey(conf, "test_table");
+			BigDecimal val=getpk.getPrimaryKey(conf, "test_table");
+			fail("Expected a missing key, got " + val);
 		} catch(SQLException e) {
 			assertEquals("Did not update the correct number of rows for"
 				+ " test_table (got 0)", e.getMessage());

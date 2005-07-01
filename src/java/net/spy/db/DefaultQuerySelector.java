@@ -57,7 +57,7 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 	 */
 	public DefaultQuerySelector() {
 		super();
-		nameMap=new TreeMap();
+		nameMap=new TreeMap<String, String>();
 		initNameMap();
 	}
 

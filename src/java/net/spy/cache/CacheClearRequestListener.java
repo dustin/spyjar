@@ -25,21 +25,20 @@ public final class CacheClearRequestListener extends SpyThread {
 	/**
 	 * Get an instance of CacheClearRequestListener.
 	 */
-	public CacheClearRequestListener(InetAddress group, int port)
+	public CacheClearRequestListener(InetAddress g, int p)
 		throws IOException {
 
 		super();
 
-		getLogger().info("Starting multicast cache listener on "
-			+ group + ":" + port);
+		getLogger().info("Starting multicast cache listener on " + g + ":" + p);
 		setDaemon(true);
 		setName("SpyCacheClearRequestListener");
 
-		this.group=group;
-		this.port=port;
+		this.group=g;
+		this.port=p;
 
-		s=new MulticastSocket(port);
-		s.joinGroup(group);
+		s=new MulticastSocket(p);
+		s.joinGroup(g);
 
 		start();
 	}

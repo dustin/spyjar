@@ -48,11 +48,11 @@ public class CachePreparedStatementStub extends SpyObject {
 	 * Create a CachePreparedStatement object for the given query (you
 	 * probably don't want to do this directly).
 	 */
-	public CachePreparedStatementStub(SpyDB db, String query, long cacheTime) {
+	public CachePreparedStatementStub(SpyDB d, String query, long cTime) {
 		super();
-		this.db=db;
+		this.db=d;
 		this.queryStr=query;
-		this.cacheTime=cacheTime;
+		this.cacheTime=cTime;
 
 		// Figure out how many arguments may be used.
 		int ntokens=countQs(query);

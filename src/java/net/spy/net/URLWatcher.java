@@ -31,7 +31,7 @@ public final class URLWatcher extends SpyObject {
 	 */
 	private URLWatcher() {
 		super();
-		JobQueue<URLItem> jq=new JobQueue();
+		JobQueue<URLItem> jq=new JobQueue<URLItem>();
 		cron=new Cron("URLWatcher Cron", jq);
 	}
 

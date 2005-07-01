@@ -27,9 +27,9 @@ public class NetStringDecoder extends SpyObject {
 	/**
 	 * Get an instance of NetStringDecoder.
 	 */
-	public NetStringDecoder(String encoding) {
+	public NetStringDecoder(String enc) {
 		super();
-		this.encoding=encoding;
+		this.encoding=enc;
 	}
 
 	/** 

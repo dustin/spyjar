@@ -53,7 +53,7 @@ public class JobQueue<T extends Job> extends ArrayList<T> {
 	 * Get an Iterator of Jobs that are ready to run.
 	 */
 	public synchronized Collection<Job> getReadyJobs() {
-		ArrayList v=new ArrayList();
+		ArrayList<Job> v=new ArrayList<Job>();
 
 		// Flip through all of the jobs and see what we've got to do.
 		for(Iterator<T> i=iterator(); i.hasNext();) {

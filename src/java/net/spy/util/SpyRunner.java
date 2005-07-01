@@ -38,12 +38,12 @@ public class SpyRunner extends SpyThread {
 
 	private static SpyConfig conf=null;
 
-	public SpyRunner(ThreadGroup tg, String object, String args[]) {
+	public SpyRunner(ThreadGroup tg, String object, String a[]) {
 		super(tg, "main");
 		this.classname=object;
 		try {
 			Class.forName(object);
-			this.args=args;
+			this.args=a;
 		} catch(Exception e) {
 			getLogger().error("Problem loading class " + object, e);
 		}

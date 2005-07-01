@@ -104,10 +104,10 @@ public abstract class TimedSocket extends Object {
 		private IOException exception=null;
 
 		// Connect to the specified host IP and port number
-		public SocketThread (InetAddress addr, int port) {
+		public SocketThread (InetAddress a, int p) {
 			// Assign to member variables
-			this.addr = addr;
-			this.port = port;
+			this.addr = a;
+			this.port = p;
 		}
 
 		public void run() {

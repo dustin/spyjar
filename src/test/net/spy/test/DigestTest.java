@@ -60,11 +60,10 @@ public class DigestTest extends TestCase {
 	 * sure the hashing consistently works.
 	 */
 	public void testPasswordHash() {
-		PwGen gen=new PwGen();
 		Digest d=new Digest();
 
 		for(int i=0; i<10; i++) {
-			String pw=gen.getPass(8);
+			String pw=PwGen.getPass(8);
 			String hpw=d.getHash(pw);
 			assertTrue("Password checking failed", d.checkPassword(pw, hpw));
 		}

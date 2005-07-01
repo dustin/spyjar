@@ -57,16 +57,16 @@ public class SPGenTask extends MatchingTask {
 	/**
 	 * Sets the source directory to search for .spt files.
 	 **/
-	public void setSrcdir(File srcDir) {
-		this.srcDir = srcDir;
+	public void setSrcdir(File to) {
+		this.srcDir = to;
 	}
 
 	/**
 	 * Sets the destination directory to place .java files.
 	 * If not specified, assumed to be the same as the source directory.
 	 **/
-	public void setDestdir(File destDir) {
-		this.destDir = destDir;
+	public void setDestdir(File to) {
+		this.destDir = to;
 	}
 
 	/** 
@@ -102,7 +102,8 @@ public class SPGenTask extends MatchingTask {
 	 **/
 	public void execute() throws BuildException {
 		if (srcDir == null) {
-			throw new BuildException("srcdir attribute must be set!", location);
+			throw new BuildException("srcdir attribute must be set!",
+					getLocation());
 		}
 		if (!srcDir.isDirectory()) {
 			throw new BuildException("source directory \"" + srcDir
@@ -114,7 +115,7 @@ public class SPGenTask extends MatchingTask {
 
 		if (!destDir.isDirectory()) {
 			throw new BuildException("destination directory \"" + destDir
-				+ "\" is not valid.", location);
+				+ "\" is not valid.", getLocation());
 		}
 
 		DirectoryScanner ds = getDirectoryScanner(srcDir);
@@ -138,7 +139,7 @@ public class SPGenTask extends MatchingTask {
 	}
 
 	private String[] trimSPTList(String input[]) {
-		ArrayList a=new ArrayList();
+		ArrayList<String> a=new ArrayList<String>();
 
 		for(int i = 0; i < input.length; i++) {
 			File srcFile = new File(srcDir, input[i]);
@@ -152,7 +153,7 @@ public class SPGenTask extends MatchingTask {
 
 		String rv[]=new String[a.size()];
 		for(int i=0; i<a.size(); i++) {
-			rv[i]=(String)a.get(i);
+			rv[i]=a.get(i);
 		}
 
 		return(rv);

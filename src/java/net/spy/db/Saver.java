@@ -35,22 +35,22 @@ public class Saver extends SpyObject {
 	/**
 	 * Get an instance of Saver with the given database config.
 	 */
-	public Saver(SpyConfig config) {
-		this(config, null);
+	public Saver(SpyConfig conf) {
+		this(conf, null);
 	}
 
 	/**
 	 * Get an instance of saver with the given database config and context.
 	 */
-	public Saver(SpyConfig config, SaveContext context) {
+	public Saver(SpyConfig conf, SaveContext ctx) {
 		super();
-		this.context=context;
+		this.context=ctx;
 		if(this.context == null) {
 			this.context = new SaveContext();
 		}
-		this.config=config;
+		this.config=conf;
 		ConnectionSourceFactory csf=ConnectionSourceFactory.getInstance();
-		connSrc=csf.getConnectionSource(config);
+		connSrc=csf.getConnectionSource(conf);
 		this.listedObjects=new HashSet();
 	}
 

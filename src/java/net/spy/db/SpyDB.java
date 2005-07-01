@@ -205,6 +205,7 @@ public class SpyDB extends SpyObject {
 	 * initialization.
 	 */
 	protected void init() {
+		// Subclass initialization
 	}
 
 	// Actually dig up a DB connection

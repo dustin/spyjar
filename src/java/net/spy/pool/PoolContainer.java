@@ -305,7 +305,7 @@ public class PoolContainer extends SpyObject {
 	}
 
 	private void initialize() throws PoolException {
-		pool=new ArrayList();
+		pool=new ArrayList<PoolAble>();
 
 		// Get the min and max args.
 		minObjects=getPropertyInt("min", 0);

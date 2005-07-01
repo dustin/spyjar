@@ -66,8 +66,8 @@ public class LoggingTest extends TestCase {
 	 * Make sure we're using log4j.
 	 */
 	public void testLog4j() {
-		Logger logger=LoggerFactory.getLogger(getClass());
-		assertEquals("net.spy.log.Log4JLogger", logger.getClass().getName());
+		Logger l=LoggerFactory.getLogger(getClass());
+		assertEquals("net.spy.log.Log4JLogger", l.getClass().getName());
 	}
 
 	/** 

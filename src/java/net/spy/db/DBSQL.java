@@ -42,7 +42,7 @@ public abstract class DBSQL extends DBSP {
 	 */
 	protected void registerQuery(String name, String query) {
 		if(registeredQueries==null) {
-			registeredQueries=new HashMap();
+			registeredQueries=new HashMap<String, String>();
 		}
 		registeredQueries.put(name, query);
 	}

@@ -111,7 +111,7 @@ public class BuildInfoTask extends Task {
 			String s=SpyUtil.getReaderAsString(ir);
 			ir.close();
 
-			HashMap tokens=new HashMap();
+			HashMap<String, String> tokens=new HashMap<String, String>();
 			tokens.put("PACKAGE", pkg);
 			tokens.put("CHANGELOG", changelog);
 			tokens.put("BUILDPROPS", buildProps);

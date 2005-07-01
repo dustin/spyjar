@@ -15,12 +15,12 @@ public abstract class AbstractLogger implements Logger {
 	/** 
 	 * Instantiate the abstract logger.
 	 */
-	protected AbstractLogger(String name) {
+	protected AbstractLogger(String nm) {
 		super();
-		if(name == null) {
+		if(nm == null) {
 			throw new NullPointerException("Logger name may not be null.");
 		}
-		this.name=name;
+		this.name=nm;
 	}
 
 	/** 

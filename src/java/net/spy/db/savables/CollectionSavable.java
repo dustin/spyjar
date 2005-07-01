@@ -38,6 +38,7 @@ public class CollectionSavable extends AbstractSavable {
 	 */
 	public void save(Connection conn, SaveContext context)
 		throws SaveException, SQLException {
+		// No implementation necessary since this object itself won't be saved
 	}
 
 }

@@ -23,7 +23,7 @@ public class HashCacheEntry<T extends Instance> extends SpyObject
 	 */
 	public HashCacheEntry() {
 		super();
-		cache=new HashMap();
+		cache=new HashMap<Integer, T>();
 	}
 
 	/** 

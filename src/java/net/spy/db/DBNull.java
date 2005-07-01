@@ -13,9 +13,9 @@ public class DBNull extends Object {
 	/**
 	 * Get a new null object.
 	 */
-	public DBNull(int type) {
+	public DBNull(int t) {
 		super();
-		this.type=type;
+		this.type=t;
 	}
 
 	/**

@@ -21,20 +21,20 @@ public class MainJob extends Job implements ThreadPoolRunnable {
 	/**
 	 * Get a new ``at style'' MainJob.
 	 */
-	public MainJob(String classname, String args[], Date startDate) {
-		super("main:" + classname, startDate);
-		this.classname=classname;
-		this.args=args;
+	public MainJob(String cName, String a[], Date startDate) {
+		super("main:" + cName, startDate);
+		this.classname=cName;
+		this.args=a;
 	}
 
 	/**
 	 * Get a new ``cron style'' MainJob.
 	 */
-	public MainJob(String classname, String args[],
+	public MainJob(String cName, String a[],
 		Date startDate, TimeIncrement ti) {
-		super("main:" + classname, startDate, ti);
-		this.classname=classname;
-		this.args=args;
+		super("main:" + cName, startDate, ti);
+		this.classname=cName;
+		this.args=a;
 	}
 
 	/**

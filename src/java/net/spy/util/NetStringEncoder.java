@@ -19,9 +19,9 @@ public class NetStringEncoder extends Object {
 	/**
 	 * Get an instance of NetStringEncoder.
 	 */
-	public NetStringEncoder(String encoding) {
+	public NetStringEncoder(String enc) {
 		super();
-		this.encoding=encoding;
+		this.encoding=enc;
 	}
 
 	/** 

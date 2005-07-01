@@ -42,21 +42,21 @@ public class DiskCache extends AbstractMap {
 	/**
 	 * Get an DiskObject using the given directory.
 	 */
-	public DiskCache(String basedir) {
-		this(basedir, DEFAULT_LRU_CACHE_SIZE);
+	public DiskCache(String base) {
+		this(base, DEFAULT_LRU_CACHE_SIZE);
 	}
 
 	/** 
 	 * Get a DiskCache using the given directory with a backing LRU cache
 	 * of the specified size.
 	 * 
-	 * @param basedir the base directory for the disk cache
+	 * @param base the base directory for the disk cache
 	 * @param lruCacheSize the size of the LRU cache holding recently accessed
 	 *		objects
 	 */
-	public DiskCache(String basedir, int lruCacheSize) {
+	public DiskCache(String base, int lruCacheSize) {
 		super();
-		this.basedir=basedir;
+		this.basedir=base;
 		lruCache=new LRUCache(lruCacheSize);
 	}
 
@@ -212,6 +212,7 @@ public class DiskCache extends AbstractMap {
 
 	private class WalkerDiskCacheRanger extends HashSet {
 
+		@SuppressWarnings("synthetic-access")
 		public WalkerDiskCacheRanger()
 			throws IOException, ClassNotFoundException {
 			super();
@@ -256,9 +257,9 @@ public class DiskCache extends AbstractMap {
 		private boolean begun=false;
 
 		// Instatiate the iterator over the default iterator implementation
-		public I(Iterator i) {
+		public I(Iterator it) {
 			super();
-			this.i=i;
+			this.i=it;
 		}
 
 		/** 

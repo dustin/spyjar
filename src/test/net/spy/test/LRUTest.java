@@ -118,7 +118,6 @@ public class LRUTest extends TestCase {
 	 * Test cache listener.
 	 */
 	public void testCacheListener() {
-		Integer zero=new Integer(0);
 		LRUCache cache=new LRUCache(10);
 
 		TestListener tl=new TestListener();

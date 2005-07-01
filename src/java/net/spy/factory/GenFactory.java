@@ -72,7 +72,7 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 	 * @return an empty CacheEntry instance.
 	 */
 	protected CacheEntry<T> getNewCacheEntry() {
-		return new HashCacheEntry();
+		return new HashCacheEntry<T>();
 	}
 
 	/** 

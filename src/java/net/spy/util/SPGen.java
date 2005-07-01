@@ -53,17 +53,17 @@ public class SPGen extends SpyObject {
 
 	private String superinterface=null;
 	private long cachetime=0;
-	private Map queries=null;
+	private Map<String, List<String>> queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
-	private List results=null;
-	private List args=null;
-	private Set interfaces=null;
-	private Set imports=null;
+	private List<Result> results=null;
+	private List<Parameter> args=null;
+	private Set<String> interfaces=null;
+	private Set<String> imports=null;
 	private int timeout=0;
 
-	private static Set types=null;
-	private static Map javaTypes=null;
-	private static Map javaResultTypes=null;
+	private static Set<String> types=null;
+	private static Map<String, String> javaTypes=null;
+	private static Map<String, String> javaResultTypes=null;
 
 	private boolean looseTypes=false;
 
@@ -84,11 +84,11 @@ public class SPGen extends SpyObject {
 		this.in=i;
 		this.out=o;
 		this.classname=cn;
-		queries=new TreeMap();
-		results=new ArrayList();
-		args=new ArrayList();
-		interfaces=new HashSet();
-		imports=new HashSet();
+		queries=new TreeMap<String, List<String>>();
+		results=new ArrayList<Result>();
+		args=new ArrayList<Parameter>();
+		interfaces=new HashSet<String>();
+		imports=new HashSet<String>();
 
 		if(types==null) {
 			initTypes();
@@ -131,8 +131,8 @@ public class SPGen extends SpyObject {
 
 	private static synchronized void initTypes() {
 		if(types==null) {
-			javaTypes=new HashMap();
-			javaResultTypes=new HashMap();
+			javaTypes=new HashMap<String, String>();
+			javaResultTypes=new HashMap<String, String>();
 
 			String jstypes="java.sql.Types.";
 			int jstypeslen=jstypes.length();
@@ -182,28 +182,25 @@ public class SPGen extends SpyObject {
 			javaResultTypes.put(typ, "java.sql.Timestamp");
 
 			// Same as above, without the java.sql. part
-			Map tmp=new HashMap();
+			Map<String, String> tmp=new HashMap<String, String>();
 			for(Iterator i=javaTypes.entrySet().iterator(); i.hasNext();) {
-				Map.Entry me=(Map.Entry)i.next();
-				String k=(String)me.getKey();
+				Map.Entry<String, String> me=(Map.Entry)i.next();
+				String k=me.getKey();
 				if(k.startsWith(jstypes)) {
 					tmp.put(k.substring(jstypeslen), me.getValue());
 				}
 			}
 			javaTypes.putAll(tmp);
 			tmp.clear();
-			for(Iterator i=javaResultTypes.entrySet().iterator();
-				i.hasNext();) {
-				Map.Entry me=(Map.Entry)i.next();
-				String k=(String)me.getKey();
-				if(k.startsWith(jstypes)) {
-					tmp.put(k.substring(jstypeslen), me.getValue());
+			for(Map.Entry<String, String> me : javaResultTypes.entrySet()) {
+				if(me.getKey().startsWith(jstypes)) {
+					tmp.put(me.getKey().substring(jstypeslen), me.getValue());
 				}
 			}
 			javaResultTypes.putAll(tmp);
 
 			Field fields[]=java.sql.Types.class.getDeclaredFields();
-			types=new HashSet();
+			types=new HashSet<String>();
 
 			for(int i=0; i<fields.length; i++) {
 				types.add(fields[i].getName());
@@ -832,9 +829,9 @@ public class SPGen extends SpyObject {
 							superclass="net.spy.db.DBSQL";
 						}
 
-						List sqlquery=(List)queries.get(currentQuery);
+						List<String> sqlquery=queries.get(currentQuery);
 						if(sqlquery == null) {
-							sqlquery=new ArrayList();
+							sqlquery=new ArrayList<String>();
 							queries.put(currentQuery, sqlquery);
 						}
 						sqlquery.add(tmp);
@@ -925,10 +922,9 @@ public class SPGen extends SpyObject {
 
 	// get all of the required arguments
 	// If evenOutput is true, then we even get the output parameters
-	private Collection getRequiredArgs(boolean evenOutput) {
-		Collection rv=new ArrayList(args.size());
-		for(Iterator i=args.iterator(); i.hasNext();) {
-			Parameter p=(Parameter)i.next();
+	private Collection<Parameter> getRequiredArgs(boolean evenOutput) {
+		Collection<Parameter> rv=new ArrayList<Parameter>(args.size());
+		for(Parameter p : args) {
 			if(p.isRequired()) {
 				// Deal with output parameters
 				if(p.isOutput()) {
@@ -944,10 +940,9 @@ public class SPGen extends SpyObject {
 	}
 
 	// get all of the required arguments
-	private Collection getOptionalArgs() {
-		Collection rv=new ArrayList(args.size());
-		for(Iterator i=args.iterator(); i.hasNext();) {
-			Parameter p=(Parameter)i.next();
+	private Collection<Parameter> getOptionalArgs() {
+		Collection<Parameter> rv=new ArrayList<Parameter>(args.size());
+		for(Parameter p : args) {
 			if(!p.isRequired()) {
 				rv.add(p);
 			}
@@ -956,10 +951,9 @@ public class SPGen extends SpyObject {
 	}
 
 	// Get the output parameters
-	private Collection getOutputParameters() {
-		Collection rv=new ArrayList(args.size());
-		for(Iterator i=args.iterator(); i.hasNext();) {
-			Parameter p=(Parameter)i.next();
+	private Collection<Parameter> getOutputParameters() {
+		Collection<Parameter> rv=new ArrayList<Parameter>(args.size());
+		for(Parameter p : args) {
 			if(p.isOutput()) {
 				rv.add(p);
 			}
@@ -1022,7 +1016,7 @@ public class SPGen extends SpyObject {
 		}
 
 		public String getJavaType() {
-			String rv=(String)javaTypes.get(type);
+			String rv=javaTypes.get(type);
 			if(rv==null) {
 				throw new RuntimeException("Whoops!  " + type
 					+ " must have been overlooked");
@@ -1031,7 +1025,7 @@ public class SPGen extends SpyObject {
 		}
 
 		public String getJavaResultType() {
-			String rv=(String)javaResultTypes.get(type);
+			String rv=javaResultTypes.get(type);
 			if(rv==null) {
 				throw new RuntimeException("Whoops!  " + type
 					+ " must have been overlooked");
@@ -1051,7 +1045,7 @@ public class SPGen extends SpyObject {
 		private String name=null;
 		private boolean required=false;
 		private String type=null;
-		private String description=null;
+		private String paramDescr=null;
 		private boolean output=false;
 		private Default defaultValue=null;
 
@@ -1115,13 +1109,13 @@ public class SPGen extends SpyObject {
 
 			try {
 				// This character pretty much can't be in the line.
-				description=st.nextToken("\n");
+				paramDescr=st.nextToken("\n");
 			} catch (NoSuchElementException ex) {
 				// I don't think we cre if it's documented or not!  But
 				// honestly I don't think this should ever happen cause you
 				// need a newline.  Well, I guess if you ended the file odd
 				// enough, and without a EOL before the EOF...very odd case
-				description="";
+				paramDescr="";
 			}
 		}
 
@@ -1168,7 +1162,7 @@ public class SPGen extends SpyObject {
 		}
 
 		public String getDescription() {
-			return(description);
+			return(paramDescr);
 		}
 
 		public boolean isRequired() {

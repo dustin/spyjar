@@ -23,16 +23,16 @@ public class SPVertex<N extends SPNode> extends Object
 	/**
 	 * Get an instance of SPVertex.
 	 *
-	 * @param to the destination node
-	 * @param cost the cost
+	 * @param destination the destination node
+	 * @param theCost the cost
 	 */
-	public SPVertex(N to, int cost) {
+	public SPVertex(N destination, int theCost) {
 		super();
-		if(to == null) {
+		if(destination == null) {
 			throw new NullPointerException("Destination node may not be null.");
 		}
-		this.to=new WeakReference(to);
-		this.cost=cost;
+		this.to=new WeakReference(destination);
+		this.cost=theCost;
 	}
 
 	/** 
@@ -54,10 +54,10 @@ public class SPVertex<N extends SPNode> extends Object
 	 * Get an instance of SPVertex linking the two nodes with the default
 	 * cost.
 	 * 
-	 * @param to the destination node
+	 * @param destination the destination node
 	 */
-	public SPVertex(N to) {
-		this(to, DEFAULT_COST);
+	public SPVertex(N destination) {
+		this(destination, DEFAULT_COST);
 	}
 
 	/** 

@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public final class LoggerFactory extends Object {
 
-	private Map instances=null;
+	private Map<String, Logger> instances=null;
 	private Constructor instanceConstructor=null;
 
 	private static LoggerFactory instance=null;
@@ -37,7 +37,7 @@ public final class LoggerFactory extends Object {
 	private LoggerFactory() {
 		super();
 
-		instances=Collections.synchronizedMap(new HashMap());
+		instances=Collections.synchronizedMap(new HashMap<String, Logger>());
 	}
 
 	private static synchronized void init() {
@@ -69,7 +69,7 @@ public final class LoggerFactory extends Object {
 
 	// Get an instance of Logger from internal mechanisms.
 	private Logger internalGetLogger(String name) {
-		Logger rv=(Logger)instances.get(name);
+		Logger rv=instances.get(name);
 
 		if (rv==null) {
 			try {

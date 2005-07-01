@@ -26,9 +26,6 @@ import net.spy.util.SpyUtil;
  */
 public class DiskCacheTest extends TestCase {
 
-	// The ever-increasing value that will be stored in the cache.
-	private int val=0;
-
 	private DiskCache cache=null;
 
 	private String tmpdir=null;
@@ -56,8 +53,7 @@ public class DiskCacheTest extends TestCase {
 
 	private String getTmpDir() {
 		if(tmpdir==null) {
-			PwGen pw=new PwGen();
-			tmpdir="/tmp/sjju-" + pw.getPass(16);
+			tmpdir="/tmp/sjju-" + PwGen.getPass(16);
 		}
 		return(tmpdir);
 	}
@@ -66,8 +62,7 @@ public class DiskCacheTest extends TestCase {
 	 * Get the cache.
 	 */
 	protected void setUp() throws Exception {
-		String tmpdir=getTmpDir();
-		cache=new DiskCache(tmpdir);
+		cache=new DiskCache(getTmpDir());
 	}
 
 	/** 
@@ -95,12 +90,11 @@ public class DiskCacheTest extends TestCase {
 	}
 
 	private Map initCache() throws IOException {
-		PwGen gen=new PwGen();
 		HashMap pairs=new HashMap();
 
 		for(int i=0; i<100; i++) {
-			String key=gen.getPass(8);
-			String value=gen.getPass(8);
+			String key=PwGen.getPass(8);
+			String value=PwGen.getPass(8);
 			pairs.put(key, value);
 			cache.put(key, value);
 		}
@@ -215,8 +209,6 @@ public class DiskCacheTest extends TestCase {
 	 * Test cache walking.
 	 */
 	public void testCacheWalkingWithRemoval() throws Exception {
-		Map pairs=initCache();
-
 		// Now, walk the cache, removing every other entry
 		Set cacheSet=cache.entrySet();
 		int origsize=cache.size();

@@ -196,7 +196,7 @@ public class FileJobQueue extends JobQueue {
 	// These are the supported formats, and the fields we should remember
 	// from them.
 	private Collection<TimeFormat> getFormats() {
-		Collection<TimeFormat> rv=new ArrayList();
+		Collection<TimeFormat> rv=new ArrayList<TimeFormat>();
 
 		int f1[]={Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH,
 					Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};
@@ -259,11 +259,11 @@ public class FileJobQueue extends JobQueue {
 		private SimpleDateFormat format=null;
 		private int fields[]=null;
 
-		private TimeFormat(String format, int fields[]) {
+		private TimeFormat(String fmt, int flds[]) {
 			super();
-			this.format=new SimpleDateFormat(format);
+			this.format=new SimpleDateFormat(fmt);
 			this.format.setLenient(false);
-			this.fields=fields;
+			this.fields=flds;
 		}
 
 		/** 

@@ -14,10 +14,10 @@ public class NoSuchPoolException extends PoolException {
 	/**
 	 * Get an instance of NoSuchPoolException.
 	 */
-	public NoSuchPoolException(String poolName) {
-		super("There's no pool called " + poolName);
+	public NoSuchPoolException(String nm) {
+		super("There's no pool called " + nm);
 
-		this.poolName=poolName;
+		this.poolName=nm;
 	}
 
 	/**
