@@ -209,6 +209,8 @@ public class DiskCacheTest extends TestCase {
 	 * Test cache walking.
 	 */
 	public void testCacheWalkingWithRemoval() throws Exception {
+		Map pairs=initCache();
+
 		// Now, walk the cache, removing every other entry
 		Set cacheSet=cache.entrySet();
 		int origsize=cache.size();
