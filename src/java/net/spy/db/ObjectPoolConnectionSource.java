@@ -7,6 +7,8 @@ package net.spy.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import net.spy.SpyObject;
 import net.spy.pool.JDBCPoolFiller;
@@ -51,9 +53,7 @@ public class ObjectPoolConnectionSource extends SpyObject
 	// This is the object pool from which connections will be retrieved
 	private static ObjectPool pool=null;
 
-	// This is the pooled object that will be held until the connection is
-	// finished.
-	private PooledObject object=null;
+	private Map<Connection, PooledObject> objects=null;
 
 	// The name of the pool referenced by this instance.
 	private String poolName=null;
@@ -63,6 +63,7 @@ public class ObjectPoolConnectionSource extends SpyObject
 	 */
 	public ObjectPoolConnectionSource() {
 		super();
+		objects=new WeakHashMap<Connection, PooledObject>();
 	}
 
 	/**
@@ -91,8 +92,9 @@ public class ObjectPoolConnectionSource extends SpyObject
 		throws SQLException, PoolException {
 
 		Connection rv=null;
-		object=pool.getObject(name);
+		PooledObject object=pool.getObject(name);
 		rv=(Connection)object.getObject();
+		objects.put(rv, object);
 
 		return(rv);
 	}
@@ -101,11 +103,12 @@ public class ObjectPoolConnectionSource extends SpyObject
 	 * @see ConnectionSource
 	 */
 	public void returnConnection(Connection conn) {
+		PooledObject object=objects.get(conn);
 		if(object==null) {
 			throw new NullPointerException("Object is null, already returned?");
 		}
 		object.checkIn();
-		object=null;
+		objects.remove(conn);
 	}
 
 	// Perform one-time initialization for a config.
