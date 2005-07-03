@@ -13,9 +13,11 @@ import java.util.Iterator;
 
 import net.spy.db.DBSQL;
 import net.spy.db.FileDriver;
+import net.spy.util.SpyConfig;
+
 import net.spy.test.db.DumpTestTable;
 import net.spy.test.db.ThreeColumnTest;
-import net.spy.util.SpyConfig;
+import net.spy.test.db.DeleteTest;
 
 import junit.framework.TestCase;
 
@@ -39,12 +41,17 @@ public class FileDBTest extends TestCase {
 		// Register up a couple of queries.
 		DumpTestTable dtt=new DumpTestTable(conf);
 		ThreeColumnTest ttt=new ThreeColumnTest(conf);
+		DeleteTest dt=new DeleteTest(conf);
 
-		mapQueries(dtt, new Object[0], getPath("dumptest.txt"));
-		mapQueries(ttt, new Object[]{new Integer(1), new Integer(2), "string"},
+		fd.registerQuery(dtt, new Object[0], getPath("dumptest.txt"));
+		fd.registerQuery(ttt,
+			new Object[]{new Integer(1), new Integer(2), "string"},
 			getPath("threecol.txt"));
-		mapQueries(ttt, new Object[]{new Integer(1), new Integer(3), "string"},
+		fd.registerQuery(ttt,
+			new Object[]{new Integer(1), new Integer(3), "string"},
 			getPath("threecol2.txt"));
+		fd.registerUpdate(dt, new Object[]{new Integer(11)}, 11);
+		fd.registerUpdate(dt, new Object[]{new Integer(13)}, 13);
 	}
 
 	protected void tearDown() {
@@ -70,12 +77,40 @@ public class FileDBTest extends TestCase {
 		conn.close();
 	}
 
-	private void mapQueries(DBSQL dtt, Object args[], File path) {
-		for(Iterator i=dtt.getRegisteredQueries().values().iterator();
-			i.hasNext();) {
-			String query=(String)i.next();
-			fd.registerQuery(query, args, path);
+	public void testMissingUpdate() throws Exception {
+		Connection conn=DriverManager.getConnection(url);
+		try {
+			PreparedStatement pst=conn.prepareStatement("delete from blah");
+			pst.executeUpdate();
+			fail("Should not run unregistered query:  delete from blah");
+		} catch(SQLException e) {
+			assertTrue(e.getMessage().startsWith("No mapping registered "));
+		} finally {
+			conn.close();
 		}
+	}
+
+	public void testUpdate() throws Exception {
+		fd.registerUpdate("delete from blah", new Object[0], 13);
+		Connection conn=DriverManager.getConnection(url);
+		PreparedStatement pst=conn.prepareStatement("delete from blah");
+		assertEquals(13, pst.executeUpdate());
+		pst.close();
+		conn.close();
+	}
+
+	public void testSPTUpdate() throws Exception {
+		DeleteTest dt=new DeleteTest(conf);
+		dt.setSomeColumn(11);
+		assertEquals(11, dt.executeUpdate());
+		// Run it again
+		assertEquals(11, dt.executeUpdate());
+		// Try it at 13
+		dt.setSomeColumn(13);
+		assertEquals(13, dt.executeUpdate());
+		// Try it again at 11
+		dt.setSomeColumn(11);
+		assertEquals(11, dt.executeUpdate());
 	}
 
 	public void testBadArguments() throws Exception {

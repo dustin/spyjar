@@ -31,6 +31,7 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -50,10 +51,12 @@ public class FileDriver extends SpyObject implements Driver {
 	}
 	
 	private Map queryMap=null;
+	private Map updateMap=null;
 
 	public FileDriver() {
 		super();
 		queryMap=new HashMap();
+		updateMap=new HashMap();
 	}
 	
 	/**
@@ -77,17 +80,97 @@ public class FileDriver extends SpyObject implements Driver {
 		ParameterizedQuery pq=new ParameterizedQuery(s, args);
 		queryMap.put(pq, f);
 	}
-	
+
+	/** 
+	 * Register the query(-ies) from the given DBSQL and args to a file.
+	 * 
+	 * @param db the DBSQL instance.
+	 * @param args arguments to this query
+	 * @param path the path of the results
+	 */
+	public void registerQuery(DBSQL db, Object args[], File path) {
+		for(Iterator i=db.getRegisteredQueries().values().iterator();
+			i.hasNext();) {
+			String query=(String)i.next();
+			registerQuery(query, args, path);
+		}
+	}
+
+	/** 
+	 * Register an update action.
+	 * 
+	 * @param s the query
+	 * @param args the args 
+	 * @param action the action to be performed upon this update
+	 */
+	public void registerUpdate(String s, Object args[], Updater action) {
+		ParameterizedQuery pq=new ParameterizedQuery(s, args);
+		updateMap.put(pq, action);
+	}
+
+	/** 
+	 * Register the update(s) from the given DBSQL and args to an updater.
+	 * 
+	 * @param db the DBSQL instance
+	 * @param args the arguments to the update
+	 * @param u the updater
+	 */
+	public void registerUpdate(DBSQL db, Object args[], Updater u) {
+		for(Iterator i=db.getRegisteredQueries().values().iterator();
+			i.hasNext();) {
+			String query=(String)i.next();
+			registerUpdate(query, args, u);
+		}
+	}
+
+	/** 
+	 * Register the update(s) from the given DBSQL and args to return an int.
+	 * 
+	 * @param db the DBSQL instance
+	 * @param args the arguments to the update
+	 * @param rv the return value
+	 */
+	public void registerUpdate(DBSQL db, Object args[], int rv) {
+		registerUpdate(db, args, new IntUpdater(rv));
+	}
+
+	/** 
+	 * Register a simple update that returns an int.
+	 * 
+	 * @param s the query
+	 * @param args the args 
+	 * @param rv the value that should be returned from this update
+	 */
+	public void registerUpdate(String s, Object args[], int rv) {
+		ParameterizedQuery pq=new ParameterizedQuery(s, args);
+		updateMap.put(pq, new IntUpdater(rv));
+	}
+
 	/**
 	 * Get the File for the specified query.
-	 * @param s the query
+	 * @param pq the query
 	 * @return the File
-	 * @throws SQLException if there isn't a query managed for 
+	 * @throws SQLException if there isn't a query managed for this query
 	 */
 	File getQuery(ParameterizedQuery pq) throws SQLException {
 		File rv=(File)queryMap.get(pq);
 		if(rv == null) {
-			throw new SQLException("No mapping registered for " + pq);
+			throw new SQLException("No mapping registered for query " + pq);
+		}
+		return(rv);
+	}
+
+	/** 
+	 * Get the Updater for the specified query
+	 * 
+	 * @param pq the query
+	 * @return the Updater
+	 * @throws SQLException if there isn't an update managed for this query
+	 */
+	Updater getUpdate(ParameterizedQuery pq) throws SQLException {
+		Updater rv=(Updater)updateMap.get(pq);
+		if(rv == null) {
+			throw new SQLException("No mapping registered for update " + pq);
 		}
 		return(rv);
 	}
@@ -122,6 +205,28 @@ public class FileDriver extends SpyObject implements Driver {
 
 	public boolean jdbcCompliant() {
 		return false;
+	}
+
+	/** 
+	 * Interface for registering updates.
+	 */
+	public static interface Updater {
+		/** 
+		 * Perform the update and return a value.
+		 */
+		int doUpdate() throws SQLException;
+	}
+
+	// An updater that returns an int
+	private static class IntUpdater implements Updater {
+		private int rv=0;
+		public IntUpdater(int v) {
+			super();
+			this.rv=v;
+		}
+		public int doUpdate() {
+			return(rv);
+		}
 	}
 
 	private static final class ParameterizedQuery extends SpyObject {
@@ -362,7 +467,11 @@ public class FileDriver extends SpyObject implements Driver {
 		}	
 		
 		public int executeUpdate() throws SQLException {
-			throw new SQLException("Not implemented");
+			FileDriver fd=(FileDriver)DriverManager.getDriver(
+				URL_PREFIX + "blah");
+			Updater u=fd.getUpdate(
+				new ParameterizedQuery(getQuery(), getArgs()));
+			return(u.doUpdate());
 		}
 		
 		public void setByte(int arg0, byte arg1) throws SQLException {
