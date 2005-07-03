@@ -1,0 +1,3 @@
+col_one:INTEGER	col_two:VARCHAR	col_three:DATE	col_four:TIME	col_five:TIMESTAMP
+28	I will be twenty-eight.	20051005	12:15:27	20051005T12:15:27
+10	Jennalynn will be ten.	20050710	03:18:05	20050710T03:18:05
