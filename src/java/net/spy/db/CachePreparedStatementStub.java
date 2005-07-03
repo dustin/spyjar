@@ -16,25 +16,15 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Arrays;
 
-import net.spy.SpyObject;
 import net.spy.cache.SpyCache;
-import net.spy.util.SpyUtil;
 
 /**
  * Prepared statement for executing cached queries
  */
-public class CachePreparedStatementStub extends SpyObject {
+public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 
 	// Stored DB handle
-	private SpyDB db=null;
-
-	// Where we store the prepared query
-	private String queryStr=null;
-
-	// Where we can put arguments.
-	private Object args[]=null;
-	// What are our argument types
-	private int types[]=null;
+	SpyDB db=null;
 
 	// How long the results of this statement should be cached
 	private long cacheTime=60*60*1000;
@@ -49,50 +39,11 @@ public class CachePreparedStatementStub extends SpyObject {
 	 * probably don't want to do this directly).
 	 */
 	public CachePreparedStatementStub(SpyDB d, String query, long cTime) {
-		super();
+		super(query);
 		this.db=d;
-		this.queryStr=query;
 		this.cacheTime=cTime;
-
-		// Figure out how many arguments may be used.
-		int ntokens=countQs(query);
-		args=new Object[ntokens];
-		types=new int[ntokens];
 	}
 
-	// Count the number of question marks
-	private int countQs(String query) {
-		int qs=0;
-		int currentIndex=-1;
-
-		do {
-			currentIndex=query.indexOf("?", currentIndex+1);
-			if(currentIndex>=0) {
-				qs++;
-			}
-		} while(currentIndex>=0);
-
-		return(qs);
-	}
-
-	// Set a given argument
-	private void setArg(int index, Object what, int type)
-		throws SQLException {
-		// Our base is 0, JDBC base is 1
-		index--;
-
-		if(index<0) {
-			throw new SQLException("Illegal index, they start at 1, G");
-		}
-		if(index>=args.length) {
-			throw new SQLException("Illegal index, this statement takes a "
-				+ "maximum of " + args.length + " arguments.");
-		}
-
-		// Set the vars
-		args[index]=what;
-		types[index]=type;
-	}
 
 	/**
 	 * Get an integer hash code to uniquely identify this object.
@@ -100,10 +51,10 @@ public class CachePreparedStatementStub extends SpyObject {
 	public int hashCode() {
 		int hc=0;
 
-		hc+=queryStr.hashCode();
+		hc+=getQuery().hashCode();
 		StringBuffer sb=new StringBuffer(256);
-		for(int i=0; i<args.length; i++) {
-			sb.append(args[i]);
+		for(int i=0; i<getArgs().length; i++) {
+			sb.append(getArgs()[i]);
 			sb.append((char)0x00);
 		}
 		// Hashcode of all of the args run together.
@@ -123,12 +74,12 @@ public class CachePreparedStatementStub extends SpyObject {
 		if(otherHc == hashCode()) {
 			if(o instanceof CachePreparedStatementStub) {
 				CachePreparedStatementStub cpss=(CachePreparedStatementStub)o;
-				String oQuery=cpss.queryStr;
-				Object otherArgs[]=cpss.args;
+				String oQuery=cpss.getQuery();
+				Object otherArgs[]=cpss.getArgs();
 
-				if(oQuery != null && oQuery.equals(queryStr)) {
+				if(oQuery != null && oQuery.equals(getQuery())) {
 					// Finally, true if the args are equal.
-					rv=Arrays.equals(args, otherArgs);
+					rv=Arrays.equals(getArgs(), otherArgs);
 				} // query check
 			} // instance check
 		} // hash code check
@@ -181,14 +132,15 @@ public class CachePreparedStatementStub extends SpyObject {
 	// OK, here's what happens when we determine that we really don't have
 	// the data and need to come up with it.
 	private CachedResultSet realExecuteQuery() throws SQLException {
-		PreparedStatement pst=db.prepareStatement(queryStr);
+		PreparedStatement pst=db.prepareStatement(getQuery());
 		pst.setQueryTimeout(timeout);
 		pst.setMaxRows(maxRows);
 
 		// Set allllllll the types
+		Object args[]=getArgs();
 		for(int i=0; i<args.length; i++) {
 			try {
-				switch(types[i]) {
+				switch(getTypes()[i]) {
 					case Types.BIT:
 						pst.setBoolean(i+1, ((Boolean)args[i]).booleanValue());
 						break;
@@ -230,12 +182,13 @@ public class CachePreparedStatementStub extends SpyObject {
 						break;
 					default:
 						throw new SQLException("Whoops, type "
-							+ types[i] + " (" + TypeNames.getTypeName(types[i])
+							+ getTypes()[i] + " ("
+							+ TypeNames.getTypeName(getTypes()[i])
 							+ ") seems to have been overlooked.");
 				}
 			} catch (NullPointerException ex) {
 				getLogger().error("error with "+args[i]+" in type "+
-					types[i]+" at param postition "+i);
+					getTypes()[i]+" at param postition "+i);
 				throw ex;
 			}
 		}
@@ -251,85 +204,9 @@ public class CachePreparedStatementStub extends SpyObject {
 		throws SQLException {
 		throw new SQLException("Illegal?  This operation makes no sense!");
 	}
-
-	// Implemented
-	public void setBoolean(int a0,boolean a1) 
-		throws SQLException {
-		setArg(a0, SpyUtil.getBoolean(a1), Types.BIT);
-	}
-
-	// Implemented
-	public void setDate(int a0,Date a1) 
-		throws SQLException {
-		setArg(a0, a1, Types.DATE);
-	}
-
-	// Implemented
-	public void setDouble(int a0,double a1) 
-		throws SQLException {
-		setArg(a0, new Double(a1), Types.DOUBLE);
-	}
-
-	// Implemented
-	public void setFloat(int a0,float a1) 
-		throws SQLException {
-		setArg(a0, new Float(a1), Types.FLOAT);
-	}
-
-	// Implemented
-	public void setInt(int a0,int a1) 
-		throws SQLException {
-		setArg(a0, new Integer(a1), Types.INTEGER);
-	}
-
-	// Implemented
-	public void setLong(int a0,long a1) 
-		throws SQLException {
-		setArg(a0, new Long(a1), Types.BIGINT);
-	}
-
-	// Implemented
-	public void setNull(int a0,int a1) 
-		throws SQLException {
-		// This one works a bit different because we have to store the
-		// original type
-		setArg(a0, new Integer(a1), Types.NULL);
-	}
-
-	// Implemented
-	public void setBigDecimal(int a0, BigDecimal a1) throws SQLException {
-		setArg(a0, a1, Types.DECIMAL);
-	}
-
-	// Implemented
-	public void setObject(int a0,java.lang.Object a1) 
-		throws SQLException {
-		setArg(a0, a1, Types.OTHER);
-	}
-
-	// Implemented
-	public void setShort(int a0,short a1) 
-		throws SQLException {
-		setArg(a0, new Integer(a1), Types.TINYINT);
-	}
-
-	// Implemented
-	public void setString(int a0,java.lang.String a1) 
-		throws SQLException {
-		setArg(a0, a1, Types.VARCHAR);
-	}
-
-	// Implemented
-	public void setTime(int a0,Time a1) 
-		throws SQLException {
-		setArg(a0, a1, Types.TIME);
-	}
-
-	// Implemented
+	
 	public void close() throws SQLException {
+		super.close();
 		db=null;
-		queryStr=null;
-		args=null;
-		types=null;
 	}
 }
