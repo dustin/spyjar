@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -66,47 +67,108 @@ public class FileResultSetStub extends GenericResultSetStub {
 	private static interface Parser {
 		Object parseString(String s) throws Exception;
 	}
+	
+	private static abstract class PreParser implements Parser {
+		public final Object parseString(String s) throws Exception {
+			Object rv=null;
+			String cleanedUp=cleanString(s);
+			if(cleanedUp != null) {
+				rv=subParse(cleanedUp);
+			}
+			return(rv);
+		}
+		
+		private String cleanString(String s) {
+			String rv=null;
+			if(!s.equals("\\N")) {
+				StringBuffer sb=new StringBuffer(s.length());
+				for(int i=0; i<s.length(); i++) {
+					char c=s.charAt(i);
+					switch(c) {
+						case '\\':
+							i++;
+							char escaped=s.charAt(i);
+							switch(escaped) {
+								case 't':
+									sb.append('\t');
+									break;
+								case 'n':
+									sb.append('\n');
+									break;
+								default:
+									sb.append('\\');
+							}
+							break;
+						default:
+							sb.append(c);
+					}
+				}
+				rv=sb.toString();
+			}
+			return(rv);
+		}
+		
+		protected abstract Object subParse(String s) throws Exception;
+	}
 
+	private static final class NumberParser extends PreParser {
+		public Object subParse(String s) throws Exception {
+			return(new BigDecimal(s));
+		}
+	}
+	
+	private static final class StringParser extends PreParser {
+		public Object subParse(String s) {
+			return(s);
+		}
+	}
+	
 	private static final class ParserFactory extends Object {
 		private static ParserFactory instance=null;
 		private Map parsers=null;
 		private ParserFactory() {
 			super();
 			parsers=new HashMap();
-			parsers.put(new Integer(Types.VARCHAR), new Parser() {
-					public Object parseString(String s) {
-						return(s);
-					}
-				});
-			parsers.put(new Integer(Types.INTEGER), new Parser() {
-					public Object parseString(String s) {
-						return(new Integer(s));
-					}
-				});
-			parsers.put(new Integer(Types.TIMESTAMP), new Parser() {
+			parsers.put(new Integer(Types.VARCHAR), new StringParser());
+			parsers.put(new Integer(Types.LONGVARCHAR), new StringParser());
+			parsers.put(new Integer(Types.INTEGER), new NumberParser());
+			parsers.put(new Integer(Types.BIGINT), new NumberParser());
+			parsers.put(new Integer(Types.DECIMAL), new NumberParser());
+			parsers.put(new Integer(Types.DOUBLE), new NumberParser());
+			parsers.put(new Integer(Types.FLOAT), new NumberParser());
+			parsers.put(new Integer(Types.NUMERIC), new NumberParser());
+			parsers.put(new Integer(Types.REAL), new NumberParser());
+			parsers.put(new Integer(Types.SMALLINT), new NumberParser());
+			parsers.put(new Integer(Types.TINYINT), new NumberParser());
+			parsers.put(new Integer(Types.TIMESTAMP), new PreParser() {
 					private SimpleDateFormat sdf=new SimpleDateFormat(
 						"yyyyMMdd'T'HH:mm:ss");
-					public Object parseString(String s) throws Exception {
+					public Object subParse(String s) throws Exception {
 						Date d=sdf.parse(s);
 						return(new java.sql.Timestamp(d.getTime()));
 					}
 				});
-			parsers.put(new Integer(Types.DATE), new Parser() {
+			parsers.put(new Integer(Types.DATE), new PreParser() {
 					private SimpleDateFormat sdf=new SimpleDateFormat(
 						"yyyyMMdd");
-					public Object parseString(String s) throws Exception {
+					public Object subParse(String s) throws Exception {
 						Date d=sdf.parse(s);
 						return(new java.sql.Date(d.getTime()));
 					}
 				});
-			parsers.put(new Integer(Types.TIME), new Parser() {
+			parsers.put(new Integer(Types.TIME), new PreParser() {
 					private SimpleDateFormat sdf=new SimpleDateFormat(
 						"HH:mm:ss");
-					public Object parseString(String s) throws Exception {
+					public Object subParse(String s) throws Exception {
 						Date d=sdf.parse(s);
 						return(new java.sql.Time(d.getTime()));
 					}
 				});
+			parsers.put(new Integer(Types.BIT), new PreParser() {
+				public Object subParse(String s) throws Exception {
+					return(Boolean.valueOf(s));
+				}
+			});
 		}
 
 		public static synchronized ParserFactory getInstance() {
