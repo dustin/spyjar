@@ -69,10 +69,6 @@
 			superClass="net.spy.SpyObject"
 			outClass="net.spy.db.ProxyResultSet"
 			outDir="${maven.build.src}"/>
-		<ant:implement interfaceName="java.sql.ResultSet"
-			superClass="net.spy.db.FileResultSetStub"
-			outClass="net.spy.db.FileResultSet"
-			outDir="${maven.build.src}"/>
 
 		<!-- Second stage compile -->
 		<ant:javac
@@ -96,6 +92,11 @@
 			<include name="net/spy/db/ProxyResultSet.java"/>
 			<include name="net/spy/db/CachedResultSet.java"/>
 		</ant:javac>
+
+		<ant:implement interfaceName="java.sql.ResultSet"
+			superClass="net.spy.db.FileResultSetStub"
+			outClass="net.spy.db.FileResultSet"
+			outDir="${maven.build.src}"/>
 
 		<ant:implement interfaceName="java.sql.PreparedStatement"
 			superClass="net.spy.db.CachePreparedStatementStub"
