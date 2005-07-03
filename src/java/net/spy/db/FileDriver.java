@@ -28,6 +28,7 @@ import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +63,19 @@ public class FileDriver extends SpyObject implements Driver {
 	 * @param f the file that will provide the results
 	 */
 	public void registerQuery(String s, File f) {
-		queryMap.put(s, f);
+		registerQuery(s, new Object[0], f);
+	}
+
+	/** 
+	 * Register a ResultSet File to a parameterized query.
+	 * 
+	 * @param s the query string
+	 * @param args the args
+	 * @param f the file with the result set
+	 */
+	public void registerQuery(String s, Object args[], File f) {
+		ParameterizedQuery pq=new ParameterizedQuery(s, args);
+		queryMap.put(pq, f);
 	}
 	
 	/**
@@ -70,26 +83,11 @@ public class FileDriver extends SpyObject implements Driver {
 	 * @param s the query
 	 * @return the File
 	 * @throws SQLException if there isn't a query managed for 
-	public void clearQueries() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void clearQueries() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void clearQueries() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	 */
-	File getQuery(String s) throws SQLException {
-		File rv=(File)queryMap.get(s);
+	File getQuery(ParameterizedQuery pq) throws SQLException {
+		File rv=(File)queryMap.get(pq);
 		if(rv == null) {
-			throw new SQLException("No mapping registered for " + s);
+			throw new SQLException("No mapping registered for " + pq);
 		}
 		return(rv);
 	}
@@ -101,7 +99,7 @@ public class FileDriver extends SpyObject implements Driver {
 		queryMap.clear();
 	}
 
-	public Connection connect(String arg0, Properties arg1) throws SQLException {
+	public Connection connect(String url, Properties prop) throws SQLException {
 		return (new FileConnection());
 	}
 
@@ -124,6 +122,53 @@ public class FileDriver extends SpyObject implements Driver {
 
 	public boolean jdbcCompliant() {
 		return false;
+	}
+
+	private static final class ParameterizedQuery extends SpyObject {
+		private String query=null;
+		private Object args[]=null;
+
+		public ParameterizedQuery(String q, Object a[]) {
+			super();
+			if(q == null) {
+				throw new NullPointerException("Invalid null query");
+			}
+			if(a == null) {
+				throw new NullPointerException("Invalid null arguments");
+			}
+			this.query=q;
+			this.args=a;
+		}
+
+		public ParameterizedQuery(String q) {
+			this(q, new Object[0]);
+		}
+
+		public int hashCode() {
+			int rv=query.hashCode();
+			for(int i=0; i<args.length; i++) {
+				if(args[i] != null) {
+					rv ^= args[i].hashCode();
+				}
+			}
+			return(rv);
+		}
+
+		public boolean equals(Object o) {
+			boolean rv=false;
+			if(o instanceof ParameterizedQuery) {
+				ParameterizedQuery pq=(ParameterizedQuery)o;
+				if(query.equals(pq.query)) {
+					rv=Arrays.equals(args, pq.args);
+				}
+			}
+			return(rv);
+		}
+
+		public String toString() {
+			return("{ParameterizedQuery ``" + query + "'' with "
+				+ Arrays.asList(args) + "}");
+		}
 	}
 
 	private static final class FileConnection extends SpyObject
@@ -307,10 +352,11 @@ public class FileDriver extends SpyObject implements Driver {
 		public FilePreparedStatement(String q) {
 			super(q);
 		}
-		
+
 		public ResultSet executeQuery() throws SQLException {
-			FileDriver fd=(FileDriver)DriverManager.getDriver(URL_PREFIX + "blah");
-			File f=fd.getQuery(getQuery());
+			FileDriver fd=(FileDriver)DriverManager.getDriver(
+				URL_PREFIX + "blah");
+			File f=fd.getQuery(new ParameterizedQuery(getQuery(), getArgs()));
 			ResultSet rs=new FileResultSet(f);
 			return(rs);
 		}	

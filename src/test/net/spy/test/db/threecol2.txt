@@ -1,0 +1,4 @@
+first:INTEGER	second:INTEGER	third:VARCHAR
+11	12	not a number
+12	14	nut a nomber
+13	16	noant hjieg

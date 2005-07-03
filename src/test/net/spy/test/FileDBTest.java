@@ -20,15 +20,14 @@ import net.spy.util.SpyConfig;
 import junit.framework.TestCase;
 
 public class FileDBTest extends TestCase {
-	
+
 	private FileDriver fd=null;
 	private String url=FileDriver.URL_PREFIX + "/x";
 	private SpyConfig conf=null;
-	
+
 	protected void setUp() throws Exception {
 		Class.forName("net.spy.db.FileDriver");
 		fd=(FileDriver)DriverManager.getDriver(url);
-		fd.clearQueries();
 		
 		conf=new SpyConfig();
 		conf.put("dbConnectionSource", "net.spy.db.JDBCConnectionSource");
@@ -36,17 +35,33 @@ public class FileDBTest extends TestCase {
 		conf.put("dbSource", url);
 		conf.put("dbUser", "username");
 		conf.put("dbPass", "password");
+
+		// Register up a couple of queries.
+		DumpTestTable dtt=new DumpTestTable(conf);
+		ThreeColumnTest ttt=new ThreeColumnTest(conf);
+
+		mapQueries(dtt, new Object[0], getPath("dumptest.txt"));
+		mapQueries(ttt, new Object[]{new Integer(1), new Integer(2), "string"},
+			getPath("threecol.txt"));
+		mapQueries(ttt, new Object[]{new Integer(1), new Integer(3), "string"},
+			getPath("threecol2.txt"));
+	}
+
+	protected void tearDown() {
+		fd.clearQueries();
 	}
 
 	private File getPath(String p) {
 		return(new File(System.getProperty("basedir")
 			+ "/src/test/net/spy/test/db/" + p));
 	}
-	
+
 	public void testFileDB() throws Exception {
-		fd.registerQuery("select count(*) from table", getPath("counttest.txt"));
+		fd.registerQuery("select count(*) from table",
+			getPath("counttest.txt"));
 		Connection conn=DriverManager.getConnection(url);
-		PreparedStatement pst=conn.prepareStatement("select count(*) from table");
+		PreparedStatement pst=conn.prepareStatement(
+			"select count(*) from table");
 		ResultSet rs=pst.executeQuery();
 		assertTrue(rs.next());
 		assertEquals(8325, rs.getInt("count"));
@@ -54,32 +69,55 @@ public class FileDBTest extends TestCase {
 		rs.close();
 		conn.close();
 	}
-	
-	private void mapQueries(DBSQL dtt, File path) {
+
+	private void mapQueries(DBSQL dtt, Object args[], File path) {
 		for(Iterator i=dtt.getRegisteredQueries().values().iterator();
 			i.hasNext();) {
 			String query=(String)i.next();
-			fd.registerQuery(query, path);
+			fd.registerQuery(query, args, path);
 		}
 	}
-	
-	public void testSPTs() throws Exception {
-		DumpTestTable dtt=new DumpTestTable(conf);
+
+	public void testBadArguments() throws Exception {
 		ThreeColumnTest ttt=new ThreeColumnTest(conf);
-		
-		mapQueries(dtt, getPath("dumptest.txt"));
-		mapQueries(ttt, getPath("threecol.txt"));
-		
 		try {
 			ResultSet rs=ttt.executeQuery();
 			fail("Expected to fail on query without params, got " + rs);
 		} catch(SQLException e) {
 			assertNotNull(e.getMessage());
 		}
+
+		ttt.setFirst(1);
+		ttt.setSecond(2);
+		ttt.setThird("wrongstring");
+		try {
+			ResultSet rs=ttt.executeQuery();
+			fail("Expected to fail on query with different args, got " + rs);
+		} catch(SQLException e) {
+			assertNotNull(e.getMessage());
+		}
+	}
+
+	public void testSPTWithoutArgs() throws Exception {
+		DumpTestTable dtt=new DumpTestTable(conf);
+		ResultSet rs=dtt.executeQuery();
+		assertTrue(rs.next());
+		assertEquals("valone", rs.getString("something"));
+		assertTrue(rs.next());
+		assertEquals("valtwo", rs.getString("something"));
+		assertFalse(rs.next());
+		rs.close();
+		dtt.close();
+	}
+
+	public void testSPTWithArgs() throws Exception {
+		ThreeColumnTest ttt=new ThreeColumnTest(conf);
+
+		// Set us up the arguments
 		ttt.setFirst(1);
 		ttt.setSecond(2);
 		ttt.setThird("string");
-		
+
 		ResultSet rs=ttt.executeQuery();
 		assertTrue(rs.next());
 		assertEquals(1, rs.getInt("first"));
@@ -95,17 +133,30 @@ public class FileDBTest extends TestCase {
 		assertEquals("nine", rs.getString("third"));
 		assertFalse(rs.next());
 		rs.close();
-		ttt.close();
-		
-		rs=dtt.executeQuery();
+
+		// Second run, different arguments.
+
+		ttt.setFirst(1);
+		ttt.setSecond(3);
+		ttt.setThird("string");
+
+		rs=ttt.executeQuery();
 		assertTrue(rs.next());
-		assertEquals("valone", rs.getString("something"));
+		assertEquals(11, rs.getInt("first"));
+		assertEquals(12, rs.getInt("second"));
+		assertEquals("not a number", rs.getString("third"));
 		assertTrue(rs.next());
-		assertEquals("valtwo", rs.getString("something"));
+		assertEquals(12, rs.getInt("first"));
+		assertEquals(14, rs.getInt("second"));
+		assertEquals("nut a nomber", rs.getString("third"));
+		assertTrue(rs.next());
+		assertEquals(13, rs.getInt("first"));
+		assertEquals(16, rs.getInt("second"));
+		assertEquals("noant hjieg", rs.getString("third"));
 		assertFalse(rs.next());
 		rs.close();
-		dtt.close();		
-	}
 
+		ttt.close();
+	}
 
 }
