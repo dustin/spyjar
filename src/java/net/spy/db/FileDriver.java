@@ -65,12 +65,40 @@ public class FileDriver extends SpyObject implements Driver {
 		queryMap.put(s, f);
 	}
 	
+	/**
+	 * Get the File for the specified query.
+	 * @param s the query
+	 * @return the File
+	 * @throws SQLException if there isn't a query managed for 
+	public void clearQueries() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void clearQueries() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void clearQueries() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	 */
 	File getQuery(String s) throws SQLException {
 		File rv=(File)queryMap.get(s);
 		if(rv == null) {
 			throw new SQLException("No mapping registered for " + s);
 		}
 		return(rv);
+	}
+
+	/**
+	 * Remove all mapped queries.
+	 */
+	public void clearQueries() {
+		queryMap.clear();
 	}
 
 	public Connection connect(String arg0, Properties arg1) throws SQLException {

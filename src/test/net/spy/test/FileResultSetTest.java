@@ -61,8 +61,27 @@ public class FileResultSetTest extends TestCase {
 		String path = System.getProperty("basedir")
 			+ "/src/test/net/spy/test/db/resulttest.txt";
 		FileResultSet rs = new FileResultSet(new File(path));
+		
+		try {
+			String s=rs.getString("col_two");
+			fail("Shouldn't be able to get a column before rs.next(), got " + s);
+		} catch(SQLException e) {
+			assertEquals("No current result.", e.getMessage());
+		}
 
 		assertTrue(rs.next());
+		try {
+			String s=rs.getString("nonexistent");
+			fail("Should not be able to request nonexistent column, got " + s);
+		} catch(SQLException e) {
+			assertEquals("No such column:  nonexistent", e.getMessage());
+		}
+		try {
+			String s=rs.getString(7);
+			fail("Should not be able to request not existent column, got " + s);
+		} catch(SQLException e) {
+			assertEquals("There are only 6 columns in this set.", e.getMessage());
+		}
 		assertColumn(rs, 28, "col_one", 1);
 		assertColumn(rs, "I'll be twenty-eight.", "col_two", 2);
 		assertDateColumn(rs, "20051005", "col_three", 3);

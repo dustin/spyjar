@@ -1,0 +1,4 @@
+first:INTEGER	second:INTEGER	third:VARCHAR
+1	2	three
+2	4	six
+3	6	nine

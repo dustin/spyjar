@@ -111,7 +111,7 @@ public abstract class GenericResultSetStub extends SpyObject
 	/** 
 	 * Set the results for this ResultSet to use.
 	 * 
-	 * @param results results list to use
+	 * @param to results list to use
 	 */
 	protected void setResults(List to) {
 		this.results=to;
