@@ -35,19 +35,6 @@ public abstract class DBSQL extends DBSP {
 	}
 
 	/** 
-	 * Register a named query.
-	 * 
-	 * @param name the name of the query (i.e. pgsql)
-	 * @param query the query
-	 */
-	protected void registerQuery(String name, String query) {
-		if(registeredQueries==null) {
-			registeredQueries=new HashMap<String, String>();
-		}
-		registeredQueries.put(name, query);
-	}
-
-	/** 
 	 * Set the Map of registered queries.
 	 * 
 	 * @param to the Map of registered queries.
