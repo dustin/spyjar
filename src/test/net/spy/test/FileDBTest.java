@@ -12,6 +12,7 @@ import java.sql.SQLException;
 
 import junit.framework.TestCase;
 
+import net.spy.db.CachedResultSet;
 import net.spy.db.FileDriver;
 import net.spy.test.db.DeleteTest;
 import net.spy.test.db.DumpTestTable;
@@ -141,16 +142,8 @@ public class FileDBTest extends TestCase {
 		rs.close();
 		dtt.close();
 	}
-
-	public void testSPTWithArgs() throws Exception {
-		ThreeColumnTest ttt=new ThreeColumnTest(conf);
-
-		// Set us up the arguments
-		ttt.setFirst(1);
-		ttt.setSecond(2);
-		ttt.setThird("string");
-
-		ResultSet rs=ttt.executeQuery();
+	
+	private void assertThreeColumnOne(ResultSet rs) throws Exception {
 		assertTrue(rs.next());
 		assertEquals(1, rs.getInt("first"));
 		assertEquals(2, rs.getInt("second"));
@@ -164,6 +157,18 @@ public class FileDBTest extends TestCase {
 		assertEquals(6, rs.getInt("second"));
 		assertEquals("nine", rs.getString("third"));
 		assertFalse(rs.next());
+	}
+
+	public void testSPTWithArgs() throws Exception {
+		ThreeColumnTest ttt=new ThreeColumnTest(conf);
+
+		// Set us up the arguments
+		ttt.setFirst(1);
+		ttt.setSecond(2);
+		ttt.setThird("string");
+
+		ResultSet rs=ttt.executeQuery();
+		assertThreeColumnOne(rs);
 		rs.close();
 
 		// Second run, different arguments.
@@ -217,7 +222,29 @@ public class FileDBTest extends TestCase {
 		assertEquals("nine", rs.getThird());
 		assertFalse(rs.next());
 		rs.close();
-
+	}
+	
+	/**
+	 * Test the cached DB result set.
+	 */
+	public void testCachedResult() throws Exception {
+		ThreeColumnTest ttt=new ThreeColumnTest(conf);
+		ttt.setFirst(1);
+		ttt.setSecond(2);
+		ttt.setThird("string");
+		// Set a cache time so we'll get cached results
+		ttt.setCacheTime(5000);
+		ResultSet rs=ttt.executeQuery();
+		assertThreeColumnOne(rs);
+		assertTrue(rs instanceof CachedResultSet);
+		assertEquals(1, ((CachedResultSet)rs).numCopies());
+		
+		// Run it again
+		ResultSet rs2=ttt.executeQuery();
+		assertFalse(rs == rs2);
+		assertThreeColumnOne(rs2);
+		assertTrue(rs2 instanceof CachedResultSet);
+		assertEquals(2, ((CachedResultSet)rs2).numCopies());		
 	}
 
 }
