@@ -24,17 +24,27 @@ public class FileDBTest extends TestCase {
 	private FileDriver fd=null;
 	private String url=FileDriver.URL_PREFIX + "/x";
 	private SpyConfig conf=null;
+	private SpyConfig poolConf=null;
 
 	protected void setUp() throws Exception {
 		Class.forName("net.spy.db.FileDriver");
 		fd=(FileDriver)DriverManager.getDriver(url);
 		
+		// Config using JDBC directly.
 		conf=new SpyConfig();
 		conf.put("dbConnectionSource", "net.spy.db.JDBCConnectionSource");
 		conf.put("dbDriverName", "net.spy.db.FileDriver");
 		conf.put("dbSource", url);
 		conf.put("dbUser", "username");
 		conf.put("dbPass", "password");
+		
+		// Config using the DB pool
+		poolConf=new SpyConfig();
+		poolConf.put("dbDriverName", "net.spy.db.FileDriver");
+		poolConf.put("dbSource", url);
+		poolConf.put("dbUser", "username");
+		poolConf.put("dbPass", "password");
+		poolConf.put("dbPoolName", "TestPool");
 
 		// Register up a couple of queries.
 		DumpTestTable dtt=new DumpTestTable(conf);
@@ -228,7 +238,7 @@ public class FileDBTest extends TestCase {
 	 * Test the cached DB result set.
 	 */
 	public void testCachedResult() throws Exception {
-		ThreeColumnTest ttt=new ThreeColumnTest(conf);
+		ThreeColumnTest ttt=new ThreeColumnTest(poolConf);
 		ttt.setFirst(1);
 		ttt.setSecond(2);
 		ttt.setThird("string");
@@ -244,7 +254,8 @@ public class FileDBTest extends TestCase {
 		assertFalse(rs == rs2);
 		assertThreeColumnOne(rs2);
 		assertTrue(rs2 instanceof CachedResultSet);
-		assertEquals(2, ((CachedResultSet)rs2).numCopies());		
+		assertEquals(2, ((CachedResultSet)rs2).numCopies());	
+		ttt.close();
 	}
 
 }

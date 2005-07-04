@@ -77,7 +77,7 @@ arch-tag: 2A68027B-714D-465F-A2B5-D105CE22459C
 				<include>**/*Test.java</include>
 			</includes>
 			<excludes>
-				<exclude>**/DBTest.java</exclude>
+				<!-- Don't try to run the SPTs with junit -->
 				<exclude>**/db/*.java</exclude>
 			</excludes>
 		</unitTest>
