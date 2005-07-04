@@ -9,17 +9,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
-
-import net.spy.db.DBSQL;
-import net.spy.db.FileDriver;
-import net.spy.util.SpyConfig;
-
-import net.spy.test.db.DumpTestTable;
-import net.spy.test.db.ThreeColumnTest;
-import net.spy.test.db.DeleteTest;
 
 import junit.framework.TestCase;
+
+import net.spy.db.FileDriver;
+import net.spy.test.db.DeleteTest;
+import net.spy.test.db.DumpTestTable;
+import net.spy.test.db.ThreeColumnTest;
+import net.spy.util.SpyConfig;
 
 public class FileDBTest extends TestCase {
 
@@ -192,6 +189,35 @@ public class FileDBTest extends TestCase {
 		rs.close();
 
 		ttt.close();
+	}
+	
+	/**
+	 * Test the SPT result set implementation.
+	 */
+	public void testSPTResult() throws Exception {
+		ThreeColumnTest ttt=new ThreeColumnTest(conf);
+
+		// Set us up the arguments
+		ttt.setFirst(1);
+		ttt.setSecond(2);
+		ttt.setThird("string");
+		ThreeColumnTest.Result rs=ttt.getResult();
+		
+		assertTrue(rs.next());
+		assertEquals(1, rs.getFirst());
+		assertEquals(2, rs.getSecond());
+		assertEquals("three", rs.getThird());
+		assertTrue(rs.next());
+		assertEquals(2, rs.getFirst());
+		assertEquals(4, rs.getSecond());
+		assertEquals("six", rs.getString("third"));
+		assertTrue(rs.next());
+		assertEquals(3, rs.getFirst());
+		assertEquals(6, rs.getSecond());
+		assertEquals("nine", rs.getThird());
+		assertFalse(rs.next());
+		rs.close();
+
 	}
 
 }
