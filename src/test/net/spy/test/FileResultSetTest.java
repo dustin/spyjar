@@ -8,6 +8,7 @@ import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 import net.spy.db.FileResultSet;
 
@@ -35,16 +36,30 @@ public class FileResultSetTest extends TestCase {
 
 	private void assertTimestampColumn(
 		ResultSet rs, String val, String col, int colInt) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
-		Date parsedDate = new java.sql.Timestamp(sdf.parse(val).getTime());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss.SSS");
+		Date parsedDate = null;
+		try {
+			parsedDate = new java.sql.Timestamp(sdf.parse(val).getTime());
+		} catch(ParseException e) {
+			// Alternate parse
+			sdf = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+			parsedDate = new java.sql.Time(sdf.parse(val).getTime());
+		}
 		assertEquals(parsedDate, rs.getTimestamp(col));
 		assertEquals(parsedDate, rs.getTimestamp(colInt));
 	}
 
 	private void assertTimeColumn(
 		ResultSet rs, String val, String col, int colInt) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		java.sql.Time parsedTime = new java.sql.Time(sdf.parse(val).getTime());
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+		java.sql.Time parsedTime = null;
+		try {
+			parsedTime = new java.sql.Time(sdf.parse(val).getTime());
+		} catch(ParseException e) {
+			// Alternate parse
+			sdf = new SimpleDateFormat("HH:mm:ss");
+			parsedTime = new java.sql.Time(sdf.parse(val).getTime());
+		}
 		assertEquals(parsedTime, rs.getTime(col));
 		assertEquals(parsedTime, rs.getTime(colInt));
 	}
@@ -77,17 +92,19 @@ public class FileResultSetTest extends TestCase {
 			assertEquals("No such column:  nonexistent", e.getMessage());
 		}
 		try {
-			String s=rs.getString(7);
+			String s=rs.getString(8);
 			fail("Should not be able to request not existent column, got " + s);
 		} catch(SQLException e) {
-			assertEquals("There are only 6 columns in this set.", e.getMessage());
+			assertEquals("There are only 7 columns in this set.",
+				e.getMessage());
 		}
 		assertColumn(rs, 28, "col_one", 1);
 		assertColumn(rs, "I'll be twenty-eight.", "col_two", 2);
 		assertDateColumn(rs, "20051005", "col_three", 3);
-		assertTimeColumn(rs, "12:15:27", "col_four", 4);
-		assertTimestampColumn(rs, "20051005T12:15:27", "col_five", 5);
+		assertTimeColumn(rs, "12:15:27.13", "col_four", 4);
+		assertTimestampColumn(rs, "20051005T12:15:27.13", "col_five", 5);
 		assertColumn(rs, true, "col_six", 6);
+		assertColumn(rs, true, "col_seven", 7);
 
 		assertTrue(rs.next());
 		assertColumn(rs, 10, "col_one", 1);
@@ -97,15 +114,18 @@ public class FileResultSetTest extends TestCase {
 		assertTimestampColumn(rs, "20050710T03:18:05", "col_five", 5);
 		assertColumn(rs, false, "col_six", 6);
 		assertFalse(rs.wasNull());
+		assertColumn(rs, false, "col_seven", 7);
 
 		assertTrue(rs.next());
 		assertColumn(rs, -5, "col_one", 1);
-		assertColumn(rs, "This has a\ttab and\nnewline and a \\N", "col_two", 2);
+		assertColumn(rs, "This has a\ttab and\nnewline and a \\N",
+			"col_two", 2);
 		assertDateColumn(rs, "19771005", "col_three", 3);
 		assertTimeColumn(rs, "00:00:00", "col_four", 4);
 		assertTimestampColumn(rs, "19771005T00:00:00", "col_five", 5);
 		assertColumn(rs, false, "col_six", 6);
 		assertTrue(rs.wasNull());
+		assertColumn(rs, true, "col_seven", 7);
 		
 		assertFalse(rs.next());
 	}

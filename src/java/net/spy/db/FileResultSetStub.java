@@ -13,6 +13,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -122,7 +123,74 @@ public class FileResultSetStub extends GenericResultSetStub {
 			return(s);
 		}
 	}
-	
+
+	private abstract static class MultiDateParser extends PreParser {
+		private SimpleDateFormat formats[]=null;
+
+		public MultiDateParser(String formatStrings[]) {
+			super();
+			formats=new SimpleDateFormat[formatStrings.length];
+			for(int i=0; i<formatStrings.length; i++) {
+				formats[i]=new SimpleDateFormat(formatStrings[i]);
+				formats[i].setLenient(false);
+			}
+		}
+
+		protected long parseDate(String s) {
+			long rv=0;
+			for(int i=0; rv==0 && i<formats.length; i++) {
+				try {
+					rv=formats[i].parse(s).getTime();
+				} catch(ParseException e) {
+					// skip
+				}
+			}
+			return(rv);
+		}
+	}
+
+	private static final class TimeParser extends MultiDateParser {
+		public TimeParser() {
+			super(new String[]{"HH:mm:ss.SSS", "HH:mm:ss"});
+		}
+
+		public Object subParse(String s) throws Exception {
+			return(new java.sql.Time(parseDate(s)));
+		}
+	}
+
+	private static final class DateParser extends MultiDateParser {
+		public DateParser() {
+			super(new String[]{
+				"yyyyMMdd", "yyyy-MM-dd", "yyyy/MM/dd", "dd/MM/yyyy"});
+		}
+
+		public Object subParse(String s) throws Exception {
+			return(new java.sql.Date(parseDate(s)));
+		}
+	}
+
+	private static final class TimestampParser extends MultiDateParser {
+		public TimestampParser() {
+			super(new String[]{
+				"yyyyMMdd'T'HH:mm:ss.SSS",
+				"yyyyMMdd'T'HH:mm:ss",
+				"yyyyMMdd'T'HHmmss.SSS",
+				"yyyyMMdd'T'HHmmss",
+				"yyyy-MM-dd HH:mm:ss.SSS",
+				"yyyy-MM-dd HH:mm:ss",
+				"yyyy/MM/dd HH:mm:ss.SSS",
+				"yyyy/MM/dd HH:mm:ss",
+				"dd/MM/yyyy HH:mm:ss.SSS",
+				"dd/MM/yyyy HH:mm:ss",
+				});
+		}
+
+		public Object subParse(String s) throws Exception {
+			return(new java.sql.Timestamp(parseDate(s)));
+		}
+	}
+
 	private static final class ParserFactory extends Object {
 		private static ParserFactory instance=null;
 		private Map parsers=null;
@@ -140,33 +208,22 @@ public class FileResultSetStub extends GenericResultSetStub {
 			parsers.put(new Integer(Types.REAL), new NumberParser());
 			parsers.put(new Integer(Types.SMALLINT), new NumberParser());
 			parsers.put(new Integer(Types.TINYINT), new NumberParser());
-			parsers.put(new Integer(Types.TIMESTAMP), new PreParser() {
-					private SimpleDateFormat sdf=new SimpleDateFormat(
-						"yyyyMMdd'T'HH:mm:ss");
-					public Object subParse(String s) throws Exception {
-						Date d=sdf.parse(s);
-						return(new java.sql.Timestamp(d.getTime()));
-					}
-				});
-			parsers.put(new Integer(Types.DATE), new PreParser() {
-					private SimpleDateFormat sdf=new SimpleDateFormat(
-						"yyyyMMdd");
-					public Object subParse(String s) throws Exception {
-						Date d=sdf.parse(s);
-						return(new java.sql.Date(d.getTime()));
-					}
-				});
-			parsers.put(new Integer(Types.TIME), new PreParser() {
-					private SimpleDateFormat sdf=new SimpleDateFormat(
-						"HH:mm:ss");
-					public Object subParse(String s) throws Exception {
-						Date d=sdf.parse(s);
-						return(new java.sql.Time(d.getTime()));
-					}
-				});
+			parsers.put(new Integer(Types.TIMESTAMP), new TimestampParser());
+			parsers.put(new Integer(Types.DATE), new DateParser());
+			parsers.put(new Integer(Types.TIME), new TimeParser());
 			parsers.put(new Integer(Types.BIT), new PreParser() {
 				public Object subParse(String s) throws Exception {
-					return(Boolean.valueOf(s));
+					Boolean rv=Boolean.FALSE;
+					try {
+						if(Integer.parseInt(s) == 0) {
+							rv=Boolean.FALSE;
+						} else {
+							rv=Boolean.TRUE;
+						}
+					} catch(NumberFormatException e) {
+						rv=Boolean.valueOf(s);
+					}
+					return(rv);
 				}
 			});
 		}

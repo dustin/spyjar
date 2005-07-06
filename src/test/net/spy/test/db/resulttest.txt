@@ -1,4 +1,4 @@
-col_one:INTEGER	col_two:VARCHAR	col_three:DATE	col_four:TIME	col_five:TIMESTAMP	col_six:BIT
-28	I'll be twenty-eight.	20051005	12:15:27	20051005T12:15:27	true
-10	Jennalynn will be ten.	20050710	03:18:05	20050710T03:18:05	false
--5	This has a\ttab and\nnewline and a \\N	19771005	00:00:00	19771005T00:00:00	\N
+col_one:INTEGER	col_two:VARCHAR	col_three:DATE	col_four:TIME	col_five:TIMESTAMP	col_six:BIT	col_seven:BIT
+28	I'll be twenty-eight.	20051005	12:15:27.13	20051005T12:15:27.13	true	1
+10	Jennalynn will be ten.	20050710	03:18:05	2005-07-10 03:18:05	false	0
+-5	This has a\ttab and\nnewline and a \\N	19771005	00:00:00	19771005T00:00:00	\N	13
