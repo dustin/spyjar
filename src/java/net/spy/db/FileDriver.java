@@ -59,118 +59,131 @@ public class FileDriver extends SpyObject implements Driver {
 		updateMap=new HashMap();
 	}
 	
+	private Map getMap(String key, Map m) {
+		Map rv=(Map)m.get(key);
+		if(rv == null) {
+			rv=new HashMap();
+			m.put(key, rv);
+		}
+		return(rv);
+	}
+	
 	/**
 	 * Register a query to file mapping.
-	 * 
+	 * @param url JDBC URL to which this query applies
 	 * @param s the query string
 	 * @param f the file that will provide the results
 	 */
-	public void registerQuery(String s, File f) {
-		registerQuery(s, new Object[0], f);
+	public void registerQuery(String url, String s, File f) {
+		registerQuery(url, s, new Object[0], f);
 	}
 
 	/** 
 	 * Register a ResultSet File to a parameterized query.
-	 * 
+	 * @param url JDBC URL to which this query applies
 	 * @param s the query string
 	 * @param args the args
 	 * @param f the file with the result set
 	 */
-	public void registerQuery(String s, Object args[], File f) {
+	public void registerQuery(String url, String s, Object args[], File f) {
 		ParameterizedQuery pq=new ParameterizedQuery(s, args);
-		queryMap.put(pq, f);
+		getMap(url, queryMap).put(pq, f);
 	}
 
 	/** 
 	 * Register the query(-ies) from the given DBSQL and args to a file.
-	 * 
+	 * @param url JDBC URL to which this query applies
 	 * @param db the DBSQL instance.
 	 * @param args arguments to this query
 	 * @param path the path of the results
 	 */
-	public void registerQuery(DBSQL db, Object args[], File path) {
+	public void registerQuery(String url, DBSQL db, Object args[], File path) {
 		for(Iterator i=db.getRegisteredQueries().values().iterator();
 			i.hasNext();) {
 			String query=(String)i.next();
-			registerQuery(query, args, path);
+			registerQuery(url, query, args, path);
 		}
 	}
 
 	/** 
 	 * Register an update action.
-	 * 
+	 * @param url JDBC URL to which this query applies
 	 * @param s the query
 	 * @param args the args 
 	 * @param action the action to be performed upon this update
 	 */
-	public void registerUpdate(String s, Object args[], Updater action) {
+	public void registerUpdate(String url, String s, Object args[], Updater action) {
 		ParameterizedQuery pq=new ParameterizedQuery(s, args);
-		updateMap.put(pq, action);
+		getMap(url, updateMap).put(pq, action);
 	}
 
 	/** 
 	 * Register the update(s) from the given DBSQL and args to an updater.
-	 * 
+	 * @param url JDBC URL to which this query applies
 	 * @param db the DBSQL instance
 	 * @param args the arguments to the update
 	 * @param u the updater
 	 */
-	public void registerUpdate(DBSQL db, Object args[], Updater u) {
+	public void registerUpdate(String url, DBSQL db, Object args[], Updater u) {
 		for(Iterator i=db.getRegisteredQueries().values().iterator();
 			i.hasNext();) {
 			String query=(String)i.next();
-			registerUpdate(query, args, u);
+			registerUpdate(url, query, args, u);
 		}
 	}
 
 	/** 
 	 * Register the update(s) from the given DBSQL and args to return an int.
-	 * 
+	 * @param url JDBC URL to which this query applies
 	 * @param db the DBSQL instance
 	 * @param args the arguments to the update
 	 * @param rv the return value
 	 */
-	public void registerUpdate(DBSQL db, Object args[], int rv) {
-		registerUpdate(db, args, new IntUpdater(rv));
+	public void registerUpdate(String url, DBSQL db, Object args[], int rv) {
+		registerUpdate(url, db, args, new IntUpdater(rv));
 	}
 
 	/** 
 	 * Register a simple update that returns an int.
-	 * 
+	 * @param url JDBC URL to which this query applies
 	 * @param s the query
 	 * @param args the args 
 	 * @param rv the value that should be returned from this update
 	 */
-	public void registerUpdate(String s, Object args[], int rv) {
+	public void registerUpdate(String url, String s, Object args[], int rv) {
 		ParameterizedQuery pq=new ParameterizedQuery(s, args);
-		updateMap.put(pq, new IntUpdater(rv));
+		getMap(url, updateMap).put(pq, new IntUpdater(rv));
 	}
 
 	/**
 	 * Get the File for the specified query.
+	 * @param url JDBC URL to which this query applies
 	 * @param pq the query
 	 * @return the File
 	 * @throws SQLException if there isn't a query managed for this query
 	 */
-	File getQuery(ParameterizedQuery pq) throws SQLException {
-		File rv=(File)queryMap.get(pq);
+	File getQuery(String url, ParameterizedQuery pq) throws SQLException {
+		File rv=(File)getMap(url, queryMap).get(pq);
 		if(rv == null) {
-			throw new SQLException("No mapping registered for query " + pq);
+			throw new SQLException("No mapping registered for query " + pq
+				+ " in DB specified as " + url);
 		}
 		return(rv);
 	}
 
 	/** 
 	 * Get the Updater for the specified query
-	 * 
+	 * @param url JDBC URL to which this query applies
 	 * @param pq the query
+	 * 
 	 * @return the Updater
 	 * @throws SQLException if there isn't an update managed for this query
 	 */
-	Updater getUpdate(ParameterizedQuery pq) throws SQLException {
-		Updater rv=(Updater)updateMap.get(pq);
+	Updater getUpdate(String url, ParameterizedQuery pq) throws SQLException {
+		Updater rv=(Updater)getMap(url, updateMap).get(pq);
 		if(rv == null) {
-			throw new SQLException("No mapping registered for update " + pq);
+			throw new SQLException("No mapping registered for update " + pq
+				+ " in DB specified as " + url);
 		}
 		return(rv);
 	}
@@ -180,10 +193,11 @@ public class FileDriver extends SpyObject implements Driver {
 	 */
 	public void clearQueries() {
 		queryMap.clear();
+		updateMap.clear();
 	}
 
 	public Connection connect(String url, Properties prop) throws SQLException {
-		return (new FileConnection());
+		return (new FileConnection(url));
 	}
 
 	public boolean acceptsURL(String arg0) throws SQLException {
@@ -278,6 +292,8 @@ public class FileDriver extends SpyObject implements Driver {
 
 	private static final class FileConnection extends SpyObject
 		implements Connection {
+		
+		private String url=null;
 
 		private boolean closed = false;
 
@@ -293,13 +309,18 @@ public class FileDriver extends SpyObject implements Driver {
 
 		private Map<String, Class<?>> typeMap = null;
 
+		public FileConnection(String u) {
+			super();
+			url=u;
+		}
+
 		public Statement createStatement() throws SQLException {
 			throw new SQLException("Not implemented");
 		}
 
 		public PreparedStatement prepareStatement(String query)
 			throws SQLException {
-			return(new FilePreparedStatement(query));
+			return(new FilePreparedStatement(url, query));
 		}
 
 		public CallableStatement prepareCall(String arg0) throws SQLException {
@@ -453,15 +474,18 @@ public class FileDriver extends SpyObject implements Driver {
 	private static final class FilePreparedStatement
 		extends GenericPreparedStatementStub
 		implements PreparedStatement {
+		
+		private String url=null;
 
-		public FilePreparedStatement(String q) {
+		public FilePreparedStatement(String u, String q) {
 			super(q);
+			this.url=u;
 		}
 
 		public ResultSet executeQuery() throws SQLException {
 			FileDriver fd=(FileDriver)DriverManager.getDriver(
 				URL_PREFIX + "blah");
-			File f=fd.getQuery(new ParameterizedQuery(getQuery(), getArgs()));
+			File f=fd.getQuery(url, new ParameterizedQuery(getQuery(), getArgs()));
 			ResultSet rs=new FileResultSet(f);
 			return(rs);
 		}	
@@ -470,7 +494,7 @@ public class FileDriver extends SpyObject implements Driver {
 			FileDriver fd=(FileDriver)DriverManager.getDriver(
 				URL_PREFIX + "blah");
 			Updater u=fd.getUpdate(
-				new ParameterizedQuery(getQuery(), getArgs()));
+				url, new ParameterizedQuery(getQuery(), getArgs()));
 			return(u.doUpdate());
 		}
 		

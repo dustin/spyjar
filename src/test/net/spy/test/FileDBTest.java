@@ -23,13 +23,15 @@ public class FileDBTest extends TestCase {
 
 	private FileDriver fd=null;
 	private String url=FileDriver.URL_PREFIX + "/x";
+	private String url2=FileDriver.URL_PREFIX + "/x2";
 	private SpyConfig conf=null;
+	private SpyConfig conf2=null;
 	private SpyConfig poolConf=null;
 
 	protected void setUp() throws Exception {
 		Class.forName("net.spy.db.FileDriver");
 		fd=(FileDriver)DriverManager.getDriver(url);
-		
+
 		// Config using JDBC directly.
 		conf=new SpyConfig();
 		conf.put("dbConnectionSource", "net.spy.db.JDBCConnectionSource");
@@ -37,7 +39,14 @@ public class FileDBTest extends TestCase {
 		conf.put("dbSource", url);
 		conf.put("dbUser", "username");
 		conf.put("dbPass", "password");
-		
+
+		conf2=new SpyConfig();
+		conf2.put("dbConnectionSource", "net.spy.db.JDBCConnectionSource");
+		conf2.put("dbDriverName", "net.spy.db.FileDriver");
+		conf2.put("dbSource", url2);
+		conf2.put("dbUser", "username");
+		conf2.put("dbPass", "password");
+
 		// Config using the DB pool
 		poolConf=new SpyConfig();
 		poolConf.put("dbDriverName", "net.spy.db.FileDriver");
@@ -51,15 +60,17 @@ public class FileDBTest extends TestCase {
 		ThreeColumnTest ttt=new ThreeColumnTest(conf);
 		DeleteTest dt=new DeleteTest(conf);
 
-		fd.registerQuery(dtt, new Object[0], getPath("dumptest.txt"));
-		fd.registerQuery(ttt,
+		fd.registerQuery(url, dtt, new Object[0], getPath("dumptest.txt"));
+		fd.registerQuery(url, ttt,
 			new Object[]{new Integer(1), new Integer(2), "string"},
 			getPath("threecol.txt"));
-		fd.registerQuery(ttt,
+		fd.registerQuery(url, ttt,
 			new Object[]{new Integer(1), new Integer(3), "string"},
 			getPath("threecol2.txt"));
-		fd.registerUpdate(dt, new Object[]{new Integer(11)}, 11);
-		fd.registerUpdate(dt, new Object[]{new Integer(13)}, 13);
+		fd.registerUpdate(url, dt, new Object[]{new Integer(11)}, 11);
+		fd.registerUpdate(url, dt, new Object[]{new Integer(13)}, 13);
+		
+		fd.registerUpdate(url2, dt, new Object[]{new Integer(26)}, 26);
 	}
 
 	protected void tearDown() {
@@ -72,8 +83,8 @@ public class FileDBTest extends TestCase {
 	}
 
 	public void testFileDB() throws Exception {
-		fd.registerQuery("select count(*) from table",
-			getPath("counttest.txt"));
+		fd.registerQuery(url,
+			"select count(*) from table", getPath("counttest.txt"));
 		Connection conn=DriverManager.getConnection(url);
 		PreparedStatement pst=conn.prepareStatement(
 			"select count(*) from table");
@@ -97,9 +108,23 @@ public class FileDBTest extends TestCase {
 			conn.close();
 		}
 	}
+	
+	public void testMissingSPT() throws Exception {
+		// This same query is run succesfully later with the other config
+		DeleteTest dt=new DeleteTest(conf);
+		try {
+			dt.setSomeColumn(26);
+			int rv=dt.executeUpdate();
+			fail("Should not run unregistered spt, returned " + rv);
+		} catch(SQLException e) {
+			assertTrue(e.getMessage().startsWith("No mapping registered "));
+		} finally {
+			dt.close();
+		}
+	}
 
 	public void testUpdate() throws Exception {
-		fd.registerUpdate("delete from blah", new Object[0], 13);
+		fd.registerUpdate(url, "delete from blah", new Object[0], 13);
 		Connection conn=DriverManager.getConnection(url);
 		PreparedStatement pst=conn.prepareStatement("delete from blah");
 		assertEquals(13, pst.executeUpdate());
@@ -119,6 +144,13 @@ public class FileDBTest extends TestCase {
 		// Try it again at 11
 		dt.setSomeColumn(11);
 		assertEquals(11, dt.executeUpdate());
+		
+		// try the other config
+		dt.close();
+		
+		dt=new DeleteTest(conf2);
+		dt.setSomeColumn(26);
+		assertEquals(26, dt.executeUpdate());
 	}
 
 	public void testBadArguments() throws Exception {
