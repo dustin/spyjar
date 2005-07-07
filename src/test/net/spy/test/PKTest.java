@@ -27,6 +27,20 @@ import org.jmock.core.stub.StubSequence;
  * Test the primary key implementation.
  */
 public class PKTest extends TestCase {
+	
+	protected void tearDown() {
+		GetPK.setInstance(null);
+	}
+	
+	/**
+	 * Test the singleton operation.
+	 */
+	public void testSingleton() {
+		GetPK ref=GetPK.getInstance();
+		assertSame(ref, GetPK.getInstance());
+		GetPK.setInstance(null);
+		assertNotSame(ref, GetPK.getInstance());
+	}
 
 	/** 
 	 * Test basic primary key functionality.

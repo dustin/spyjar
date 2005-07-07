@@ -91,6 +91,14 @@ public class GetPK extends SpyObject {
 		return(instance);
 	}
 
+	/**
+	 * Set the singleton instance.
+	 * @param to the new singleton instance
+	 */
+	public static synchronized void setInstance(GetPK to) {
+		instance=to;
+	}
+
 	/** 
 	 * Get a primary key from the database described in the given config.
 	 * 
