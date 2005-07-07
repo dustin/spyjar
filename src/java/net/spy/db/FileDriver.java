@@ -485,7 +485,8 @@ public class FileDriver extends SpyObject implements Driver {
 		public ResultSet executeQuery() throws SQLException {
 			FileDriver fd=(FileDriver)DriverManager.getDriver(
 				URL_PREFIX + "blah");
-			File f=fd.getQuery(url, new ParameterizedQuery(getQuery(), getArgs()));
+			File f=fd.getQuery(url, new ParameterizedQuery(getQuery(),
+				getApplicableArgs()));
 			ResultSet rs=new FileResultSet(f);
 			return(rs);
 		}	
@@ -494,7 +495,7 @@ public class FileDriver extends SpyObject implements Driver {
 			FileDriver fd=(FileDriver)DriverManager.getDriver(
 				URL_PREFIX + "blah");
 			Updater u=fd.getUpdate(
-				url, new ParameterizedQuery(getQuery(), getArgs()));
+				url, new ParameterizedQuery(getQuery(), getApplicableArgs()));
 			return(u.doUpdate());
 		}
 		

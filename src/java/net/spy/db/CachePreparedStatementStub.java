@@ -163,7 +163,7 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 						pst.setShort(i+1, (short)((Integer)args[i]).intValue());
 						break;
 					case Types.NULL:
-						pst.setNull(i+1, ((Integer)args[i]).intValue());
+						pst.setNull(i+1, ((DBNull)args[i]).getType());
 						break;
 					case Types.OTHER:
 						pst.setObject(i+1, args[i]);

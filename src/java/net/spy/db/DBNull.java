@@ -24,6 +24,32 @@ public class DBNull extends Object {
 	public int getType() {
 		return type;
 	}
+	
+	/**
+	 * Get the hashcode for this object.
+	 */
+	public int hashCode() {
+		return(type);
+	}
+	
+	/**
+	 *  String me.
+	 */
+	public String toString() {
+		return("{DBNull type=" + TypeNames.getTypeName(type) + "}");
+	}
+	
+	/**
+	 * True if o is a DBNull of the same type.
+	 */
+	public boolean equals(Object o) {
+		boolean rv=false;
+		if(o instanceof DBNull) {
+			DBNull n=(DBNull)o;
+			rv= (type == n.getType());
+		}
+		return(rv);
+	}
 }
 
 

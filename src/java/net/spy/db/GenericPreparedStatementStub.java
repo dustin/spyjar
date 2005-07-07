@@ -35,6 +35,22 @@ public abstract class GenericPreparedStatementStub extends SpyObject {
 		return(args);
 	}
 	
+	/**
+	 * Get the args as can be applied to a database.
+	 * @return the arguments, with DBNulls replaced with null
+	 */
+	protected Object[] getApplicableArgs() {
+		Object rv[]=new Object[args.length];
+		for(int i=0; i<args.length; i++) {
+			if(args[i] instanceof DBNull) {
+				rv[i]=null;
+			} else {
+				rv[i]=args[i];
+			}
+		}
+		return(rv);
+	}
+	
 	protected int[] getTypes() {
 		return(types);
 	}
@@ -83,7 +99,7 @@ public abstract class GenericPreparedStatementStub extends SpyObject {
 	public void setNull(int a0, int a1) throws SQLException {
 		// This one works a bit different because we have to store the
 		// original type
-		setArg(a0, new Integer(a1), Types.NULL);
+		setArg(a0, new DBNull(a1), Types.NULL);
 	}
 
 	public void setBigDecimal(int a0, BigDecimal a1) throws SQLException {

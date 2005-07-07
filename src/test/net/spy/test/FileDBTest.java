@@ -67,6 +67,9 @@ public class FileDBTest extends TestCase {
 		fd.registerQuery(url, ttt,
 			new Object[]{new Integer(1), new Integer(3), "string"},
 			getPath("threecol2.txt"));
+		fd.registerQuery(url, ttt,
+			new Object[]{null, new Integer(3), null},
+			getPath("threecol.txt"));
 		fd.registerUpdate(url, dt, new Object[]{new Integer(11)}, 11);
 		fd.registerUpdate(url, dt, new Object[]{new Integer(13)}, 13);
 		
@@ -200,6 +203,22 @@ public class FileDBTest extends TestCase {
 		assertEquals("nine", rs.getString("third"));
 		assertFalse(rs.next());
 	}
+	
+	/**
+	 * Validate queries with null parameters.
+	 */
+	public void testSPTWithNull() throws Exception {
+		ThreeColumnTest ttt=new ThreeColumnTest(conf);
+		ttt.setFirst((Integer)null);
+		ttt.setSecond(3);
+		ttt.setThird(null);
+		
+		ResultSet rs=ttt.executeQuery();
+		assertThreeColumnOne(rs);
+		rs.close();
+		
+		ttt.close();
+	}
 
 	public void testSPTWithArgs() throws Exception {
 		ThreeColumnTest ttt=new ThreeColumnTest(conf);
@@ -265,15 +284,12 @@ public class FileDBTest extends TestCase {
 		assertFalse(rs.next());
 		rs.close();
 	}
-	
-	/**
-	 * Test the cached DB result set.
-	 */
-	public void testCachedResult() throws Exception {
+
+	private void cacheTest(Integer a1, Integer a2, String s) throws Exception {
 		ThreeColumnTest ttt=new ThreeColumnTest(poolConf);
-		ttt.setFirst(1);
-		ttt.setSecond(2);
-		ttt.setThird("string");
+		ttt.setFirst(a1);
+		ttt.setSecond(a2);
+		ttt.setThird(s);
 		// Set a cache time so we'll get cached results
 		ttt.setCacheTime(5000);
 		ResultSet rs=ttt.executeQuery();
@@ -288,6 +304,17 @@ public class FileDBTest extends TestCase {
 		assertTrue(rs2 instanceof CachedResultSet);
 		assertEquals(2, ((CachedResultSet)rs2).numCopies());	
 		ttt.close();
+	}
+
+	/**
+	 * Test the cached DB result set.
+	 */
+	public void testCachedResult() throws Exception {
+		cacheTest(new Integer(1), new Integer(2), "string");
+	}
+
+	public void testCachedResultWithNull() throws Exception {
+		cacheTest(null, new Integer(3), null);
 	}
 
 }
