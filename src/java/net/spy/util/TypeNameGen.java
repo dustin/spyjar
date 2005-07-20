@@ -64,7 +64,7 @@ public class TypeNameGen extends Object {
 	/** 
 	 * Write out the TypeNames implementation.
 	 * 
-	 * @param String args[0] = path to which to write the TypeNames
+	 * @param args (0) = path to which to write the TypeNames
 	 * @throws IOException if there's a problem writing the file
 	 */
 	public static void main(String args[]) throws IOException {

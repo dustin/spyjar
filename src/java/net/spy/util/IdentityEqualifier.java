@@ -23,7 +23,7 @@ public class IdentityEqualifier extends Object {
 	/** 
 	 * Get the object this IdentityEqualifier is wrapping.
 	 * 
-	 * @return 
+	 * @return the object
 	 */
 	public Object get() {
 		return(object);

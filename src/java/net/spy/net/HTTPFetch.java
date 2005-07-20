@@ -91,7 +91,7 @@ public class HTTPFetch extends Object {
 	 * Get a vector containing the individual lines of the document
 	 * returned from the URL.
 	 *
-	 * @exception Exception thrown when something fails.
+	 * @exception IOException thrown when something fails.
 	 */
 	public List<String> getLines() throws IOException {
 		ArrayList<String> a = new ArrayList<String>();

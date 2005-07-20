@@ -360,10 +360,8 @@ public class SNPP extends SpyObject {
 	/**
 	 * Check for a response from a 2way message.
 	 *
-	 * @param msgTag the message tag to look up.
-	 *
+	 * @param tag the message tag to look up.
 	 * @return the response message, or NULL if it's not ready
-	 *
 	 * @exception Exception when the msta command fails, or we're not doing
 	 * 2way.
 	 */

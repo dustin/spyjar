@@ -63,7 +63,7 @@ public class SpyToker extends Object {
 	 * Tokenize a file.
 	 *
 	 * @param file file to tokenize
-	 * @param p Map whose entries will be looked up to fill in the
+	 * @param m Map whose entries will be looked up to fill in the
 	 * tokens in the text file.
 	 *
 	 * @return tokenized data from the file.

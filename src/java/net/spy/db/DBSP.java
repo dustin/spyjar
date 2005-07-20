@@ -186,7 +186,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	/**
 	 * Set the prepared statement on which this DBSP will operate.
 	 *
-	 * @param pst the prepared statement
+	 * @param to the prepared statement
 	 */
 	protected void setPreparedStatement(PreparedStatement to)
 		throws SQLException {
@@ -213,8 +213,6 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 	/**
 	 * Get the prepared statement on which this DBSP will operate.
-	 *
-	 * @param pst the prepared statement
 	 */
 	protected PreparedStatement getPreparedStatement() {
 		return(pst);
@@ -507,7 +505,6 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	/**
 	 * Fill in the arguments (with types) for the given list of parameters.
 	 *
-	 * @param query the query we'll be calling
 	 * @param v the list of Parameters we need to add, in order
 	 */
 	protected void applyArgs(Collection<Argument> v) throws SQLException {
@@ -991,7 +988,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		/**
 		 * Get an instance of a named object with the given name.
 		 *
-		 * @param name
+		 * @param nm the name
 		 */
 		protected NamedObject(String nm) {
 			super();
@@ -1080,8 +1077,8 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		/**
 		 * Construct a new Parameter.
 		 *
-		 * @param paramType the parameter type (REQUIRED, etc...)
-		 * @param javaType the {@link java.sql.Types} type
+		 * @param pType the parameter type (REQUIRED, etc...)
+		 * @param jType the {@link java.sql.Types} type
 		 * @param name name of the parametr
 		 */
 		public Parameter(int pType, int jType, String name) {
@@ -1145,7 +1142,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		/**
 		 * Construct a new Argument.
 		 *
-		 * @param javaType the {@link java.sql.Types} type
+		 * @param jType the {@link java.sql.Types} type
 		 * @param name name of the parametr
 		 */
 		public Argument(int jType, String name, Object v) {

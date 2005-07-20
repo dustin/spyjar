@@ -6,6 +6,7 @@ package net.spy.db;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 /**
  * Interface describing the basic DBSP features.

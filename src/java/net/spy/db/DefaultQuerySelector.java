@@ -45,7 +45,7 @@ import net.spy.util.SpyConfig;
  *
  * </p>
  *
- * @see net.spy.SpyDB
+ * @see SpyDB
  */
 public class DefaultQuerySelector extends Object implements QuerySelector {
 

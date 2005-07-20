@@ -30,8 +30,8 @@ public abstract class PoolFiller extends Object {
 	/**
 	 * Get a PoolFiller object.
 	 *
-	 * @param name the name to be used for config lookups
-	 * @param conf the config to use
+	 * @param nm the name to be used for config lookups
+	 * @param cnf the config to use
 	 */
 	public PoolFiller(String nm, SpyConfig cnf) {
 		this();

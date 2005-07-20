@@ -76,8 +76,8 @@ public class SPGen extends SpyObject {
 	 * Get a new SPGen from the given BufferedReader.
 	 *
 	 * @param cn the name of the class to generate
-	 * @param in the stream containing the spt source
-	 * @param out the stream to which the java code will be written
+	 * @param i the stream containing the spt source
+	 * @param o the stream to which the java code will be written
 	 */
 	public SPGen(String cn, BufferedReader i, PrintWriter o) {
 		super();

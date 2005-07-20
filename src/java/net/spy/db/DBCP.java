@@ -73,7 +73,6 @@ public abstract class DBCP extends DBSP {
 	/**
 	 * Fill in the arguments (with types) for the given list of parameters.
 	 *
-	 * @param query the query we'll be calling
 	 * @param v the list of Argument objects we need to add, in order
 	 */
 	protected void applyArgs(Collection<Argument> v) throws SQLException {

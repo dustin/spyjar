@@ -342,7 +342,7 @@ public class ThreadPool extends ThreadGroup {
 	 * unclaimed tasks that may be queued.  If more than this many tasks
 	 * are queued, exceptions will be thrown.
 	 * 
-	 * @param maxTaskQueueSize a value &gt; 0
+	 * @param mtqs a value &gt; 0
 	 */
 	public void setMaxTaskQueueSize(int mtqs) {
 		if(mtqs <= 0) {
@@ -371,7 +371,7 @@ public class ThreadPool extends ThreadGroup {
 	 * Set the minimum number of threads that may exist in the thread pool
 	 * at any moment.
 	 * 
-	 * @param minTotalThreads a value &ge; 0
+	 * @param mtt a value &ge; 0
 	 */
 	public void setMinTotalThreads(int mtt) {
 		if(mtt < 0) {
@@ -391,7 +391,7 @@ public class ThreadPool extends ThreadGroup {
 	/** 
 	 * Set the minimum number of idle threads to maintain.
 	 * 
-	 * @param minIdleThreads a value &ge; 0
+	 * @param mit a value &ge; 0
 	 */
 	public void setMinIdleThreads(int mit) {
 		if(mit < 0) {
@@ -411,7 +411,7 @@ public class ThreadPool extends ThreadGroup {
 	/** 
 	 * Set the maximum number of threads that may be in this pool.
 	 * 
-	 * @param maxTotalThreads a value &ge; 0
+	 * @param mtt a value &ge; 0
 	 */
 	public void setMaxTotalThreads(int mtt) {
 		if(mtt < 0) {
@@ -432,7 +432,7 @@ public class ThreadPool extends ThreadGroup {
 	/** 
 	 * Set the number of threads to start when bringing up this pool.
 	 * 
-	 * @param startThreads a value &ge; 0
+	 * @param st a value &ge; 0
 	 */
 	public void setStartThreads(int st) {
 		if(st < 0) {

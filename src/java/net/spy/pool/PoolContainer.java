@@ -95,7 +95,7 @@ public class PoolContainer extends SpyObject {
 	 *      </li>
 	 * </ul>
 	 *
-	 * @param name name of the pool
+	 * @param nm name of the pool
 	 * @param pf the PoolFiller to use
 	 *
 	 * @exception PoolException when something bad happens

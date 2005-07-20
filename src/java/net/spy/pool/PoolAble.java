@@ -57,7 +57,7 @@ public abstract class PoolAble extends SpyObject {
 	 * Get a PoolAble representation for an object, including a given
 	 * maximum lifetime the object can have.
 	 *
-	 * @param maxAge the amount of time, in milliseconds, that the object
+	 * @param a the amount of time, in milliseconds, that the object
 	 * will be valid.  Objects will not be checked out if they are older
 	 * than their maximum lifetime.
 	 */
