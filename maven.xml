@@ -145,6 +145,7 @@
 	<preGoal name="test:compile">
 		<ant:mkdir dir="${maven.build.dir}/testsrc"/>
 		<ant:spgen srcdir="${maven.src.dir}/test/"
+			interfaces="java.io.Serializable java.util.RandomAccess"
 			destdir="${maven.build.dir}/testsrc"/>
 		<path id="spyjar.test.build.src" location="${maven.build.dir}/testsrc"/>
 		<m:addPath id="maven.test.compile.src.set" refid="spyjar.test.build.src"/>

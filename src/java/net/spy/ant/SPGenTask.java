@@ -14,6 +14,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import net.spy.util.SPGen;
 
@@ -52,6 +55,7 @@ public class SPGenTask extends MatchingTask {
 	private String superclass=null;
 	private String dbcpSuperclass=null;
 	private String dbspSuperclass=null;
+	private Set interfaces=null;
 	private boolean verbose=false;
 
 	/**
@@ -170,6 +174,9 @@ public class SPGenTask extends MatchingTask {
 	 * Processes an individual file.
 	 * @param filename The filename, relative to the source directory.
 	 **/
+	/**
+	 * @param filename
+	 */
 	protected void processFile(String filename) {
 		File srcFile = new File(srcDir, filename);
 		File tmpFile = null;
@@ -213,6 +220,9 @@ public class SPGenTask extends MatchingTask {
 			}
 			if (this.dbspSuperclass!=null) {
 				spg.setDbspSuperclass(this.dbspSuperclass);
+			}
+			if (this.interfaces != null) {
+				spg.addInterfaces(this.interfaces);
 			}
 			spg.setVerbose(verbose);
 			try {
@@ -260,6 +270,17 @@ public class SPGenTask extends MatchingTask {
 			}
 		} else if (!parent.isDirectory()) {
 			throw new BuildException("Not a directory: " + parent);
+		}
+	}
+
+	/**
+	 * Add a space separated set of interfaces to have generated classes implement.
+	 * @param to a space separated list of fully qualified interface names.
+	 */
+	public void setInterfaces(String to) {
+		interfaces = new HashSet();
+		for(StringTokenizer st=new StringTokenizer(to); st.hasMoreTokens();) {
+			interfaces.add(st.nextToken());
 		}
 	}
 }

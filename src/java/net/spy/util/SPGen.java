@@ -110,6 +110,22 @@ public class SPGen extends SpyObject {
 			this.superclass=sc;
 		}
 	}
+	
+	/**
+	 * Add an interface to the implements line.
+	 * @param intf the fully qualified name of the interface to implement
+	 */
+	public void addInterface(String intf) {
+		interfaces.add(intf);
+	}
+
+	/**
+	 * Add a collection of interfaces.
+	 * @param set the set of interfaces
+	 */
+	public void addInterfaces(Collection set) {
+		interfaces.addAll(set);
+	}
 
 	/** 
 	 * Set the DBCP superclass of the generated java class.
@@ -504,7 +520,13 @@ public class SPGen extends SpyObject {
 			+ classname + " extends "
 				+ (isInterface?superinterface:superclass));
 		if(interfaces.size() > 0) {
-			out.print("\n\timplements " + SpyUtil.join(interfaces, ", "));
+			// If this is an interface, extra interfaces are just appended
+			if(isInterface) {
+				out.print(", ");
+			} else {
+				out.print("\n\timplements ");
+			}
+			out.print(SpyUtil.join(interfaces, ", "));
 		}
 		out.println(" {\n");
 
