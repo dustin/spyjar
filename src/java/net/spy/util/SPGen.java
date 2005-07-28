@@ -1115,7 +1115,7 @@ public class SPGen extends SpyObject {
 				type=st.nextToken();
 
 				if(isValidJDBCType(type)) {
-					type="java.sql.Types."+type;
+					type="java.sql.Types." + getParamTypeAlias(type);
 				} else {
 					if (!looseTypes) {
 						throw new IllegalArgumentException("Invalid JDBC type: "
@@ -1139,6 +1139,16 @@ public class SPGen extends SpyObject {
 				// enough, and without a EOL before the EOF...very odd case
 				paramDescr="";
 			}
+		}
+		
+		// Need to alias NUMERIC to DECIMAL, since I can't otherwise tell them
+		// apart.
+		private String getParamTypeAlias(String pt) {
+			String rv=pt;
+			if(pt.equals("NUMERIC")) {
+				rv="DECIMAL";
+			}
+			return(rv);
 		}
 
 		public String toString() {

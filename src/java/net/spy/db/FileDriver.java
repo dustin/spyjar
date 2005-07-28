@@ -28,6 +28,7 @@ import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -285,8 +286,16 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 
 		public String toString() {
+			ArrayList paramStrings=new ArrayList(args.length);
+			for(int i=0; i<args.length; i++) {
+				String type="";
+				if(args[i] != null) {
+					type="(" + args[i].getClass().getName() + ")";
+				}
+				paramStrings.add(type + args[i]);
+			}
 			return("{ParameterizedQuery ``" + query + "'' with "
-				+ Arrays.asList(args) + "}");
+				+ paramStrings + "}");
 		}
 	}
 
@@ -500,273 +509,218 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 		
 		public void setByte(int arg0, byte arg1) throws SQLException {
-			// TODO Auto-generated method stub
+			throw new SQLException("Not supported.");
 
 		}
 
 		public void setBytes(int arg0, byte[] arg1) throws SQLException {
-			// TODO Auto-generated method stub
-
-		}
-
-		public void setTimestamp(int arg0, Timestamp arg1) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setAsciiStream(int arg0, InputStream arg1, int arg2)
 			throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setUnicodeStream(int arg0, InputStream arg1, int arg2)
 			throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setBinaryStream(int arg0, InputStream arg1, int arg2)
 			throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void clearParameters() throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setObject(int arg0, Object arg1, int arg2, int arg3)
 			throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setObject(int arg0, Object arg1, int arg2)
 			throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public boolean execute() throws SQLException {
-			// TODO Auto-generated method stub
-			return false;
+			throw new SQLException("Not supported.");
 		}
 
 		public void addBatch() throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setCharacterStream(int arg0, Reader arg1, int arg2)
 			throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setRef(int arg0, Ref arg1) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setBlob(int arg0, Blob arg1) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setClob(int arg0, Clob arg1) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setArray(int arg0, Array arg1) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public ResultSetMetaData getMetaData() throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
+			throw new SQLException("Not supported.");
 		}
 
 		public void setDate(int arg0, Date arg1, Calendar arg2)
 			throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setTime(int arg0, Time arg1, Calendar arg2)
 			throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setTimestamp(int arg0, Timestamp arg1, Calendar arg2)
 			throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setNull(int arg0, int arg1, String arg2)
 			throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setURL(int arg0, URL arg1) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public ParameterMetaData getParameterMetaData() throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
+			throw new SQLException("Not supported.");
 		}
 
 		public ResultSet executeQuery(String arg0) throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
+			throw new SQLException("Not supported.");
 		}
 
 		public int executeUpdate(String arg0) throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new SQLException("Not supported.");
 		}
 
 		public int getMaxFieldSize() throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new SQLException("Not supported.");
 		}
 
 		public void setMaxFieldSize(int arg0) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public int getMaxRows() throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+			return(0);
 		}
 
 		public void setMaxRows(int arg0) throws SQLException {
-			// TODO Auto-generated method stub
-
+			// Do nothing
 		}
 
 		public void setEscapeProcessing(boolean arg0) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public int getQueryTimeout() throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+			return(0);
 		}
 
 		public void setQueryTimeout(int arg0) throws SQLException {
-			// TODO Auto-generated method stub
-
+			// Do nothing
 		}
 
 		public void cancel() throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public SQLWarning getWarnings() throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
+			throw new SQLException("Not supported.");
 		}
 
 		public void clearWarnings() throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void setCursorName(String arg0) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public boolean execute(String arg0) throws SQLException {
-			// TODO Auto-generated method stub
-			return false;
+			throw new SQLException("Not supported.");
 		}
 
 		public ResultSet getResultSet() throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
+			throw new SQLException("Not supported.");
 		}
 
 		public int getUpdateCount() throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new SQLException("Not supported.");
 		}
 
 		public boolean getMoreResults() throws SQLException {
-			// TODO Auto-generated method stub
-			return false;
+			throw new SQLException("Not supported.");
 		}
 
 		public void setFetchDirection(int arg0) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public int getFetchDirection() throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new SQLException("Not supported.");
 		}
 
 		public void setFetchSize(int arg0) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public int getFetchSize() throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new SQLException("Not supported.");
 		}
 
 		public int getResultSetConcurrency() throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new SQLException("Not supported.");
 		}
 
 		public int getResultSetType() throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new SQLException("Not supported.");
 		}
 
 		public void addBatch(String arg0) throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public void clearBatch() throws SQLException {
-			// TODO Auto-generated method stub
-
+			throw new SQLException("Not supported.");
 		}
 
 		public int[] executeBatch() throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
+			throw new SQLException("Not supported.");
 		}
 
 		public Connection getConnection() throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
+			throw new SQLException("Not supported.");
 		}
 
 		public boolean getMoreResults(int arg0) throws SQLException {
-			// TODO Auto-generated method stub
-			return false;
+			throw new SQLException("Not supported.");
 		}
 
 		public ResultSet getGeneratedKeys() throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
+			throw new SQLException("Not supported.");
 		}
 
 		public int executeUpdate(String arg0, int arg1) throws SQLException {
@@ -795,8 +749,7 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 
 		public int getResultSetHoldability() throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new SQLException("Not supported.");
 		}
 	}
 

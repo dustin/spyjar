@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.sql.Types;
 
 import net.spy.SpyObject;
@@ -120,6 +121,13 @@ public abstract class GenericPreparedStatementStub extends SpyObject {
 
 	public void setTime(int a0, Time a1) throws SQLException {
 		setArg(a0, a1, Types.TIME);
+	}
+	
+	/**
+	 * Set a timetamp value.
+	 */
+	public void setTimestamp(int a0, Timestamp a1) throws SQLException {
+		setArg(a0, a1, Types.TIMESTAMP);
 	}
 
 	public void close() throws SQLException {

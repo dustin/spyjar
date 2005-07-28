@@ -767,9 +767,23 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 *
 	 * @exception SQLException if there's an error setting this argument.
 	 */
-	public void setSmallInt(String which,short a1)
+	public void setTinyInt(String which,short a1)
 		throws SQLException {
 		setArg(which, new Integer(a1), Types.SMALLINT);
+	}
+	
+	/**
+	 * Set a parameter to the tinyint value b of the type byte.
+	 */
+	public void set(String which, byte b) throws SQLException {
+		setArg(which, new Integer(b), Types.TINYINT);
+	}
+	
+	/**
+	 * Set a parameter to a tinyint value.
+	 */
+	public void set(String which, Byte b) throws SQLException {
+		setArg(which, new Integer(b.intValue()), Types.TINYINT);
 	}
 
 	/**
@@ -782,7 +796,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 */
 	public void set(String which,short a1)
 		throws SQLException {
-		setArg(which, new Integer(a1), Types.TINYINT);
+		setArg(which, new Integer(a1), Types.SMALLINT);
 	}
 
 	/**
@@ -793,7 +807,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 * @throws SQLException if there's a problem setting this value
 	 */
 	public void set(String which, Short s) throws SQLException {
-		setArg(which, new Integer(s.intValue()), Types.TINYINT);
+		setArg(which, new Integer(s.intValue()), Types.SMALLINT);
 	}
 
 	/**

@@ -4,18 +4,21 @@
 package net.spy.test;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 import junit.framework.TestCase;
-
 import net.spy.db.CachedResultSet;
 import net.spy.db.FileDriver;
 import net.spy.test.db.DeleteTest;
 import net.spy.test.db.DumpTestTable;
+import net.spy.test.db.ImplTest;
 import net.spy.test.db.ThreeColumnTest;
 import net.spy.util.SpyConfig;
 
@@ -120,7 +123,8 @@ public class FileDBTest extends TestCase {
 			int rv=dt.executeUpdate();
 			fail("Should not run unregistered spt, returned " + rv);
 		} catch(SQLException e) {
-			assertTrue(e.getMessage().startsWith("No mapping registered "));
+			assertTrue("Unexpected message:  " + e.getMessage(),
+				e.getMessage().startsWith("No mapping registered "));
 		} finally {
 			dt.close();
 		}
@@ -154,6 +158,35 @@ public class FileDBTest extends TestCase {
 		dt=new DeleteTest(conf2);
 		dt.setSomeColumn(26);
 		assertEquals(26, dt.executeUpdate());
+	}
+	
+	public void testBigSPTUpdate() throws Exception {
+		java.sql.Date d=new java.sql.Date(System.currentTimeMillis());
+		Time t=new Time(System.currentTimeMillis());
+		Timestamp ts=new Timestamp(System.currentTimeMillis());
+		ImplTest it=new ImplTest(conf);
+		fd.registerUpdate(url, it, new Object[] {
+			Boolean.TRUE, d, new Double("1.23"), new Float("1.234"),
+			new Integer(13), new Long("123"), new BigDecimal("6.8790"),
+			new BigDecimal("76.6470"), new Integer(6), new Integer(2),
+			"other", "string", t, ts}, 187);
+		
+		it.setParam1(true);
+		it.setParam2(d);
+		it.setParam3(1.23);
+		it.setParam4(1.234f);
+		it.setParam5(13);
+		it.setParam6(123);
+		it.setParam7(new BigDecimal("6.879"));
+		it.setParam8(new BigDecimal("76.647"));
+		it.setParam9((short)6);
+		it.setParam10((byte)2);
+		it.setParam11("other");
+		it.setParam12("string");
+		it.setParam13(t);
+		it.setParam14(ts);
+		
+		assertEquals(187, it.executeUpdate());
 	}
 
 	public void testBadArguments() throws Exception {
