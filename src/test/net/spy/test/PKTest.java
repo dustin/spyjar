@@ -81,8 +81,10 @@ public class PKTest extends TestCase {
 			BigDecimal val=getpk.getPrimaryKey(conf, "test_table");
 			fail("Expected a missing key, got " + val);
 		} catch(SQLException e) {
-			assertEquals("Did not update the correct number of rows for"
-				+ " test_table (got 0)", e.getMessage());
+			assertEquals("Incorrect row count for"
+				+ " test_table (got 0) - "
+				+ "This usually means the primary key table does not have "
+				+ "test_table or there is a case mismatch.", e.getMessage());
 		}
 
 		ConnectionSourceFactory cnf=ConnectionSourceFactory.getInstance();

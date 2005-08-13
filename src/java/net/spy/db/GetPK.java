@@ -268,7 +268,12 @@ public class GetPK extends SpyObject {
 				dbsp.close();
 			}
 			// Make sure one row got updated
-			if(changed!=1) {
+			if(changed==0) {
+				throw new SQLException("Incorrect row count for " + table
+					+ " (got " + changed + ") - "
+					+ "This usually means the primary key table does not have "
+					+ table + " or there is a case mismatch.");
+			} else if(changed>1) {
 				throw new SQLException(
 					"Did not update the correct number of rows for "
 						+ table + " (got " + changed + ")");
