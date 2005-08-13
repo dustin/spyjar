@@ -110,11 +110,15 @@ public class GetPK extends SpyObject {
 	public BigDecimal getPrimaryKey(SpyConfig conf, String table)
 		throws SQLException {
 
+		BigDecimal rv=null;
 		SpyDB db=new SpyDB(conf);
-		BigDecimal pk=getPrimaryKey(db, table.toLowerCase(),
-			makeDbTableKey(conf, table));
-		db.close();
-		return(pk);
+		try {
+			rv=getPrimaryKey(db, table.toLowerCase(),
+				makeDbTableKey(conf, table));
+		} finally {
+			db.close();
+		}
+		return(rv);
 	}
 
 	// make the key to be used for identifying this table and connection
@@ -257,32 +261,46 @@ public class GetPK extends SpyObject {
 			// Update the table first
 			DBSP dbsp=getUpdateDBSP(conn);
 			dbsp.set("table_name", table);
-			int changed=dbsp.executeUpdate();
+			int changed=0;
+			try {
+				changed=dbsp.executeUpdate();
+			} finally {
+				dbsp.close();
+			}
 			// Make sure one row got updated
 			if(changed!=1) {
 				throw new SQLException(
 					"Did not update the correct number of rows for "
 						+ table + " (got " + changed + ")");
 			}
-			dbsp.close();
 
 			// Now, fetch it again
+			BigDecimal start=null;
+			BigDecimal end=null;
+
 			dbsp=getSelectDBSP(conn);
-			dbsp.set("table_name", table);
-			ResultSet rs=dbsp.executeQuery();
-			if(!rs.next()) {
-				throw new SQLException("No results returned for primary key");
+			ResultSet rs=null;
+			try {
+				dbsp.set("table_name", table);
+				rs=dbsp.executeQuery();
+				if(!rs.next()) {
+					throw new SQLException(
+						"No results returned for primary key");
+				}
+				// Get the beginning and ending of the range
+				start=rs.getBigDecimal("first_key");
+				end=rs.getBigDecimal("last_key");
+				if(rs.next()) {
+					throw new SQLException(
+						"Too many results returned for primary key");
+				}
+			} finally {
+				// clean up
+				if(rs!=null) {
+					rs.close();
+				}
+				dbsp.close();
 			}
-			// Get the beginning and ending of the range
-			BigDecimal start=rs.getBigDecimal("first_key");
-			BigDecimal end=rs.getBigDecimal("last_key");
-			if(rs.next()) {
-				throw new SQLException(
-					"Too many results returned for primary key");
-			}
-			// clean up
-			rs.close();
-			dbsp.close();
 
 			KeyStore ks=new KeyStore(start, end);
 			if(getLogger().isDebugEnabled()) {

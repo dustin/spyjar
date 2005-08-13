@@ -84,6 +84,11 @@ public class PKTest extends TestCase {
 			assertEquals("Did not update the correct number of rows for"
 				+ " test_table (got 0)", e.getMessage());
 		}
+
+		ConnectionSourceFactory cnf=ConnectionSourceFactory.getInstance();
+		MockConnectionSource mockSource=
+			(MockConnectionSource)cnf.getConnectionSource(conf);
+		mockSource.verifyConnections();
 	}
 
 	private abstract static class BaseConnectionSource
