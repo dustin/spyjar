@@ -767,10 +767,8 @@ public class ThreadPool extends ThreadGroup {
 
 			threadId=threadIds++;
 
-			// System.out.println("RunThread " + threadId + " going online.");
-
 			// Adjust the name to include the thread number
-			setName("RunThread#" + threadId);
+			setName("RunThread[" + tg.getName() + "]#" + threadId);
 			// Note:  This should not be a daemon thread.
 			this.start();
 		}
