@@ -307,7 +307,7 @@ public class ThreadPool extends ThreadGroup {
 			synchronized(tasks) {
 				sb.append(tasks.size());
 			}
-			sb.append(" of a maximum");
+			sb.append(" of a maximum ");
 			sb.append(maxTaskQueueSize);
 			sb.append(" tasks queued");
 		}
