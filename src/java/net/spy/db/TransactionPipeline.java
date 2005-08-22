@@ -103,7 +103,7 @@ public class TransactionPipeline extends SpyObject {
 				// How long should we sleep before processing?
 				long age=System.currentTimeMillis() - startDate;
 				int sleepTime=(int)(MIN_TRANS_AGE - age);
-				if(age > MAX_SLEEP_TIME) {
+				if(sleepTime > MAX_SLEEP_TIME) {
 					sleepTime=MAX_SLEEP_TIME;
 				}
 				if(sleepTime > 0) {
