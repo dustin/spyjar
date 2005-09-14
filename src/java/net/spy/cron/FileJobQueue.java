@@ -54,29 +54,54 @@ import net.spy.util.SpyUtil;
  */
 public class FileJobQueue extends JobQueue {
 
+	private ClassLoader classLoader=null;
+
 	/**
 	 * Get a new FileJobQueue based on what's in the given file.
+	 * @param cl the class loader
 	 * @param f the file to read
 	 * @throws IOException if there's a problem reading the jobs
 	 */
-	public FileJobQueue(File f) throws IOException {
+	public FileJobQueue(ClassLoader cl, File f) throws IOException {
 		super();
 
+		classLoader=cl;
 		FileReader fr=new FileReader(f);
 		initQueue(fr);
 		fr.close();
+
+	}
+
+	/** 
+	 * Get a FileJobQueue from a file using the current classloader.
+	 * @param f the file
+	 */
+	public FileJobQueue(File f) throws IOException {
+		this(null, f);
+		classLoader=getClass().getClassLoader();
 	}
 
 	/** 
 	 * Get a new FileJobQueue from a Reader.
 	 * 
+	 * @param cl the classloader
 	 * @param r the reader
 	 * @throws IOException if there's a problem reading the jobs
 	 */
-	public FileJobQueue(Reader r) throws IOException {
+	public FileJobQueue(ClassLoader cl, Reader r) throws IOException {
 		super();
 
+		classLoader=cl;
 		initQueue(r);
+	}
+
+	/** 
+	 * Get a FileJobQueue from a reader using the current classloader.
+	 * @param r the reader
+	 */
+	public FileJobQueue(Reader r) throws IOException {
+		this(null, r);
+		classLoader = getClass().getClassLoader();
 	}
 
 	// Init the job queue.
@@ -145,13 +170,13 @@ public class FileJobQueue extends JobQueue {
 			// the job will run *right now*.
 			startDate=ti.nextDate(startDate);
 
-			rv=new MainJob(classS, args, startDate, ti);
+			rv=new MainJob(classLoader, classS, args, startDate, ti);
 		} else {
 			if(startDate.getTime() < System.currentTimeMillis()) {
 				getLogger().warn("At job on line " + lineNum
 					+ " is in the past.");
 			} else {
-				rv=new MainJob(classS, args, startDate);
+				rv=new MainJob(classLoader, classS, args, startDate);
 			}
 		}
 

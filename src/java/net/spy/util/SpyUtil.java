@@ -178,9 +178,19 @@ public class SpyUtil {
 	 */
 	public static void runClass(String classname, String args[])
 		throws Exception {
+		// If no classloader is given, use the classloader that loaded this
+		// class.
+		runClass(SpyUtil.class.getClassLoader(), classname, args);
+	}
+
+	/**
+	 * Class invoker (runs main(String[]) from a String array.
+	 */
+	public static void runClass(ClassLoader cl, String classname, String args[])
+		throws Exception {
 
 		// Load the class.
-		Class tclass=Class.forName(classname);
+		Class tclass=Class.forName(classname, true, cl);
 
 		// Find the method
 		Class paramtypes[] = new Class[1];

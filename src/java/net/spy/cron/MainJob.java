@@ -14,27 +14,31 @@ import net.spy.util.ThreadPoolRunnable;
  */
 public class MainJob extends Job implements ThreadPoolRunnable {
 
-	// The classname and the args to run.
+	// The classname and the args to run and the classloader in which to find
+	// the class.
+	private ClassLoader classLoader=null;
 	private String classname=null;
 	private String args[]=null;
 
 	/**
 	 * Get a new ``at style'' MainJob.
 	 */
-	public MainJob(String cName, String a[], Date startDate) {
+	public MainJob(ClassLoader cl, String cName, String a[], Date startDate) {
 		super("main:" + cName, startDate);
 		this.classname=cName;
 		this.args=a;
+		this.classLoader=cl;
 	}
 
 	/**
 	 * Get a new ``cron style'' MainJob.
 	 */
-	public MainJob(String cName, String a[],
+	public MainJob(ClassLoader cl, String cName, String a[],
 		Date startDate, TimeIncrement ti) {
 		super("main:" + cName, startDate, ti);
 		this.classname=cName;
 		this.args=a;
+		this.classLoader=cl;
 	}
 
 	/**
@@ -42,7 +46,7 @@ public class MainJob extends Job implements ThreadPoolRunnable {
 	 */
 	public void runJob() {
 		try {
-			SpyUtil.runClass(classname, args);
+			SpyUtil.runClass(classLoader, classname, args);
 		} catch(Exception e) {
 			getLogger().error("Problem invoking main class " + classname, e);
 		}
