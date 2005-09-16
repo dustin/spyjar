@@ -1,10 +1,11 @@
-// Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
+// Copyright (c) 2005  Dustin Sallings <dustin@spy.net>
 //
-// arch-tag: 69674B1C-1110-11D9-A825-000A957659CC
+// arch-tag: 2BE84A2E-8A66-42BE-80BC-FC0859D57B9D
 
 package net.spy.db;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.SortedMap;
@@ -47,15 +48,16 @@ import net.spy.util.SpyConfig;
  *
  * @see SpyDB
  */
-public class DefaultQuerySelector extends Object implements QuerySelector {
+public class DatabaseMetaDataQuerySelector extends Object
+	implements QuerySelector {
 
 	private SortedMap<String, String> nameMap=null;
 
 	/** 
-	 * Get an instance of DefaultQuerySelector.
+	 * Get an instance of DatabaseMetaDataQuerySelector.
 	 * This should really only be called from QuerySelectorFactory
 	 */
-	public DefaultQuerySelector() {
+	public DatabaseMetaDataQuerySelector() {
 		super();
 		nameMap=new TreeMap<String, String>();
 		initNameMap();
@@ -65,17 +67,13 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 	 * Initialize the prefix to name map.
 	 */
 	protected void initNameMap() {
-		// Postgres
-		registerNameMapping("org.postgresql.", "pgsql");
-
-		// Oracle
-		registerNameMapping("oracle.jdbc.driver.", "oracle");
-
-		// Weblogic's Oracle jDrvier
-		registerNameMapping("weblogic.jdbc.oci.", "oracle");
-
-		// Micro$oft MSSQL from New Atlanta
-		registerNameMapping("com.ashna.jturbo.", "mssql");
+		registerNameMapping("PostgreSQL", "pgsql");
+		registerNameMapping("Oracle", "oracle");
+		registerNameMapping("Microsoft SQL Server", "mssql");
+		registerNameMapping("MySQL", "mysql");
+		registerNameMapping("DB2 UDB for AS/400", "db2");
+		registerNameMapping("Informix Dynamic Server", "informix");
+		registerNameMapping("INFORMIX-OnLine", "informix");
 	}
 
 	/** 
@@ -91,36 +89,9 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 	/** 
 	 * @see QuerySelector
 	 */
-	public String getQuery(Connection conn, Map<String, String> queryMap) {
-		return(getQuery(conn.getClass().getName(), queryMap));
-	}
-
-	/** 
-	 * @see QuerySelector
-	 */
-	public String getQuery(SpyConfig conf, Map<String, String> queryMap) {
-		String rv=null;
-
-		// Find out if there's an explicit mapping in the config
-		String tmp=conf.get("queryName");
-
-		if (tmp != null) {
-			// If there is, use it.
-			rv=queryMap.get(tmp);
-		} else {
-			// If there's not, base it on the driver name
-			tmp=conf.get("dbDriverName");
-			if(tmp!=null) {
-				rv=getQuery(tmp, queryMap);
-			}
-		}
-
-		// If we didn't find anything, use the default.
-		if (rv==null) {
-			rv=queryMap.get(DEFAULT_QUERY);
-		}
-
-		return (rv);
+	public String getQuery(Connection conn, Map<String, String> queryMap)
+		throws SQLException {
+		return(getQuery(conn.getMetaData().getDatabaseProductName(), queryMap));
 	}
 
 	/** 
@@ -139,21 +110,7 @@ public class DefaultQuerySelector extends Object implements QuerySelector {
 			// Next, check to see if the name is in our translation map
 			String tmp=nameMap.get(name);
 
-			// If we didn't get a key directly, try a fuzzy search in the Map
-			if(tmp == null) {
-				try {
-					SortedMap<String, String> h=nameMap.headMap(name);
-					String key=h.lastKey();
-					if(name.startsWith(key)) {
-						tmp=nameMap.get(key);
-					}
-				} catch(NoSuchElementException e) {
-					// It wasn't there, and nothing like it was there, move
-					// along
-				}
-			} // not in the name map
-
-			// If we still don't have a key, use the default key
+			// If we don't have a key, use the default key
 			if(tmp == null) {
 				tmp=DEFAULT_QUERY;
 			}

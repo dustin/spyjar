@@ -105,17 +105,7 @@ public abstract class DBSQL extends DBSP {
 
 	private void selectQuery() throws SQLException {
 		QuerySelector qs=QuerySelectorFactory.getQuerySelector();
-		String query=null;
-		switch(getInitType()) {
-			case INIT_FROM_CONFIG:
-				query=qs.getQuery(getConfig(), registeredQueries);
-				break;
-			case INIT_FROM_CONN:
-				query=qs.getQuery(getConn(), registeredQueries);
-				break;
-			default:
-				throw new SQLException("Unknown init type:  " + getInitType());
-		}
+		String query=qs.getQuery(getConn(), registeredQueries);
 
 		if(query==null) {
 			throw new SQLException("Could not find query for "

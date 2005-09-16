@@ -13,7 +13,7 @@ import net.spy.log.LoggerFactory;
  *
  * If the system propery <code>net.spy.db.QuerySelector</code> is set, it
  * will point to the QuerySelector implementation to use, otherwise
- * {@link net.spy.db.DefaultQuerySelector} is used.
+ * {@link net.spy.db.DatabaseMetaDataQuerySelector} is used.
  */
 public class QuerySelectorFactory extends SpyObject {
 
@@ -22,7 +22,7 @@ public class QuerySelectorFactory extends SpyObject {
 	private static final String PROPERTY_NAME=
 		"net.spy.db.QuerySelector";
 	private static final String DEFAULT_SELECTOR=
-		"net.spy.db.DefaultQuerySelector";
+		"net.spy.db.DatabaseMetaDataQuerySelector";
 
 	/** 
 	 * Get the QuerySelector instance.
@@ -44,7 +44,7 @@ public class QuerySelectorFactory extends SpyObject {
 				Logger l=LoggerFactory.getLogger(QuerySelectorFactory.class);
 				l.warn("Couldn't make a " + selectorClassName
 					+ ", using " + DEFAULT_SELECTOR, e);
-				qs=new DefaultQuerySelector();
+				qs=new DatabaseMetaDataQuerySelector();
 			}
 		}
 	}

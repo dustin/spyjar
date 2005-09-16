@@ -5,6 +5,7 @@
 package net.spy.db;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Map;
 
 import net.spy.util.SpyConfig;
@@ -26,15 +27,7 @@ public interface QuerySelector {
 	 * @param queryMap the Map of queries by name
 	 * @return the query (as a String), null if a suitable query can't be found
 	 */
-	String getQuery(Connection conn, Map<String, String> queryMap);
-
-	/** 
-	 * Get the query for the given config.
-	 * 
-	 * @param conf a SpyConfig containing enough information to find a query
-	 * @param queryMap the Map of queries by name
-	 * @return the query (as a String), null if a suitable query can't be found
-	 */
-	String getQuery(SpyConfig conf, Map<String, String> queryMap);
+	String getQuery(Connection conn, Map<String, String> queryMap)
+		throws SQLException;
 
 }

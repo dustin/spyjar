@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
@@ -194,6 +195,18 @@ public class PKTest extends TestCase {
 				.with(new IsEqual(SELECT))
 				.will(new ReturnStub(getSelectStatementWithRange(first, last)));
 		}
+
+
+		protected void setupDBMD(Mock connMock) {
+			Mock dbMdMock=new Mock(DatabaseMetaData.class);
+			dbMdMock.expects(new InvokeAtLeastOnceMatcher())
+				.method("getDatabaseProductName")
+				.will(new ReturnStub("UnknownProduct"));
+			connMock.expects(new InvokeAtLeastOnceMatcher())
+				.method("getMetaData")
+				.will(new ReturnStub(dbMdMock.proxy()));
+		}
+
 	}
 
 	public static class SuccessConnectionSource extends BaseConnectionSource {
@@ -215,6 +228,8 @@ public class PKTest extends TestCase {
 			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
 				.with(new IsEqual(Boolean.TRUE)).id("enableAutocommit");
 			connMock.expects(new InvokeOnceMatcher()).method("close");
+
+			setupDBMD(connMock);
 		}
 
 	}
@@ -234,6 +249,8 @@ public class PKTest extends TestCase {
 			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
 				.with(new IsEqual(Boolean.TRUE)).id("enableAutocommit");
 			connMock.expects(new InvokeOnceMatcher()).method("close");
+
+			setupDBMD(connMock);
 		}
 
 	}

@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -50,6 +51,13 @@ public class SPTTest extends MockObjectTestCase {
 				.method("prepareStatement")
 				.with(eq("select ? as a_boolean\n"))
 				.will(returnValue(stMock.proxy()));
+		Mock mdMock=mock(DatabaseMetaData.class);
+		mdMock.expects(once())
+			.method("getDatabaseProductName")
+			.will(returnValue("Unknown database"));
+		connMock.expects(once())
+				.method("getMetaData")
+				.will(returnValue(mdMock.proxy()));
 		bt.setMaxRows(10);
 
 		boolean tryCursor=false;
@@ -208,42 +216,6 @@ public class SPTTest extends MockObjectTestCase {
 	}
 
 	/** 
-	 * Test an existing query selector by driver name.
-	 */
-	public void testQuerySelectionOracleByDriver() throws Exception {
-		SpyConfig conf=new SpyConfig();
-		conf.put("dbDriverName", "oracle.jdbc.driver.Driver");
-		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$OracleConnectionSource");
-		runQuerySelectorTest(conf);
-	}
-
-	/** 
-	 * Test an existing query selector by driver name (exact).
-	 */
-	public void testQuerySelectionOracleByExactDriverPrefix() throws Exception {
-		SpyConfig conf=new SpyConfig();
-		conf.put("dbDriverName", "oracle.jdbc.driver.");
-		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$OracleConnectionSource");
-		runQuerySelectorTest(conf);
-	}
-
-	/** 
-	 * Test an existing query selector by driver name (exact).
-	 */
-	public void testQuerySelectionOracleByExactDriver() throws Exception {
-		SpyConfig conf=new SpyConfig();
-		// This is a weird case when the key name is the same as a known query.
-		// Perhaps it makes sense if you name your queries directly after
-		// drivers.
-		conf.put("dbDriverName", "oracle");
-		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$OracleConnectionSource");
-		runQuerySelectorTest(conf);
-	}
-
-	/** 
 	 * Test the primary key selection spt.
 	 */
 	public void testSelectPrimaryKey() throws Exception {
@@ -339,6 +311,14 @@ public class SPTTest extends MockObjectTestCase {
 		protected abstract String getQuery();
 
 		protected void setupMock(Mock connMock, SpyConfig conf) {
+			Mock dbMdMock=new Mock(DatabaseMetaData.class);
+			dbMdMock.expects(new InvokeAtLeastOnceMatcher())
+				.method("getDatabaseProductName")
+				.will(new ReturnStub("UnknownProduct"));
+			connMock.expects(new InvokeAtLeastOnceMatcher())
+				.method("getMetaData")
+				.will(new ReturnStub(dbMdMock.proxy()));
+
 			Mock rsmdMock=new Mock(ResultSetMetaData.class);
 			rsmdMock.expects(new InvokeAtLeastOnceMatcher())
 				.method("getColumnCount")
