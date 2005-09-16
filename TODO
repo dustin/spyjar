@@ -1,7 +1,4 @@
 
-cron
-	Pass classloaders to instantiation
-
 pooling
 	push configurable pre/post checkout checks to PoolAble, set by PoolContainer
 
