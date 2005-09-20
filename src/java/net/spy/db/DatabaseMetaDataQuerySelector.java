@@ -11,36 +11,44 @@ import java.util.NoSuchElementException;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import net.spy.SpyObject;
 import net.spy.util.SpyConfig;
 
 /**
- * Default implementation of query selector.
+ * Query selection by database product name.
  *
  * This implementation of QuerySelector works by finding the best match for
- * the given Connection by package name.  If given a SpyConfig, it looks
- * for either an entry called <code>queryName</code> or a prefix match
- * against the driver name as specified for SpyDB.
+ * the given Connection by DatabaseMetaData's getDatabaseProductName().
  *
  * <p>
  *
- * The following driver prefixes are mapped to their respective names in
+ * The following product names are mapped to their respective names in
  * this implementation:
  *
  * <table border="1">
  *  <tr>
- *   <th>Driver class prefix</th><th>Query Name</th><th>Driver Provider</th>
+ *   <th>Driver driver name</th><th>Query Name</th>
  *  </tr>
  *  <tr>
- *   <td>org.postgresql.</td><td>pgsql</td><td>http://www.postgresql.org</td>
+ *   <td>PostgreSQL</td><td>pgsql</td>
  *  </tr>
  *  <tr>
- *   <td>oracle.jdbc.driver.</td><td>oracle</td><td>http://www.oracle.com</td>
+ *   <td>Oracle</td><td>oracle</td>
  *  </tr>
  *  <tr>
- *   <td>weblogic.jdbc.oci.</td><td>oracle</td><td>http://www.bea.com</td>
+ *   <td>Microsoft SQL Server</td><td>mssql</td>
  *  </tr>
  *  <tr>
- *   <td>com.ashna.jturbo.</td><td>mssql</td><td>http://www.newatlanta.com/</td>
+ *   <td>MySQL</td><td>mysql</td>
+ *  </tr>
+ *  <tr>
+ *   <td>DB2 UDB for AS/400</td><td>db2</td>
+ *  </tr>
+ *  <tr>
+ *   <td>Informix Dynamic Server</td><td>informix</td>
+ *  </tr>
+ *  <tr>
+ *   <td>INFORMIX-OnLine</td><td>informix</td>
  *  </tr>
  * </table>
  *
@@ -48,7 +56,7 @@ import net.spy.util.SpyConfig;
  *
  * @see SpyDB
  */
-public class DatabaseMetaDataQuerySelector extends Object
+public class DatabaseMetaDataQuerySelector extends SpyObject
 	implements QuerySelector {
 
 	private SortedMap<String, String> nameMap=null;
@@ -112,6 +120,9 @@ public class DatabaseMetaDataQuerySelector extends Object
 
 			// If we don't have a key, use the default key
 			if(tmp == null) {
+				if(getLogger().isDebugEnabled()) {
+					getLogger().debug("Unknown driver:  " + name);
+				}
 				tmp=DEFAULT_QUERY;
 			}
 			rv=queryMap.get(tmp);
