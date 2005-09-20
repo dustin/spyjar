@@ -182,17 +182,6 @@ public class SPTTest extends MockObjectTestCase {
 	}
 
 	/** 
-	 * Test an existing query selector.
-	 */
-	public void testQuerySelectionOracle() throws Exception {
-		SpyConfig conf=new SpyConfig();
-		conf.put("queryName", "oracle");
-		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$OracleConnectionSource");
-		runQuerySelectorTest(conf);
-	}
-
-	/** 
 	 * Test an existing query selector by driver name for a driver whose query
 	 * we don't have.
 	 */

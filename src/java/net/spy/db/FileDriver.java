@@ -365,9 +365,7 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 
 		public DatabaseMetaData getMetaData() throws SQLException {
-			// TODO DatabaseMetaData is a particularly difficult thing to
-			// implement
-			return null;
+			return new FileDriverMetaData(this, url);
 		}
 
 		public void setReadOnly(boolean arg0) throws SQLException {
@@ -753,4 +751,700 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 	}
 
+	private static final class FileDriverMetaData extends SpyObject
+		implements DatabaseMetaData {
+		
+		private Connection conn=null;
+		private String url=null;
+		
+		public FileDriverMetaData(Connection c, String u) {
+			super();
+			conn=c;
+			url=u;
+		}
+
+		public boolean allProceduresAreCallable() throws SQLException {
+			return false;
+		}
+
+		public boolean allTablesAreSelectable() throws SQLException {
+			return false;
+		}
+
+		public String getURL() throws SQLException {
+			return url;
+		}
+
+		public String getUserName() throws SQLException {
+			return "user";
+		}
+
+		public boolean isReadOnly() throws SQLException {
+			return false;
+		}
+
+		public boolean nullsAreSortedHigh() throws SQLException {
+			return false;
+		}
+
+		public boolean nullsAreSortedLow() throws SQLException {
+			return true;
+		}
+
+		public boolean nullsAreSortedAtStart() throws SQLException {
+			return false;
+		}
+
+		public boolean nullsAreSortedAtEnd() throws SQLException {
+			return true;
+		}
+
+		public String getDatabaseProductName() throws SQLException {
+			return "SpyDB FileDriver";
+		}
+
+		public String getDatabaseProductVersion() throws SQLException {
+			return "2.1";
+		}
+
+		public String getDriverName() throws SQLException {
+			return "SpyDB FileDriver";
+		}
+
+		public String getDriverVersion() throws SQLException {
+			return "2.1";
+		}
+
+		public int getDriverMajorVersion() {
+			return 2;
+		}
+
+		public int getDriverMinorVersion() {
+			return 1;
+		}
+
+		public boolean usesLocalFiles() throws SQLException {
+			return true;
+		}
+
+		public boolean usesLocalFilePerTable() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsMixedCaseIdentifiers() throws SQLException {
+			return true;
+		}
+
+		public boolean storesUpperCaseIdentifiers() throws SQLException {
+			return true;
+		}
+
+		public boolean storesLowerCaseIdentifiers() throws SQLException {
+			return true;
+		}
+
+		public boolean storesMixedCaseIdentifiers() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException {
+			return true;
+		}
+
+		public boolean storesUpperCaseQuotedIdentifiers() throws SQLException {
+			return false;
+		}
+
+		public boolean storesLowerCaseQuotedIdentifiers() throws SQLException {
+			return true;
+		}
+
+		public boolean storesMixedCaseQuotedIdentifiers() throws SQLException {
+			return true;
+		}
+
+		public String getIdentifierQuoteString() throws SQLException {
+			return "\"";
+		}
+
+		public String getSQLKeywords() throws SQLException {
+			return "";
+		}
+
+		public String getNumericFunctions() throws SQLException {
+			return "";
+		}
+
+		public String getStringFunctions() throws SQLException {
+			return "";
+		}
+
+		public String getSystemFunctions() throws SQLException {
+			return "";
+		}
+
+		public String getTimeDateFunctions() throws SQLException {
+			return "";
+		}
+
+		public String getSearchStringEscape() throws SQLException {
+			return "";
+		}
+
+		public String getExtraNameCharacters() throws SQLException {
+			return "";
+		}
+
+		public boolean supportsAlterTableWithAddColumn() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsAlterTableWithDropColumn() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsColumnAliasing() throws SQLException {
+			return true;
+		}
+
+		public boolean nullPlusNonNullIsNull() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsConvert() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsConvert(int fromType, int toType) throws SQLException {
+			return true;
+		}
+
+		public boolean supportsTableCorrelationNames() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsDifferentTableCorrelationNames() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsExpressionsInOrderBy() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsOrderByUnrelated() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsGroupBy() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsGroupByUnrelated() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsGroupByBeyondSelect() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsLikeEscapeClause() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsMultipleResultSets() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsMultipleTransactions() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsNonNullableColumns() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsMinimumSQLGrammar() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsCoreSQLGrammar() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsExtendedSQLGrammar() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsANSI92EntryLevelSQL() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsANSI92IntermediateSQL() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsANSI92FullSQL() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsIntegrityEnhancementFacility() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsOuterJoins() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsFullOuterJoins() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsLimitedOuterJoins() throws SQLException {
+			return true;
+		}
+
+		public String getSchemaTerm() throws SQLException {
+			return "schema";
+		}
+
+		public String getProcedureTerm() throws SQLException {
+			return "procedure";
+		}
+
+		public String getCatalogTerm() throws SQLException {
+			return "catalog";
+		}
+
+		public boolean isCatalogAtStart() throws SQLException {
+			return false;
+		}
+
+		public String getCatalogSeparator() throws SQLException {
+			return ".";
+		}
+
+		public boolean supportsSchemasInDataManipulation() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsSchemasInProcedureCalls() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsSchemasInTableDefinitions() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsSchemasInIndexDefinitions() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsCatalogsInDataManipulation() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsCatalogsInProcedureCalls() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsCatalogsInTableDefinitions() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsPositionedDelete() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsPositionedUpdate() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsSelectForUpdate() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsStoredProcedures() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsSubqueriesInComparisons() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsSubqueriesInExists() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsSubqueriesInIns() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsSubqueriesInQuantifieds() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsCorrelatedSubqueries() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsUnion() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsUnionAll() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
+			return true;
+		}
+
+		public int getMaxBinaryLiteralLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxCharLiteralLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxColumnNameLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxColumnsInGroupBy() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxColumnsInIndex() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxColumnsInOrderBy() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxColumnsInSelect() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxColumnsInTable() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxConnections() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxCursorNameLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxIndexLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxSchemaNameLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxProcedureNameLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxCatalogNameLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxRowSize() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public boolean doesMaxRowSizeIncludeBlobs() throws SQLException {
+			return false;
+		}
+
+		public int getMaxStatementLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxStatements() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxTableNameLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxTablesInSelect() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getMaxUserNameLength() throws SQLException {
+			return Integer.MAX_VALUE;
+		}
+
+		public int getDefaultTransactionIsolation() throws SQLException {
+			return Connection.TRANSACTION_SERIALIZABLE;
+		}
+
+		public boolean supportsTransactions() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsTransactionIsolationLevel(int level) throws SQLException {
+			return true;
+		}
+
+		public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsDataManipulationTransactionsOnly() throws SQLException {
+			return false;
+		}
+
+		public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
+			return false;
+		}
+
+		public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
+			return false;
+		}
+
+		public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getSchemas() throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getCatalogs() throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getTableTypes() throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getVersionColumns(String catalog, String schema, String table) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getCrossReference(String primaryCatalog, String primarySchema, String primaryTable, String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getTypeInfo() throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public boolean supportsResultSetType(int type) throws SQLException {
+			return true;
+		}
+
+		public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
+			return true;
+		}
+
+		public boolean ownUpdatesAreVisible(int type) throws SQLException {
+			return true;
+		}
+
+		public boolean ownDeletesAreVisible(int type) throws SQLException {
+			return true;
+		}
+
+		public boolean ownInsertsAreVisible(int type) throws SQLException {
+			return true;
+		}
+
+		public boolean othersUpdatesAreVisible(int type) throws SQLException {
+			return false;
+		}
+
+		public boolean othersDeletesAreVisible(int type) throws SQLException {
+			return false;
+		}
+
+		public boolean othersInsertsAreVisible(int type) throws SQLException {
+			return false;
+		}
+
+		public boolean updatesAreDetected(int type) throws SQLException {
+			return false;
+		}
+
+		public boolean deletesAreDetected(int type) throws SQLException {
+			return false;
+		}
+
+		public boolean insertsAreDetected(int type) throws SQLException {
+			return false;
+		}
+
+		public boolean supportsBatchUpdates() throws SQLException {
+			return true;
+		}
+
+		public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public Connection getConnection() throws SQLException {
+			return conn;
+		}
+
+		public boolean supportsSavepoints() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsNamedParameters() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsMultipleOpenResults() throws SQLException {
+			return true;
+		}
+
+		public boolean supportsGetGeneratedKeys() throws SQLException {
+			return false;
+		}
+
+		public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public boolean supportsResultSetHoldability(int holdability) throws SQLException {
+			return false;
+		}
+
+		public int getResultSetHoldability() throws SQLException {
+			return ResultSet.CLOSE_CURSORS_AT_COMMIT;
+		}
+
+		public int getDatabaseMajorVersion() throws SQLException {
+			return 2;
+		}
+
+		public int getDatabaseMinorVersion() throws SQLException {
+			// TODO Auto-generated method stub
+			return 1;
+		}
+
+		public int getJDBCMajorVersion() throws SQLException {
+			return 3;
+		}
+
+		public int getJDBCMinorVersion() throws SQLException {
+			return 0;
+		}
+
+		public int getSQLStateType() throws SQLException {
+			// XXX:  I don't know where this is defined off hand
+			return 0;
+		}
+
+		public boolean locatorsUpdateCopy() throws SQLException {
+			return false;
+		}
+
+		public boolean supportsStatementPooling() throws SQLException {
+			return false;
+		}
+		
+	}
 }
