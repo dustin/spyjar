@@ -188,6 +188,7 @@ public class SpyDB extends SpyObject {
 			// to hear that we're done with it.
 			if(conn!=null) {
 				source.returnConnection(conn);
+				conn=null;
 			}
 		}
 		isClosed=true;
