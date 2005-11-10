@@ -265,12 +265,7 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 
 		public int hashCode() {
-			int rv=query.hashCode();
-			for(int i=0; i<args.length; i++) {
-				if(args[i] != null) {
-					rv ^= args[i].hashCode();
-				}
-			}
+			int rv=query.hashCode() ^ args.length;
 			return(rv);
 		}
 
@@ -278,8 +273,24 @@ public class FileDriver extends SpyObject implements Driver {
 			boolean rv=false;
 			if(o instanceof ParameterizedQuery) {
 				ParameterizedQuery pq=(ParameterizedQuery)o;
-				if(query.equals(pq.query)) {
-					rv=Arrays.equals(args, pq.args);
+				if(query.equals(pq.query) && args.length == pq.args.length) {
+					// Default to true, try to disprove
+					rv=true;
+					// Look at each argument and validate that it's either
+					// the same, or the pq has a matcher that likes what it
+					// sees
+					for(int i=0; i<pq.args.length; i++) {
+						if(pq.args[i] instanceof ParamMatcher) {
+							ParamMatcher pm=(ParamMatcher)pq.args[i];
+							rv &= pm.matches(args[i]);
+						} else {
+							if(pq.args[i] == null) {
+								rv &= (args[i] == null);
+							} else {
+								rv &= pq.args[i].equals(args[i]);
+							}
+						}
+					}
 				}
 			}
 			return(rv);
@@ -296,6 +307,39 @@ public class FileDriver extends SpyObject implements Driver {
 			}
 			return("{ParameterizedQuery ``" + query + "'' with "
 				+ paramStrings + "}");
+		}
+	}
+
+	/** 
+	 * Parameter matching interface for fuzzy matches on query parameters.
+	 */
+	public static interface ParamMatcher {
+		/** 
+		 * Return true if this parameter matches the given object.
+		 */
+		boolean matches(Object o);
+	}
+
+	/** 
+	 * Parameter matching instance that matches any parameter.
+	 */
+	public static class AnyParamMatcher implements ParamMatcher {
+		public boolean matches(Object o) {
+			return(true);
+		}
+	}
+
+	/** 
+	 * Parameter matching instance that matches objects by class.
+	 */
+	public static class ClassParamMatcher implements ParamMatcher {
+		private Class theClass=null;
+		public ClassParamMatcher(Class c) {
+			super();
+			theClass=c;
+		}
+		public boolean matches(Object o) {
+			return(theClass.equals(o.getClass()));
 		}
 	}
 

@@ -350,4 +350,40 @@ public class FileDBTest extends TestCase {
 		cacheTest(null, new Integer(3), null);
 	}
 
+	public void testAnyMatcher() throws Exception {
+		DeleteTest dt=new DeleteTest(conf);
+		fd.clearQueries();
+		fd.registerUpdate(url, dt, new Object[]{
+			new FileDriver.AnyParamMatcher()}, 13);
+
+		dt.setSomeColumn(11);
+		assertEquals(13, dt.executeUpdate());
+		// Run it again
+		assertEquals(13, dt.executeUpdate());
+		// Try it at 19
+		dt.setSomeColumn(19);
+		assertEquals(13, dt.executeUpdate());
+		// Try it again at 13
+		dt.setSomeColumn(13);
+		assertEquals(13, dt.executeUpdate());
+
+		dt.close();
+	}
+
+	public void testClassMatcher() throws Exception {
+		DeleteTest dt=new DeleteTest(conf);
+		fd.clearQueries();
+		fd.registerUpdate(url, dt, new Object[]{
+			new FileDriver.ClassParamMatcher(Integer.class)}, 7);
+
+		dt.setSomeColumn(19);
+		assertEquals(7, dt.executeUpdate());
+		// Run it again
+		assertEquals(7, dt.executeUpdate());
+		dt.setSomeColumn(119);
+		assertEquals(7, dt.executeUpdate());
+
+		dt.close();
+	}
+
 }
