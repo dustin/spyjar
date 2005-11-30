@@ -190,6 +190,9 @@ public class SPGen extends SpyObject {
 			typ="java.sql.Types.VARCHAR";
 			javaTypes.put(typ, "String");
 			javaResultTypes.put(typ, "String");
+			typ="java.sql.Types.CLOB";
+			javaTypes.put(typ, "String");
+			javaResultTypes.put(typ, "String");
 			typ="java.sql.Types.TIME";
 			javaTypes.put(typ, "Time");
 			javaResultTypes.put(typ, "java.sql.Time");
