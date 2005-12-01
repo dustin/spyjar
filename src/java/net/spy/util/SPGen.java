@@ -279,7 +279,6 @@ public class SPGen extends SpyObject {
 	private String createSetMethod(Parameter p) throws Exception {
 		String rv=null;
 		String atypes[]=null;
-		boolean customtype=false;
 
 		// Get the type map entry for this parameter
 		try {
@@ -291,7 +290,6 @@ public class SPGen extends SpyObject {
 			getLogger().warn("Can't set all types for " + p, e);
 			String typesTmp[]={"java.lang.Object"};
 			atypes=typesTmp;
-			customtype=true;
 		}
 
 		String methodName=methodify(p.getName());
@@ -312,14 +310,9 @@ public class SPGen extends SpyObject {
 			if(isInterface) {
 				rv+=";\n";
 			} else {
-				if (customtype) {
-					rv+=" {\n\n"
-						+ "\t\tsetArg(\"" + p.getName() + "\", to, "
-						+ p.getType() +");\n\t}\n";
-				} else {
-					rv+=" {\n\n"
-						+ "\t\tset(\"" + p.getName() + "\", to);\n\t}\n";
-				}
+				rv+=" {\n\n"
+					+ "\t\tsetArg(\"" + p.getName() + "\", to, "
+					+ p.getType() +");\n\t}\n";
 			}
 		}
 

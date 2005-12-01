@@ -528,16 +528,16 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 						pst.setDate(i, (java.sql.Date)o);
 						break;
 					case Types.DOUBLE:
-						pst.setDouble(i, ((Double)o).doubleValue());
+						pst.setDouble(i, ((Number)o).doubleValue());
 						break;
 					case Types.FLOAT:
-						pst.setFloat(i, ((Float)o).floatValue());
+						pst.setFloat(i, ((Number)o).floatValue());
 						break;
 					case Types.INTEGER:
-						pst.setInt(i, ((Integer)o).intValue());
+						pst.setInt(i, ((Number)o).intValue());
 						break;
 					case Types.BIGINT:
-						pst.setLong(i, ((Long)o).longValue());
+						pst.setLong(i, ((Number)o).longValue());
 						break;
 					case Types.NUMERIC:
 					case Types.DECIMAL:
@@ -547,7 +547,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 						break;
 					case Types.SMALLINT:
 					case Types.TINYINT:
-						pst.setShort(i, (short)((Integer)o).intValue());
+						pst.setShort(i, (short)((Number)o).intValue());
 						break;
 					case Types.NULL:
 						pst.setNull(i, ((DBNull)o).getType());
@@ -555,6 +555,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 					case Types.OTHER:
 						pst.setObject(i, o);
 						break;
+					case Types.CLOB:
 					case Types.VARCHAR:
 						pst.setString(i, (String)o);
 						break;

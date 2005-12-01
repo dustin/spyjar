@@ -1,0 +1,16 @@
+#
+# Copyright (c) 2005 Dustin Sallings <dustin@spy.net>
+# arch-tag: 88CB4429-6091-4E10-8BE9-B1BAF6B8ABD7
+#
+
+@package
+net.spy.test.db
+
+@description
+Test a clob.
+
+@sql
+insert into blah values(?)
+
+@params
+clob required CLOB Test clob.

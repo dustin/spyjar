@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import junit.framework.TestCase;
 import net.spy.db.CachedResultSet;
 import net.spy.db.FileDriver;
+import net.spy.test.db.ClobTest;
 import net.spy.test.db.DeleteTest;
 import net.spy.test.db.DumpTestTable;
 import net.spy.test.db.ImplTest;
@@ -77,6 +78,8 @@ public class FileDBTest extends TestCase {
 		fd.registerUpdate(url, dt, new Object[]{new Integer(13)}, 13);
 		
 		fd.registerUpdate(url2, dt, new Object[]{new Integer(26)}, 26);
+
+		fd.registerUpdate(url, new ClobTest(conf), new Object[]{"test"}, 1);
 	}
 
 	protected void tearDown() {
@@ -384,6 +387,13 @@ public class FileDBTest extends TestCase {
 		assertEquals(7, dt.executeUpdate());
 
 		dt.close();
+	}
+
+	public void testClob() throws Exception {
+		ClobTest ct=new ClobTest(conf);
+		ct.setClob("test");
+		assertEquals(1, ct.executeUpdate());
+		ct.close();
 	}
 
 }
