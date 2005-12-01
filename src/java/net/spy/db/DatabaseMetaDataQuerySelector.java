@@ -7,12 +7,10 @@ package net.spy.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import net.spy.SpyObject;
-import net.spy.util.SpyConfig;
 
 /**
  * Query selection by database product name.

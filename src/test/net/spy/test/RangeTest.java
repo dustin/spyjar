@@ -189,8 +189,6 @@ public class RangeTest extends TestCase {
 		Range athroughb=new Range(a, b);
 		Range athrougha=new Range(a, a);
 		Range nullthroughb=new Range(null, b);
-		Range nullthrougha=new Range(null, a);
-		Range athroughnull=new Range(a, null);
 		Range bthroughnull=new Range(b, null);
 
 		// Exclusive matched ends

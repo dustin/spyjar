@@ -209,7 +209,7 @@ public class DiskCacheTest extends TestCase {
 	 * Test cache walking.
 	 */
 	public void testCacheWalkingWithRemoval() throws Exception {
-		Map pairs=initCache();
+		initCache();
 
 		// Now, walk the cache, removing every other entry
 		Set cacheSet=cache.entrySet();
@@ -225,7 +225,7 @@ public class DiskCacheTest extends TestCase {
 		}
 
 		for(Iterator i=cacheSet.iterator(); i.hasNext(); ) {
-			Map.Entry me=(Map.Entry)i.next();
+			i.next();
 
 			// Remove every other entry.
 			if(n%2 == 0) {
