@@ -24,7 +24,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	public ReferenceSet() {
 		super();
 
-		contents=new HashSet();
+		contents=new HashSet<Reference<T>>();
 	}
 
 	/** 
@@ -34,7 +34,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	 */
 	public ReferenceSet(int n) {
 		super();
-		contents=new HashSet(n);
+		contents=new HashSet<Reference<T>>(n);
 	}
 
 	/** 
@@ -49,7 +49,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 				"Null collection provided to ReferenceSet");
 		}
 
-		contents = new HashSet(c.size() * 2);
+		contents = new HashSet<Reference<T>>(c.size() * 2);
 
 		// Copy references into the content map
 		for(T o : c) {
@@ -95,8 +95,8 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	 * with HashMap and Iterator that would otherwise require me to
 	 * duplicate all of HashMap.
 	 */
-	public Iterator iterator() {
-		return(new ReferenceIterator(contents.iterator()));
+	public Iterator<T> iterator() {
+		return(new ReferenceIterator<T>(contents.iterator()));
 	}
 
 	/** 

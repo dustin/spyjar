@@ -8,8 +8,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 
-import net.spy.util.SpyConfig;
-
 /**
  * Select the most appropriate query for the given DBSQL instance.
  */

@@ -23,7 +23,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	 */
 	public WeakHashSet() {
 		super();
-		map=new WeakHashMap();
+		map=new WeakHashMap<T, Object>();
 	}
 
 	/** 
@@ -33,7 +33,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	 */
 	public WeakHashSet(int n) {
 		super();
-		map=new WeakHashMap(n);
+		map=new WeakHashMap<T, Object>(n);
 	}
 
 	/** 

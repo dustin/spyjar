@@ -54,14 +54,14 @@ public class SpyUtilTest extends TestCase {
 	 * Test the basics of join.
 	 */
 	public void testJoin() {
-		Collection a=new ArrayList();
+		Collection<Object> a=new ArrayList<Object>();
 		a.add("a");
 		a.add("b");
 		a.add("c");
 
 		String col=SpyUtil.join(a, ",");
 		String it=SpyUtil.join(a.iterator(), ",");
-		String en=SpyUtil.join(new Vector(a).elements(), ",");
+		String en=SpyUtil.join(new Vector<Object>(a).elements(), ",");
 
 		assertEquals("a,b,c", col);
 		assertEquals("a,b,c", it);
@@ -128,11 +128,12 @@ public class SpyUtilTest extends TestCase {
 	 * Test the Enumeriterator implementation.
 	 */
 	public void testEnumeriterator() throws Exception {
-		Vector v=new Vector();
+		Vector<String> v=new Vector<String>();
 		v.add("a");
 		v.add("b");
 		v.add("c");
-		for(Iterator i=new Enumeriterator(v.elements()); i.hasNext(); ) {
+		for(Iterator<String> i
+				=new Enumeriterator<String>(v.elements()); i.hasNext(); ) {
 			i.next();
 			try {
 				i.remove();

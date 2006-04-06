@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
  * but may not otherwise be modified.  Individual entries may not be
  * accessed directly, only via the iterator.
  */
-public class RingBuffer<T extends Object> extends AbstractCollection<T>
+public class RingBuffer<T> extends AbstractCollection<T>
 	implements Serializable {
 
 	private T buf[]=null;
@@ -32,6 +32,7 @@ public class RingBuffer<T extends Object> extends AbstractCollection<T>
 	/**
 	 * Get an instance of RingBuffer.
 	 */
+	@SuppressWarnings("unchecked")
 	public RingBuffer(int s) {
 		super();
 		buf=(T[])new Object[s];
@@ -92,7 +93,7 @@ public class RingBuffer<T extends Object> extends AbstractCollection<T>
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(256);
+		StringBuilder sb=new StringBuilder(256);
 		sb.append("{RingBuffer cap=");
 		sb.append(getCapacity());
 		sb.append(" s=");
@@ -105,7 +106,7 @@ public class RingBuffer<T extends Object> extends AbstractCollection<T>
 			sb.append(" ");
 		}
 		sb.append("]\n\t");
-		ArrayList a=new ArrayList(this);
+		ArrayList<T> a=new ArrayList<T>(this);
 		sb.append(a.toString());
 		sb.append("}");
 		return(sb.toString());

@@ -55,7 +55,7 @@ public class SPGenTask extends MatchingTask {
 	private String superclass=null;
 	private String dbcpSuperclass=null;
 	private String dbspSuperclass=null;
-	private Set interfaces=null;
+	private Set<String> interfaces=null;
 	private boolean verbose=false;
 
 	/**
@@ -274,11 +274,12 @@ public class SPGenTask extends MatchingTask {
 	}
 
 	/**
-	 * Add a space separated set of interfaces to have generated classes implement.
+	 * Add a space separated set of interfaces to have generated classes
+	 * implement.
 	 * @param to a space separated list of fully qualified interface names.
 	 */
 	public void setInterfaces(String to) {
-		interfaces = new HashSet();
+		interfaces = new HashSet<String>();
 		for(StringTokenizer st=new StringTokenizer(to); st.hasMoreTokens();) {
 			interfaces.add(st.nextToken());
 		}

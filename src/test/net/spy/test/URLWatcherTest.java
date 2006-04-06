@@ -121,7 +121,7 @@ public class URLWatcherTest extends TestCase {
 			"http://bleu.west.spy.net/~dustin/projects/spytest.xtp",
 			"http://bleu.west.spy.net/~dustin/projects/spyjar.xtp"};
 
-		HashMap content=new HashMap();
+		HashMap<URL, String> content=new HashMap<URL, String>();
 		
 		for(int i=0; i<urls.length; i++) {
 			URL u=new URL(urls[i]);
@@ -145,7 +145,7 @@ public class URLWatcherTest extends TestCase {
 			assertNotNull("Didn't get content for " + u + " 2nd time", s);
 
 			// Verify it looks the same.
-			String s1=(String)content.get(u);
+			String s1=content.get(u);
 			assertNotNull("Saved content was null for " + u, s1);
 
 			assertEquals("Second run was different for " + u, s1, s);

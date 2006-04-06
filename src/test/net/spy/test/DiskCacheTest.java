@@ -89,8 +89,8 @@ public class DiskCacheTest extends TestCase {
 		f.mkdirs();
 	}
 
-	private Map initCache() throws IOException {
-		HashMap pairs=new HashMap();
+	private Map<String, String> initCache() throws IOException {
+		HashMap<String, String> pairs=new HashMap<String, String>();
 
 		for(int i=0; i<100; i++) {
 			String key=PwGen.getPass(8);
@@ -106,7 +106,7 @@ public class DiskCacheTest extends TestCase {
 	 * Test basic functionality of the disk cache.
 	 */
 	public void testBasicDiskCache() throws Exception {
-		Map pairs=initCache();
+		Map<String, String> pairs=initCache();
 
 		for(Iterator i=pairs.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
@@ -146,7 +146,7 @@ public class DiskCacheTest extends TestCase {
 	 * Test basic functionality of the disk cache.
 	 */
 	public void testBasicDiskCacheNew() throws Exception {
-		Map pairs=initCache();
+		Map<String, String> pairs=initCache();
 
 		for(Iterator i=pairs.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
@@ -158,8 +158,9 @@ public class DiskCacheTest extends TestCase {
 	/** 
 	 * Test cache walking.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testCacheWalking() throws Exception {
-		Map pairs=initCache();
+		Map<String, String> pairs=initCache();
 
 		// First, walk the map
 		for(Iterator i=pairs.entrySet().iterator(); i.hasNext(); ) {
@@ -170,10 +171,10 @@ public class DiskCacheTest extends TestCase {
 
 		// Now, walk the cache
 		int n=0;
-		Set s=new HashSet();
+		Set<String> s=new HashSet<String>();
 		Map.Entry lastEntry=null;
 		for(Iterator i=cache.entrySet().iterator(); i.hasNext(); ) {
-			Map.Entry me=(Map.Entry)i.next();
+			Map.Entry<String, String> me=(Map.Entry<String, String>)i.next();
 
 			// Make sure we haven't seen this record before
 			assertTrue("Already seen " + me.getKey() + " at " + n,

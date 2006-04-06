@@ -81,7 +81,7 @@ public class CacheTest extends TestCase {
 
 		// OK, now store it
 		i=new Integer(++val);
-		cache.store(key, new SoftReference(i), 250);
+		cache.store(key, new SoftReference<Integer>(i), 250);
 
 		// Check again immediately
 		i=(Integer)cache.get(key);

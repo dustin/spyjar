@@ -30,12 +30,12 @@ public class ReferenceSetsTest extends TestCase {
 	 * -- core duo.  I wouldn't necessarily expect it to.
 	 */
 	public void xtestGCWeakHash() {
-		Set<String> s=new java.util.HashSet();
+		Set<String> s=new java.util.HashSet<String>();
 		for(int i=0; i<100; i++) {
 			s.add("Blah" + i);
 		}
 
-		WeakHashSet<String> whs=new WeakHashSet(s);
+		WeakHashSet<String> whs=new WeakHashSet<String>(s);
 
 		assertEquals("Size didn't match", whs.size(), s.size());
 
@@ -56,7 +56,7 @@ public class ReferenceSetsTest extends TestCase {
 	}
 
 	private void equalityTestFor(Set<String> rhs) {
-		Set<String> s=new java.util.HashSet();
+		Set<String> s=new java.util.HashSet<String>();
 		for(int i=0; i<100; i++) {
 			s.add("Blah" + i);
 		}
@@ -79,7 +79,7 @@ public class ReferenceSetsTest extends TestCase {
 		}
 	}
 
-	private void basicTestFor(Set s) {
+	private void basicTestFor(Set<String> s) {
 		assertFalse(s.contains("a"));
 		assertFalse(s.contains(null));
 		s.add("a");
@@ -89,20 +89,20 @@ public class ReferenceSetsTest extends TestCase {
 	}
 
 	public void testBasicSetStuff() {
-		basicTestFor(new WeakHashSet());
-		basicTestFor(new SoftHashSet());
+		basicTestFor(new WeakHashSet<String>());
+		basicTestFor(new SoftHashSet<String>());
 	}
 
 	/** 
 	 * Verify equality (lookup, etc...) works.
 	 */
 	public void testEquality() {
-		equalityTestFor(new WeakHashSet(100));
-		equalityTestFor(new SoftHashSet(100));
+		equalityTestFor(new WeakHashSet<String>(100));
+		equalityTestFor(new SoftHashSet<String>(100));
 	}
 
-	private void removalTestFor(Set rhs) {
-		Set<String> s=new java.util.HashSet();
+	private void removalTestFor(Set<String> rhs) {
+		Set<String> s=new java.util.HashSet<String>();
 		for(int i=0; i<100; i++) {
 			s.add("Blah" + i);
 		}
@@ -128,9 +128,9 @@ public class ReferenceSetsTest extends TestCase {
 	 * Test refset removal.
 	 */
 	public void testRemoval() {
-		removalTestFor(new WeakHashSet(100));
+		removalTestFor(new WeakHashSet<String>(100));
 		try {
-			removalTestFor(new SoftHashSet(100));
+			removalTestFor(new SoftHashSet<String>(100));
 			fail("I didn't know SoftHashSet supported iterator removal!?");
 		} catch(UnsupportedOperationException e) {
 			// pass
@@ -154,35 +154,35 @@ public class ReferenceSetsTest extends TestCase {
 	 * Test the iterators.
 	 */
 	public void testIterators() {
-		Set<String> s=new java.util.HashSet();
+		Set<String> s=new java.util.HashSet<String>();
 		for(int i=0; i<10; i++) {
 			s.add("Blah" + i);
 		}
 
-		runIteratorTest(new SoftHashSet(s));
-		runIteratorTest(new WeakHashSet(s));
+		runIteratorTest(new SoftHashSet<String>(s));
+		runIteratorTest(new WeakHashSet<String>(s));
 	}
 
 	/** 
 	 * Constructor tests.
 	 */
 	public void testConstructors() {
-		Set<String> s=new java.util.HashSet();
+		Set<String> s=new java.util.HashSet<String>();
 		for(int i=0; i<10; i++) {
 			s.add("Blah" + i);
 		}
 
-		SoftHashSet shs=new SoftHashSet(s);
-		WeakHashSet whs=new WeakHashSet(s);
+		SoftHashSet<String> shs=new SoftHashSet<String>(s);
+		WeakHashSet<String> whs=new WeakHashSet<String>(s);
 
 		assertTrue(shs.containsAll(s));
 		assertTrue(s.containsAll(shs));
 		assertTrue(whs.containsAll(s));
 		assertTrue(s.containsAll(whs));
 
-		shs=new SoftHashSet();
+		shs=new SoftHashSet<String>();
 		shs.addAll(s);
-		whs=new WeakHashSet();
+		whs=new WeakHashSet<String>();
 		whs.addAll(s);
 
 		assertTrue(shs.containsAll(s));
@@ -191,7 +191,7 @@ public class ReferenceSetsTest extends TestCase {
 		assertTrue(s.containsAll(whs));
 
 		try {
-			SoftHashSet nshs=new SoftHashSet(null);
+			SoftHashSet<String> nshs=new SoftHashSet<String>(null);
 			fail("Made a SoftHashSet from null:  " + nshs);
 		} catch(NullPointerException e) {
 			assertEquals("Null collection provided to ReferenceSet",
@@ -199,7 +199,7 @@ public class ReferenceSetsTest extends TestCase {
 		}
 
 		try {
-			WeakHashSet nwhs=new WeakHashSet(null);
+			WeakHashSet<String> nwhs=new WeakHashSet<String>(null);
 			fail("Made a WeakHashSet from null:  " + nwhs);
 		} catch(NullPointerException e) {
 			assertEquals("Null collection provided to WeakHashSet",

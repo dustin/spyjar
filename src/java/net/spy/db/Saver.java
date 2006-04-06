@@ -27,7 +27,7 @@ public class Saver extends SpyObject {
 	private int rdepth=0;
 
 	// Make sure we don't deal with the same object more than once
-	private Set listedObjects=null;
+	private Set<IdentityEqualifier> listedObjects=null;
 
 	private ConnectionSource connSrc=null;
 	private Connection conn=null;
@@ -51,7 +51,7 @@ public class Saver extends SpyObject {
 		this.config=conf;
 		ConnectionSourceFactory csf=ConnectionSourceFactory.getInstance();
 		connSrc=csf.getConnectionSource(conf);
-		this.listedObjects=new HashSet();
+		this.listedObjects=new HashSet<IdentityEqualifier>();
 	}
 
 	/** 
@@ -143,8 +143,7 @@ public class Saver extends SpyObject {
 
 		// Inform all of the TransactionListener objects that the
 		// transaction is complete.
-		for(Iterator i=listedObjects.iterator(); i.hasNext(); ) {
-			IdentityEqualifier ie=(IdentityEqualifier)i.next();
+		for(IdentityEqualifier ie : listedObjects) {
 			if(ie.get() instanceof TransactionListener) {
 				TransactionListener tl=(TransactionListener)ie.get();
 				tl.transactionCommited();

@@ -21,7 +21,7 @@ import net.spy.db.SaveException;
  *
  * @author <a href="mailto:dsallings@2wire.com">Dustin Sallings</a>
  */
-public class SavableHashSet extends HashSet implements Savable {
+public class SavableHashSet extends HashSet<Savable> implements Savable {
 
     /**
      * Get an instance of SavableHashSet.
@@ -34,7 +34,7 @@ public class SavableHashSet extends HashSet implements Savable {
 	 * Get an instance of SavableHashSet populated with the given
 	 * Collection of objects.
 	 */
-	public SavableHashSet(Collection col) {
+	public SavableHashSet(Collection<Savable> col) {
 		super(col);
 	}
 

@@ -50,19 +50,20 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 	}
 	
-	private Map queryMap=null;
-	private Map updateMap=null;
+	private Map<String, Map<ParameterizedQuery, Object>> queryMap=null;
+	private Map<String, Map<ParameterizedQuery, Object>> updateMap=null;
 
 	public FileDriver() {
 		super();
-		queryMap=new HashMap();
-		updateMap=new HashMap();
+		queryMap=new HashMap<String, Map<ParameterizedQuery, Object>>();
+		updateMap=new HashMap<String, Map<ParameterizedQuery, Object>>();
 	}
 	
-	private Map getMap(String key, Map m) {
-		Map rv=(Map)m.get(key);
+	private Map<ParameterizedQuery, Object> getMap(String key,
+			Map<String, Map<ParameterizedQuery, Object>> m) {
+		Map<ParameterizedQuery, Object> rv=m.get(key);
 		if(rv == null) {
-			rv=new HashMap();
+			rv=new HashMap<ParameterizedQuery, Object>();
 			m.put(key, rv);
 		}
 		return(rv);
@@ -296,7 +297,7 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 
 		public String toString() {
-			ArrayList paramStrings=new ArrayList(args.length);
+			ArrayList<String> paramStrings=new ArrayList<String>(args.length);
 			for(int i=0; i<args.length; i++) {
 				String type="";
 				if(args[i] != null) {

@@ -104,7 +104,7 @@ public class ObjectDump extends SpyObject {
 
 				reportExamining(path, o);
 
-                Set<Field> fields=new HashSet();
+                Set<Field> fields=new HashSet<Field>();
                 getAllFields(c, fields);
 				for(Field field : fields) {
                     Class fieldType=field.getType();
@@ -138,7 +138,7 @@ public class ObjectDump extends SpyObject {
 		if(o == null) {
 			throw new NullPointerException("Cannot dump a null object.");
 		}
-        dumpObject(o, "o", 0, new IdentityHashMap());
+        dumpObject(o, "o", 0, new IdentityHashMap<Object, String>());
     }
 
 }

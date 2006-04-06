@@ -22,7 +22,8 @@ import net.spy.db.SaveException;
  *
  * @author <a href="mailto:dsallings@2wire.com">Dustin Sallings</a>
  */
-public class SavableHashMap extends HashMap implements Savable {
+public class SavableHashMap<K, V> extends HashMap<K, Savable>
+	implements Savable {
 
     /**
      * Get an instance of SavableHashMap.
@@ -35,7 +36,7 @@ public class SavableHashMap extends HashMap implements Savable {
 	 * Get an instance of SavableHashMap populated with the given
 	 * Map of objects.
 	 */
-	public SavableHashMap(Map map) {
+	public SavableHashMap(Map<K, Savable> map) {
 		super(map);
 	}
 

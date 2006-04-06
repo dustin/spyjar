@@ -81,7 +81,7 @@ public abstract class DBSQL extends DBSP {
 
 		// Get the name of the class
 		String className=getClass().getName();
-		String shortClassName=null;
+		String shortClassName=className;
 		StringTokenizer st=new StringTokenizer(className, ".");
 		// Get the last token
 		while(st.hasMoreTokens()) {

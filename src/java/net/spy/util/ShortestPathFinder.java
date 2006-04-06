@@ -132,12 +132,13 @@ public class ShortestPathFinder extends Object {
 
 		for(SPVertex spv : node.getConnections()) {
 			recordLink(node, spv.getCost(), spv.getTo(), spv.getTo(),
-				new HashSet());
+				new HashSet<SPNode>());
 		}
 	}
 
 	// Add a hop if the path doesn't exist, or the new path will be less costly
 	// than the existing path
+	@SuppressWarnings("unchecked")
 	private void addHopFrom(SPNode node, SPNode dest, SPNode next, int cost) {
 		SPVertex currentHop=node.getNextHop(dest);
 		if(currentHop == null) {
@@ -153,7 +154,7 @@ public class ShortestPathFinder extends Object {
 	// the given next hop, starting at node ``other'' and maintaining seen
 	// links in s
 	private void recordLink(SPNode node, int cost, SPNode nextHop,
-		SPNode other, Set s) {
+		SPNode other, Set<SPNode> s) {
 
 		// Make sure we're not looping over a path we've already seen.
 		if(!s.contains(other)) {

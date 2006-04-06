@@ -16,7 +16,7 @@ import net.spy.util.SpyUtil;
  */
 public class TokerTest extends TestCase {
 
-	private Map vars=null;
+	private Map<String, String> vars=null;
 	private SpyToker toker=null;
 
     /**
@@ -28,7 +28,7 @@ public class TokerTest extends TestCase {
 
 	protected void setUp() {
 		toker=new SpyToker();
-		vars=new HashMap();
+		vars=new HashMap<String, String>();
 		vars.put("t1", "test1");
 		vars.put("t2", "test2");
 	}

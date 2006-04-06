@@ -28,14 +28,14 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	protected AbstractSPNode(SortedSet<SPVertex> l) {
 		super();
 		this.links=l;
-		nextHops=new WeakHashMap();
+		nextHops=new WeakHashMap<SPNode, SPVertex>();
 	}
 
 	/** 
 	 * Get an instance of AbstractSPNode.
 	 */
 	protected AbstractSPNode() {
-		this(new TreeSet());
+		this(new TreeSet<SPVertex>());
 	}
 
 	/** 
@@ -44,6 +44,7 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	 * @param n SPNode to which to link
 	 * @param cost cost of this link
 	 */
+	@SuppressWarnings("unchecked")
 	protected void linkTo(SPNode n, int cost) {
 		links.add(new SPVertex(n, cost));
 	}
@@ -95,6 +96,7 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	/** 
 	 * @see Object
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean equals(Object o) {
 		boolean rv=false;
 

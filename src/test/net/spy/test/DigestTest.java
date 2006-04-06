@@ -45,7 +45,7 @@ public class DigestTest extends TestCase {
 	 * generator won't generate the same password if called several times.
 	 */
 	public void testPasswordGenerator() {
-		HashSet words=new HashSet();
+		HashSet<String> words=new HashSet<String>();
 
 		for(int i=0; i<1000; i++) {
 			String pw=PwGen.getPass(8);

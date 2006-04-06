@@ -117,6 +117,7 @@ public class SpyUtil {
 	 * @param on the join string
 	 * @return a new String with all of the elements joined
 	 */
+	@SuppressWarnings("unchecked")
 	public static String join(Enumeration e, String on) {
 		return(join(new Enumeriterator(e), on));
 	}
@@ -129,7 +130,7 @@ public class SpyUtil {
 	 * @param on the join string
 	 * @return a new String with all of the elements joined
 	 */
-	public static String join(Iterator i, String on) {
+	public static String join(Iterator<Object> i, String on) {
 		StringBuffer sb=new StringBuffer(256);
 		while(i.hasNext()) {
 			Object o=i.next();
@@ -149,6 +150,7 @@ public class SpyUtil {
 	 * @param on the join string
 	 * @return a String with all the elements joined
 	 */
+	@SuppressWarnings("unchecked")
 	public static String join(Collection c, String on) {
 		return(join(c.iterator(), on));
 	}

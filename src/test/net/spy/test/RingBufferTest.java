@@ -25,7 +25,7 @@ public class RingBufferTest extends TestCase {
 	}
 
 	private void verify(RingBuffer<Integer> rb) {
-		ArrayList<Integer> a=new ArrayList(rb);
+		ArrayList<Integer> a=new ArrayList<Integer>(rb);
 
 		// The buffer should be at capacity here
 		assertTrue("Size is incorrect.", (rb.size() == a.size()));
@@ -44,7 +44,7 @@ public class RingBufferTest extends TestCase {
 	 */
 	public void testRingBuffer() {
 		int cap=256;
-		RingBuffer<Integer> rb=new RingBuffer(cap);
+		RingBuffer<Integer> rb=new RingBuffer<Integer>(cap);
 
 		// Fill 'er up
 		for(int i=1; i<cap; i++) {
@@ -66,11 +66,11 @@ public class RingBufferTest extends TestCase {
 	public void testRingBufferFromArray() {
 		int cap=256;
 
-		ArrayList<Integer> a=new ArrayList(cap*2);
+		ArrayList<Integer> a=new ArrayList<Integer>(cap*2);
 		for(int i=0; i<cap*2; i++) {
 			a.add(i);
 		}
-		RingBuffer<Integer> rb=new RingBuffer(cap, a);
+		RingBuffer<Integer> rb=new RingBuffer<Integer>(cap, a);
 		verify(rb);
 
 		assertTrue(rb.hasWrapped());
@@ -78,11 +78,11 @@ public class RingBufferTest extends TestCase {
 
 	public void testIterator() {
 		int cap=256;
-		ArrayList<Integer> a=new ArrayList(cap*2);
+		ArrayList<Integer> a=new ArrayList<Integer>(cap*2);
 		for(int i=0; i<cap*2; i++) {
 			a.add(i);
 		}
-		RingBuffer<Integer> rb=new RingBuffer(cap, a);
+		RingBuffer<Integer> rb=new RingBuffer<Integer>(cap, a);
 
 		Iterator itmp=rb.iterator();
 		rb.add(1);

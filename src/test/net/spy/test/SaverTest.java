@@ -150,6 +150,7 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * Test an empty saver with a context.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testEmptySaverWithContext() throws Exception {
 		SaveContext context=new SaveContext();
 		context.put("a", "b");
@@ -176,6 +177,7 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * Test an empty saver with an isolation level (and context).
 	 */
+	@SuppressWarnings("unchecked")
 	public void testEmptySaverWithIsolation() throws Exception {
 		SaveContext context=new SaveContext();
 		context.put("c", "d");
@@ -254,6 +256,7 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * Test a complex sequence of savables.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testComplexSequence() throws Exception {
 		// Our root object is going to be TestSavable 1
 		TestSavable ts1=new TestSavable(1);
@@ -336,6 +339,7 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * Test a save with an invalid savable.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testInvalidObject() throws Exception {
 		TestSavable ts1=new TestSavable(1);
 		// This is some arbitrary object that is not savable, but more
@@ -356,6 +360,7 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * Test a save with a null object.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testNullObject() throws Exception {
 		TestSavable ts1=new TestSavable(1);
 		// This is some arbitrary object that is not savable, but more
@@ -395,6 +400,7 @@ public class SaverTest extends MockObjectTestCase {
 	 * Validate the right thing happens when we try too complicated of an
 	 * object graph.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testExcessiveDepth() throws Exception {
 		// Build out a deep object graph.  Max depth is 100
 		TestSavable ts1=new TestSavable(1);
@@ -419,6 +425,7 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * Test the CollectionSavable implementation.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testCollectionSavable() throws Exception {
 		ArrayList al=new ArrayList();
 		ArrayList expectedSequence=new ArrayList();
@@ -441,6 +448,7 @@ public class SaverTest extends MockObjectTestCase {
 		assertEquals("Save order was wrong", expectedSequence, seenSequence);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void populateMapAndTest(SavableHashMap shm) throws Exception {
 		shm.put("1", new TestSavable(1));
 		shm.put("2", new TestSavable(2));
@@ -455,10 +463,11 @@ public class SaverTest extends MockObjectTestCase {
 	 */
 	public void testSavableHashMap() throws Exception {
 		// Map constructor
-		Map m=new HashMap();
+		Map<String, Savable> m=new HashMap<String, Savable>();
 		m.put("1", new TestSavable(1));
 		m.put("2", new TestSavable(2));
-		SavableHashMap shm=new SavableHashMap(m);
+		SavableHashMap<String, Savable> shm
+			=new SavableHashMap<String, Savable>(m);
 		shm.save((Connection)mock(Connection.class).proxy(),
 			new SaveContext());
 
@@ -485,7 +494,7 @@ public class SaverTest extends MockObjectTestCase {
 	 */
 	public void testSavableHashSet() throws Exception {
 		// Map constructor
-		Collection c=new HashSet();
+		Collection<Savable> c=new HashSet<Savable>();
 		c.add(new TestSavable(1));
 		c.add(new TestSavable(2));
 		SavableHashSet shs=new SavableHashSet(c);
@@ -617,8 +626,8 @@ public class SaverTest extends MockObjectTestCase {
 		public TestSavable(int i) {
 			super();
 			this.id=i;
-			this.preSavs=new ArrayList();
-			this.postSavs=new ArrayList();
+			this.preSavs=new ArrayList<TestSavable>();
+			this.postSavs=new ArrayList<Collection<TestSavable>>();
 		}
 
 		public Collection getPreSavables(SaveContext ctx) {
@@ -629,6 +638,7 @@ public class SaverTest extends MockObjectTestCase {
 			return(postSavs);
 		}
 
+		@SuppressWarnings("unchecked")
 		public void save(Connection conn, SaveContext ctx) {
 			super.save(conn, ctx);
 			Collection sequence=(Collection)ctx.get("sequence");

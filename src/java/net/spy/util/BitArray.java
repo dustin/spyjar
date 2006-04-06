@@ -22,7 +22,7 @@ public class BitArray extends Object {
 	 */
 	public BitArray(int size) {
 		super();
-		bitList=new ArrayList(size);
+		bitList=new ArrayList<Integer>(size);
 	}
 
 	/** 
@@ -30,7 +30,7 @@ public class BitArray extends Object {
 	 */
 	public BitArray() {
 		super();
-		bitList=new ArrayList();
+		bitList=new ArrayList<Integer>();
 	}
 
 	/** 
@@ -82,7 +82,7 @@ public class BitArray extends Object {
 	 * @param numBits the number of bits to add.
 	 */
 	public void addBits(int bitSet, int numBits) {
-		List<Integer> bitsToAdd=new ArrayList(numBits);
+		List<Integer> bitsToAdd=new ArrayList<Integer>(numBits);
 
 		for(int i=0; i<numBits; i++) {
 			if( (bitSet&0x1) == 0) {

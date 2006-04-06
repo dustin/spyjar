@@ -21,11 +21,11 @@ import org.jmock.Mock;
 public abstract class MockConnectionSource extends Object
 	implements ConnectionSource {
 
-	private Map mocks=null;
+	private Map<Object, Mock> mocks=null;
 
 	public MockConnectionSource() {
 		super();
-		mocks=new HashMap();
+		mocks=new HashMap<Object, Mock>();
 	}
 
 	protected void registerMock(Mock m) {
@@ -33,7 +33,7 @@ public abstract class MockConnectionSource extends Object
 	}
 
 	public Mock getMock(Object proxy) {
-		return((Mock)mocks.get(proxy));
+		return mocks.get(proxy);
 	}
 
 	public void clearSeenObjects() {

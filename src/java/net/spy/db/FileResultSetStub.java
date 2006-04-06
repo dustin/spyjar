@@ -49,7 +49,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			MyMetaData mmd=new MyMetaData(lnr.readLine());
 			setMetaData(mmd);
 
-			List results=new ArrayList();
+			List<Object[]> results=new ArrayList<Object[]>();
 			String tmp=lnr.readLine();
 			while(tmp != null) {
 				Object result[]=mmd.parseLine(tmp);
@@ -192,10 +192,10 @@ public class FileResultSetStub extends GenericResultSetStub {
 
 	private static final class ParserFactory extends Object {
 		private static ParserFactory instance=null;
-		private Map parsers=null;
+		private Map<Integer, PreParser> parsers=null;
 		private ParserFactory() {
 			super();
-			parsers=new HashMap();
+			parsers=new HashMap<Integer, PreParser>();
 			parsers.put(new Integer(Types.VARCHAR), new StringParser());
 			parsers.put(new Integer(Types.LONGVARCHAR), new StringParser());
 			parsers.put(new Integer(Types.INTEGER), new NumberParser());
@@ -235,7 +235,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 		}
 		
 		public Parser getParser(int type) throws SQLException {
-			Parser rv=(Parser)parsers.get(new Integer(type));
+			Parser rv=parsers.get(new Integer(type));
 			if(rv == null) {
 				throw new SQLException("Don't have a parser for "
 					+ TypeNames.getTypeName(type));

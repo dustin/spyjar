@@ -174,11 +174,11 @@ public class ThreadPool extends ThreadGroup {
 		checkValues();
 		// Make sure there's a place to put the tasks
 		if(tasks==null) {
-			tasks=new LimitedList(getMaxTaskQueueSize());
+			tasks=new LimitedList<Task>(getMaxTaskQueueSize());
 		}
 		// Make sure there's a place to put the threads
 		if(threads==null) {
-			threads=new java.util.ArrayList(getStartThreads());
+			threads=new java.util.ArrayList<RunThread>(getStartThreads());
 		}
 		// We'll also need an object monitor
 		if(monitor==null) {
@@ -344,6 +344,7 @@ public class ThreadPool extends ThreadGroup {
 	 * 
 	 * @param mtqs a value &gt; 0
 	 */
+	@SuppressWarnings("unchecked")
 	public void setMaxTaskQueueSize(int mtqs) {
 		if(mtqs <= 0) {
 			throw new IllegalArgumentException(

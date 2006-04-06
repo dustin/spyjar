@@ -31,7 +31,7 @@ public class SPVertex<N extends SPNode> extends Object
 		if(destination == null) {
 			throw new NullPointerException("Destination node may not be null.");
 		}
-		this.to=new WeakReference(destination);
+		this.to=new WeakReference<N>(destination);
 		this.cost=theCost;
 	}
 
@@ -80,6 +80,7 @@ public class SPVertex<N extends SPNode> extends Object
 	 * Weight will be considered first.  If vertices are at the same
 	 * weight, the destination nodes will be compared.
 	 */
+	@SuppressWarnings("unchecked")
 	public int compareTo(SPVertex other) {
 		int rv=0;
 

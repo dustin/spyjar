@@ -5,82 +5,42 @@
 package net.spy.cache;
 
 import java.lang.ref.Reference;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.Map;
-
-import net.spy.SpyObject;
 
 /**
  * A fixed-size least-recently-used cache.
  */
-public class LRUCache extends SpyObject {
+public class LRUCache<K,V> extends LinkedHashMap<K,V> {
 
 	private int maxSize=0;
-
-	private Map map=null;
-	private LinkedList list=null;
 
 	/**
 	 * Get an instance of LRUCache.
 	 */
 	public LRUCache(int size) {
-		super();
-		map=new HashMap(size);
-		list=new LinkedList();
+		super(size, 0.75f, true);
 		maxSize=size;
 	}
 
-	/** 
-	 * Get the named object from the cache.
-	 * 
-	 * @param key the key
-	 * @return the value, or null if this mapping is not in the cache
+	/**
+	 * Get the object from the cache, and defereference it if it's a reference.
 	 */
-	public synchronized Object get(Object key) {
-		updateLRU(key);
-		Object rv=map.get(key);
+	@SuppressWarnings("unchecked")
+	public V get(Object o) {
+		V rv=super.get(o);
 		if(rv instanceof Reference) {
-			Reference ref=(Reference)rv;
-			rv=ref.get();
+			rv=(V) ((Reference)rv).get();
 		}
-		return(rv);
+		return rv;
 	}
 
-	private void updateLRU(Object key) {
-		if(map.containsKey(key)) {
-			list.remove(key);
-			list.addFirst(key);
-		}
-	}
-
-	/** 
-	 * Store an object in the cache.  This may cause an object to be
-	 * removed from the cache to make room.
-	 * 
-	 * @param key the cache key
-	 * @param value the cache value
-	 */
-	public synchronized void put(Object key, Object value) {
-
-		// If the cache is full, make room
-		while(map.size() >= maxSize) {
-			Object removed=map.remove(list.getLast());
-			list.removeLast();
-			sendRemovedEvent(key, removed);
-		}
-
-		// Add the new object.  If this caused an object to be removed,
-		// make sure the event is sent.
-		Object removed=map.put(key, value);
-		sendRemovedEvent(key, removed);
-		updateLRU(key);
-
-		// If the new value wants a cached event, send it
-		if(value instanceof CacheListener) {
-			CacheListener cl=(CacheListener)value;
+	public V put(K key, V val) {
+		if(val instanceof CacheListener) {
+			CacheListener cl=(CacheListener)val;
 			cl.cachedEvent(key);
 		}
+		return super.put(key, val);
 	}
 
 	// When an object is removed from the cache, send a removed event if it
@@ -92,4 +52,12 @@ public class LRUCache extends SpyObject {
 		}
 	}
 
+	protected boolean removeEldestEntry(Map.Entry<K, V> e) {
+		boolean shouldRemove=false;
+		shouldRemove=size() > maxSize;
+		if(shouldRemove) {
+			sendRemovedEvent(e.getKey(), e.getValue());
+		}
+		return shouldRemove;
+	}
 }

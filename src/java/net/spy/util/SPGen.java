@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -26,6 +25,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import net.spy.SpyObject;
 import net.spy.db.QuerySelector;
@@ -88,7 +88,7 @@ public class SPGen extends SpyObject {
 		results=new ArrayList<Result>();
 		args=new ArrayList<Parameter>();
 		interfaces=new HashSet<String>();
-		imports=new HashSet<String>();
+		imports=new TreeSet<String>();
 
 		if(types==null) {
 			initTypes();
@@ -123,7 +123,7 @@ public class SPGen extends SpyObject {
 	 * Add a collection of interfaces.
 	 * @param set the set of interfaces
 	 */
-	public void addInterfaces(Collection set) {
+	public void addInterfaces(Collection<String> set) {
 		interfaces.addAll(set);
 	}
 
@@ -202,8 +202,7 @@ public class SPGen extends SpyObject {
 
 			// Same as above, without the java.sql. part
 			Map<String, String> tmp=new HashMap<String, String>();
-			for(Iterator i=javaTypes.entrySet().iterator(); i.hasNext();) {
-				Map.Entry<String, String> me=(Map.Entry)i.next();
+			for(Map.Entry<String, String> me : javaTypes.entrySet()) {
 				String k=me.getKey();
 				if(k.startsWith(jstypes)) {
 					tmp.put(k.substring(jstypeslen), me.getValue());
@@ -335,17 +334,19 @@ public class SPGen extends SpyObject {
 		out.println("package " + pkg + ";\n");
 
 		// Imports
-		out.println("import java.sql.Types;\n"
-			+ "import java.sql.Connection;\n"
-			+ "import java.sql.SQLException;\n"
-			+ "import java.sql.ResultSet;\n"
-			+ "import java.util.Map;\n"
-			+ "import java.util.HashMap;\n"
-			+ "import net.spy.util.SpyConfig;\n");
+		imports.add("java.sql.SQLException");
+		if(!isInterface) {
+			imports.add("java.sql.Connection");
+			imports.add("java.util.Map");
+			imports.add("java.util.HashMap");
+			imports.add("net.spy.util.SpyConfig");
+		}
+		if(wantsResultSet && results.size() > 0) {
+			imports.add("java.sql.ResultSet");
+		}
 
-		// custom imports
-		for (Iterator it=imports.iterator(); it.hasNext();) {
-			String tmpimp=(String)it.next();
+		// output imports
+		for (String tmpimp : imports) {
 			out.print("import ");
 			out.print(tmpimp);
 			out.println(";");
@@ -407,8 +408,7 @@ public class SPGen extends SpyObject {
 		if(getRequiredArgs(false).size()==0) {
 			out.println(" *  <li><i>none</i></li>");
 		} else {
-			for(Iterator i=getRequiredArgs(false).iterator(); i.hasNext();) {
-				Parameter p=(Parameter)i.next();
+			for(Parameter p : getRequiredArgs(false)) {
 				out.print(" * <li>" + p.getName() + " - "
 					+ "{@link java.sql.Types#" + p.getShortType() + " "
 						+ p.getType() + "}\n * "
@@ -433,8 +433,7 @@ public class SPGen extends SpyObject {
 		if(getOptionalArgs().size()==0) {
 			out.println(" *  <li><i>none</i></li>");
 		} else {
-			for(Iterator i=getOptionalArgs().iterator(); i.hasNext();) {
-				Parameter p=(Parameter)i.next();
+			for(Parameter p : getOptionalArgs()) {
 				out.println(" * <li>" + p.getName() + " - "
 					+ "{@link java.sql.Types#" + p.getShortType() + " "
 						+ p.getType() + "}\n * "
@@ -455,8 +454,7 @@ public class SPGen extends SpyObject {
 			if(getOutputParameters().size()==0) {
 				out.println(" *  <li><i>none</i></li>");
 			} else {
-				for(Iterator i=getOutputParameters().iterator(); i.hasNext();) {
-					Parameter p=(Parameter)i.next();
+				for(Parameter p : getOutputParameters()) {
 					out.println(" * <li>" + p.getName() + " - "
 						+ "{@link java.sql.Types#" + p.getShortType() + " "
 							+ p.getType() + "}\n * "
@@ -475,9 +473,7 @@ public class SPGen extends SpyObject {
 			out.println(" * <b>Results</b>\n"
 				+ " * <ul>");
 
-			for(Iterator i=results.iterator(); i.hasNext();) {
-				Result r=(Result)i.next();
-
+			for(Result r : results) {
 				out.print(" *  <li>"
 					+ r.getName() + " - ");
 				if(isValidJDBCType(r.getType())) {
@@ -529,7 +525,10 @@ public class SPGen extends SpyObject {
 		// The map (staticially initialized)
 
 		if(!isInterface) {
-			out.println("\tprivate static final Map queries=getQueries();\n");
+			if(!(typeDbsp || typeDbcp)) {
+				out.println("\tprivate static final Map<String, String> "
+						+ "queries=getQueries();\n");
+			}
 
 			// Constructor documentation
 			out.println("\t/**\n"
@@ -589,8 +588,7 @@ public class SPGen extends SpyObject {
 			// parameters
 			if (args.size()>0) {
 				out.println("\n\t\t// Set the parameters.");
-				for (Iterator i=args.iterator(); i.hasNext();) {
-					Parameter p=(Parameter)i.next();
+				for (Parameter p : args) {
 					if (p.isRequired()) {
 						if (!p.isOutput()) {
 							out.println("\t\tsetRequired(\"" + p.getName()
@@ -623,18 +621,19 @@ public class SPGen extends SpyObject {
 			out.println("\t}\n");
 
 			// Create the static initializers
-			out.println("\t// Static initializer for query map.");
-			out.println("\tprivate static Map getQueries() {");
-			out.println("\t\t" + getJavaQueries());
-			out.println("\n\t\treturn(rv);");
-			out.println("\t}\n");
+			if(!(typeDbsp || typeDbcp)) {
+				out.println("\t// Static initializer for query map.");
+				out.println(
+						"\tprivate static Map<String, String> getQueries() {");
+				out.println("\t\t" + getJavaQueries());
+				out.println("\n\t\treturn(rv);");
+				out.println("\t}\n");
+			}
 		}
 
 		// Create set methods for all the individual parameters
 		int count=1;
-		for(Iterator i=args.iterator(); i.hasNext();) {
-			Parameter p=(Parameter)i.next();
-
+		for(Parameter p : args) {
 			if (!p.isOutput()) {
 				out.println(createSetMethod(p));
 			} else {
@@ -701,8 +700,8 @@ public class SPGen extends SpyObject {
 			+ "\t\t\tsuper(rs);\n"
 			+ "\t\t}\n\n";
 
-		for(Iterator i=results.iterator(); i.hasNext();) {
-			rv+=createGetMethod((Result)i.next());
+		for(Result r : results) {
+			rv+=createGetMethod(r);
 		}
 
 		// End of class
@@ -738,10 +737,9 @@ public class SPGen extends SpyObject {
 	private String getDocQuery() {
 		StringBuffer sb=new StringBuffer(1024);
 
-		for(Iterator i=queries.entrySet().iterator(); i.hasNext();) {
+		for(Map.Entry<String, List<String>> me : queries.entrySet()) {
 
-			Map.Entry me=(Map.Entry)i.next();
-			List sqlquery=(List)me.getValue();
+			List<String> sqlquery=me.getValue();
 
 			sb.append(" * <li>\n");
 			sb.append(" *  <b>\n");
@@ -750,8 +748,7 @@ public class SPGen extends SpyObject {
 			sb.append("\n");
 			sb.append(" *  </b>\n");
 			sb.append(" *  <pre>\n");
-			for(Iterator i2=sqlquery.iterator(); i2.hasNext();) {
-				String part=(String)i2.next();
+			for(String part : sqlquery) {
 				sb.append(" * ");
 				sb.append(docifySQL(part));
 				sb.append("\n");
@@ -767,17 +764,16 @@ public class SPGen extends SpyObject {
 		StringBuffer sb=new StringBuffer(1024);
 
 		sb.append("StringBuffer query=null;\n");
-		sb.append("\t\tMap rv=new HashMap();\n");
+		sb.append("\t\tMap<String, String> rv"
+			+ "=new HashMap<String, String>();\n");
 
-		for(Iterator i=queries.entrySet().iterator(); i.hasNext();) {
+		for(Map.Entry<String, List<String>> me : queries.entrySet()) {
 
-			Map.Entry me=(Map.Entry)i.next();
-			List sqlquery=(List)me.getValue();
+			List<String> sqlquery=me.getValue();
 
 			sb.append("\n\t\tquery=new StringBuffer(1024);");
 
-			for(Iterator i2=sqlquery.iterator(); i2.hasNext();) {
-				String part=(String)i2.next();
+			for(String part : sqlquery) {
 				sb.append("\n\t\tquery.append(\"");
 
 				for(StringTokenizer st=new StringTokenizer(part, "\"", true);
@@ -925,11 +921,11 @@ public class SPGen extends SpyObject {
 
 	private void registerDefault(Default d) {
 		boolean done=false;
-		for(Iterator i=args.iterator(); done==false && i.hasNext();) {
-			Parameter p=(Parameter)i.next();
+		for(Parameter p : args) {
 			if(p.getName().equals(d.getName())) {
 				p.setDefaultValue(d);
 				done=true;
+				break;
 			}
 		}
 		if(!done) {
@@ -1253,18 +1249,6 @@ public class SPGen extends SpyObject {
 			if(value == null) {
 				// If the value was null, cast it
 				needsCast=true;
-			} else if(value instanceof Integer) {
-				needsCast=false;
-			} else if(value instanceof Float) {
-				needsCast=false;
-			} else if(value instanceof String) {
-				needsCast=false;
-			} else if(value instanceof Double) {
-				needsCast=false;
-			} else if(value instanceof Boolean) {
-				needsCast=false;
-			} else {
-				needsCast=true;
 			}
 
 			if(needsCast) {
@@ -1322,10 +1306,10 @@ public class SPGen extends SpyObject {
 			String rv=null;
 
 			// Look for the parameter
-			for(Iterator i=args.iterator(); rv==null && i.hasNext();) {
-				Parameter p=(Parameter)i.next();
+			for(Parameter p : args) {
 				if(p.getName().equals(name)) {
 					rv=p.getType();
+					break;
 				}
 			}
 

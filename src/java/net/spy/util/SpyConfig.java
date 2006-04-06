@@ -48,7 +48,8 @@ public class SpyConfig extends Properties {
 
 	private static synchronized void confInit() {
 		if(configStore==null) {
-			configStore=Collections.synchronizedMap(new HashMap());
+			configStore=Collections.synchronizedMap(
+					new HashMap<File, ConfigInfo>());
 		}
 	}
 
@@ -177,6 +178,7 @@ public class SpyConfig extends Properties {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private Map<String, String> mapConfig(File file) throws IOException {
 		Properties p = new Properties();
 		FileInputStream fis=new FileInputStream(file);
@@ -194,7 +196,7 @@ public class SpyConfig extends Properties {
 		private long timestamp=0;
 		private Map<String,String> config=null;
 
-		public ConfigInfo(Map m, long ts) {
+		public ConfigInfo(Map<String, String> m, long ts) {
 			super();
 			this.config=m;
 			this.timestamp=ts;
@@ -205,7 +207,7 @@ public class SpyConfig extends Properties {
 			return(timestamp);
 		}
 
-		public Map getConfig() {
+		public Map<String, String> getConfig() {
 			return(config);
 		}
 	}

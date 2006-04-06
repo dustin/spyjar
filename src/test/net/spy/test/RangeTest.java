@@ -56,22 +56,22 @@ public class RangeTest extends TestCase {
 			"2-3", "2-null", "3-3", "3-4", "4-4", "4-5", "5-5", "5-6", "6-6"
 			};
 
-		ArrayList al=new ArrayList();
-		al.add(new Range(null, a));
-		al.add(new Range(null, b));
-		al.add(new Range(a, a));
-		al.add(new Range(a, b));
-		al.add(new Range(a, null));
-		al.add(new Range(b, b));
-		al.add(new Range(b, null));
-		al.add(new Range(b, c));
-		al.add(new Range(c, c));
-		al.add(new Range(c, d));
-		al.add(new Range(d, d));
-		al.add(new Range(d, e));
-		al.add(new Range(e, e));
-		al.add(new Range(e, f));
-		al.add(new Range(f, f));
+		ArrayList<Range<Integer>> al=new ArrayList<Range<Integer>>();
+		al.add(new Range<Integer>(null, a));
+		al.add(new Range<Integer>(null, b));
+		al.add(new Range<Integer>(a, a));
+		al.add(new Range<Integer>(a, b));
+		al.add(new Range<Integer>(a, null));
+		al.add(new Range<Integer>(b, b));
+		al.add(new Range<Integer>(b, null));
+		al.add(new Range<Integer>(b, c));
+		al.add(new Range<Integer>(c, c));
+		al.add(new Range<Integer>(c, d));
+		al.add(new Range<Integer>(d, d));
+		al.add(new Range<Integer>(d, e));
+		al.add(new Range<Integer>(e, e));
+		al.add(new Range<Integer>(e, f));
+		al.add(new Range<Integer>(f, f));
 
 		// Unsort
 		Collections.shuffle(al);
@@ -81,7 +81,7 @@ public class RangeTest extends TestCase {
 
 		// Validate the order
 		for(int i=0; i<sortedVals.length; i++) {
-			Range r=(Range)al.get(i);
+			Range r=al.get(i);
 			String tmps=r.getLow() + "-" + r.getHigh();
 
 			assertEquals("Sort failure", sortedVals[i], tmps);
@@ -92,27 +92,33 @@ public class RangeTest extends TestCase {
 		Integer a=new Integer(1);
 		Integer b=new Integer(2);
 
-		assertEquals(0, new Range(a, b).compareTo(new Range(a, b)));
-		assertEquals(1, new Range(a, null).compareTo(new Range(a, b)));
-		assertEquals(-1, new Range(a, b).compareTo(new Range(a, null)));
-		assertEquals(0, new Range(a, null).compareTo(new Range(a, null)));
-		assertEquals(-1, new Range(null, a).compareTo(new Range(a, null)));
-		assertEquals(1, new Range(a, null).compareTo(new Range(null, a)));
+		assertEquals(0,
+			new Range<Integer>(a, b).compareTo(new Range<Integer>(a, b)));
+		assertEquals(1,
+			new Range<Integer>(a, null).compareTo(new Range<Integer>(a, b)));
+		assertEquals(-1,
+			new Range<Integer>(a, b).compareTo(new Range<Integer>(a, null)));
+		assertEquals(0,
+			new Range<Integer>(a, null).compareTo(new Range<Integer>(a, null)));
+		assertEquals(-1,
+			new Range<Integer>(null, a).compareTo(new Range<Integer>(a, null)));
+		assertEquals(1,
+			new Range<Integer>(a, null).compareTo(new Range<Integer>(null, a)));
 	}
 
 	public void testRangeEquality() {
-		ArrayList al=new ArrayList();
+		ArrayList<Range<Integer>> al=new ArrayList<Range<Integer>>();
 		Integer a=new Integer(1);
 		Integer b=new Integer(2);
-		al.add(new Range(null, a));
-		al.add(new Range(null, b));
-		al.add(new Range(a, a));
-		al.add(new Range(a, b));
-		al.add(new Range(a, null));
-		al.add(new Range(b, b));
-		al.add(new Range(b, null));
+		al.add(new Range<Integer>(null, a));
+		al.add(new Range<Integer>(null, b));
+		al.add(new Range<Integer>(a, a));
+		al.add(new Range<Integer>(a, b));
+		al.add(new Range<Integer>(a, null));
+		al.add(new Range<Integer>(b, b));
+		al.add(new Range<Integer>(b, null));
 
-		HashSet hs=new HashSet(al);
+		HashSet<Range<Integer>> hs=new HashSet<Range<Integer>>(al);
 
 		assertEquals(al.size(), hs.size());
 
@@ -123,22 +129,25 @@ public class RangeTest extends TestCase {
 	}
 
 	public void testForeignEquality() {
-		Range r=new Range(new Integer(0), new Integer(1));
+		Range<Integer> r=new Range<Integer>(new Integer(0), new Integer(1));
 		assertFalse(r.equals("x"));
 	}
 
 	// Verify r.contains(c)
+	@SuppressWarnings("unchecked")
 	private void assertRangeHit(Range r, Comparable c) {
 		// System.out.println("Expecting " + c + " in " + r);
 		assertTrue(r + " should contain " + c, r.contains(c));
 	}
 
 	// Verify !r.contains(c)
+	@SuppressWarnings("unchecked")
 	private void assertRangeMiss(Range r, Comparable c) {
 		// System.out.println("Not expecting " + c + " in " + r);
 		assertTrue(r + " should not contain " + c, (!r.contains(c)));
 	}
 
+	@SuppressWarnings("unchecked")
 	private void assertInvalidConstruct(Comparable l, Comparable h) {
 		try {
 			Range r=new Range(l, h);
@@ -154,13 +163,13 @@ public class RangeTest extends TestCase {
 	}
 
 	public void testDefaultParams() {
-		Range r=new Range(new Integer(0), new Integer(100));
+		Range<Integer> r=new Range<Integer>(new Integer(0), new Integer(100));
 		assertEquals(Range.INCLUSIVE, r.getLowMatch());
 		assertEquals(Range.INCLUSIVE, r.getHighMatch());
 	}
 
 	public void testInvalidMatchCatch() {
-		Range r=new Range(new Integer(0), new Integer(100));
+		Range<Integer> r=new Range<Integer>(new Integer(0), new Integer(100));
 		for(int i=-100; i<100; i++) {
 			if(i == Range.INCLUSIVE || i == Range.EXCLUSIVE) {
 				// Skip these
@@ -186,17 +195,17 @@ public class RangeTest extends TestCase {
 		Integer b=new Integer(9);
 
 		// Build some ranges
-		Range athroughb=new Range(a, b);
-		Range athrougha=new Range(a, a);
-		Range nullthroughb=new Range(null, b);
-		Range bthroughnull=new Range(b, null);
+		Range<Integer> athroughb=new Range<Integer>(a, b);
+		Range<Integer> athrougha=new Range<Integer>(a, a);
+		Range<Integer> nullthroughb=new Range<Integer>(null, b);
+		Range<Integer> bthroughnull=new Range<Integer>(b, null);
 
 		// Exclusive matched ends
-		Range athroughbx=new Range(a, b);
+		Range<Integer> athroughbx=new Range<Integer>(a, b);
 		athroughbx.setHighMatch(Range.EXCLUSIVE);
-		Range axthroughb=new Range(a, b);
+		Range<Integer> axthroughb=new Range<Integer>(a, b);
 		axthroughb.setLowMatch(Range.EXCLUSIVE);
-		Range axthroughbx=new Range(a, b);
+		Range<Integer> axthroughbx=new Range<Integer>(a, b);
 		axthroughbx.setLowMatch(Range.EXCLUSIVE);
 		axthroughbx.setHighMatch(Range.EXCLUSIVE);
 

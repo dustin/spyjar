@@ -7,7 +7,8 @@ package net.spy.util;
 /**
  * A range of Comparable objects.
  */
-public class Range extends Object implements Comparable {
+public class Range<T extends Comparable<T>> extends Object
+	implements Comparable<Range<T>> {
 
 	/** 
 	 * Match type for inclusive matches.
@@ -19,8 +20,8 @@ public class Range extends Object implements Comparable {
 	 */
 	public static final int EXCLUSIVE=2;
 
-	private Comparable low=null;
-	private Comparable high=null;
+	private T low=null;
+	private T high=null;
 
 	private int lowMatch=INCLUSIVE;
 	private int highMatch=INCLUSIVE;
@@ -28,7 +29,7 @@ public class Range extends Object implements Comparable {
 	/**
 	 * Get an instance of Range.
 	 */
-	public Range(Comparable lowObject, Comparable highObject) {
+	public Range(T lowObject, T highObject) {
 		super();
 
 		low=lowObject;
@@ -139,7 +140,7 @@ public class Range extends Object implements Comparable {
 	/** 
 	 * True if the given object lies within this range.
 	 */
-	public boolean contains(Comparable c) {
+	public boolean contains(T c) {
 		// False if we prove it's not there
 		boolean rv=true;
 
@@ -183,10 +184,10 @@ public class Range extends Object implements Comparable {
 	/** 
 	 * @see Comparable 
 	 */
-	public int compareTo(Object o) {
-		int rv=compareLow(this, (Range)o);
+	public int compareTo(Range<T> r) {
+		int rv=compareLow(this, r);
 		if(rv == 0) {
-			rv=compareHigh(this, (Range)o);
+			rv=compareHigh(this, r);
 		}
 		return(rv);
 	}
@@ -195,10 +196,11 @@ public class Range extends Object implements Comparable {
 	 * True if the given object is a Range object that represents the same
 	 * range.
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean equals(Object o) {
 		boolean rv=false;
 		if(o instanceof Range) {
-			rv= (compareTo(o)==0);
+			rv= (compareTo((Range)o)==0);
 		}
 		return(rv);
 	}
@@ -219,7 +221,7 @@ public class Range extends Object implements Comparable {
 	}
 
 	// Compare two ranges based on their low value
-	private int compareLow(Range a, Range b) {
+	private int compareLow(Range<T> a, Range<T> b) {
 		int rv=0;
 
 		if(!(a.low==null && b.low == null)) {
@@ -243,7 +245,7 @@ public class Range extends Object implements Comparable {
 	}
 
 	// Compare two ranges based on their high value
-	private int compareHigh(Range a, Range b) {
+	private int compareHigh(Range<T> a, Range<T> b) {
 		int rv=0;
 
 		if(!(a.high==null && b.high == null)) {

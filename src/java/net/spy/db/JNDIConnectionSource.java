@@ -49,6 +49,7 @@ public class JNDIConnectionSource extends SpyObject
 	 * @throws SQLException  
 	 * @see ConnectionSource
 	 */
+	@SuppressWarnings("unchecked")
 	public Connection getConnection(SpyConfig conf) throws SQLException {
 		String source=conf.get("dbSource");
 

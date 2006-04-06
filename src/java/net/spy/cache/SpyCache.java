@@ -179,10 +179,10 @@ public class SpyCache extends SpyObject {
 	 */
 	public void uncacheLike(String keystart) {
 		synchronized(cacheStore) {
-			for(Iterator i=cacheStore.entrySet().iterator();
-				i.hasNext();) {
+			for(Iterator<Map.Entry<String, Cachable>> i
+					=cacheStore.entrySet().iterator(); i.hasNext();) {
 
-				Map.Entry<String, Cachable> me=(Map.Entry)i.next();
+				Map.Entry<String, Cachable> me=i.next();
 
 				String key=me.getKey();
 
@@ -249,8 +249,9 @@ public class SpyCache extends SpyObject {
 
 		private void cleanup() throws Exception {
 			synchronized(cacheStore) {
-				for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext();){
-					Map.Entry<String, Cachable> me=(Map.Entry)i.next();
+				for(Iterator<Map.Entry<String, Cachable>> i
+						=cacheStore.entrySet().iterator(); i.hasNext();){
+					Map.Entry<String, Cachable> me=i.next();
 					String key=me.getKey();
 					Cachable it=me.getValue();
 					if(it.isExpired()) {
@@ -333,8 +334,9 @@ public class SpyCache extends SpyObject {
 
 			// OK, we're about to bail, let's dump the cache and go.
 			synchronized(cacheStore) {
-				for(Iterator i=cacheStore.entrySet().iterator(); i.hasNext();){
-					Map.Entry<String, Cachable> me=(Map.Entry)i.next();
+				for(Iterator<Map.Entry<String, Cachable>> i
+						=cacheStore.entrySet().iterator(); i.hasNext();){
+					Map.Entry<String, Cachable> me=i.next();
 					String key=me.getKey();
 					Cachable it=me.getValue();
 					i.remove();

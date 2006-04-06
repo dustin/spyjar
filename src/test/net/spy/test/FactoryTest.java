@@ -141,7 +141,7 @@ public class FactoryTest extends TestCase {
 		}
 
 		public Collection<TestInstance> getInstances() {
-			Collection<TestInstance> rv=new ArrayList();
+			Collection<TestInstance> rv=new ArrayList<TestInstance>();
 			int startId=lastObject;
 			for(int i=0; i<NUM_OBJECTS; i++) {
 				int id=i + startId;

@@ -57,7 +57,8 @@ public class SpyCacheDB extends SpyDB {
 		if(crs==null) {
 			ResultSet rs=executeQuery(query);
 			crs=new CachedResultSet(rs);
-			cache.store(key, new SoftReference(crs), lifetime*1000);
+			cache.store(key, new SoftReference<CachedResultSet>(crs),
+					lifetime*1000);
 		}
 
 		ResultSet crsret=(ResultSet)crs.newCopy();

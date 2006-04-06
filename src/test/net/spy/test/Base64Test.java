@@ -28,7 +28,7 @@ public class Base64Test extends TestCase {
 
 	private static final String CHARSET="UTF-8";
 
-	private Map cases=null;
+	private Map<String, String> cases=null;
 
 	/**
 	 * Get an instance of Base64Test.
@@ -45,7 +45,7 @@ public class Base64Test extends TestCase {
 	}
 
 	protected void setUp() {
-		cases=new HashMap();
+		cases=new HashMap<String, String>();
 
 		cases.put("d3d3LnB5dGhvbi5vcmc=", "www.python.org");
 		cases.put("YQ==", "a");
@@ -111,7 +111,7 @@ public class Base64Test extends TestCase {
 			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
 		};
-		Map allChars=new HashMap();
+		Map<Character, Boolean> allChars=new HashMap<Character, Boolean>();
 		for(int i=0; i<65535; i++) {
 			allChars.put( new Character((char)i), Boolean.FALSE);
 		}
@@ -184,7 +184,7 @@ public class Base64Test extends TestCase {
 	 * encoding.
 	 */
 	public void testBlockOutput() throws Exception {
-		HashMap hm=new HashMap();
+		HashMap<String, Comparable> hm=new HashMap<String, Comparable>();
 		hm.put("Some Key", new Integer(13));
 		hm.put("Some Other Key", "Another value");
 
@@ -214,7 +214,7 @@ public class Base64Test extends TestCase {
 	 * decoding.
 	 */
 	public void testBlockInput() throws Exception {
-		HashMap hm=new HashMap();
+		HashMap<String, Comparable> hm=new HashMap<String, Comparable>();
 		hm.put("Some Key", new Integer(13));
 		hm.put("Some Other Key", "Another value");
 
@@ -249,7 +249,7 @@ public class Base64Test extends TestCase {
 		GZIPOutputStream gzos=new GZIPOutputStream(b64os);
 		ObjectOutputStream oos=new ObjectOutputStream(gzos);
 
-		HashMap hm=new HashMap();
+		HashMap<String, Comparable> hm=new HashMap<String, Comparable>();
 		hm.put("Some Key", new Integer(13));
 		hm.put("Some Other Key", "Another value");
 

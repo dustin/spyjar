@@ -42,7 +42,7 @@ public class LimitedListTest extends TestCase {
 	 * Verify limited list limits properly.
 	 */
 	public void testLimitedList() {
-		LimitedList<Integer> ll=new LimitedList(10);
+		LimitedList<Integer> ll=new LimitedList<Integer>(10);
 
 		// These should all work
 		for(int i=0; i<10; i++) {
@@ -78,7 +78,7 @@ public class LimitedListTest extends TestCase {
 
 		// This should fail
 		try {
-			LimitedList tmp=new LimitedList(10);
+			LimitedList<Integer> tmp=new LimitedList<Integer>(10);
 			tmp.addLast(new Integer(11));
 			ll.addAll(tmp);
 			fail("Allowed me to addAll eleven.");
@@ -88,7 +88,7 @@ public class LimitedListTest extends TestCase {
 
 		// This should fail
 		try {
-			LimitedList tmp=new LimitedList(10);
+			LimitedList<Integer> tmp=new LimitedList<Integer>(10);
 			tmp.addLast(new Integer(11));
 			ll.addAll(2, tmp);
 			fail("Allowed me to addAll eleven (2).");
@@ -125,13 +125,13 @@ public class LimitedListTest extends TestCase {
 	 * more than you have.
 	 */
 	public void testQueue() {
-		LimitedList ll=new LimitedList(10);
+		LimitedList<Integer> ll=new LimitedList<Integer>(10);
 		for(int i=0; i<10; i++) {
 			ll.add(new Integer(i));
 		}
 
 		for(int i=0; i<10; i++) {
-			Integer tmpI=(Integer)ll.removeFirst();
+			Integer tmpI=ll.removeFirst();
 			int tmp=tmpI.intValue();
 			assertEquals("Error on value " + i, i, tmp);
 		}

@@ -33,7 +33,7 @@ public class DiskCache extends AbstractMap {
 
 	// Base directory for hashing
 	private String basedir = null;
-	private LRUCache lruCache=null;
+	private LRUCache<Object, SoftReference<Object>> lruCache=null;
 
 	private static final int DEFAULT_LRU_CACHE_SIZE=100;
 
@@ -57,7 +57,7 @@ public class DiskCache extends AbstractMap {
 	public DiskCache(String base, int lruCacheSize) {
 		super();
 		this.basedir=base;
-		lruCache=new LRUCache(lruCacheSize);
+		lruCache=new LRUCache<Object, SoftReference<Object>>(lruCacheSize);
 	}
 
 	/** 
@@ -138,7 +138,7 @@ public class DiskCache extends AbstractMap {
 		rv=lruCache.get(key);
 		if(rv==null) {
 			rv=getFromDiskCache(key);
-			lruCache.put(key, new SoftReference(rv));
+			lruCache.put(key, new SoftReference<Object>(rv));
 		}
 
 		return(rv);
@@ -210,9 +210,8 @@ public class DiskCache extends AbstractMap {
 		return(rv);
 	}
 
-	private class WalkerDiskCacheRanger extends HashSet {
+	private class WalkerDiskCacheRanger extends HashSet<Object> {
 
-		@SuppressWarnings("synthetic-access")
 		public WalkerDiskCacheRanger()
 			throws IOException, ClassNotFoundException {
 			super();
@@ -243,14 +242,14 @@ public class DiskCache extends AbstractMap {
 		/** 
 		 * Get an iterator.
 		 */
-		public Iterator iterator() {
+		public Iterator<Object> iterator() {
 			return(new I(super.iterator()));
 		}
 
 	}
 
 	// Iterator implementation
-	private static class I extends Object implements Iterator {
+	private static class I extends Object implements Iterator<Object> {
 
 		private Iterator i=null;
 		private E current=null;

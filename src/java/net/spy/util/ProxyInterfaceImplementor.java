@@ -102,7 +102,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 
 		// Get the parameters
 		Class types[]=method.getParameterTypes();
-		ArrayList l=new ArrayList(types.length);
+		ArrayList<String> l=new ArrayList<String>(types.length);
 		for(int i=0; i<types.length; i++) {
 			l.add("a" + i);
 		}

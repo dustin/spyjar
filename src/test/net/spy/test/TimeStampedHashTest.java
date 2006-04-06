@@ -22,7 +22,8 @@ public class TimeStampedHashTest extends TestCase {
 	 * Test the basic hashtable operations.
 	 */
 	public void testOperations() throws Exception {
-		TimeStampedHashMap m=new TimeStampedHashMap();
+		TimeStampedHashMap<String, String> m
+			=new TimeStampedHashMap<String, String>();
 		long originalTimestamp=m.getTimestamp();
 		assertEquals(originalTimestamp, m.getLastGet());
 		assertEquals(originalTimestamp, m.getLastPut());

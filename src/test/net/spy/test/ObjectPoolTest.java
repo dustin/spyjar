@@ -46,7 +46,7 @@ public class ObjectPoolTest extends TestCase {
 		// Just to exercise the code.
 		String.valueOf(op);
 
-		Collection pooledObs=new ArrayList(10);
+		Collection<PooledObject> pooledObs=new ArrayList<PooledObject>(10);
 		for(int i=0; i<10; i++) {
 			pooledObs.add(op.getObject("test"));
 		}
@@ -58,7 +58,7 @@ public class ObjectPoolTest extends TestCase {
 			// pass
 		}
 		// Return them all to the pool
-		Collection objectsFromPool=new TreeSet();
+		Collection<Object> objectsFromPool=new TreeSet<Object>();
 		for(Iterator i=pooledObs.iterator(); i.hasNext();) {
 			PooledObject po=(PooledObject)i.next();
 			objectsFromPool.add(po.getObject());

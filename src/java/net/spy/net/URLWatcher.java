@@ -59,6 +59,7 @@ public final class URLWatcher extends SpyObject {
 	}
 
 	// Get the URLItem for the given URL.
+	@SuppressWarnings("unchecked")
 	private URLItem getURLItem(URL u) {
 		URLItem ui=null;
 
@@ -90,6 +91,7 @@ public final class URLWatcher extends SpyObject {
 	 * Start watching the given URL.
 	 * @param u The item to watch
 	 */
+	@SuppressWarnings("unchecked")
 	public void startWatching(URLItem u) {
 		JobQueue<URLItem> jq=cron.getJobQueue();
 		synchronized(jq) {

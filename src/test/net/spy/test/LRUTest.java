@@ -5,13 +5,12 @@
 package net.spy.test;
 
 import java.lang.ref.SoftReference;
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
+import java.util.Collections;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import net.spy.cache.CacheListener;
 import net.spy.cache.LRUCache;
 
@@ -41,31 +40,12 @@ public class LRUTest extends TestCase {
 		junit.textui.TestRunner.run(suite());
 	}
 
-	private void validateCacheSize(LRUCache instance) {
-		Map map=null;
-		List list=null;
-		try {
-			Field mapField=instance.getClass().getDeclaredField("map");
-			Field listField=instance.getClass().getDeclaredField("list");
-			mapField.setAccessible(true);
-			listField.setAccessible(true);
-
-			map=(Map)mapField.get(instance);
-			list=(List)listField.get(instance);
-		} catch(Exception e) {
-			e.printStackTrace();
-			fail("Couldn't validate the cache size.");
-		}
-
-		assertEquals("Cache size invalid", map.size(), list.size());
-	}
-
 	/** 
 	 * Perform basic LRU testing.
 	 */
 	public void testBasicLRU() {
 		Integer zero=new Integer(0);
-		LRUCache cache=new LRUCache(10);
+		LRUCache<Integer, Integer> cache=new LRUCache<Integer, Integer>(10);
 
 		assertNull("Zero shouldn't be there.", cache.get(zero));
 
@@ -74,7 +54,7 @@ public class LRUTest extends TestCase {
 		assertNotNull("Zero should be there.", cache.get(zero));
 
 		for(int i=1; i<100; i++) {
-			validateCacheSize(cache);
+			assertTrue("Cache size exceeded valid size", cache.size() <= 10);
 			Integer ii=new Integer(i);
 			assertNull(cache.get(ii));
 			cache.put(ii, ii);
@@ -92,19 +72,20 @@ public class LRUTest extends TestCase {
 	 */
 	public void testReferenceLRU() {
 		Integer zero=new Integer(0);
-		LRUCache cache=new LRUCache(10);
+		LRUCache<Integer, SoftReference<Integer>> cache
+			=new LRUCache<Integer, SoftReference<Integer>>(10);
 
 		assertNull("Zero shouldn't be there.", cache.get(zero));
 
 		// Keep this value up-to-date
-		cache.put(zero, new SoftReference(zero));
+		cache.put(zero, new SoftReference<Integer>(zero));
 		assertNotNull("Zero should be there.", cache.get(zero));
 
 		for(int i=1; i<100; i++) {
-			validateCacheSize(cache);
+			assertTrue("Cache size exceeded valid size", cache.size() <= 10);
 			Integer ii=new Integer(i);
 			assertNull(cache.get(ii));
-			cache.put(ii, new SoftReference(ii));
+			cache.put(ii, new SoftReference<Integer>(ii));
 			assertNotNull(cache.get(zero));
 			assertNotNull(cache.get(ii));
 
@@ -118,7 +99,8 @@ public class LRUTest extends TestCase {
 	 * Test cache listener.
 	 */
 	public void testCacheListener() {
-		LRUCache cache=new LRUCache(10);
+		LRUCache<Comparable, Object> cache
+			=new LRUCache<Comparable, Object>(10);
 
 		TestListener tl=new TestListener();
 		cache.put("listener", tl);
@@ -131,6 +113,14 @@ public class LRUTest extends TestCase {
 		assertNull(cache.get("listener"));
 		assertEquals(1, tl.cached);
 		assertEquals(1, tl.uncached);
+	}
+
+	public void testCacheListenerPutAll() {
+		LRUCache<String, TestListener> cache
+			=new LRUCache<String, TestListener>(10);
+		cache.putAll(Collections.singletonMap("listener", new TestListener()));
+		TestListener tl=cache.get("listener");
+		assertEquals(1, tl.cached);
 	}
 
 	private static final class TestListener extends Object

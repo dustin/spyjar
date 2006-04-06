@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.spy.SpyObject;
 
@@ -26,11 +27,11 @@ public abstract class GenericResultSetStub extends SpyObject
 	implements Cloneable {
 
 	// Here is where the ResultSet data gets stored.
-	private List results=null;
-	private Iterator resultIter=null;
+	private List<Object[]> results=null;
+	private Iterator<Object[]> resultIter=null;
 
 	// Map column names to ints
-	private HashMap columns=null;
+	private Map<String, Integer> columns=null;
 
 	// This is the current result we're looking at.
 	private Object result[]=null;
@@ -73,7 +74,7 @@ public abstract class GenericResultSetStub extends SpyObject
 	// result set initializer
 	private void initResults(ResultSet rs) throws SQLException {
 		// Initialize the results vector
-		ArrayList r=new ArrayList();
+		ArrayList<Object[]> r=new ArrayList<Object[]>();
 		int ncolumns=metadata.getColumnCount();
 
 		// Flip through each result
@@ -113,7 +114,7 @@ public abstract class GenericResultSetStub extends SpyObject
 	 * 
 	 * @param to results list to use
 	 */
-	protected void setResults(List to) {
+	protected void setResults(List<Object[]> to) {
 		this.results=to;
 		resetResults();
 	}
@@ -131,7 +132,7 @@ public abstract class GenericResultSetStub extends SpyObject
 		int ncolumns=metadata.getColumnCount();
 
 		// Initialize columns
-		columns=new HashMap();
+		columns=new HashMap<String, Integer>();
 		for(int i=1; i<=ncolumns; i++) {
 			String name=metadata.getColumnName(i).toLowerCase();
 			columns.put(name, new Integer(i));
@@ -224,7 +225,7 @@ public abstract class GenericResultSetStub extends SpyObject
 		}
 
 		if(resultIter.hasNext()) {
-			result=(Object[])resultIter.next();
+			result=resultIter.next();
 		} else {
 			rv=false;
 		}
@@ -426,7 +427,7 @@ public abstract class GenericResultSetStub extends SpyObject
 	 */
 	public int findColumn(String columnName) throws SQLException {
 		String name=columnName.toLowerCase();
-		Integer value=(Integer)columns.get(name);
+		Integer value=columns.get(name);
 		if(value==null) {
 			throw new SQLException("No such column:  " + columnName);
 		}

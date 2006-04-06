@@ -151,7 +151,7 @@ public class PKTest extends TestCase {
 			Mock rs=new Mock(ResultSet.class);
 			rs.expects(new InvokeOnceMatcher()).method("getMetaData")
 				.will(new ReturnStub(rsmd.proxy()));
-			ArrayList ofResults=new ArrayList();
+			ArrayList<ReturnStub> ofResults=new ArrayList<ReturnStub>();
 			ofResults.add(new ReturnStub(Boolean.TRUE));
 			ofResults.add(new ReturnStub(Boolean.FALSE));
 			rs.expects(new InvokeAtLeastOnceMatcher()).method("next")

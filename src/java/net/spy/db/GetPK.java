@@ -76,7 +76,7 @@ public class GetPK extends SpyObject {
 	 */
 	protected GetPK() {
 		super();
-		caches=new HashMap();
+		caches=new HashMap<String, KeyStore>();
 	}
 
 	/** 

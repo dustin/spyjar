@@ -26,7 +26,7 @@ public class ObjectDumpTest extends TestCase {
 	 * validate any of its values.
 	 */
 	public void testObjectDump() throws Exception {
-		Map m=new java.util.HashMap();
+		Map<String, Object> m=new java.util.HashMap<String, Object>();
 		m.put("aKey", "aValue");
 		m.put("myself", m);
 

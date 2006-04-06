@@ -69,7 +69,7 @@ public class InterfaceImplementor extends SpyObject {
 
 		// Go ahead and initialize this here.  That way we don't have to
 		// worry about it later.
-		definedFunctions=new HashSet();
+		definedFunctions=new HashSet<String>();
 		this.interfaceClass=c;
 	}
 

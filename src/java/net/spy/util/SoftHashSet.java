@@ -42,7 +42,7 @@ public class SoftHashSet<T extends Object> extends ReferenceSet<T> {
 	 * Return a soft reference.
 	 */
 	protected Reference<T> getReference(T o) {
-		return(new MySoftReference(o));
+		return(new MySoftReference<T>(o));
 	}
 
 	private static class MySoftReference<T> extends SoftReference<T> {
