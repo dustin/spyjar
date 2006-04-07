@@ -106,8 +106,11 @@ public class SpyUtil {
 	 */
 	public static String getFileData(File file) throws IOException {
 		FileReader f = new FileReader(file);
-		String rv=getReaderAsString(f);
-		f.close();
+		try {
+			String rv=getReaderAsString(f);
+		} finally {
+			f.close();
+		}
 		return(rv);
 	}
 
