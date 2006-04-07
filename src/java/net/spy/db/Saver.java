@@ -214,7 +214,7 @@ public class Saver extends SpyObject {
 
 	//  make a pleasant way to print out the debug strings.
 	private String dbgString(Object o) {
-		StringBuffer sb=new StringBuffer(80);
+		StringBuilder sb=new StringBuilder(80);
 		if(o == null) {
 			sb.append("<null>");
 		} else {

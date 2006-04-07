@@ -81,18 +81,14 @@ public final class Cron extends SpyThread {
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(128);
-		sb.append(super.toString());
+		String extra=null;
 		if(jobQueue==null) {
-			sb.append(" - null jobqueue");
+			extra = " - null jobqueue";
 		} else {
-			sb.append(" - watching ");
-			sb.append(jobQueue.size());
-			sb.append(" jobs, next up at ");
-			sb.append(jobQueue.getNextStartDate());
+			extra = " - watching " + jobQueue.size()
+				+ " jobs, next up at " + jobQueue.getNextStartDate();
 		}
-
-		return(sb.toString());
+		return(super.toString() + extra);
 	}
 
 	/**

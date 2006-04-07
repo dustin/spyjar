@@ -57,13 +57,7 @@ public abstract class PoolFiller extends Object {
 	 * Get the debug name (including the pool's hash).
 	 */
 	protected String debugName() {
-		StringBuffer sb=new StringBuffer(TOSTRING_LEN);
-
-		sb.append(name);
-		sb.append(" @");
-		sb.append(Integer.toHexString(poolHash));
-
-		return(sb.toString());
+		return(name + " @" + Integer.toHexString(poolHash));
 	}
 
 	/**

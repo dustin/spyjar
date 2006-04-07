@@ -61,19 +61,14 @@ public class TimeSpan extends Object {
 
 	// Provide a two-digit number as a String.
 	private String zeroNumber(long in) {
-		StringBuffer sb=new StringBuffer(2);
-		if(in<10) {
-			sb.append("0");
-		}
-		sb.append(in);
-		return(sb.toString());
+		return (in < 10 ? "0" : "") + in;
 	}
 
 	/**
 	 * Print out the timespan.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(64);
+		StringBuilder sb=new StringBuilder(64);
 		boolean hasDays=false;
 
 		if(days>0) {

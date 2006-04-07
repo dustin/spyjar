@@ -34,7 +34,7 @@ class WorkerThread extends LoopingThread implements RunnableRunner {
 		// out.
 		Runnable tmp=theRunnable;
 
-		StringBuffer sb=new StringBuffer(64);
+		StringBuilder sb=new StringBuilder(64);
 		sb.append(super.toString());
 		if(tmp != null) {
 			sb.append(" - running ");

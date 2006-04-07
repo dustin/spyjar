@@ -84,7 +84,7 @@ public class SpyUtil {
 	 */
 	public static String getReaderAsString(Reader r) throws IOException {
 		char c[]=new char[8192];
-		StringBuffer rv=new StringBuffer(8192);
+		StringBuilder rv=new StringBuilder(8192);
 
 		int size;
 		while((size=r.read(c)) >=0) {
@@ -106,8 +106,9 @@ public class SpyUtil {
 	 */
 	public static String getFileData(File file) throws IOException {
 		FileReader f = new FileReader(file);
+		String rv=null;
 		try {
-			String rv=getReaderAsString(f);
+			rv=getReaderAsString(f);
 		} finally {
 			f.close();
 		}
@@ -134,7 +135,7 @@ public class SpyUtil {
 	 * @return a new String with all of the elements joined
 	 */
 	public static String join(Iterator<Object> i, String on) {
-		StringBuffer sb=new StringBuffer(256);
+		StringBuilder sb=new StringBuilder(256);
 		while(i.hasNext()) {
 			Object o=i.next();
 			sb.append(o);
@@ -165,7 +166,7 @@ public class SpyUtil {
 	 * @param me the byte array that needs hexified.
 	 */
 	public static String byteAToHexString(byte me[]) {
-		StringBuffer sb=new StringBuffer(me.length*2);
+		StringBuilder sb=new StringBuilder(me.length*2);
 
 		for(byte b : me) {
 			int bai=b & 0xff;
@@ -265,7 +266,7 @@ public class SpyUtil {
 	 */
 	public static String deHTML(String contents) {
 		int inTag=0;
-		StringBuffer sb=new StringBuffer(contents.length());
+		StringBuilder sb=new StringBuilder(contents.length());
 
 		char chars[]=contents.toCharArray();
 

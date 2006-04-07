@@ -85,7 +85,7 @@ public class UUInputStream extends ByteConverionInputStream {
 	private String readLine() throws IOException {
 		String rv=null;
 
-		StringBuffer sb=new StringBuffer(128);
+		StringBuilder sb=new StringBuilder(128);
 		int r=0;
 
 		while(r!=-1 && (r=='\n' || r=='\r')) {

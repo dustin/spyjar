@@ -191,7 +191,7 @@ public class BitArray extends Object {
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(bitList.size());
+		StringBuilder sb=new StringBuilder(bitList.size());
 
 		for(int i : bitList) {
 			sb.append(i);

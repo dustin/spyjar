@@ -146,7 +146,7 @@ public class ObjectPool extends SpyObject {
 	 * Dump out the object pools.
 	 */
 	public String toString() {
-		StringBuffer out=new StringBuffer(TOSTRING_LEN);
+		StringBuilder out=new StringBuilder(TOSTRING_LEN);
 		ArrayList<PoolContainer> a=new ArrayList<PoolContainer>();
 		synchronized (pools) {
 			for(PoolContainer pc : pools.values()) {
@@ -247,7 +247,7 @@ public class ObjectPool extends SpyObject {
 		// Look like a normal thread, but report number of times the thing's
 		// cleaned.
 		public String toString() {
-			StringBuffer sb=new StringBuffer(TOSTRING_LEN);
+			StringBuilder sb=new StringBuilder(TOSTRING_LEN);
 			sb.append(super.toString());
 			sb.append(" - ");
 			sb.append(numCleans);

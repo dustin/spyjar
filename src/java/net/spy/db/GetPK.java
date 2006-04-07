@@ -124,7 +124,7 @@ public class GetPK extends SpyObject {
 	// make the key to be used for identifying this table and connection
 	// source
 	private String makeDbTableKey (SpyConfig conf, String table) {
-		StringBuffer rc=new StringBuffer(512);
+		StringBuilder rc=new StringBuilder(512);
 
 		// shove in typical stuff
 		rc.append(conf.get("dbSource"));

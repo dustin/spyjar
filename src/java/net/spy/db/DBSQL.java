@@ -68,7 +68,7 @@ public abstract class DBSQL extends DBSP {
 	 * Generate (and set) a new cursor name.
 	 */
 	protected void generateCursorName() throws SQLException {
-		StringBuffer sb=new StringBuffer();
+		StringBuilder sb=new StringBuilder();
 
 		int totalSize=32;
 

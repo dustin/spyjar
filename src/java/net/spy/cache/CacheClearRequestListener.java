@@ -47,19 +47,9 @@ public final class CacheClearRequestListener extends SpyThread {
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(64);
-
-		sb.append(super.toString());
-
-		sb.append(" on ");
-		sb.append(group.getHostAddress());
-		sb.append(":");
-		sb.append(port);
-		sb.append(" processed ");
-		sb.append(requests);
-		sb.append(" requests");
-
-		return(sb.toString());
+		return super.toString()
+			+ " on " + group.getHostAddress() + ":" + port
+			+ " processed " + requests + " requests";
 	}
 
 	/**

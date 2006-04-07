@@ -52,7 +52,7 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 		int hc=0;
 
 		hc+=getQuery().hashCode();
-		StringBuffer sb=new StringBuffer(256);
+		StringBuilder sb=new StringBuilder(256);
 		for(int i=0; i<getArgs().length; i++) {
 			sb.append(getArgs()[i]);
 			sb.append((char)0x00);

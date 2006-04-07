@@ -52,7 +52,7 @@ public class PwGen extends Object {
 	 */
 	public static String getPass(int length, char charset[]) {
 		SecureRandom sr=new SecureRandom();
-		StringBuffer sb=new StringBuffer(length);
+		StringBuilder sb=new StringBuilder(length);
 		for(int i=0; i<length; i++) {
 			// Stick a random character in our result.
 			sb.append(charset[sr.nextInt(charset.length)]);

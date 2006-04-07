@@ -89,7 +89,7 @@ public class ThreadPool extends ThreadGroup {
 	// for jobs to finish
 	private static final int WAIT_TIMEOUT=5000;
 
-	// StringBuffer default size for toString methods
+	// StringBuilder default size for toString methods
 	private static final int TOSTRING_BUFFER_SIZE=128;
 
 	private boolean started=false;
@@ -298,7 +298,7 @@ public class ThreadPool extends ThreadGroup {
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(TOSTRING_BUFFER_SIZE);
+		StringBuilder sb=new StringBuilder(TOSTRING_BUFFER_SIZE);
 		sb.append(super.toString());
 		if(tasks==null) {
 			sb.append(" - no queue");
@@ -775,7 +775,7 @@ public class ThreadPool extends ThreadGroup {
 		}
 
 		public String toString() {
-			StringBuffer sb=new StringBuffer(TOSTRING_BUFFER_SIZE);
+			StringBuilder sb=new StringBuilder(TOSTRING_BUFFER_SIZE);
 			sb.append(super.toString());
 
 			synchronized(runningMutex) {

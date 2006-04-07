@@ -81,7 +81,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 		private String cleanString(String s) {
 			String rv=null;
 			if(!s.equals("\\N")) {
-				StringBuffer sb=new StringBuffer(s.length());
+				StringBuilder sb=new StringBuilder(s.length());
 				for(int i=0; i<s.length(); i++) {
 					char c=s.charAt(i);
 					switch(c) {

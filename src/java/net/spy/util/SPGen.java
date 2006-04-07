@@ -259,12 +259,12 @@ public class SPGen extends SpyObject {
 	// Create a methodable name (i.e. blah returns Blah so you can make
 	// getBlah.
 	private String methodify(String word) {
-		StringBuffer sb=new StringBuffer(word.length());
+		StringBuilder sb=new StringBuilder(word.length());
 
 		StringTokenizer st=new StringTokenizer(word, "_");
 		while(st.hasMoreTokens()) {
 			String part=st.nextToken();
-			StringBuffer mntmp=new StringBuffer(part);
+			StringBuilder mntmp=new StringBuilder(part);
 			char c=Character.toUpperCase(mntmp.charAt(0));
 			mntmp.setCharAt(0, c);
 
@@ -712,7 +712,7 @@ public class SPGen extends SpyObject {
 
 	// Fix > and < characters, and & characters if there are any
 	private String docifySQL(String sql) {
-		StringBuffer sb=new StringBuffer(sql.length());
+		StringBuilder sb=new StringBuilder(sql.length());
 
 		char acters[]=sql.toCharArray();
 		for(int i=0; i<acters.length; i++) {
@@ -735,7 +735,7 @@ public class SPGen extends SpyObject {
 	}
 
 	private String getDocQuery() {
-		StringBuffer sb=new StringBuffer(1024);
+		StringBuilder sb=new StringBuilder(1024);
 
 		for(Map.Entry<String, List<String>> me : queries.entrySet()) {
 
@@ -761,9 +761,9 @@ public class SPGen extends SpyObject {
 	}
 
 	private String getJavaQueries() {
-		StringBuffer sb=new StringBuffer(1024);
+		StringBuilder sb=new StringBuilder(1024);
 
-		sb.append("StringBuffer query=null;\n");
+		sb.append("StringBuilder query=null;\n");
 		sb.append("\t\tMap<String, String> rv"
 			+ "=new HashMap<String, String>();\n");
 
@@ -771,7 +771,7 @@ public class SPGen extends SpyObject {
 
 			List<String> sqlquery=me.getValue();
 
-			sb.append("\n\t\tquery=new StringBuffer(1024);");
+			sb.append("\n\t\tquery=new StringBuilder(1024);");
 
 			for(String part : sqlquery) {
 				sb.append("\n\t\tquery.append(\"");
@@ -802,7 +802,7 @@ public class SPGen extends SpyObject {
 	private void parse() throws Exception {
 
 		// this is for when a user overrides the superclass
-		StringBuffer userSuperclass=null;
+		StringBuilder userSuperclass=null;
 
 		if(verbose) {
 			System.out.println("Parsing " + classname + ".spt");
@@ -887,7 +887,7 @@ public class SPGen extends SpyObject {
 					} else if(section.equals("timeout")) {
 						timeout=Integer.parseInt(tmp);
 					} else if(section.equals("superclass")) {
-						userSuperclass=new StringBuffer(96);
+						userSuperclass=new StringBuilder(96);
 						userSuperclass.append(tmp);
 					} else if(section.equals("import")) {
 						imports.add(tmp);

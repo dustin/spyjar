@@ -72,12 +72,8 @@ public abstract class PoolAble extends SpyObject {
 
 	// Get the debug name
 	private String debugName() {
-		StringBuffer sb=new StringBuffer(DEBUG_LEN);
-		sb.append("PoolAble ");
-		sb.append(objectId);
-		sb.append(" for ");
-		sb.append(Integer.toHexString(poolHash));
-		return(sb.toString());
+		return("PoolAble " + objectId + " for "
+			+ Integer.toHexString(poolHash));
 	}
 
 	/**
@@ -303,7 +299,7 @@ public abstract class PoolAble extends SpyObject {
 	 * @return a string representation of this object.
 	 */
 	public synchronized String toString() {
-		StringBuffer out=new StringBuffer(TOSTRING_LEN);
+		StringBuilder out=new StringBuilder(TOSTRING_LEN);
 		out.append(debugName());
 		if(isCheckedOut()) {
 			out.append(" is checked out");

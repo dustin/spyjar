@@ -88,7 +88,7 @@ public class BuildInfo extends Properties {
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(256);
+		StringBuilder sb=new StringBuilder(256);
 
 		if(getProperty("build.number") != null) {
 			sb.append("build ");

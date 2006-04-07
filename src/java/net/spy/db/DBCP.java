@@ -184,7 +184,7 @@ public abstract class DBCP extends DBSP {
 		checkArgs();
 
 		// Get ready to build our query.
-		StringBuffer querySb=new StringBuffer(256);
+		StringBuilder querySb=new StringBuilder(256);
 		querySb.append("{call ");
 		querySb.append(getSPName());
 		querySb.append(" (");
@@ -196,8 +196,7 @@ public abstract class DBCP extends DBSP {
 
 		// Remove the last comma if we had params
 		if(nargs>0) {
-			querySb=new StringBuffer(querySb.toString().substring(0,
-										querySb.length()-1));
+			querySb.deleteCharAt(querySb.length()-1);
 		}
 
 		// finish out

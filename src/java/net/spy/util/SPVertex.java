@@ -39,15 +39,7 @@ public class SPVertex<N extends SPNode> extends Object
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(32);
-
-		sb.append("{SPVertex cost=");
-		sb.append(cost);
-		sb.append(" dest=");
-		sb.append(to.get());
-		sb.append("}");
-
-		return(sb.toString());
+		return("{SPVertex cost=" + cost + " dest=" + to.get() + "}");
 	}
 
 	/** 

@@ -125,7 +125,7 @@ public class SQLRunner extends SpyObject {
 		throws SQLException, IOException {
 
 		String curline=null;
-		StringBuffer query=new StringBuffer(1024);
+		StringBuilder query=new StringBuilder(1024);
 
 		while( (curline=lr.readLine()) != null) {
 			curline=curline.trim();

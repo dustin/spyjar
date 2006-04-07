@@ -41,7 +41,7 @@ public class NetStringDecoder extends SpyObject {
 	 * @throws IOException if there is a problem decoding the netstring
 	 */
 	public String decodeString(InputStream is) throws IOException {
-		StringBuffer sizeBuf=new StringBuffer(10);
+		StringBuilder sizeBuf=new StringBuilder(10);
 		boolean haveSize=false;
 		while(!haveSize) {
 			int c=is.read();

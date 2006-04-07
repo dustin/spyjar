@@ -239,7 +239,7 @@ public class SpyDB extends SpyObject {
 		if(in.indexOf('\'') < 0) {
 			sout = in;
 		} else {
-			StringBuffer sb=new StringBuffer(in.length());
+			StringBuilder sb=new StringBuilder(in.length());
 			StringTokenizer st = new StringTokenizer(in, "\'", true);
 			while(st.hasMoreTokens()) {
 				String part = st.nextToken();

@@ -112,7 +112,7 @@ public class HTTPFetch extends Object {
 	 */
 	public String getData() throws IOException {
 		if(contents==null) {
-			StringBuffer sb=new StringBuffer(256);
+			StringBuilder sb=new StringBuilder(256);
 			BufferedReader br = getReader();
 			String line;
 			while( (line=br.readLine()) != null) {

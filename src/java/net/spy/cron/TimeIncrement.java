@@ -35,17 +35,8 @@ public class TimeIncrement extends Object {
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(128);
-
-		sb.append("{");
-		sb.append(getClass().getName());
-		sb.append(" field=");
-		sb.append(fieldIncrement);
-		sb.append(", amount=");
-		sb.append(incAmount);
-		sb.append("}");
-
-		return(sb.toString());
+		return("{" + getClass().getName() + " field=" + fieldIncrement
+			+ ", amount=" + incAmount + "}");
 	}
 
 	/**

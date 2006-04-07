@@ -34,7 +34,7 @@ public class SpyToker extends Object {
 	 * @return the tokenized string
 	 */
 	public String tokenizeString(String input, Map<String, String> m) {
-		StringBuffer output=new StringBuffer(input.length() + 256);
+		StringBuilder output=new StringBuilder(input.length() + 256);
 		int which;
 
 		while((which=input.indexOf('%')) >= 0) {

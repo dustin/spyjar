@@ -114,7 +114,7 @@ public class Range<T extends Comparable<T>> extends Object
 	 * Describe this object in Set notation.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(256);
+		StringBuilder sb=new StringBuilder(256);
 
 		sb.append("{Range ");
 		if(lowMatch == INCLUSIVE) {

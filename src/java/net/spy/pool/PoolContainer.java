@@ -216,19 +216,14 @@ public class PoolContainer extends SpyObject {
 
 	// Name to print in debuggy type things.
 	private String debugName() {
-		StringBuffer rv=new StringBuffer(DEBUG_NAMELEN);
-		rv.append(name);
-		rv.append(" @");
-		rv.append(Integer.toHexString(hashCode()));
-
-		return(rv.toString());
+		return(name + " @" + Integer.toHexString(hashCode()));
 	}
 
 	/**
 	 * debugging tool, dump out the current state of the pool
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(TOSTRING_LEN);
+		StringBuilder sb=new StringBuilder(TOSTRING_LEN);
 		sb.append("Pool ");
 		sb.append(debugName());
 		sb.append(" - total Objects:  ");

@@ -48,13 +48,7 @@ public final class Level extends Object {
 	 * Get a string representation of this level.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(16);
-
-		sb.append("{LogLevel:  ");
-		sb.append(name);
-		sb.append("}");
-
-		return(sb.toString());
+		return("{LogLevel:  " + name + "}");
 	}
 
 }

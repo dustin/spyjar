@@ -431,7 +431,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			checkArgs();
 
 			// Get ready to build our query.
-			StringBuffer querySb=new StringBuffer(TOSTRING_SB_SIZE);
+			StringBuilder querySb=new StringBuilder(TOSTRING_SB_SIZE);
 			querySb.append("exec ");
 			querySb.append(spname);
 			querySb.append(" ");
@@ -446,8 +446,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 			// Remove the last comma if we had params
 			if(nargs>0) {
-				querySb=new StringBuffer(querySb.toString().substring(0,
-											querySb.length()-2));
+				querySb.delete(querySb.length()-2, querySb.length());
 			}
 			String tmpQuery=querySb.toString().trim();
 
@@ -1026,15 +1025,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		 * String me.
 		 */
 		public String toString() {
-			StringBuffer sb=new StringBuffer(TOSTRING_SB_SIZE);
-
-			sb.append("{");
-			sb.append(getClass().getName());
-			sb.append(" ");
-			sb.append(getName());
-			sb.append("}");
-
-			return(sb.toString());
+			return("{" + getClass().getName() + " " + getName() + "}");
 		}
 
 		/**
@@ -1131,18 +1122,10 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		public String toString() {
-			StringBuffer rc=new StringBuffer(TOSTRING_SB_SIZE);
-			rc.append("{ Param: type=");
-			rc.append(TypeNames.getTypeName(javaType));
-			rc.append("(");
-			rc.append(javaType);
-			rc.append(")");
-			rc.append(", name=");
-			rc.append(getName().toString());
-			rc.append(", required=");
-			rc.append(paramType);
-			rc.append("}");
-			return(rc.toString());
+			return "{Param: type="
+				+ TypeNames.getTypeName(javaType)
+				+ "(" + javaType + "), name="
+				+ getName() + ", required=" + paramType + "}";
 		}
 	}
 
@@ -1196,24 +1179,15 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		public String toString() {
-			StringBuffer rc=new StringBuffer(TOSTRING_SB_SIZE);
-			rc.append("{ Arg: type=");
-			rc.append(javaType);
-			rc.append("(");
-			rc.append(TypeNames.getTypeName(javaType));
-			rc.append(")");
-			rc.append(", name=");
-			rc.append(getName().toString());
-			rc.append(", value=");
+			String valName=null;
 			if (value==null) {
-				rc.append("NULL");
+				valName="NULL";
 			} else {
-				rc.append("'");
-				rc.append(value.toString());
-				rc.append("'");
+				valName="'" + value + "'";
 			}
-			rc.append("}");
-			return(rc.toString());
+			return "{Arg: type=" + javaType
+				+ "(" + TypeNames.getTypeName(javaType)
+				+ "), name=" + getName() + ", value=" + valName + "}";
 		}
 
 	}

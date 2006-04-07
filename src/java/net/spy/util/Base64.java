@@ -41,7 +41,7 @@ public class Base64 extends Object {
 	 */
 	public String encode(byte data[]) {
 		// Go ahead and guess how big it needs to be.
-		StringBuffer sb=new StringBuffer((data.length*4/3));
+		StringBuilder sb=new StringBuilder((data.length*4/3));
 
 		int o=0;
 		// Flip through the input and encode the shite.
