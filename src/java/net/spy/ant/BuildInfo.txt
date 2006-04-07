@@ -48,8 +48,11 @@ public class BuildInfo extends Properties {
 		if(is==null) {
 			throw new IOException("No resources found for " + resource);
 		}
-		load(is);
-		is.close();
+		try {
+			load(is);
+		} finally {
+			is.close();
+		}
 	}
 
 	/**
@@ -128,15 +131,18 @@ public class BuildInfo extends Properties {
 
 				URL u=bi.getFile("%CHANGELOG%");
 				InputStream is=u.openStream();
-				byte data[]=new byte[8192];
-				int bread=0;
-				do {
-					bread=is.read(data);
-					if(bread > 0) {
-						System.out.write(data, 0, bread);
-					}
-				} while(bread != -1);
-				is.close();
+				try {
+					byte data[]=new byte[8192];
+					int bread=0;
+					do {
+						bread=is.read(data);
+						if(bread > 0) {
+							System.out.write(data, 0, bread);
+						}
+					} while(bread != -1);
+				} finally {
+					is.close();
+				}
 			} else {
 				System.out.println("(add -c to see the recent changelog)");
 			}

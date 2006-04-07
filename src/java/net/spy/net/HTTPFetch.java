@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import net.spy.util.CloseUtil;
 import net.spy.util.SpyUtil;
 
 /**
@@ -113,11 +114,16 @@ public class HTTPFetch extends Object {
 	public String getData() throws IOException {
 		if(contents==null) {
 			StringBuilder sb=new StringBuilder(256);
-			BufferedReader br = getReader();
-			String line;
-			while( (line=br.readLine()) != null) {
-				sb.append(line);
-				sb.append("\n");
+			BufferedReader br = null;
+			try {
+				br=getReader();
+				String line;
+				while( (line=br.readLine()) != null) {
+					sb.append(line);
+					sb.append("\n");
+				}
+			} finally {
+				CloseUtil.close(br);
 			}
 			contents=sb.toString();
 		}

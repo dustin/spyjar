@@ -21,6 +21,7 @@ import java.util.Set;
 
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
+import net.spy.util.CloseUtil;
 import net.spy.util.SpyUtil;
 
 /**
@@ -108,16 +109,19 @@ public class DiskCache extends AbstractMap {
 
 		String pathto=getPath(k);
 
+		FileOutputStream ostream=null;
+		ObjectOutputStream p=null;
 		try {
-			FileOutputStream ostream = new FileOutputStream(pathto);
-			ObjectOutputStream p = new ObjectOutputStream(ostream);
+			ostream = new FileOutputStream(pathto);
+			p = new ObjectOutputStream(ostream);
 			p.writeObject(k);
 			p.writeObject(v);
 			p.flush();
-			p.close();
-			ostream.close();
 		} catch(IOException e) {
 			throw new RuntimeException("Error storing object", e);
+		} finally {
+			CloseUtil.close(p);
+			CloseUtil.close(ostream);
 		}
 
 		return(rv);
@@ -176,20 +180,8 @@ public class DiskCache extends AbstractMap {
 		} catch(Exception e) {
 			getLogger().warn("Error getting " + key + " from disk cache", e);
 		} finally {
-			if(p != null) {
-				try {
-					p.close();
-				} catch(IOException e) {
-					getLogger().debug("Problem closing " + p, e);
-				}
-			}
-			if(istream != null) {
-				try {
-					istream.close();
-				} catch(IOException e) {
-					getLogger().debug("Problem closing " + istream, e);
-				}
-			}
+			CloseUtil.close(p);
+			CloseUtil.close(istream);
 		}
 
 		return(rv);
@@ -228,11 +220,17 @@ public class DiskCache extends AbstractMap {
 				}
 			} else {
 				// Regular file, open it and read it
-				FileInputStream istream = new FileInputStream(f);
-				ObjectInputStream p = new ObjectInputStream(istream);
-				Object key=p.readObject();
-				p.close();
-				istream.close();
+				FileInputStream istream = null;
+				ObjectInputStream p = null;
+				Object key=null;
+				try {
+					istream = new FileInputStream(f);
+					p = new ObjectInputStream(istream);
+					key=p.readObject();
+				} finally {
+					CloseUtil.close(p);
+					CloseUtil.close(istream);
+				}
 
 				// Add the new entry.
 				add(new E(key, f));
@@ -345,20 +343,21 @@ public class DiskCache extends AbstractMap {
 		public Object getValue() {
 			Object rv=null;
 
+			FileInputStream istream=null;
+			ObjectInputStream p=null;
 			try {
-				FileInputStream istream = new FileInputStream(path);
-				ObjectInputStream p = new ObjectInputStream(istream);
+				istream = new FileInputStream(path);
+				p = new ObjectInputStream(istream);
 				Object key=p.readObject();
 				assert(key.equals(k));
-				Object val=p.readObject();
-				p.close();
-				istream.close();
-
-				rv=val;
+				rv=p.readObject();
 			} catch(IOException e) {
 				throw new RuntimeException("Error getting object",e);
 			} catch(ClassNotFoundException e) {
 				throw new RuntimeException("Error getting object",e);
+			} finally {
+				CloseUtil.close(p);
+				CloseUtil.close(istream);
 			}
 
 			return(rv);

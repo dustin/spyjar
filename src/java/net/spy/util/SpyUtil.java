@@ -110,7 +110,7 @@ public class SpyUtil {
 		try {
 			rv=getReaderAsString(f);
 		} finally {
-			f.close();
+			CloseUtil.close(f);
 		}
 		return(rv);
 	}

@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 
+import net.spy.util.CloseUtil;
 import net.spy.util.SpyToker;
 import net.spy.util.SpyUtil;
 
@@ -108,8 +109,12 @@ public class BuildInfoTask extends Task {
 		}
 		try {
 			InputStreamReader ir=new InputStreamReader(u.openStream());
-			String s=SpyUtil.getReaderAsString(ir);
-			ir.close();
+			String s=null;
+			try {
+				s=SpyUtil.getReaderAsString(ir);
+			} finally {
+				CloseUtil.close(ir);
+			}
 
 			HashMap<String, String> tokens=new HashMap<String, String>();
 			tokens.put("PACKAGE", pkg);
@@ -127,8 +132,11 @@ public class BuildInfoTask extends Task {
 			// Get the output file and write it
 			File outFile=new File(outFileName);
 			FileWriter fw=new FileWriter(outFile);
-			fw.write(output);
-			fw.close();
+			try {
+				fw.write(output);
+			} finally {
+				CloseUtil.close(fw);
+			}
 
 			System.out.println("Wrote " + pkg + ".BuildInfo");
 		} catch(IOException e) {

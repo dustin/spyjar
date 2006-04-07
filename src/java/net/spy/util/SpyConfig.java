@@ -185,7 +185,7 @@ public class SpyConfig extends Properties {
 		try {
 			p.load(fis);
 		} finally {
-			fis.close();
+			CloseUtil.close(fis);
 		}
 		return(new HashMap(p));
 	}

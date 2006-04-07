@@ -652,7 +652,6 @@ public class SPGen extends SpyObject {
 		}
 
 		out.println("}");
-
 	}
 
 	private String createExecuteMethods() {
@@ -1348,8 +1347,8 @@ public class SPGen extends SpyObject {
 
 		spg.generate();
 
-		ireader.close();
-		owriter.close();
+		CloseUtil.close(ireader);
+		CloseUtil.close(owriter);
 	}
 
 }

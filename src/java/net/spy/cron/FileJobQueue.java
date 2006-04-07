@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
+import net.spy.util.CloseUtil;
 import net.spy.util.SpyUtil;
 
 /**
@@ -66,10 +67,13 @@ public class FileJobQueue extends JobQueue {
 		super();
 
 		classLoader=cl;
-		FileReader fr=new FileReader(f);
-		initQueue(fr);
-		fr.close();
-
+		FileReader fr=null;
+		try {
+			fr=new FileReader(f);
+			initQueue(fr);
+		} finally {
+			CloseUtil.close(fr);
+		}
 	}
 
 	/** 

@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import net.spy.util.CloseUtil;
+
 /**
  * Stub class for building a ResultSet from a file.
  */
@@ -58,9 +60,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			}
 			setResults(results);
 		} finally {
-			if(fr != null) {
-				fr.close();
-			}
+			CloseUtil.close(fr);
 		}
 	}
 

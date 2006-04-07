@@ -6,6 +6,7 @@
 
 package net.spy.db;
 
+import java.io.Closeable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +21,7 @@ import net.spy.util.SpyConfig;
 /**
  * SpyDB is an abstraction of both net.spy.pool and java.sql.
  */
-public class SpyDB extends SpyObject {
+public class SpyDB extends SpyObject implements Closeable {
 
 	// The actual database connection from the PooledObject.
 	private Connection conn=null;

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import net.spy.SpyObject;
 import net.spy.db.sp.SelectPrimaryKey;
 import net.spy.db.sp.UpdatePrimaryKey;
+import net.spy.util.CloseUtil;
 import net.spy.util.SpyConfig;
 
 /**
@@ -116,7 +117,7 @@ public class GetPK extends SpyObject {
 			rv=getPrimaryKey(db, table.toLowerCase(),
 				makeDbTableKey(conf, table));
 		} finally {
-			db.close();
+			CloseUtil.close(db);
 		}
 		return(rv);
 	}

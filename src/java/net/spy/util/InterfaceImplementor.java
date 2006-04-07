@@ -495,8 +495,11 @@ public class InterfaceImplementor extends SpyObject {
 		// Write it out...
 		System.out.println("Writing output to " + fn);
 		FileWriter fw=new FileWriter(fn);
-		fw.write(makeSource());
-		fw.close();
+		try {
+			fw.write(makeSource());
+		} finally {
+			CloseUtil.close(fw);
+		}
 	}
 
 	// A method com

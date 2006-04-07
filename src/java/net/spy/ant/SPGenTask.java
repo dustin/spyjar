@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import net.spy.util.CloseUtil;
 import net.spy.util.SPGen;
 
 import org.apache.tools.ant.BuildException;
@@ -181,8 +182,8 @@ public class SPGenTask extends MatchingTask {
 		File srcFile = new File(srcDir, filename);
 		File tmpFile = null;
 		File destFile = getDestFile(filename);
-		BufferedReader in;
-		PrintWriter out;
+		BufferedReader in=null;
+		PrintWriter out=null;
 
 		try {
 
@@ -205,32 +206,30 @@ public class SPGenTask extends MatchingTask {
 				tmpFile = File.createTempFile("sptgen", "java", destDir);
 				FileWriter writer = new FileWriter(tmpFile);
 				out = new PrintWriter(writer);
-			} catch (IOException e) {
-				throw new BuildException(e);
-			}
 
-			String name = srcFile.getName();
-			// assert name.endsWith(".spt");
-			SPGen spg = new SPGen(name.substring(0, name.length()-4), in, out);
-			if (this.superclass!=null) {
-				spg.setSuperclass(this.superclass);
-			}
-			if (this.dbcpSuperclass!=null) {
-				spg.setDbcpSuperclass(this.dbcpSuperclass);
-			}
-			if (this.dbspSuperclass!=null) {
-				spg.setDbspSuperclass(this.dbspSuperclass);
-			}
-			if (this.interfaces != null) {
-				spg.addInterfaces(this.interfaces);
-			}
-			spg.setVerbose(verbose);
-			try {
+				String name = srcFile.getName();
+				// assert name.endsWith(".spt");
+				SPGen spg = new SPGen(
+						name.substring(0, name.length()-4), in, out);
+				if (this.superclass!=null) {
+					spg.setSuperclass(this.superclass);
+				}
+				if (this.dbcpSuperclass!=null) {
+					spg.setDbcpSuperclass(this.dbcpSuperclass);
+				}
+				if (this.dbspSuperclass!=null) {
+					spg.setDbspSuperclass(this.dbspSuperclass);
+				}
+				if (this.interfaces != null) {
+					spg.addInterfaces(this.interfaces);
+				}
+				spg.setVerbose(verbose);
 				spg.generate();
-				in.close();
-				out.close();
 			} catch (Exception e) {
 				throw new BuildException(e);
+			} finally {
+				CloseUtil.close(in);
+				CloseUtil.close(out);
 			}
 
 			if (destFile.exists()) {
