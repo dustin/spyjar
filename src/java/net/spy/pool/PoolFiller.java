@@ -12,8 +12,6 @@ import net.spy.util.SpyConfig;
  */
 public abstract class PoolFiller extends Object {
 
-	private static final int TOSTRING_LEN=64;
-
 	private SpyConfig conf=null;
 	private String name=null;
 	private int poolHash=0;

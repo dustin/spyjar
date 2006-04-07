@@ -18,7 +18,6 @@ import net.spy.SpyObject;
  */
 public abstract class PoolAble extends SpyObject {
 
-	private static final int DEBUG_LEN=64;
 	private static final int TOSTRING_LEN=128;
 
 	private int objectId=-1;

@@ -28,8 +28,6 @@ public class PoolContainer extends SpyObject {
 
 	private static final int PING_ON_CHECKOUT=1;
 
-	// Buffer length for debug strings
-	private static final int DEBUG_NAMELEN=64;
 	// Buffer length for stringification
 	private static final int TOSTRING_LEN=256;
 
