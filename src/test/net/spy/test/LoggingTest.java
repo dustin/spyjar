@@ -6,6 +6,8 @@ package net.spy.test;
 import java.io.PrintStream;
 
 import junit.framework.TestCase;
+
+import net.spy.log.AbstractLogger;
 import net.spy.log.DefaultLogger;
 import net.spy.log.Level;
 import net.spy.log.Logger;
@@ -39,7 +41,7 @@ public class LoggingTest extends TestCase {
 	 * Make sure logging is enabled.
 	 */
 	public void testDebugLogging() {
-		assertTrue(logger.isDebugEnabled());
+		assertTrue("Debug logging is not enabled", logger.isDebugEnabled());
 		logger.debug("debug message");
 	}
 
@@ -170,5 +172,24 @@ public class LoggingTest extends TestCase {
 			System.setErr(errSave);
 		}
 	}
+
+    /**
+     * Test picking up an exception argument.
+     */
+    public void testExceptionArg() throws Exception {
+        Object args[]=new Object[]{"a", 42, new Exception("test")};
+        Throwable t=((AbstractLogger)logger).getThrowable(args);
+        assertNotNull(t);
+        assertEquals("test", t.getMessage());
+    }
+
+    /**
+     * Test when the last argument is not an exception.
+     */
+    public void testNoExceptionArg() throws Exception {
+        Object args[]=new Object[]{"a", 42, new Exception("test"), "x"};
+        Throwable t=((AbstractLogger)logger).getThrowable(args);
+        assertNull(t);
+    }
 
 }

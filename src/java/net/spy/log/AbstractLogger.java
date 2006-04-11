@@ -30,6 +30,20 @@ public abstract class AbstractLogger implements Logger {
 		return(name);
 	}
 
+    /**
+     * Get the throwable from the last element of this array if it is
+     * Throwable, else null.
+     */
+    public Throwable getThrowable(Object args[]) {
+        Throwable rv=null;
+        if(args.length > 0) {
+            if(args[args.length-1] instanceof Throwable) {
+                rv=(Throwable)args[args.length-1];
+            }   
+        }   
+        return rv;
+    }   
+
 	/** 
 	 * True if debug is enabled for this logger.
 	 * Default implementation always returns false
@@ -55,6 +69,18 @@ public abstract class AbstractLogger implements Logger {
 	public void debug(Object message, Throwable exception) {
 		log(Level.DEBUG, message, exception);
 	}
+	/**
+	 * Log a formatted message at debug level.
+	 * 
+	 * @param message the message to log
+	 * @param args the arguments for that message
+	 */
+	public void debug(String message, Object... args) {
+		if(isDebugEnabled()) {
+			debug(String.format(message, args), getThrowable(args));
+		}
+	}
+
 	/** 
 	 * Log a message at debug level.
 	 * 
@@ -73,6 +99,18 @@ public abstract class AbstractLogger implements Logger {
 	public void info(Object message, Throwable exception) {
 		log(Level.INFO, message, exception);
 	}
+	/**
+	 * Log a formatted message at info level.
+	 * 
+	 * @param message the message to log
+	 * @param args the arguments for that message
+	 */
+	public void info(String message, Object... args) {
+		if(isInfoEnabled()) {
+			info(String.format(message, args), getThrowable(args));
+		}
+	}
+
 	/** 
 	 * Log a message at info level.
 	 * 
@@ -91,6 +129,16 @@ public abstract class AbstractLogger implements Logger {
 	public void warn(Object message, Throwable exception) {
 		log(Level.WARN, message, exception);
 	}
+	/**
+	 * Log a formatted message at debug level.
+	 * 
+	 * @param message the message to log
+	 * @param args the arguments for that message
+	 */
+	public void warn(String message, Object... args) {	
+		warn(String.format(message, args), getThrowable(args));
+	}
+
 	/** 
 	 * Log a message at warning level.
 	 * 
@@ -109,6 +157,16 @@ public abstract class AbstractLogger implements Logger {
 	public void error(Object message, Throwable exception) {
 		log(Level.ERROR, message, exception);
 	}
+	/**
+	 * Log a formatted message at debug level.
+	 * 
+	 * @param message the message to log
+	 * @param args the arguments for that message
+	 */
+	public void error(String message, Object... args) {
+		error(String.format(message, args), getThrowable(args));
+	}
+
 	/** 
 	 * Log a message at error level.
 	 * 
@@ -126,6 +184,15 @@ public abstract class AbstractLogger implements Logger {
 	 */
 	public void fatal(Object message, Throwable exception) {
 		log(Level.FATAL, message, exception);
+	}
+	/**
+	 * Log a formatted message at debug level.
+	 * 
+	 * @param message the message to log
+	 * @param args the arguments for that message
+	 */
+	public void fatal(String message, Object... args) {
+		fatal(String.format(message, args), getThrowable(args));
 	}
 
 	/** 

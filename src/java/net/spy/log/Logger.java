@@ -63,6 +63,13 @@ public interface Logger {
 	 * @param message the message to log
 	 */
 	void debug(Object message);
+	/**
+	 * Log a formatted message at debug level.
+	 * 
+	 * @param message the message to log
+	 * @param args the arguments for that message
+	 */
+	void debug(String message, Object... args);
 
 	/** 
 	 * Log a message at info level.
@@ -77,6 +84,13 @@ public interface Logger {
 	 * @param message the message to log
 	 */
 	void info(Object message);
+	/**
+	 * Log a formatted message at info level.
+	 * 
+	 * @param message the message to log
+	 * @param args the arguments for that message
+	 */
+	void info(String message, Object... args);
 
 	/** 
 	 * Log a message at warning level.
@@ -91,6 +105,13 @@ public interface Logger {
 	 * @param message the message to log
 	 */
 	void warn(Object message);
+	/**
+	 * Log a formatted message at debug level.
+	 * 
+	 * @param message the message to log
+	 * @param args the arguments for that message
+	 */
+	void warn(String message, Object... args);
 
 	/** 
 	 * Log a message at error level.
@@ -105,6 +126,13 @@ public interface Logger {
 	 * @param message the message to log
 	 */
 	void error(Object message);
+	/**
+	 * Log a formatted message at debug level.
+	 * 
+	 * @param message the message to log
+	 * @param args the arguments for that message
+	 */
+	void error(String message, Object... args);
 
 	/** 
 	 * Log a message at fatal level.
@@ -113,12 +141,17 @@ public interface Logger {
 	 * @param exception the exception that caused the message to be generated
 	 */
 	void fatal(Object message, Throwable exception);
-
 	/** 
 	 * Log a message at fatal level.
 	 * 
 	 * @param message the message to log
 	 */
 	void fatal(Object message);
-
+	/**
+	 * Log a formatted message at debug level.
+	 * 
+	 * @param message the message to log
+	 * @param args the arguments for that message
+	 */
+	void fatal(String message, Object... args);
 }
