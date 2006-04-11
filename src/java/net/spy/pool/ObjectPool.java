@@ -267,9 +267,7 @@ public class ObjectPool extends SpyObject {
 			}
 			op.prune();
 			numCleans++;
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Finished cleaning, looks like this:  " + op);
-			}
+			getLogger().debug("Finished cleaning, looks like this:  %s", op);
 		}
 
 		public void run() {

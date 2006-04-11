@@ -120,14 +120,12 @@ public class FileJobQueue extends JobQueue {
 				Job j=parseJob(line, lnr.getLineNumber());
 				if(j!=null) {
 					addJob(j);
-					if(getLogger().isInfoEnabled()) {
-						getLogger().info("Added job:  " + j + " to start at "
-							+ j.getStartTime());
-					}
+					getLogger().info("Added job %s to start at %s",
+							j, j.getStartTime());
 				}
 			} catch(Exception e) {
-				getLogger().warn("Error parsing line "
-					+ lnr.getLineNumber(), e);
+				getLogger().warn("Error parsing line %s",
+						lnr.getLineNumber(), e);
 			}
 
 			line=lnr.readLine();
@@ -178,8 +176,7 @@ public class FileJobQueue extends JobQueue {
 			rv=new MainJob(classLoader, classS, args, startDate, ti);
 		} else {
 			if(startDate.getTime() < System.currentTimeMillis()) {
-				getLogger().warn("At job on line " + lineNum
-					+ " is in the past.");
+				getLogger().warn("At job on line %d is in the past.", lineNum);
 			} else {
 				rv=new MainJob(classLoader, classS, args, startDate);
 			}

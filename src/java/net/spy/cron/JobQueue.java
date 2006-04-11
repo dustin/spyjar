@@ -42,9 +42,7 @@ public class JobQueue<T extends Job> extends ArrayList<T> {
 	 * Add a job.
 	 */
 	public synchronized void addJob(T j) {
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Adding job:  " + j);
-		}
+		getLogger().debug("Adding job:  %s", j);
 		add(j);
 		notify();
 	}
@@ -65,7 +63,7 @@ public class JobQueue<T extends Job> extends ArrayList<T> {
 				// Reschedule the job
 				j.findNextRun();
 			} else if(j.isTrash()) {
-				getLogger().info("JobQueue: Removing " + j);
+				getLogger().info("JobQueue: Removing %s", j);
 				i.remove();
 			}
 		}

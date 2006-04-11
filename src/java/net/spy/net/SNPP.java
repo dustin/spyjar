@@ -334,9 +334,7 @@ public class SNPP extends SpyObject {
 		} catch(Exception e) {
 			// This is a nonstandard command and is likely to throw an
 			// exception.
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Failed to set priority");
-			}
+			getLogger().debug("Failed to set priority");
 		}
 		send();
 	}
@@ -423,9 +421,7 @@ public class SNPP extends SpyObject {
 	 * status from the SNPP server.
 	 */
 	public void cmd(String command) throws Exception {
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug(">> " + command);
-		}
+		getLogger().debug(">> %s", command);
 		prout.print(command + "\r\n");
 		prout.flush();
 		getaline();
@@ -458,9 +454,7 @@ public class SNPP extends SpyObject {
 	}
 
 	protected void finalize() throws Throwable {
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Finalizing...");
-		}
+		getLogger().debug("Finalizing...");
 		close();
 		super.finalize();
 	}
@@ -494,9 +488,7 @@ public class SNPP extends SpyObject {
 			throw new IOException("Read returned null, disconnected?");
 		}
 
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("<< " + currentLine);
-		}
+		getLogger().debug("<< %s", currentLine);
 
 		// Extract the message
 		currentMessage = currentLine.substring(STATUS_LENGTH+1);

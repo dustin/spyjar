@@ -25,7 +25,7 @@ public class CloseUtil {
             try {
                 closeable.close();
             } catch (Exception e) {
-                logger.info("Unable to close " + closeable, e);
+                logger.info("Unable to close %s", closeable, e);
             }
         }
     }
@@ -38,7 +38,7 @@ public class CloseUtil {
             try {
                 closeable.close();
             } catch (Exception e) {
-                logger.info("Unable to close " + closeable, e);
+                logger.info("Unable to close %s", closeable, e);
             }
         }
     }
@@ -51,7 +51,7 @@ public class CloseUtil {
             try {
                 closeable.close();
             } catch (Exception e) {
-                logger.info("Unable to close " + closeable, e);
+                logger.info("Unable to close %s", closeable, e);
             }
         }
     }

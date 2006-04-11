@@ -48,8 +48,8 @@ public class Digest extends SpyObject {
 		String htype=hash.substring(0,
 			hash.indexOf('}')+1).toUpperCase();
 		if(!(htype.equals("{" + HASH + "}") || htype.equals("{S" + HASH + "}"))) {
-			getLogger().warn("Invalid hash type ``" + htype + "'' in " + hash
-					+ ", assuming " + HASH);
+			getLogger().warn("Invalid hash type ``%s'' in %s, assuming %s",
+					htype, hash, HASH);
 		}
 		String data=hash.substring(hash.indexOf('}')+1);
 

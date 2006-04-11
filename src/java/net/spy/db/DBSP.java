@@ -155,10 +155,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	public void setCursorName(String name) throws SQLException {
 		cursorName=name;
 		if(pst != null) {
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Setting the pst cursor name to "
-					+ cursorName);
-			}
+			getLogger().debug("Setting the pst cursor name to %s", cursorName);
 			pst.setCursorName(cursorName);
 		}
 	}
@@ -192,22 +189,19 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		throws SQLException {
 
 		if(this.pst != null) {
-			getLogger().warn("Discarding old prepared statement " + this.pst);
+			getLogger().warn("Discarding old prepared statement %s", this.pst);
 		}
 		this.pst=to;
 
 		if(debug) {
-			getLogger().debug("Setting timeout to: "+timeout);
+			getLogger().debug("Setting timeout to: %s", timeout);
 		}
 		pst.setQueryTimeout(timeout);
 		pst.setMaxRows(maxRows);
 
 		// Set the cursor name if there is one.
 		if(cursorName != null) {
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Setting the pst cursor name to "
-					+ cursorName);
-			}
+			getLogger().debug("Setting the pst cursor name to %s", cursorName);
 		}
 	}
 
@@ -374,8 +368,8 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 		if(debug) {
 			getLogger().debug("Checking");
-			getLogger().debug("Parameters:  "+ parameters);
-			getLogger().debug("Args:  "+ arguments);
+			getLogger().debug("Parameters:  %s", parameters);
+			getLogger().debug("Args:  %s", arguments);
 		}
 
 		// Now, verify all of the arguments we have are correctly typed.
@@ -451,7 +445,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			String tmpQuery=querySb.toString().trim();
 
 			if (debug) {
-				getLogger().debug("Query: "+tmpQuery);
+				getLogger().debug("Query: %s", tmpQuery);
 			}
 
 			// Fill in the arguments.
@@ -515,7 +509,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			int type=arg.getJavaType();
 
 			if(isDebugEnabled()) {
-				getLogger().debug("arg[" + i + "] = " + arg);
+				getLogger().debug("arg[%d] = %s", i, arg);
 			}
 
 			try {
@@ -570,10 +564,9 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 							+ " seems to have been overlooked.");
 				}
 			} catch(SQLException se) {
-				getLogger().warn("SQLException while applying " + arg
-					+ " in prepared statement for type "
-					+ TypeNames.getTypeName(type)
-					+ " " + String.valueOf(o), se);
+				getLogger().warn("SQLException while applying %s"
+					+ " in prepared statement for type %s %s", arg,
+					TypeNames.getTypeName(type), o, se);
 				throw se;
 			} catch (Exception applyException) {
 				String msg="Problem setting " + arg

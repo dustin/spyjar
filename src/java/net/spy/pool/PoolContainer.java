@@ -158,16 +158,11 @@ public class PoolContainer extends SpyObject {
 				// If we didn't get anything, deal with that situation.
 				if(poolable==null) {
 					try {
-						if(getLogger().isDebugEnabled()) {
-							getLogger().debug(
-								"No free entries in pool, sleeping");
-						}
+						getLogger().debug("No free entries in pool, sleeping");
 
 						// We're halfway through, or more!  Desperate measures!
 						if(retry==retries/2) {
-							if(getLogger().isDebugEnabled()) {
-								getLogger().debug("Trying to force cleanup!");
-							}
+							getLogger().debug("Trying to force cleanup!");
 							GarbageCollector gc=
 								GarbageCollector.getGarbageCollector();
 							gc.collect();
@@ -202,9 +197,7 @@ public class PoolContainer extends SpyObject {
 
 		// Hold it still whlie we do this...
 		synchronized(pool) {
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Moving " + poolable);
-			}
+			getLogger().debug("Moving %s", poolable);
 			pool.remove(poolable);
 			pool.add(poolable);
 		}
@@ -269,18 +262,14 @@ public class PoolContainer extends SpyObject {
 	 * @exception PoolException when something bad happens
 	 */
 	void prune() throws PoolException {
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Beginning prune.");
-		}
+		getLogger().debug("Beginning prune.");
 		synchronized (pool) {
 			// Get rid of expired things
 			for(Iterator<PoolAble> it=pool.iterator(); it.hasNext();) {
 				PoolAble p=it.next();
 				if(p.pruneStatus()>=PoolAble.MUST_CLEAN) {
 					// Tell it that it can go away now.
-					if(getLogger().isDebugEnabled()) {
-						getLogger().debug("Removing " + p);
-					}
+					getLogger().debug("Removing " + p);
 					p.discard();
 					it.remove();
 				} else if(!p.isAlive()) {
@@ -316,11 +305,8 @@ public class PoolContainer extends SpyObject {
 		// Set the hashcode of this pool for consistent debug output.
 		filler.setPoolHash(hashCode());
 
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Pool " + debugName() + " wants a min of "
-				+ minObjects + " and a max of " + maxObjects
-				+ " with a yellow line at " + yellowLine);
-		}
+		getLogger().debug("Pool %s wants a min %s, max %s and yellow-line %s",
+			debugName(), minObjects, maxObjects, yellowLine);
 
 		if(getPropertyBool("pingOnCheckout", true)) {
 			pingConfig |= PING_ON_CHECKOUT;
@@ -340,10 +326,7 @@ public class PoolContainer extends SpyObject {
 
 	// Populate with the minimum number of objects.
 	private void getMinObjects() throws PoolException{
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Pool " + name + " wants at least "
-				+ minObjects +" objects.");
-		}
+		getLogger().debug("Pool %s wants at least %s object", name, minObjects);
 		for(int i=totalObjects(); i<minObjects; i++) {
 			getNewObject();
 		}
@@ -351,10 +334,8 @@ public class PoolContainer extends SpyObject {
 
 	// Populate with the number of objects we need at start.
 	private void getStartObjects() throws PoolException{
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Pool " + name + " starting with "
-				+ initObjects +" objects.");
-		}
+		getLogger().debug("Pool %s starting with %s objects",
+				name, initObjects);
 		for(int i=totalObjects(); i<initObjects; i++) {
 			getNewObject();
 		}
@@ -373,11 +354,9 @@ public class PoolContainer extends SpyObject {
 
 		// Don't add an object if we're at capacity.
 		if(totalObjects()<maxObjects) {
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("*** Getting a new object in the "
-					+ name + " pool, currently have " + totalObjects()
-					+ "/" + maxObjects + ". ***");
-			}
+			getLogger().debug(
+				"*** Getting a new object in the %s pool, have %s/%s",
+				name, totalObjects(), maxObjects);
 			po=filler.getObject();
 			po.setObjectID(nextId());
 			po.setPoolName(name);
@@ -387,10 +366,8 @@ public class PoolContainer extends SpyObject {
 			synchronized(pool) {
 				pool.add(po);
 			}
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Added the object to the pool, now have "
-					+ totalObjects());
-			}
+			getLogger().debug("Added the object to the pool, now have %s",
+					totalObjects());
 		} else {
 			throw new PoolException("Cannot create another object in the pool");
 		}

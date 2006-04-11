@@ -48,7 +48,7 @@ public class MainJob extends Job implements ThreadPoolRunnable {
 		try {
 			SpyUtil.runClass(classLoader, classname, args);
 		} catch(Exception e) {
-			getLogger().error("Problem invoking main class " + classname, e);
+			getLogger().error("Problem invoking main class %s", classname, e);
 		}
 	}
 

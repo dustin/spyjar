@@ -42,8 +42,8 @@ public class QuerySelectorFactory extends SpyObject {
 				qs=(QuerySelector)c.newInstance();
 			} catch(Exception e) {
 				Logger l=LoggerFactory.getLogger(QuerySelectorFactory.class);
-				l.warn("Couldn't make a " + selectorClassName
-					+ ", using " + DEFAULT_SELECTOR, e);
+				l.warn("Couldn't make a %s, using %s", selectorClassName,
+						DEFAULT_SELECTOR, e);
 				qs=new DatabaseMetaDataQuerySelector();
 			}
 		}

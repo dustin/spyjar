@@ -62,30 +62,18 @@ public class Saver extends SpyObject {
 		save(o, null);
 	}
 
-	/** 
-	 * Save this Savabale and everything it contains at the default isolation
-	 * level.
-	 *
-	 * @param o the savable
-	 * @param level the isolation level (as defined in java.sql.Connection)
-	 */
-	public void save(Savable o, int level) throws SaveException {
-		save(o, new Integer(level));
-	}
-
 	/**
 	 * Save this Savabale and everything it contains.
 	 */
-	private void save(Savable o, Integer isoLevel) throws SaveException {
+	public void save(Savable o, Integer isoLevel) throws SaveException {
 		boolean complete=false;
 		listedObjects.clear();
 
 		int oldIsolationLevel=0;
 
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Beginning save transaction " + getSessId()
-				+ " with isolation level " + isoLevel);
-		}
+		getLogger().debug(
+				"Beginning save transaction %s with isolation level %s",
+				getSessId(), isoLevel);
 
 		try {
 			conn=connSrc.getConnection(config);
@@ -149,9 +137,7 @@ public class Saver extends SpyObject {
 				tl.transactionCommited();
 			}
 		} // end looking at all the listeners.
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Save transaction " + getSessId() + " complete");
-		}
+		getLogger().debug("Save transaction %s complete", getSessId());
 	}
 
 	private String getSessId() {
@@ -178,8 +164,8 @@ public class Saver extends SpyObject {
 			if(o.isNew() || o.isModified()) {
 				// Log the pre-save
 				if(getLogger().isDebugEnabled()) {
-					getLogger().debug("Saving " + dbgString(o)
-						+ " in " + getSessId());
+					getLogger().debug("Saving %s in %s",
+							dbgString(o), getSessId());
 				}
 
 				// Perform the actual save
@@ -187,13 +173,13 @@ public class Saver extends SpyObject {
 
 				// Log the post save
 				if(getLogger().isDebugEnabled()) {
-					getLogger().debug("Completed saving " + dbgString(o)
-						+ " in " + getSessId());
+					getLogger().debug("Completed saving %s in %s",
+							dbgString(o), getSessId());
 				}
 			} else {
 				if(getLogger().isDebugEnabled()) {
-					getLogger().debug("Not saving " + dbgString(o)
-						+ " in " + getSessId() + " (not modified)");
+					getLogger().debug("Not saving %s in %s (not modified)",
+							dbgString(o), getSessId());
 				}
 			}
 

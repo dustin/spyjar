@@ -67,8 +67,8 @@ public class PooledObject extends SpyObject {
 	protected void finalize() {
 		if(poolAble!=null) {
 			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Finalization checking in object "
-					+ poolAble.getObjectID());
+				getLogger().debug("Finalization checking in object %s",
+					poolAble.getObjectID());
 			}
 			poolAble.checkIn();
 		}

@@ -52,7 +52,7 @@ public class ThreadPoolManager extends LoopingThread {
 			throw new IllegalStateException("There's no ThreadPool set");
 		}
 		int startThreads=tp.getStartThreads();
-		getLogger().info("Initializing " + startThreads + " threads.");
+		getLogger().info("Initializing %s threads.", startThreads);
 		for(int i=0; i<startThreads; i++) {
 			tp.createThread();
 		}
@@ -88,10 +88,9 @@ public class ThreadPoolManager extends LoopingThread {
 			need = maxTotal - totalThreads;
 		}
 		if(need>0) {
-			getLogger().info("Spinning up " + need + " more threads to get "
-				+ "us to " + (totalThreads + need));
-			getLogger().info("There are " + tp.getTaskCount()
-				+ " tasks queued.");
+			getLogger().info("Spinning up %s more threads to get us to %s",
+				need, (totalThreads + need));
+			getLogger().info("There are %s tasks queued.", tp.getTaskCount());
 			for(int i=0; i<need; i++) {
 				tp.createThread();
 			}
@@ -115,8 +114,8 @@ public class ThreadPoolManager extends LoopingThread {
 
 		// Figure out if we can kill any off.
 		if((idleThreads > minIdle) && (totalThreads > minThreads)) {
-			getLogger().info("Shutting down a thread (bring us down to "
-				+ (totalThreads - 1) + ")");
+			getLogger().info("Shutting down a thread (bring us down to %d)",
+				(totalThreads - 1));
 			tp.destroyThread();
 		}
 	}

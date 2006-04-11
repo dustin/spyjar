@@ -98,17 +98,13 @@ public abstract class DBCP extends DBSP {
 
 			try {
 				if(getParameterType(arg.getName()) == Parameter.OUTPUT) {
-					if (getLogger().isDebugEnabled()) {
-						getLogger().debug("OUT -> Setting column "
-							+arg+"("+i+") type "+type);
-					}
+					getLogger().debug("OUT -> Setting column %s(%d) type %s",
+							arg, i, type);
 					CallableStatement cst=(CallableStatement)pst;
 					cst.registerOutParameter(i, type);
 				} else {
-					if (getLogger().isDebugEnabled()) {
-						getLogger().debug("IN -> Setting column "
-							+arg+"("+i+") type "+type);
-					}
+					getLogger().debug("IN -> Setting column %s(%d) type %s",
+							arg, i, type);
 					switch(type) {
 						case Types.BIT:
 							pst.setBoolean(i, ((Boolean)o).booleanValue());

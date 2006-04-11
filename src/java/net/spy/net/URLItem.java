@@ -92,19 +92,26 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 		numUpdates++;
 
 		try {
-			HTTPFetch hf=new HTTPFetch(url, headers);
+			HTTPFetch hf=getFetcher(headers);
 			hf.setIfModifiedSince(lastModified);
 
 			if(hf.getStatus() == HttpURLConnection.HTTP_OK) {
 				setContent(hf.getData(), hf.getResponseHeaders(),
 					hf.getLastModified());
 			} else {
-				getLogger().info("Not saving content due to response status "
-					+ hf.getStatus());
+				getLogger().info("Not saving content due to response status %s",
+					hf.getStatus());
 			}
 		} catch(IOException e) {
 			lastError=e;
 		}
+	}
+
+	/**
+	 * Get a fetcher (override for testing).
+	 */
+	protected HTTPFetch getFetcher(Map<String, List<String>> headers) {
+		return(new HTTPFetch(url, headers));
 	}
 
 	private synchronized void setContent(String to,
@@ -112,14 +119,8 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 		content=to;
 		// Big chunk of debug logging.
 		if(getLogger().isDebugEnabled()) {
-			String contentDesc=null;
-			if(to == null) {
-				contentDesc="<null>";
-			} else {
-				contentDesc=to.length() + " bytes";
-			}
-			getLogger().debug("Setting content for " + this
-				+ ":  " + contentDesc);
+			getLogger().debug("Setting content for %s: %s", this,
+					content==null?"<null>":content.length() + " bytes");
 		}
 		lastModified=lastMod;
 		lastHeaders=headers;
@@ -137,14 +138,8 @@ public class URLItem extends Job implements ThreadPoolRunnable {
 			throw lastError;
 		}
 		if(getLogger().isDebugEnabled()) {
-			String contentDesc=null;
-			if(content == null) {
-				contentDesc="<null>";
-			} else {
-				contentDesc=content.length() + " bytes";
-			}
-			getLogger().debug("Getting content for " + this + ":  "
-				+ contentDesc);
+			getLogger().debug("Getting content for %s:  %s", this,
+					content==null?"<null>":content.length() + " bytes");
 		}
 		return(content);
 	}

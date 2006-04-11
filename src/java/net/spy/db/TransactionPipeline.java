@@ -107,9 +107,7 @@ public class TransactionPipeline extends SpyObject {
 					sleepTime=MAX_SLEEP_TIME;
 				}
 				if(sleepTime > 0) {
-					if(getLogger().isDebugEnabled()) {
-						getLogger().debug("Sleeping for " + sleepTime + "ms");
-					}
+					getLogger().debug("Sleeping for %sms", sleepTime);
 					Thread.sleep(sleepTime);
 				}
 				saver.save(toSave);

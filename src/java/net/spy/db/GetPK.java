@@ -309,10 +309,7 @@ public class GetPK extends SpyObject {
 			}
 
 			KeyStore ks=new KeyStore(start, end);
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Got a new keystore for "
-					+ table + ":  " + ks);
-			}
+			getLogger().debug("Got a new keystore for %s:  %s", table, ks);
 			synchronized(caches) {
 				caches.put(key, ks);
 			}

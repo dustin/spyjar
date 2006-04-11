@@ -164,7 +164,7 @@ public class HTTPFetch extends Object {
 		lastModified=uc.getLastModified();
 
 		BufferedReader br =
-			new BufferedReader( new InputStreamReader(i));
+			new BufferedReader(new InputStreamReader(i));
 		return(br);
 	}
 

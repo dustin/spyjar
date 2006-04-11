@@ -203,7 +203,7 @@ public abstract class GenericResultSetStub extends SpyObject
 				}
 			} catch(SQLException e) {
 				// Ignore these columns, it's apparently broken
-				getLogger().info("Error with column " + i, e);
+				getLogger().info("Error with column %d", i, e);
 			}
 		}
 		return(sb.toString());

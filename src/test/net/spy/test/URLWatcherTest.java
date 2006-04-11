@@ -6,12 +6,15 @@ package net.spy.test;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
 import net.spy.cron.SimpleTimeIncrement;
+import net.spy.net.HTTPFetch;
 import net.spy.net.URLItem;
 import net.spy.net.URLWatcher;
 
@@ -22,32 +25,11 @@ public class URLWatcherTest extends TestCase {
 
 	private URLWatcher uw=null;
 
-	/**
-	 * Get an instance of URLWatcherTest.
-	 */
-	public URLWatcherTest(String name) {
-		super(name);
-	}
-
-	/**
-	 * Get this test suite.
-	 */
-	public static Test suite() {
-		return(new TestSuite(URLWatcherTest.class));
-	}
-
-	/**
-	 * Run this test.
-	 */
-	public static void main(String args[]) {
-		junit.textui.TestRunner.run(suite());
-	}
-
 	/** 
 	 * Get the URLWatcher.
 	 */
 	protected void setUp() {
-		uw=URLWatcher.getInstance();
+		uw=new TestURLWatcher();
 	}
 
 	/** 
@@ -67,7 +49,7 @@ public class URLWatcherTest extends TestCase {
 		URL u=new URL("http://bleu.west.spy.net/~dustin/util/getdate.jsp");
 		String c1=uw.getContent(u);
 		assertNotNull("Did not get content from " + u, c1);
-		Thread.sleep(1000);
+		Thread.sleep(100);
 		String c2=uw.getContent(u);
 		assertNotNull(c2);
 
@@ -89,7 +71,7 @@ public class URLWatcherTest extends TestCase {
 
 		assertTrue("Shouldn't be watching that URL yet.", (!uw.isWatching(u)));
 
-		URLItem ui=new URLItem(u, new SimpleTimeIncrement(3000));
+		URLItem ui=new TestURLItem(u, new SimpleTimeIncrement(300));
 		uw.startWatching(ui);
 
 		String s1=uw.getContent(u);
@@ -99,7 +81,7 @@ public class URLWatcherTest extends TestCase {
 
 		assertSame("Different results second time", s1, s2);
 
-		Thread.sleep(5000);
+		Thread.sleep(1500);
 
 		String s3=uw.getContent(u);
 		assertNotNull("Third content not returned", s3);
@@ -130,12 +112,12 @@ public class URLWatcherTest extends TestCase {
 			content.put(u, s);
 			// Sleep a bit after we get going.
 			if(i>5) {
-				Thread.sleep(500);
+				Thread.sleep(50);
 			}
 		}
 
-		// Wait two seconds
-		Thread.sleep(2000);
+		// Wait a bit
+		Thread.sleep(200);
 
 		for(int i=0; i<urls.length; i++) {
 			URL u=new URL(urls[i]);
@@ -151,5 +133,52 @@ public class URLWatcherTest extends TestCase {
 			assertEquals("Second run was different for " + u, s1, s);
 			assertSame("Second run was a different instance for " + u, s1, s);
 		}
+	}
+
+	private static class TestURLItem extends URLItem {
+		public TestURLItem(URL u) {
+			super(u);
+		}
+
+		public TestURLItem(URL u, SimpleTimeIncrement increment) {
+			super(u, increment);
+		}
+
+		protected HTTPFetch getFetcher(Map<String, List<String>> headers) {
+			return new TestHTTPFetch(getURL(), headers);
+		}
+		
+	}
+
+	private static class TestHTTPFetch extends HTTPFetch {
+		public TestHTTPFetch(URL u, Map<String, List<String>> head) {
+			super(u, head);
+		}
+
+		public String getData() throws IOException {
+			return String.valueOf(System.currentTimeMillis());
+		}
+
+		public long getLastModified() throws IOException {
+			return System.currentTimeMillis();
+		}
+
+		@SuppressWarnings("unchecked")
+		public Map<String, List<String>> getResponseHeaders() {
+			return Collections.EMPTY_MAP;
+		}
+
+		public int getStatus() throws IOException {
+			return 200;
+		}
+		
+	}
+
+	private static class TestURLWatcher extends URLWatcher {
+
+		protected URLItem getNewURLItem(URL u) {
+			return new TestURLItem(u);
+		}
+		
 	}
 }

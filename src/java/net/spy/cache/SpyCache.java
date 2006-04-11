@@ -227,9 +227,7 @@ public class SpyCache extends SpyObject {
 		}
 
 		public void shutdown() {
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Shutting down " + this);
-			}
+			getLogger().debug("Shutting down %s", this);
 			shutdown=true;
 			synchronized(this) {
 				notify();
@@ -255,9 +253,7 @@ public class SpyCache extends SpyObject {
 					String key=me.getKey();
 					Cachable it=me.getValue();
 					if(it.isExpired()) {
-						if(getLogger().isDebugEnabled()) {
-							getLogger().debug(it.getCacheKey() + " expired");
-						}
+						getLogger().debug("%s expired", it.getCacheKey());
 						i.remove();
 						it.uncachedEvent(key);
 						delegate.uncachedObject(key, it);

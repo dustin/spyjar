@@ -53,7 +53,7 @@ public class ConnectionSourceFactory extends SpyObject {
 		// the source object.
 		if(source == null) {
 			try {
-				getLogger().debug("Instantiating " + connectionClassName);
+				getLogger().debug("Instantiating %s", connectionClassName);
 
 				Class connectionSourceClass=Class.forName(connectionClassName);
 				source=(ConnectionSource)connectionSourceClass.newInstance();

@@ -38,8 +38,9 @@ public class CachedResultSetStub extends GenericResultSetStub {
 			rv=(CachedResultSetStub)clone();
 		} catch(CloneNotSupportedException e) {
 			// The exceptions this thing throws, well, aren't
-			getLogger().error("So, " + getClass().getName()
-				+ " seems to think that clone isn't supported.", e);
+			getLogger().error(
+					"So, %s seems to think that clone isn't supported.",
+					getClass().getName(), e);
 		}
 		return(rv);
 	}

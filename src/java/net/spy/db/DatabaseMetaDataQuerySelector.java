@@ -118,9 +118,7 @@ public class DatabaseMetaDataQuerySelector extends SpyObject
 
 			// If we don't have a key, use the default key
 			if(tmp == null) {
-				if(getLogger().isDebugEnabled()) {
-					getLogger().debug("Unknown driver:  " + name);
-				}
+				getLogger().debug("Unknown driver:  %s", name);
 				tmp=DEFAULT_QUERY;
 			}
 			rv=queryMap.get(tmp);

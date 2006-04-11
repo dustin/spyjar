@@ -142,8 +142,8 @@ public class SQLRunner extends SpyObject {
 				} catch(SQLException e) {
 					if(errok) {
 						// log the exception
-						getLogger().warn("Ignorning problem executing "
-							+ query, e);
+						getLogger().warn("Ignoring problem executing %s",
+								query, e);
 					} else {
 						throw e;
 					}
@@ -152,12 +152,8 @@ public class SQLRunner extends SpyObject {
 				}
 				long stoptime=System.currentTimeMillis();
 				st=null;
-				String rows=" rows";
-				if(affected == 1) {
-					rows=" row";
-				}
-				getLogger().info("Affected " + affected + rows
-					+ " in " + (stoptime-starttime) + "ms");
+				getLogger().info("Affected %d %s in %dms", affected,
+						affected==1?"row":"row", (stoptime-starttime));
 
 				// Clear out the string buffer
 				query.delete(0, query.length() + 1);

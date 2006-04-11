@@ -37,8 +37,8 @@ public class JDBCPoolAble extends PoolAble {
 				c.close();
 			}
 		} catch(Exception e) {
-			getLogger().error("Error on finalize!  ObjectID="
-				+ getObjectID() + ":  ", e);
+			getLogger().error("Error on finalize!  ObjectID=%s",
+				getObjectID(), e);
 		}
 		// Tell the parent to do the same.
 		super.discard();

@@ -30,7 +30,7 @@ public final class CacheClearRequestListener extends SpyThread {
 
 		super();
 
-		getLogger().info("Starting multicast cache listener on " + g + ":" + p);
+		getLogger().info("Starting multicast cache listener on %s:%d", g, p);
 		setDaemon(true);
 		setName("SpyCacheClearRequestListener");
 
@@ -73,8 +73,8 @@ public final class CacheClearRequestListener extends SpyThread {
 		byte tmp[]=new byte[recv.getLength()];
 		System.arraycopy(data, 0, tmp, 0, tmp.length);
 		String prefix=new String(tmp);
-		getLogger().info("CacheClearRequestListener flushing ``"
-			+ prefix + "'' per multicast request from " + recv.getAddress());
+		getLogger().info("CacheClearRequestListener flushing ``%s''"
+					+ " per mcast req from %s", prefix, recv.getAddress());
 		requests++;
 
 		// Do it.

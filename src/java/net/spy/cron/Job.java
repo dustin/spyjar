@@ -152,9 +152,7 @@ public abstract class Job extends SpyObject implements Runnable {
 			while(nextStart.before(now)) {
 				nextStart=increment.nextDate(nextStart);
 			}
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Rescheduled " + this + " for " + nextStart);
-			}
+			getLogger().debug("Rescheduled %s for %s", this, nextStart);
 		}
 	}
 

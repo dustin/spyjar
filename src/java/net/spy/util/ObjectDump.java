@@ -48,7 +48,7 @@ public class ObjectDump extends SpyObject {
 	 * @param o the object
 	 */
 	protected void reportExamining(String path, Object o) {
-		logger.info("Examining " + path + " - " + o.getClass() + " - " + o);
+		logger.info("Examining %s - %s - %s", path, o.getClass(), o);
 	}
 
 	/** 
@@ -58,7 +58,7 @@ public class ObjectDump extends SpyObject {
 	 * @param v the value of the primitive
 	 */
 	protected void reportPrimitive(String path, Object v) {
-		logger.info("Primitive value for " + path + " is " + v);
+		logger.info("Primitive value for %s is %s", path, v);
 	}
 
 	/** 
@@ -78,8 +78,8 @@ public class ObjectDump extends SpyObject {
 	 * @param o the object itself
 	 */
 	protected void reportDuplicate(String path, String prevPath, Object o) {
-		logger.info("Saw duplicate " + o.getClass() + " instance at "
-			+ path + " previously seen at " + path);
+		logger.info("Saw duplicate %s instance at %s previously seen at %s",
+				o.getClass(), path, prevPath);
 	}
 
 	/** 
@@ -90,8 +90,7 @@ public class ObjectDump extends SpyObject {
 	 * @param e the exception that occurred
 	 */
 	protected void reportException(String path, Object o, Exception e) {
-		logger.info("Problem reading " + o.getClass() + " at " + path
-			+ " - " + o, e);
+		logger.info("Problem reading %s at %s - %s", o.getClass(), path, o, e);
 	}
 
 	// Dump this object

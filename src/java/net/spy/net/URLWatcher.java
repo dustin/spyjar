@@ -15,7 +15,7 @@ import net.spy.cron.JobQueue;
  * URLWatcher watches URLs and provides access to the most recent data from
  * the URL.
  */
-public final class URLWatcher extends SpyObject {
+public class URLWatcher extends SpyObject {
 
 	private static URLWatcher instance=null;
 
@@ -29,7 +29,7 @@ public final class URLWatcher extends SpyObject {
 	/**
 	 * Get an instance of URLWatcher.
 	 */
-	private URLWatcher() {
+	protected URLWatcher() {
 		super();
 		JobQueue<URLItem> jq=new JobQueue<URLItem>();
 		cron=new Cron("URLWatcher Cron", jq);
@@ -47,6 +47,16 @@ public final class URLWatcher extends SpyObject {
 			instance=new URLWatcher();
 		}
 		return(instance);
+	}
+
+	/**
+	 * Set an instance (for testing).
+	 */
+	public static synchronized void setInstance(URLWatcher uw) {
+		if(instance != null) {
+			instance.shutdown();
+		}
+		instance=uw;
 	}
 
 	/** 
@@ -124,6 +134,10 @@ public final class URLWatcher extends SpyObject {
 		}
 	}
 
+	protected URLItem getNewURLItem(URL u) {
+		return new URLItem(u);
+	}
+
 	/** 
 	 * Get the content (as a String) for a given URL.
 	 * 
@@ -136,7 +150,7 @@ public final class URLWatcher extends SpyObject {
 		URLItem ui=getURLItem(u);
 		// If we don't have one for this URL yet, create it.
 		if(ui==null) {
-			ui=new URLItem(u);
+			ui=getNewURLItem(u);
 			startWatching(ui);
 		}
 		// Return the current content.

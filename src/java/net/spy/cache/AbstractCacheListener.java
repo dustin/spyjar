@@ -5,7 +5,6 @@
 package net.spy.cache;
 
 import net.spy.SpyObject;
-import net.spy.log.Logger;
 
 /**
  * Abstract implementation of CacheListener
@@ -23,22 +22,16 @@ public class AbstractCacheListener extends SpyObject implements CacheListener {
 	 * Receive notification of having been cached.
 	 */
 	public void cachedEvent(Object k) {
-		Logger l=getLogger();
-		if(l.isDebugEnabled()) {
-			l.debug("Instance of " + getClass().getName()
-				+ " cached with key:  " + k);
-		}
+		getLogger().debug("Instance of %s cached with key %s",
+				getClass().getName(), k);
 	}
 
 	/** 
 	 * Receive notification of having been uncached.
 	 */
 	public void uncachedEvent(Object k) {
-		Logger l=getLogger();
-		if(l.isDebugEnabled()) {
-			l.debug("Instance of " + getClass().getName()
-				+ " uncached with key:  " + k);
-		}
+		getLogger().debug("Instance of %s uncached with key %s",
+				getClass().getName(), k);
 	}
 
 }

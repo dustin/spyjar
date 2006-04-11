@@ -187,8 +187,9 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 							+ ") seems to have been overlooked.");
 				}
 			} catch (NullPointerException ex) {
-				getLogger().error("error with "+args[i]+" in type "+
-					getTypes()[i]+" at param postition "+i);
+				getLogger().error(
+						"error with %s in type %s at param position %d",
+						args[i], getTypes()[i], i);
 				throw ex;
 			}
 		}

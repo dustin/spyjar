@@ -145,9 +145,9 @@ public final class Cron extends SpyThread {
 				if( (now-validJobFound) > maxIdleTime) {
 					getLogger().info("Been a long time "
 						+ "since I had a job.  Shutting down.");
-					getLogger().debug("now: "+now);
-					getLogger().debug("validJobFound: "+validJobFound);
-					getLogger().debug("maxIdleTime: "+maxIdleTime);
+					getLogger().debug("now: %s", now);
+					getLogger().debug("validJobFound:  %s", validJobFound);
+					getLogger().debug("maxIdleTime:  %s", maxIdleTime);
 					shutdown();
 				}
 				soonestJob=60000;
@@ -158,11 +158,11 @@ public final class Cron extends SpyThread {
 
 			try {
 				if(next!=null) {
-					getLogger().debug("Sleeping "
-						+ soonestJob + "ms (next job at " + next + ").");
+					getLogger().debug("Sleeping %sms (next job at %s).",
+							soonestJob, next);
 				} else {
-					getLogger().debug("Sleeping "
-						+ soonestJob + "ms (no good date found).");
+					getLogger().debug("Sleeping %sms (no good date found).",
+							soonestJob);
 				}
 				// If we're still running at this point, wait for a job
 				if(stillRunning) {

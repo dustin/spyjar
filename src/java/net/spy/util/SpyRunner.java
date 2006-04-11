@@ -45,7 +45,7 @@ public class SpyRunner extends SpyThread {
 			Class.forName(object);
 			this.args=a;
 		} catch(Exception e) {
-			getLogger().error("Problem loading class " + object, e);
+			getLogger().error("Problem loading class %s", object, e);
 		}
 	}
 
@@ -56,11 +56,11 @@ public class SpyRunner extends SpyThread {
 			SpyUtil.runClass(classname, args);
 
 		} catch(InvocationTargetException ite) {
-			getLogger().error("Problem invoking main from " + classname, ite);
+			getLogger().error("Problem invoking main from %s", classname, ite);
 			Throwable t = ite.getTargetException();
-			getLogger().error("Original exception " + classname, t);
+			getLogger().error("Original exception %s", classname, t);
 		} catch(Exception e) {
-			getLogger().error("Problem invoking main from " + classname, e);
+			getLogger().error("Problem invoking main from %s", classname, e);
 		}
 	}
 

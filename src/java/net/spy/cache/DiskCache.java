@@ -178,7 +178,7 @@ public class DiskCache extends AbstractMap {
 				getLogger().debug("File not found loading disk cache", e);
 			}
 		} catch(Exception e) {
-			getLogger().warn("Error getting " + key + " from disk cache", e);
+			getLogger().warn("Error getting ``%s'' from disk cache", key, e);
 		} finally {
 			CloseUtil.close(p);
 			CloseUtil.close(istream);

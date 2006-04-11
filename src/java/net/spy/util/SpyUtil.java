@@ -297,14 +297,14 @@ public class SpyUtil {
 					rmDashR(f[i]);
 				} else {
 					if(!f[i].delete()) {
-						LoggerFactory.getLogger(SpyUtil.class.getName()).warn(
+						LoggerFactory.getLogger(SpyUtil.class).warn(
 							"Couldn't delete " + f[i]);
 					}
 				}
 			}
 		}
 		if(!tmp.delete()) {
-			LoggerFactory.getLogger(SpyUtil.class.getName()).warn(
+			LoggerFactory.getLogger(SpyUtil.class).warn(
 				"Couldn't delete " + tmp);
 		}
 	}
