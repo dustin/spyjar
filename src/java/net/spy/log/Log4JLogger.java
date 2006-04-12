@@ -48,7 +48,7 @@ public class Log4JLogger extends AbstractLogger {
 	public void log(Level level, Object message, Throwable e) {
 		org.apache.log4j.Level pLevel=org.apache.log4j.Level.DEBUG;
 
-		switch(level) {
+		switch(level == null ? Level.FATAL : level) {
 			case DEBUG:
 				pLevel=org.apache.log4j.Level.DEBUG;
 				break;

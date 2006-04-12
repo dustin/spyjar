@@ -47,7 +47,7 @@ public class SunLogger extends AbstractLogger {
 	public void log(Level level, Object message, Throwable e) {
 		java.util.logging.Level sLevel=java.util.logging.Level.SEVERE;
 
-		switch(level) {
+		switch(level == null ? Level.FATAL : level) {
 			case DEBUG:
 				sLevel=java.util.logging.Level.FINE;
 				break;
