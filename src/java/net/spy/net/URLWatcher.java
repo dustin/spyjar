@@ -6,10 +6,11 @@ package net.spy.net;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
+import java.util.Timer;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.spy.SpyObject;
-import net.spy.cron.Cron;
-import net.spy.cron.JobQueue;
 
 /**
  * URLWatcher watches URLs and provides access to the most recent data from
@@ -19,9 +20,8 @@ public class URLWatcher extends SpyObject {
 
 	private static URLWatcher instance=null;
 
-	private Cron cron=null;
-
-	private int numRuns=0;
+	private Timer timer=null;
+	private Map<URL, URLItem> items=null;
 
 	// This lets it know when to give up
 	private int recentTouches=0;
@@ -31,8 +31,8 @@ public class URLWatcher extends SpyObject {
 	 */
 	protected URLWatcher() {
 		super();
-		JobQueue<URLItem> jq=new JobQueue<URLItem>();
-		cron=new Cron("URLWatcher Cron", jq);
+		timer=new Timer("URLWatcher", true);
+		items=new ConcurrentHashMap<URL, URLItem>();
 	}
 
 	/** 
@@ -41,9 +41,7 @@ public class URLWatcher extends SpyObject {
 	 * @return the URLWatcher
 	 */
 	public static synchronized URLWatcher getInstance() {
-		if(instance==null || instance.cron == null
-			|| (!instance.cron.isRunning())
-			|| (!instance.cron.isAlive())) {
+		if(instance==null || instance.timer == null) {
 			instance=new URLWatcher();
 		}
 		return(instance);
@@ -63,27 +61,14 @@ public class URLWatcher extends SpyObject {
 	 * String me.
 	 */
 	public String toString() {
-		int numPages=cron.getJobQueue().size();
-		return(super.toString() + " - " + numPages + " pages monitored, "
-			+ numRuns + " runs");
+		int numPages=items.size();
+		return(super.toString() + " - " + numPages + " pages monitored");
 	}
 
 	// Get the URLItem for the given URL.
 	@SuppressWarnings("unchecked")
 	private URLItem getURLItem(URL u) {
-		URLItem ui=null;
-
-		JobQueue<URLItem> jq=cron.getJobQueue();
-		synchronized(jq) {
-			// Look at each item for the match
-			for(URLItem tmp : jq) {
-				if(tmp.getURL().equals(u)) {
-					ui=tmp;
-				} // It's a match
-			} // All items
-		} // lock
-
-		return(ui);
+		return(items.get(u));
 	}
 
 	/** 
@@ -103,12 +88,9 @@ public class URLWatcher extends SpyObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public void startWatching(URLItem u) {
-		JobQueue<URLItem> jq=cron.getJobQueue();
-		synchronized(jq) {
-			// Don't add it if it's already there
-			if(!isWatching(u.getURL())) {
-				jq.addJob(u);
-			}
+		if(!isWatching(u.getURL())) {
+			items.put(u.getURL(), u);
+			timer.scheduleAtFixedRate(u, 0, u.getUpdateFrequency());
 		}
 		// After adding it, wait a bit to see if it can grab the content
 		synchronized(u) {
@@ -128,8 +110,9 @@ public class URLWatcher extends SpyObject {
 			// Throw away the instance
 			instance=null;
 			// Shut down the cron
-			if(cron.isRunning()) {
-				cron.shutdown();
+			if(timer != null) {
+				timer.cancel();
+				timer=null;
 			}
 		}
 	}

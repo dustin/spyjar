@@ -13,7 +13,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import net.spy.cron.SimpleTimeIncrement;
 import net.spy.net.HTTPFetch;
 import net.spy.net.URLItem;
 import net.spy.net.URLWatcher;
@@ -71,7 +70,7 @@ public class URLWatcherTest extends TestCase {
 
 		assertTrue("Shouldn't be watching that URL yet.", (!uw.isWatching(u)));
 
-		URLItem ui=new TestURLItem(u, new SimpleTimeIncrement(300));
+		URLItem ui=new TestURLItem(u, 300);
 		uw.startWatching(ui);
 
 		String s1=uw.getContent(u);
@@ -140,8 +139,8 @@ public class URLWatcherTest extends TestCase {
 			super(u);
 		}
 
-		public TestURLItem(URL u, SimpleTimeIncrement increment) {
-			super(u, increment);
+		public TestURLItem(URL u, int i) {
+			super(u, i);
 		}
 
 		protected HTTPFetch getFetcher(Map<String, List<String>> headers) {
@@ -156,6 +155,11 @@ public class URLWatcherTest extends TestCase {
 		}
 
 		public String getData() throws IOException {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			return String.valueOf(System.currentTimeMillis());
 		}
 
