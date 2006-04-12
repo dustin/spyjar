@@ -21,7 +21,7 @@ import net.spy.log.LoggerFactory;
  */
 public class URLItem extends TimerTask {
 
-	private static final int DEFAULT_UPDATE_FREQ = 900000;
+	private static final int DEFAULT_UPDATE_FREQ = 1800000;
 	// How long a URL will be watched if nobody wants it (defaults to a
 	// half hour).
 	private int maxIdleTime=1800000;
