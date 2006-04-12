@@ -168,10 +168,12 @@ public class URLItem extends TimerTask {
 		numUpdates++;
 
 		try {
+			logger.info("Updating %s", url);
 			HTTPFetch hf=getFetcher(headers);
 			hf.setIfModifiedSince(lastModified);
 
 			if(hf.getStatus() == HttpURLConnection.HTTP_OK) {
+				logger.info("Updated %s", url);
 				setContent(hf.getData(), hf.getResponseHeaders(),
 					hf.getLastModified());
 			} else {
