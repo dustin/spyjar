@@ -48,22 +48,28 @@ public class Log4JLogger extends AbstractLogger {
 	public void log(Level level, Object message, Throwable e) {
 		org.apache.log4j.Level pLevel=org.apache.log4j.Level.DEBUG;
 
-		if(level==Level.DEBUG) {
-			pLevel=org.apache.log4j.Level.DEBUG;
-		} else if(level==Level.INFO) {
-			pLevel=org.apache.log4j.Level.INFO;
-		} else if(level==Level.WARN) {
-			pLevel=org.apache.log4j.Level.WARN;
-		} else if(level==Level.ERROR) {
-			pLevel=org.apache.log4j.Level.ERROR;
-		} else if(level==Level.FATAL) {
-			pLevel=org.apache.log4j.Level.FATAL;
-		} else {
-			// I don't know what this is, so consider it fatal
-			pLevel=org.apache.log4j.Level.FATAL;
-			l4jLogger.log("net.spy.log.AbstractLogger", pLevel,
-				"Unhandled log level:  " + level
-					+ " for the following message", null);
+		switch(level) {
+			case DEBUG:
+				pLevel=org.apache.log4j.Level.DEBUG;
+				break;
+			case INFO:
+				pLevel=org.apache.log4j.Level.INFO;
+				break;
+			case WARN:
+				pLevel=org.apache.log4j.Level.WARN;
+				break;
+			case ERROR:
+				pLevel=org.apache.log4j.Level.ERROR;
+				break;
+			case FATAL:
+				pLevel=org.apache.log4j.Level.FATAL;
+				break;
+			default:
+				// I don't know what this is, so consider it fatal
+				pLevel=org.apache.log4j.Level.FATAL;
+				l4jLogger.log("net.spy.log.AbstractLogger", pLevel,
+					"Unhandled log level:  " + level
+						+ " for the following message", null);	
 		}
 
 		l4jLogger.log("net.spy.log.AbstractLogger", pLevel, message, e);

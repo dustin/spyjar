@@ -4,6 +4,9 @@
 
 package net.spy.log;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Default logger implementation.
  *
@@ -12,11 +15,14 @@ package net.spy.log;
  */
 public class DefaultLogger extends AbstractLogger {
 
+	private SimpleDateFormat df=null;
+
 	/**
 	 * Get an instance of DefaultLogger.
 	 */
 	public DefaultLogger(String name) {
 		super(name);
+		df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	}
 
 	/** 
@@ -36,13 +42,13 @@ public class DefaultLogger extends AbstractLogger {
 	/** 
 	 * @see AbstractLogger
 	 */
-	public void log(Level level, Object message, Throwable e) {
+	public synchronized void log(Level level, Object message, Throwable e) {
 		if(level == Level.INFO
 			|| level == Level.WARN
 			|| level == Level.ERROR
 			|| level == Level.FATAL) {
-			System.err.println(getName() + " (" + level.getName()
-				+ "): " + message);
+			System.err.printf("%s %s %s:  %s\n",
+					df.format(new Date()), level.name(), getName(), message);
 			if(e != null) {
 				e.printStackTrace();
 			}

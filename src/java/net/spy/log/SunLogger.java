@@ -47,20 +47,26 @@ public class SunLogger extends AbstractLogger {
 	public void log(Level level, Object message, Throwable e) {
 		java.util.logging.Level sLevel=java.util.logging.Level.SEVERE;
 
-		if(level==Level.DEBUG) {
-			sLevel=java.util.logging.Level.FINE;
-		} else if(level==Level.INFO) {
-			sLevel=java.util.logging.Level.INFO;
-		} else if(level==Level.WARN) {
-			sLevel=java.util.logging.Level.WARNING;
-		} else if(level==Level.ERROR) {
-			sLevel=java.util.logging.Level.SEVERE;
-		} else if(level==Level.FATAL) {
-			sLevel=java.util.logging.Level.SEVERE;
-		} else {
-			// I don't know what this is, so consider it fatal
-			sLevel=java.util.logging.Level.SEVERE;
-			sunLogger.log(sLevel, "Unhandled log level:  " + level
+		switch(level) {
+			case DEBUG:
+				sLevel=java.util.logging.Level.FINE;
+				break;
+			case INFO:
+				sLevel=java.util.logging.Level.INFO;
+				break;
+			case WARN:
+				sLevel=java.util.logging.Level.WARNING;
+				break;
+			case ERROR:
+				sLevel=java.util.logging.Level.SEVERE;
+				break;
+			case FATAL:
+				sLevel=java.util.logging.Level.SEVERE;
+				break;
+			default:
+				// I don't know what this is, so consider it fatal
+				sLevel=java.util.logging.Level.SEVERE;
+				sunLogger.log(sLevel, "Unhandled log level:  " + level
 					+ " for the following message");
 		}
 

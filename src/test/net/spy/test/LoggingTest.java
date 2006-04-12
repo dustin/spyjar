@@ -124,11 +124,11 @@ public class LoggingTest extends TestCase {
 		assertEquals("{LogLevel:  WARN}", String.valueOf(Level.WARN));
 		assertEquals("{LogLevel:  ERROR}", String.valueOf(Level.ERROR));
 		assertEquals("{LogLevel:  FATAL}", String.valueOf(Level.FATAL));
-		assertEquals("DEBUG", Level.DEBUG.getName());
-		assertEquals("INFO", Level.INFO.getName());
-		assertEquals("WARN", Level.WARN.getName());
-		assertEquals("ERROR", Level.ERROR.getName());
-		assertEquals("FATAL", Level.FATAL.getName());
+		assertEquals("DEBUG", Level.DEBUG.name());
+		assertEquals("INFO", Level.INFO.name());
+		assertEquals("WARN", Level.WARN.name());
+		assertEquals("ERROR", Level.ERROR.name());
+		assertEquals("FATAL", Level.FATAL.name());
 	}
 
 	/** 

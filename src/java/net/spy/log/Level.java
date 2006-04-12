@@ -7,48 +7,34 @@ package net.spy.log;
 /**
  * Levels for logging.
  */
-public final class Level extends Object {
+public enum Level {
 
 	/** 
 	 * Debug level.
 	 */
-	public static final Level DEBUG=new Level("DEBUG");
+	DEBUG,
 	/** 
 	 * Info level.
 	 */
-	public static final Level INFO=new Level("INFO");
+	INFO,
 	/** 
 	 * Warning level.
 	 */
-	public static final Level WARN=new Level("WARN");
+	WARN,
 	/** 
 	 * Error level.
 	 */
-	public static final Level ERROR=new Level("ERROR");
+	ERROR,
 	/** 
 	 * Fatal level.
 	 */
-	public static final Level FATAL=new Level("FATAL");
-
-	private String name=null;
-
-	private Level(String nm) {
-		super();
-		this.name=nm;
-	}
-
-	/** 
-	 * Get the name of this level.
-	 */
-	public String getName() {
-		return(name);
-	}
+	FATAL;
 
 	/** 
 	 * Get a string representation of this level.
 	 */
 	public String toString() {
-		return("{LogLevel:  " + name + "}");
+		return("{LogLevel:  " + name() + "}");
 	}
 
 }
