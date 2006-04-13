@@ -8,8 +8,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import net.spy.SpyThread;
 import net.spy.log.Logger;
@@ -67,7 +67,7 @@ public class ThreadPool extends ThreadGroup {
 	// The threads we're managing.
 	private Collection<RunThread> threads=null;
 	// The tasks for the threads to do.
-	private LinkedList<Task> tasks=null;
+	private BlockingQueue<Task> tasks=null;
 
 	// This is what we monitor for things being checked out (otherwise we
 	// can't tell the difference between adds and check outs).
@@ -163,6 +163,21 @@ public class ThreadPool extends ThreadGroup {
 		}
 	}
 
+	/**
+	 * Set the maximum task queue size.  This may only be done before starting
+	 * the pool.
+	 */
+	public void setMaxTaskQueueSize(int to) {
+		if(tasks != null) {
+			throw new RuntimeException("Cannot set size after queue exists");
+		}
+		if(to < 1) {
+			throw new IllegalArgumentException(
+					"Max task queue size must be > 0");
+		}
+		maxTaskQueueSize=to;
+	}
+
 	/** 
 	 * Start the ThreadPool.
 	 */
@@ -175,7 +190,7 @@ public class ThreadPool extends ThreadGroup {
 		checkValues();
 		// Make sure there's a place to put the tasks
 		if(tasks==null) {
-			tasks=new LimitedList<Task>(getMaxTaskQueueSize());
+			tasks=new ArrayBlockingQueue<Task>(getMaxTaskQueueSize(), true);
 		}
 		// Make sure there's a place to put the threads
 		if(threads==null) {
@@ -335,29 +350,6 @@ public class ThreadPool extends ThreadGroup {
 	}
 
 	/** 
-	 * Set the maximum size of the job queue.  This is the number of
-	 * unclaimed tasks that may be queued.  If more than this many tasks
-	 * are queued, exceptions will be thrown.
-	 * 
-	 * @param mtqs a value &gt; 0
-	 */
-	@SuppressWarnings("unchecked")
-	public void setMaxTaskQueueSize(int mtqs) {
-		if(mtqs <= 0) {
-			throw new IllegalArgumentException(
-				"Value must be greater than or equal to zero.");
-		}
-		if(tasks != null && !(tasks instanceof LimitedList)) {
-			throw new IllegalArgumentException("Tasks is not a limited list");
-		}
-		this.maxTaskQueueSize=mtqs;
-		if(tasks != null) {
-			LimitedList ll=(LimitedList)tasks;
-			ll.setLimit(maxTaskQueueSize);
-		}
-	}
-
-	/** 
 	 * Get the minimum number of threads that may exist in the thread pool
 	 * at any moment.
 	 */
@@ -457,10 +449,10 @@ public class ThreadPool extends ThreadGroup {
 	}
 
 	/** 
-	 * Set the LinkedList to contain the tasks on which this ThreadPool
+	 * Set the BlockingQueue to contain the tasks on which this ThreadPool
 	 * will be listening.
 	 */
-	public void setTasks(LinkedList<Task> t) {
+	public void setTasks(BlockingQueue<Task> t) {
 		if(started) {
 			throw new IllegalStateException("Can't set tasks after the "
 				+ "pool has started.");
@@ -495,11 +487,7 @@ public class ThreadPool extends ThreadGroup {
 	// Common stuff for adding tasks
 	private void addTask(Task t) {
 		checkStarted();
-		synchronized(tasks) {
-			tasks.add(t);
-			getLogger().debug("Added a new task, notifying");
-			tasks.notify();
-		}
+		tasks.add(t);
 		// Let pool manager know something's been added.
 		synchronized(poolManager) {
 			poolManager.notify();
@@ -746,7 +734,7 @@ public class ThreadPool extends ThreadGroup {
 
 	private static class RunThread extends SpyThread {
 		private ThreadPoolObserver monitor=null;
-		private LinkedList<Task> tasks=null;
+		private BlockingQueue<Task> tasks=null;
 		private boolean going=true;
 		private int threadId=0;
 
@@ -754,7 +742,7 @@ public class ThreadPool extends ThreadGroup {
 		private Runnable running=null;
 		private long start=0;
 
-		public RunThread(ThreadGroup tg, LinkedList<Task> tsks,
+		public RunThread(ThreadGroup tg, BlockingQueue<Task> tsks,
 			ThreadPoolObserver mntr) {
 
 			super(tg, "RunThread");
@@ -828,42 +816,25 @@ public class ThreadPool extends ThreadGroup {
 
 		public void run() {
 			while(going) {
+				Runnable rn=null;
 				try {
-					Task tsk=null;
-					synchronized(tasks) {
-						tsk=tasks.removeFirst();
-					}
+					Task tsk=tasks.take();
 					// Get the runnable from the task (in a specific lock)
-					Runnable rn=null;
 					synchronized(tsk) {
 						rn=tsk.getTask();
 						tsk.notify();
 					}
-					// Make sure we got something there.
-					if(rn!=null) {
-						run(rn);
-						// Let the monitor know we finished it
-						synchronized(monitor) {
-							monitor.completedJob(rn);
-						}
+				} catch(InterruptedException e) {
+					getLogger().info("Interrupted while waiting to take.", e);
+				}
+				// Make sure we got something there.
+				if(rn!=null) {
+					run(rn);
+					// Let the monitor know we finished it
+					synchronized(monitor) {
+						monitor.completedJob(rn);
 					}
-				} catch(NoSuchElementException e) {
-					// If the stack is empty, wait for something to get added.
-					synchronized(tasks) {
-						try {
-							// Wait for an object to show up
-							if(tasks.size() == 0) {
-								getLogger().debug("Waiting for a task(NSEE)");
-								tasks.wait(WAIT_TIMEOUT);
-								getLogger().debug("Finished waiting(NSEE)");
-							}
-						} catch(InterruptedException ie) {
-							// That's OK, we'll try again.
-							getLogger().debug(
-								"Interrupted while waiting for task");
-						}
-					}
-				} // empty stack
+				}
 			} // while
 			this.getLogger().debug("Shutting down.");
 		} // ThreadPool$RunThread.run()

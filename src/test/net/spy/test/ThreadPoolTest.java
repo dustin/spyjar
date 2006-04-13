@@ -6,12 +6,10 @@ package net.spy.test;
 
 import java.util.Random;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
 import net.spy.SpyObject;
 import net.spy.util.ThreadPool;
-import net.spy.util.ThreadPoolManager;
 
 /**
  * Test the ThreadPool.
@@ -19,27 +17,6 @@ import net.spy.util.ThreadPoolManager;
 public class ThreadPoolTest extends TestCase {
 	// Thread IDs (inner classes can't have static fields)
 	private static int ids=0;
-
-	/**
-	 * Get an instance of ThreadPoolTest.
-	 */
-	public ThreadPoolTest(String name) {
-		super(name);
-	}
-
-	/** 
-	 * Get the suite.
-	 */
-	public static Test suite() {
-		return new TestSuite(ThreadPoolTest.class);
-	}
-
-	/** 
-	 * Run this test.
-	 */
-	public static void main(String args[]) {
-		junit.textui.TestRunner.run(suite());
-	}
 
 	/** 
 	 * Test the constructors.
@@ -256,6 +233,21 @@ public class ThreadPoolTest extends TestCase {
 
 		// Happier shutdown
 		tp.waitForCompletion();
+	}
+
+	public void testOverflow() throws Exception {
+		ThreadPool tp=new ThreadPool("test pool", 1);
+		tp.setMaxTaskQueueSize(2);
+		try {
+			// Add more than it can take.
+			for(int i=0; i<10; i++) {
+				tp.addTask(new TestRunnable());
+			}
+		} catch(IllegalStateException e) {
+			assertEquals("Queue full", e.getMessage());
+		} finally {
+			tp.shutdown();
+		}
 	}
 
 	private static class TestRunnable extends SpyObject implements Runnable {
