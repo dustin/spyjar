@@ -9,7 +9,7 @@ import java.util.Comparator;
 /**
  * A Comparator that compares the String representation of objects.
  */
-public class ToStringComparator extends Object implements Comparator {
+public class ToStringComparator extends Object implements Comparator<Object> {
 
 	/** 
 	 * For sort order with nulls first.

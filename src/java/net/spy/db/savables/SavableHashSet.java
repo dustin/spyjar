@@ -81,14 +81,14 @@ public class SavableHashSet extends HashSet<Savable> implements Savable {
 	/** 
 	 * @return null
 	 */
-	public Collection getPreSavables(SaveContext context) {
+	public Collection<Savable> getPreSavables(SaveContext context) {
 		return(null);
 	}
 
 	/** 
 	 * @return this
 	 */
-	public Collection getPostSavables(SaveContext context) {
+	public Collection<Savable> getPostSavables(SaveContext context) {
 		return(this);
 	}
 }

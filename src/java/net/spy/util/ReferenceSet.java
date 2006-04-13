@@ -81,7 +81,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	 */
 	public int size() {
 		int rv=0;
-		for(Iterator i=iterator(); i.hasNext();) {
+		for(Iterator<T> i=iterator(); i.hasNext();) {
 			i.next();
 			rv++;
 		}

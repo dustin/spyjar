@@ -31,7 +31,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -99,9 +98,7 @@ public class FileDriver extends SpyObject implements Driver {
 	 * @param path the path of the results
 	 */
 	public void registerQuery(String url, DBSQL db, Object args[], File path) {
-		for(Iterator i=db.getRegisteredQueries().values().iterator();
-			i.hasNext();) {
-			String query=(String)i.next();
+		for(String query : db.getRegisteredQueries().values()) {
 			registerQuery(url, query, args, path);
 		}
 	}
@@ -126,9 +123,7 @@ public class FileDriver extends SpyObject implements Driver {
 	 * @param u the updater
 	 */
 	public void registerUpdate(String url, DBSQL db, Object args[], Updater u) {
-		for(Iterator i=db.getRegisteredQueries().values().iterator();
-			i.hasNext();) {
-			String query=(String)i.next();
+		for(String query : db.getRegisteredQueries().values()) {
 			registerUpdate(url, query, args, u);
 		}
 	}
@@ -333,8 +328,8 @@ public class FileDriver extends SpyObject implements Driver {
 	 * Parameter matching instance that matches objects by class.
 	 */
 	public static class ClassParamMatcher implements ParamMatcher {
-		private Class theClass=null;
-		public ClassParamMatcher(Class c) {
+		private Class<?> theClass=null;
+		public ClassParamMatcher(Class<?> c) {
 			super();
 			theClass=c;
 		}

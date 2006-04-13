@@ -32,14 +32,17 @@ public class QuerySelectorFactory extends SpyObject {
 		return (qs);
 	}
 
+	@SuppressWarnings("unchecked")
 	private static synchronized void initQuerySelector() {
 		if(qs == null) {
 			String selectorClassName=System.getProperty(
 				PROPERTY_NAME,
 				DEFAULT_SELECTOR);
 			try {
-				Class c=Class.forName(selectorClassName);
-				qs=(QuerySelector)c.newInstance();
+				Class<? extends QuerySelector> c
+					=(Class<? extends QuerySelector>) Class.forName(
+							selectorClassName);
+				qs=c.newInstance();
 			} catch(Exception e) {
 				Logger l=LoggerFactory.getLogger(QuerySelectorFactory.class);
 				l.warn("Couldn't make a %s, using %s", selectorClassName,

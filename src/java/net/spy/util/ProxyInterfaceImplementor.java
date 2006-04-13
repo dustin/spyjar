@@ -26,7 +26,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 	 * @exception IllegalArgumentException if the passed in class is not
 	 * 			an interface
 	 */
-	public ProxyInterfaceImplementor(Class c) {
+	public ProxyInterfaceImplementor(Class<?> c) {
 		super(c);
 	}
 
@@ -41,7 +41,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 	 * Create the instance variables and constructor for the proxy.
 	 */
 	protected String preConstructors() {
-		Class i=getInterface();
+		Class<?> i=getInterface();
 
 		String ret="\tprivate " + i.getName() + " proxyedObject=null;\n\n";
 
@@ -64,7 +64,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 	 * setting the proxied object.
 	 */
 	protected String preMethods() {
-		Class i=getInterface();
+		Class<?> i=getInterface();
 		String rv=null;
 
 		rv ="\t/**\n"
@@ -109,7 +109,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 		String params=SpyUtil.join(l, ", ");
 
 		// make the call via the proxy object
-		Class rt=method.getReturnType();
+		Class<?> rt=method.getReturnType();
 		if(rt == Void.TYPE) {
 			ret+="\t\tproxyedObject." + method.getName() + "("
 				+ params

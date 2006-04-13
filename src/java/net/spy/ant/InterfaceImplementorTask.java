@@ -57,9 +57,10 @@ public class InterfaceImplementorTask extends Task {
 		validateArg(outDir, "outDir");
 	}
 
-	protected void generateWith(Class c) throws BuildException {
+	protected void generateWith(Class<? extends InterfaceImplementor> c)
+		throws BuildException {
 		// Load the interface
-		Class theInterface=null;
+		Class<?> theInterface=null;
 		try {
 			theInterface=Class.forName(interfaceName);
 		} catch(ClassNotFoundException e) {
@@ -70,9 +71,10 @@ public class InterfaceImplementorTask extends Task {
 		// Instantiate the InterfaceImplementor.
 		try {
 			Class params[]={Class.class};
-			Constructor cons=c.getConstructor(params);
+			Constructor<? extends InterfaceImplementor> cons
+				=c.getConstructor(params);
 			Object args[]={theInterface};
-			ii=(InterfaceImplementor)cons.newInstance(args);
+			ii=cons.newInstance(args);
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new BuildException(

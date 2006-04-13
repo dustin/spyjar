@@ -130,7 +130,7 @@ public class ShortestPathFinder extends Object {
 		// Clear the current list
 		node.clearNextHops();
 
-		for(SPVertex spv : node.getConnections()) {
+		for(SPVertex<?> spv : node.getConnections()) {
 			recordLink(node, spv.getCost(), spv.getTo(), spv.getTo(),
 				new HashSet<SPNode>());
 		}
@@ -165,7 +165,7 @@ public class ShortestPathFinder extends Object {
 			addHopFrom(node, other, nextHop, cost);
 
 			// Flip through the connections to other nodes and recurse
-			for(SPVertex spv : other.getConnections()) {
+			for(SPVertex<?> spv : other.getConnections()) {
 				// The cost to this link is the sum of the costs to this
 				// link and the cost of this link.
 				int nextCost=cost+spv.getCost();

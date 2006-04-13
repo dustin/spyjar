@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import net.spy.SpyObject;
@@ -222,16 +221,15 @@ public class Saver extends SpyObject {
 
 	// Loop through a Collection of savables, passing each to rsave().  If
 	// only java supported functional programming...
-	private void saveLoop(Savable o, Collection c)
+	private void saveLoop(Savable o, Collection<?> name)
 		throws SaveException, SQLException {
 
 		rdepth++;
 
 		checkRecursionDepth();
 
-		if(c!=null) {
-			for(Iterator i=c.iterator(); i.hasNext(); ) {
-				Object tmpo=i.next();
+		if(name!=null) {
+			for(Object tmpo : name) {
 				if(tmpo==null) {
 					throw new NullPointerException("Got a null object from "
 						+ o + " (" + dbgString(o) + ")");
@@ -240,8 +238,8 @@ public class Saver extends SpyObject {
 				// Dispatch based on type
 				if(tmpo instanceof Savable) {
 					rsave((Savable)tmpo);
-				} else if(tmpo instanceof Collection) {
-					saveLoop(o, (Collection)tmpo);
+				} else if(tmpo instanceof Collection<?>) {
+					saveLoop(o, (Collection<?>)tmpo);
 				} else {
 					throw new SaveException(
 						"Invalid object type found in save tree:  "

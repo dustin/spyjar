@@ -106,7 +106,8 @@ public class ThreadPool extends ThreadGroup {
 	private int maxTaskQueueSize=DEFAULT_LIST_LIMIT;
 
 	// Pool manager stuff.
-	private Class poolManagerClass=ThreadPoolManager.class;
+	private Class<? extends ThreadPoolManager> poolManagerClass
+		=ThreadPoolManager.class;
 	private ThreadPoolManager poolManager=null;
 
 	/**
@@ -187,9 +188,9 @@ public class ThreadPool extends ThreadGroup {
 
 		// Set up the manager
 		try {
-			Constructor cons=getPoolMangerConstructor();
+			Constructor<? extends ThreadPoolManager> cons=getPoolMangerConstructor();
 			Object args[]={this};
-			poolManager=(ThreadPoolManager)cons.newInstance(args);
+			poolManager=cons.newInstance(args);
 			poolManager.setThreadPool(this);
 			getLogger().info("Starting the thread pool manager");
 			poolManager.start();
@@ -211,11 +212,12 @@ public class ThreadPool extends ThreadGroup {
 		started=true;
 	}
 
-	private Constructor getPoolMangerConstructor()
+	private Constructor<? extends ThreadPoolManager> getPoolMangerConstructor()
 		throws NoSuchMethodException {
 
 		Class args[]={ThreadGroup.class};
-		Constructor cons=poolManagerClass.getConstructor(args);
+		Constructor<? extends ThreadPoolManager> cons
+			=poolManagerClass.getConstructor(args);
 		return(cons);
 	}
 
@@ -321,12 +323,7 @@ public class ThreadPool extends ThreadGroup {
 	 * 
 	 * @param pmc a subclass of ThreadPoolManager
 	 */
-	public void setPoolManagerClass(Class pmc) {
-		if(!ThreadPoolManager.class.isAssignableFrom(pmc)) {
-			throw new IllegalArgumentException(
-				"PoolManagerClass must be a subclass of "
-				+ "ThreadPoolManager");
-		}
+	public void setPoolManagerClass(Class<? extends ThreadPoolManager> pmc) {
 		this.poolManagerClass=pmc;
 	}
 

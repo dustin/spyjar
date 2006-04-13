@@ -196,7 +196,7 @@ public class SpyUtil {
 		throws Exception {
 
 		// Load the class.
-		Class tclass=Class.forName(classname, true, cl);
+		Class<?> tclass=Class.forName(classname, true, cl);
 
 		// Find the method
 		Class paramtypes[] = new Class[1];

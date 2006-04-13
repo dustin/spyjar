@@ -170,8 +170,9 @@ public class ObjectPool extends SpyObject {
 		ArrayList<PoolContainer> a=new ArrayList<PoolContainer>(pools.size());
 		// Clean up any pools that are empty
 		synchronized (pools) {
-			for(Iterator i=pools.values().iterator(); i.hasNext();) {
-				PoolContainer pc=(PoolContainer)i.next();
+			for(Iterator<PoolContainer> i=pools.values().iterator();
+				i.hasNext();) {
+				PoolContainer pc=i.next();
 
 				// If it's empty, remove it.
 				if(pc.totalObjects()==0) {

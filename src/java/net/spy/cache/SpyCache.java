@@ -147,7 +147,7 @@ public class SpyCache extends SpyObject {
 				ret=i.getCachedObject();
 				// If the stored object is a reference, dereference it.
 				if((ret!=null) && (ret instanceof Reference)) {
-					Reference ref=(Reference)ret;
+					Reference<?> ref=(Reference)ret;
 					ret=ref.get();
 				} // Object was a reference
 			} // Found object in cache
@@ -377,7 +377,7 @@ public class SpyCache extends SpyObject {
 			// the object has expired
 			Object v=getCachedObject();
 			if(v instanceof Reference) {
-				Reference rvalue=(Reference)v;
+				Reference<?> rvalue=(Reference)v;
 				if(rvalue.get()==null) {
 					ret=false;
 				}

@@ -30,7 +30,7 @@ public final class Cron extends SpyThread {
 	 * 
 	 * @param jq the job queue to watch
 	 */
-	public Cron(JobQueue jq) {
+	public Cron(JobQueue<?> jq) {
 		this("Cron", jq);
 	}
 
@@ -41,7 +41,7 @@ public final class Cron extends SpyThread {
 	 * @param name name of the cron instance
 	 * @param jq the queue to watch
 	 */
-	public Cron(String name, JobQueue jq) {
+	public Cron(String name, JobQueue<?> jq) {
 		this(name, jq, null);
 	}
 
@@ -52,7 +52,7 @@ public final class Cron extends SpyThread {
 	 * @param jq job queue to watch
 	 * @param tp the thread pool
 	 */
-	public Cron(String name, JobQueue jq, ThreadPool tp) {
+	public Cron(String name, JobQueue<?> jq, ThreadPool tp) {
 		super(new ThreadGroup(name), name);
 		this.jobQueue=jq;
 		setDaemon(true);
@@ -94,7 +94,7 @@ public final class Cron extends SpyThread {
 	/**
 	 * Get the current job queue.
 	 */
-	public JobQueue getJobQueue() {
+	public JobQueue<?> getJobQueue() {
 		return(jobQueue);
 	}
 

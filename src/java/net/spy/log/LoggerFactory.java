@@ -27,7 +27,7 @@ import java.util.Map;
 public final class LoggerFactory extends Object {
 
 	private Map<String, Logger> instances=null;
-	private Constructor instanceConstructor=null;
+	private Constructor<? extends Logger> instanceConstructor=null;
 
 	private static LoggerFactory instance=null;
 
@@ -52,7 +52,7 @@ public final class LoggerFactory extends Object {
 	 * @param clazz the class for which we want the logger.
 	 * @return a Logger instance
 	 */
-	public static Logger getLogger(Class clazz) {
+	public static Logger getLogger(Class<?> clazz) {
 		return(getLogger(clazz.getName()));
 	}
 
@@ -92,19 +92,20 @@ public final class LoggerFactory extends Object {
 			getConstructor();
 		}
 		Object args[]={name};
-		Logger rv=(Logger)instanceConstructor.newInstance(args);
+		Logger rv=instanceConstructor.newInstance(args);
 
 		return (rv);
 	}
 
 	// Find the appropriate constructor
+	@SuppressWarnings("unchecked")
 	private void getConstructor() {
-		Class c=DefaultLogger.class;
+		Class<? extends Logger> c=DefaultLogger.class;
 		String className=System.getProperty("net.spy.log.LoggerImpl");
 
 		if(className!=null) {
 			try {
-				c=Class.forName(className);
+				c=(Class<? extends Logger>) Class.forName(className);
 			} catch(NoClassDefFoundError e) {
 				System.err.println("Warning:  " + className
 					+ " not found while initializing"

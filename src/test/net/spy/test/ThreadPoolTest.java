@@ -82,15 +82,6 @@ public class ThreadPoolTest extends TestCase {
 			tp.shutdown();
 		}
 		tp=new ThreadPool("Test5", 1);
-		try {
-			tp.setPoolManagerClass(String.class);
-			fail("Was able to set an invalid manager");
-		} catch(IllegalArgumentException e) {
-			// pass
-			tp.setPoolManagerClass(ThreadPoolManager.class);
-			tp.shutdown();
-		}
-		tp=new ThreadPool("Test6", 1);
 		tp.shutdown();
 	}
 

@@ -46,7 +46,7 @@ public abstract class DBSQL extends DBSP {
 	 * Get the registered queries.
 	 * @return an unmodifiable Map showing the registered queries.
 	 */
-	public Map getRegisteredQueries() {
+	public Map<String, String> getRegisteredQueries() {
 		return(Collections.unmodifiableMap(registeredQueries));
 	}
 

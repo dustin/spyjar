@@ -30,7 +30,7 @@ public class ObjectDump extends SpyObject {
 
 	// Get all of the fields available to this class or any of its super
 	// classes.
-    private void getAllFields(Class c, Set<Field> s) throws Exception {
+    private void getAllFields(Class<?> c, Set<Field> s) throws Exception {
         Field fields[]=c.getDeclaredFields();
 		for(Field field : fields) {
             field.setAccessible(true);
@@ -99,14 +99,14 @@ public class ObjectDump extends SpyObject {
         try {
             if(!seen.containsKey(o)) {
                 seen.put(o, path);
-                Class c=o.getClass();
+                Class<? extends Object> c=o.getClass();
 
 				reportExamining(path, o);
 
                 Set<Field> fields=new HashSet<Field>();
                 getAllFields(c, fields);
 				for(Field field : fields) {
-                    Class fieldType=field.getType();
+                    Class<?> fieldType=field.getType();
                     String fieldName=field.getName();
 
                     String thisPath=path + "." + fieldName;

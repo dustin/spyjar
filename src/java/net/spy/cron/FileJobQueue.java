@@ -53,7 +53,7 @@ import net.spy.util.SpyUtil;
  * 20010403-090000 DAY 1 net.spy.pagermusic.RunSubs
  * </pre>
  */
-public class FileJobQueue extends JobQueue {
+public class FileJobQueue extends JobQueue<MainJob> {
 
 	private ClassLoader classLoader=null;
 
@@ -117,7 +117,7 @@ public class FileJobQueue extends JobQueue {
 		while(line!=null) {
 
 			try {
-				Job j=parseJob(line, lnr.getLineNumber());
+				MainJob j=parseJob(line, lnr.getLineNumber());
 				if(j!=null) {
 					addJob(j);
 					getLogger().info("Added job %s to start at %s",
@@ -135,8 +135,8 @@ public class FileJobQueue extends JobQueue {
 	}
 
 	// Parse an individual line from the job file.
-	private Job parseJob(String line, int lineNum) throws ParseException {
-		Job rv=null;
+	private MainJob parseJob(String line, int lineNum) throws ParseException {
+		MainJob rv=null;
 
 		line=line.trim();
 

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import net.spy.db.AbstractSavable;
+import net.spy.db.Savable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 
@@ -16,12 +17,12 @@ import net.spy.db.SaveException;
  */
 public class CollectionSavable extends AbstractSavable {
 
-	private Collection collection=null;
+	private Collection<Savable> collection=null;
 
 	/**
 	 * Get an instance of CollectionSavable.
 	 */
-	public CollectionSavable(Collection c) {
+	public CollectionSavable(Collection<Savable> c) {
 		super();
 		this.collection=c;
 	}
@@ -29,7 +30,7 @@ public class CollectionSavable extends AbstractSavable {
 	/** 
 	 * Get the collection.
 	 */
-	public Collection getPostSavables(SaveContext context) {
+	public Collection<Savable> getPostSavables(SaveContext context) {
 		return(collection);
 	}
 

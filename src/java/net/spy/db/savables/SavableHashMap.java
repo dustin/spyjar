@@ -83,14 +83,14 @@ public class SavableHashMap<K, V> extends HashMap<K, Savable>
 	/** 
 	 * @return null
 	 */
-	public Collection getPreSavables(SaveContext context) {
+	public Collection<Savable> getPreSavables(SaveContext context) {
 		return(null);
 	}
 
 	/** 
 	 * @return values()
 	 */
-	public Collection getPostSavables(SaveContext context) {
+	public Collection<Savable> getPostSavables(SaveContext context) {
 		return(values());
 	}
 

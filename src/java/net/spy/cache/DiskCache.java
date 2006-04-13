@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,11 +31,11 @@ import net.spy.util.SpyUtil;
  * This is used for terribly simple caches with no expiration dates on
  * objects.  Things go in and they stay in.
  */
-public class DiskCache extends AbstractMap {
+public class DiskCache extends AbstractMap<Serializable, Serializable> {
 
 	// Base directory for hashing
 	private String basedir = null;
-	private LRUCache<Object, SoftReference<Object>> lruCache=null;
+	private LRUCache<Serializable, SoftReference<Serializable>> lruCache=null;
 
 	private static final int DEFAULT_LRU_CACHE_SIZE=100;
 
@@ -58,7 +59,8 @@ public class DiskCache extends AbstractMap {
 	public DiskCache(String base, int lruCacheSize) {
 		super();
 		this.basedir=base;
-		lruCache=new LRUCache<Object, SoftReference<Object>>(lruCacheSize);
+		lruCache=new LRUCache<Serializable,
+			SoftReference<Serializable>>(lruCacheSize);
 	}
 
 	/** 
@@ -104,8 +106,8 @@ public class DiskCache extends AbstractMap {
      * @param v value
      * @return the old object stored in that location (if any)
 	 */
-    public Object put(Object k, Object v) {
-		Object rv=get(k);
+    public Serializable put(Serializable k, Serializable v) {
+		Serializable rv=get(k);
 
 		String pathto=getPath(k);
 
@@ -132,17 +134,18 @@ public class DiskCache extends AbstractMap {
 	 *
 	 * @return the object, or null if there's no such object
 	 */
-    public Object get(Object key) {
-		Object rv=null;
+    public Serializable get(Object key) {
+		Serializable rv=null;
 
 		if(key==null) {
 			throw new NullPointerException("Name not provided");
 		}
 
-		rv=lruCache.get(key);
+		rv=(Serializable) lruCache.get(key);
 		if(rv==null) {
-			rv=getFromDiskCache(key);
-			lruCache.put(key, new SoftReference<Object>(rv));
+			rv=(Serializable) getFromDiskCache(key);
+			lruCache.put((Serializable) key,
+					new SoftReference<Serializable>(rv));
 		}
 
 		return(rv);
@@ -188,8 +191,8 @@ public class DiskCache extends AbstractMap {
 	}
 
 
-	public Set entrySet() {
-		Set rv=null;
+	public Set<Map.Entry<Serializable, Serializable>> entrySet() {
+		Set<Map.Entry<Serializable, Serializable>> rv=null;
 
 		try {
 			rv=new WalkerDiskCacheRanger();
@@ -202,7 +205,8 @@ public class DiskCache extends AbstractMap {
 		return(rv);
 	}
 
-	private class WalkerDiskCacheRanger extends HashSet<Object> {
+	private class WalkerDiskCacheRanger
+		extends HashSet<Map.Entry<Serializable, Serializable>> {
 
 		public WalkerDiskCacheRanger()
 			throws IOException, ClassNotFoundException {
@@ -222,11 +226,11 @@ public class DiskCache extends AbstractMap {
 				// Regular file, open it and read it
 				FileInputStream istream = null;
 				ObjectInputStream p = null;
-				Object key=null;
+				Serializable key=null;
 				try {
 					istream = new FileInputStream(f);
 					p = new ObjectInputStream(istream);
-					key=p.readObject();
+					key=(Serializable) p.readObject();
 				} finally {
 					CloseUtil.close(p);
 					CloseUtil.close(istream);
@@ -240,21 +244,22 @@ public class DiskCache extends AbstractMap {
 		/** 
 		 * Get an iterator.
 		 */
-		public Iterator<Object> iterator() {
+		public Iterator<Entry<Serializable, Serializable>> iterator() {
 			return(new I(super.iterator()));
 		}
 
 	}
 
 	// Iterator implementation
-	private static class I extends Object implements Iterator<Object> {
+	private static class I extends
+		Object implements Iterator<Entry<Serializable, Serializable>> {
 
-		private Iterator i=null;
+		private Iterator<Map.Entry<Serializable, Serializable>> i=null;
 		private E current=null;
 		private boolean begun=false;
 
 		// Instatiate the iterator over the default iterator implementation
-		public I(Iterator it) {
+		public I(Iterator<Map.Entry<Serializable, Serializable>> it) {
 			super();
 			this.i=it;
 		}
@@ -262,9 +267,9 @@ public class DiskCache extends AbstractMap {
 		/** 
 		 * Get the next object.
 		 */
-		public Object next() {
+		public E next() {
 			begun=true;
-			current=(E)i.next();
+			current=(E) i.next();
 			return(current);
 		}
 
@@ -291,12 +296,13 @@ public class DiskCache extends AbstractMap {
 	}
 
 	// Map entry implementation
-	private static class E extends Object implements Map.Entry {
+	private static class E extends Object
+		implements Map.Entry<Serializable, Serializable> {
 
 		File path=null;
-		Object k=null;
+		Serializable k=null;
 
-		public E(Object key, File p) {
+		public E(Serializable key, File p) {
 			super();
 			this.k=key;
 			this.path=p;
@@ -326,7 +332,7 @@ public class DiskCache extends AbstractMap {
 		/** 
 		 * Get the key.
 		 */
-		public Object getKey() {
+		public Serializable getKey() {
 			return(k);
 		}
 
@@ -340,8 +346,8 @@ public class DiskCache extends AbstractMap {
 		/** 
 		 * Get the value.
 		 */
-		public Object getValue() {
-			Object rv=null;
+		public Serializable getValue() {
+			Serializable rv=null;
 
 			FileInputStream istream=null;
 			ObjectInputStream p=null;
@@ -350,7 +356,7 @@ public class DiskCache extends AbstractMap {
 				p = new ObjectInputStream(istream);
 				Object key=p.readObject();
 				assert(key.equals(k));
-				rv=p.readObject();
+				rv=(Serializable) p.readObject();
 			} catch(IOException e) {
 				throw new RuntimeException("Error getting object",e);
 			} catch(ClassNotFoundException e) {
@@ -366,7 +372,7 @@ public class DiskCache extends AbstractMap {
 		/** 
 		 * Not implemented.
 		 */
-		public Object setValue(Object o) {
+		public Serializable setValue(Serializable o) {
 			throw new UnsupportedOperationException("Can't set here.");
 		}
 

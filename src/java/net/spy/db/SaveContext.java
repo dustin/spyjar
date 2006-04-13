@@ -11,7 +11,7 @@ import java.util.Hashtable;
  * keep track of whatever state they may need in order to maintain key
  * integrity or whatever.
  */
-public class SaveContext extends Hashtable {
+public class SaveContext extends Hashtable<String, Object> {
 
 	/**
 	 * Get an instance of SaveContext.

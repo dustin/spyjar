@@ -231,7 +231,7 @@ public class ObjectPoolConnectionSource extends SpyObject
 		rv.put(prefix + "dbPass", tmp);
 
 		// Add the db options
-		for(Enumeration e=conf.propertyNames(); e.hasMoreElements();) {
+		for(Enumeration<?> e=conf.propertyNames(); e.hasMoreElements();) {
 			String pname=(String)e.nextElement();
 			if(pname.startsWith("dboption.")) {
 				String ovalue=conf.get(pname);

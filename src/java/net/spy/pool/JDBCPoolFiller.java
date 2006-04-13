@@ -31,7 +31,7 @@ public class JDBCPoolFiller extends PoolFiller {
 	// Extract db options from various properties.
 	private void setDBOptions(Properties from, Properties tmpconf,
 		String base) {
-		for(Enumeration e=from.propertyNames(); e.hasMoreElements(); ) {
+		for(Enumeration<?> e=from.propertyNames(); e.hasMoreElements(); ) {
 			String pname=(String)e.nextElement();
 			if(pname.startsWith(base)) {
 				String oname=pname.substring(base.length());
