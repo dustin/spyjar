@@ -68,7 +68,12 @@ public class URLWatcher extends SpyObject {
 	// Get the URLItem for the given URL.
 	@SuppressWarnings("unchecked")
 	private URLItem getURLItem(URL u) {
-		return(items.get(u));
+		URLItem rv=items.get(u);
+		if(rv != null && !rv.isRunning()) {
+			items.remove(u);
+			rv=null;
+		}
+		return(rv);
 	}
 
 	/** 

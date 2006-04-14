@@ -186,6 +186,7 @@ public class URLItem extends TimerTask {
 		if((System.currentTimeMillis() - lastRequest) > maxIdleTime) {
 			cancel();
 			isRunning=false;
+			logger.info("Stopped updating %s", url);
 		}
 	}
 
