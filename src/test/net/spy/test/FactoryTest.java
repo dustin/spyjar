@@ -6,9 +6,10 @@ package net.spy.test;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import net.spy.cache.SpyCache;
+import net.spy.factory.CacheRefresher;
 import net.spy.factory.GenFactory;
 import net.spy.factory.Instance;
 
@@ -18,35 +19,35 @@ import net.spy.factory.Instance;
 public class FactoryTest extends TestCase {
 
 	private static final int NUM_OBJECTS=1000;
+	private static final String TEST_KEY = "TestStuff";
 
-	/**
-	 * Get an instance of FactoryTest.
-	 */
-	public FactoryTest(String name) {
-		super(name);
+	private TestFactory tf=null;
+
+	public void setUp() {
+		tf=new TestFactory();
 	}
 
-	/** 
-	 * Get the test.
-	 */
-	public static Test suite() {
-		return new TestSuite(FactoryTest.class);
-	}
-
-	/** 
-	 * Run this test.
-	 */
-	public static void main(String args[]) {
-		junit.textui.TestRunner.run(suite());
+	public void tearDown() {
+		SpyCache.getInstance().uncache(TEST_KEY);
+		if(CacheRefresher.getInstance() != null) {
+			CacheRefresher.getInstance().shutdown();
+		}
 	}
 
 	/** 
 	 * Test the factory thingy.
 	 */
 	public void testFactory() throws Exception {
-		TestFactory tf=TestFactory.getInstance();
-
 		// Try all the existing objects
+		checkFirstPass();
+
+		// Get the thing to recache
+		tf.recache();
+
+		checkSecondPass();
+	}
+
+	private void checkFirstPass() {
 		for(int i=0; i<NUM_OBJECTS; i++) {
 			TestInstance ti=tf.getObject(i);
 			assertNotNull("Null at " + i, ti);
@@ -59,39 +60,100 @@ public class FactoryTest extends TestCase {
 		TestInstance ti=tf.getObject(NUM_OBJECTS + 138);
 		assertNull(ti);
 
-		// Get the thing to recache
-		tf.recache();
+		assertEquals(1, tf.numRuns);
+	}
 
+	private void checkSecondPass() {
 		// Now that object should be there.
-		ti=tf.getObject(NUM_OBJECTS + 138);
+		TestInstance ti=tf.getObject(NUM_OBJECTS + 138);
 		assertEquals(ti.getId(), NUM_OBJECTS + 138);
 
 		// And this object shouldn't
 		ti=tf.getObject(138);
 		assertNull(ti);
+
+		assertEquals(2, tf.numRuns);
+	}
+
+	/** 
+	 * Test the factory thingy with delayed recaches.
+	 */
+	public void testFactoryDelayedRecache() throws Exception {
+
+		checkFirstPass();
+
+		// Tell the thing to recache
+		CacheRefresher cc=CacheRefresher.getInstance();
+		cc.recache(tf, System.currentTimeMillis(), 100);
+
+		// Still should have the same stuff
+		checkFirstPass();
+
+		// Let the stuff have time to recache.
+		Thread.sleep(100);
+
+		checkSecondPass();
+	}
+
+	/** 
+	 * Test the factory thingy with double-delayed recaches.
+	 */
+	public void testFactoryDoubleDelayedRecache() throws Exception {
+
+		checkFirstPass();
+
+		// Tell the thing to recache
+		CacheRefresher cc=CacheRefresher.getInstance();
+		cc.recache(tf, System.currentTimeMillis(), 100);
+
+		// Still should have the same stuff
+		checkFirstPass();
+
+		// Let a little time pass and then recache.
+		Thread.sleep(50);
+		cc.recache(tf, System.currentTimeMillis(), 100);
+
+		// Let a little more time pass and then validate we haven't recached
+		Thread.sleep(75);
+		checkFirstPass();
+
+		// With a bit more time passed, we should be on the new set.
+		Thread.sleep(25);
+		checkSecondPass();
+	}
+
+	public void testInvalidCacheRefresherAssignment() {
+		try {
+			CacheRefresher cc=CacheRefresher.getInstance();
+			CacheRefresher.setInstance(cc);
+			fail("Overwrite cache refresher instance");
+		} catch(IllegalStateException e) {
+			assertEquals("Attempting to overwrite cache refresher instance",
+					e.getMessage());
+		}
 	}
 
 	public void testInvalidConstructors() {
 		try {
-			TestFactory tf=new TestFactory(null, 10000);
+			TestFactory t=new TestFactory(null, 10000);
 			fail("Shouldn't be able to construct a factory with a null name: "
-				+ tf);
+				+ t);
 		} catch(NullPointerException e) {
 			assertNotNull(e.getMessage());
 		}
 
 		try {
-			TestFactory tf=new TestFactory("Test", 0);
+			TestFactory t=new TestFactory("Test", 0);
 			fail("Shouldn't be able to construct a factory with 0 cache time: "
-				+ tf);
+				+ t);
 		} catch(IllegalArgumentException e) {
 			assertNotNull(e.getMessage());
 		}
 
 		try {
-			TestFactory tf=new TestFactory("Test", -103);
+			TestFactory t=new TestFactory("Test", -103);
 			fail("Shouldn't be able to construct a factory with "
-				+ "negative cache time: " + tf);
+				+ "negative cache time: " + t);
 		} catch(IllegalArgumentException e) {
 			assertNotNull(e.getMessage());
 		}
@@ -124,20 +186,15 @@ public class FactoryTest extends TestCase {
 
 	private static class TestFactory extends GenFactory<TestInstance> {
 
-		private static TestFactory instance=new TestFactory();
-
 		private int lastObject=0;
+		public int numRuns=0;
 
 		public TestFactory(String nm, long t) {
 			super(nm, t);
 		}
 
 		public TestFactory() {
-			this("TestStuff", 10000);
-		}
-
-		public static TestFactory getInstance() {
-			return(instance);
+			this(TEST_KEY, 10000);
 		}
 
 		public Collection<TestInstance> getInstances() {
@@ -148,6 +205,7 @@ public class FactoryTest extends TestCase {
 				rv.add(new TestInstance(id));
 				lastObject=id;
 			}
+			numRuns++;
 			return(rv);
 		}
 	}

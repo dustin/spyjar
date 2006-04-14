@@ -4,17 +4,21 @@
 package net.spy.factory;
 
 import java.util.Collection;
+import java.util.TimerTask;
 
 import net.spy.SpyObject;
 import net.spy.cache.SpyCache;
 
 /**
- * Generic object instance cache.
+ * Generic object instance cache for objects collections suitable of being
+ * stored completely in memory.
  */
 public abstract class GenFactory<T extends Instance> extends SpyObject {
 
 	private String cacheKey=null;
 	private long cacheTime=0;
+	private long lastRefresh=0;
+	private TimerTask nextRefresh=null;
 
 	/**
 	 * Get an instance of GenFactory.
@@ -59,6 +63,7 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 		for(T inst : getInstances()) {
 			rv.cacheInstance(inst);
 		}
+		lastRefresh=System.currentTimeMillis();
 		SpyCache sc=SpyCache.getInstance();
 		sc.store(cacheKey, rv, cacheTime);
 		return(rv);
@@ -121,6 +126,27 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 	 */
 	public void recache() {
 		setCache();
+	}
+
+	/**
+	 * Get the timestamp of the last time this was refreshed.
+	 */
+	public long getLastRefresh() {
+		return lastRefresh;
+	}
+
+	/**
+	 * Get the TimerTask scheduled to refresh this cache (if any).
+	 */
+	TimerTask getNextRefresh() {
+		return nextRefresh;
+	}
+
+	/**
+	 * Set the TimerTask for the update 
+	 */
+	void setNextRefresh(TimerTask nextRefresh) {
+		this.nextRefresh = nextRefresh;
 	}
 
 }
