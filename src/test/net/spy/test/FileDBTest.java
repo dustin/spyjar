@@ -3,8 +3,8 @@
 
 package net.spy.test;
 
-import java.io.File;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -86,8 +86,8 @@ public class FileDBTest extends TestCase {
 		fd.clearQueries();
 	}
 
-	private File getPath(String p) {
-		return(new File(System.getProperty("basedir")
+	private URL getPath(String p) throws Exception {
+		return(new URL("file://" + System.getProperty("basedir")
 			+ "/src/test/net/spy/test/db/" + p));
 	}
 

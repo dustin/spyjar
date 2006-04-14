@@ -3,12 +3,13 @@
 
 package net.spy.db;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -23,17 +24,17 @@ import java.util.StringTokenizer;
 import net.spy.util.CloseUtil;
 
 /**
- * Stub class for building a ResultSet from a file.
+ * Stub class for building a ResultSet from a URL.
  */
 public class FileResultSetStub extends GenericResultSetStub {
 
 	/**
 	 * Get an instance of FileResultSetStub.
 	 */
-	public FileResultSetStub(File f) throws SQLException {
+	public FileResultSetStub(URL f) throws SQLException {
 		super();
 		try {
-			initFromFile(f);
+			initFromURL(f);
 		} catch(IOException e) {
 			SQLException toThrow=new SQLException(
 				"Could not initialize results from " + f);
@@ -42,11 +43,11 @@ public class FileResultSetStub extends GenericResultSetStub {
 		}
 	}
 
-	private void initFromFile(File f) throws SQLException, IOException {
-		FileReader fr=null;
+	private void initFromURL(URL u) throws SQLException, IOException {
+		InputStream is=null;
 		try {
-			fr=new FileReader(f);
-			LineNumberReader lnr=new LineNumberReader(fr);
+			is=u.openStream();
+			LineNumberReader lnr=new LineNumberReader(new InputStreamReader(is));
 
 			MyMetaData mmd=new MyMetaData(lnr.readLine());
 			setMetaData(mmd);
@@ -60,7 +61,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			}
 			setResults(results);
 		} finally {
-			CloseUtil.close(fr);
+			CloseUtil.close(is);
 		}
 	}
 

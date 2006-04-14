@@ -3,16 +3,16 @@
 
 package net.spy.test;
 
-import java.io.File;
-import java.util.Date;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
-
-import net.spy.db.FileResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import junit.framework.TestCase;
+import net.spy.db.FileResultSet;
 
 public class FileResultSetTest extends TestCase {
 
@@ -73,9 +73,9 @@ public class FileResultSetTest extends TestCase {
 	}
 
 	public void testResultSet1() throws Exception {
-		String path = System.getProperty("basedir")
+		String path = "file://" + System.getProperty("basedir")
 			+ "/src/test/net/spy/test/db/resulttest.txt";
-		FileResultSet rs = new FileResultSet(new File(path));
+		FileResultSet rs = new FileResultSet(new URL(path));
 		
 		try {
 			String s=rs.getString("col_two");
@@ -130,8 +130,8 @@ public class FileResultSetTest extends TestCase {
 		assertFalse(rs.next());
 	}
 
-	public void testBadResultSet1() {
-		File f = new File("/tmp/nonExistentPath.txt");
+	public void testBadResultSet1() throws MalformedURLException {
+		URL f = new URL("file:///tmp/nonExistentPath.txt");
 		try {
 			FileResultSet rs = new FileResultSet(f);
 			fail("Got a result set from a non-existent file:  "

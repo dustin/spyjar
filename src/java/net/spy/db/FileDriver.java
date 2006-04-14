@@ -3,7 +3,6 @@
 
 package net.spy.db;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
@@ -69,35 +68,35 @@ public class FileDriver extends SpyObject implements Driver {
 	}
 	
 	/**
-	 * Register a query to file mapping.
+	 * Register a query to URL mapping.
 	 * @param url JDBC URL to which this query applies
 	 * @param s the query string
-	 * @param f the file that will provide the results
+	 * @param f the URL that will provide the results
 	 */
-	public void registerQuery(String url, String s, File f) {
+	public void registerQuery(String url, String s, URL f) {
 		registerQuery(url, s, new Object[0], f);
 	}
 
 	/** 
-	 * Register a ResultSet File to a parameterized query.
+	 * Register a ResultSet URL to a parameterized query.
 	 * @param url JDBC URL to which this query applies
 	 * @param s the query string
 	 * @param args the args
-	 * @param f the file with the result set
+	 * @param f the URL with the result set
 	 */
-	public void registerQuery(String url, String s, Object args[], File f) {
+	public void registerQuery(String url, String s, Object args[], URL f) {
 		ParameterizedQuery pq=new ParameterizedQuery(s, args);
 		getMap(url, queryMap).put(pq, f);
 	}
 
 	/** 
-	 * Register the query(-ies) from the given DBSQL and args to a file.
+	 * Register the query(-ies) from the given DBSQL and args to a URL.
 	 * @param url JDBC URL to which this query applies
 	 * @param db the DBSQL instance.
 	 * @param args arguments to this query
 	 * @param path the path of the results
 	 */
-	public void registerQuery(String url, DBSQL db, Object args[], File path) {
+	public void registerQuery(String url, DBSQL db, Object args[], URL path) {
 		for(String query : db.getRegisteredQueries().values()) {
 			registerQuery(url, query, args, path);
 		}
@@ -152,14 +151,14 @@ public class FileDriver extends SpyObject implements Driver {
 	}
 
 	/**
-	 * Get the File for the specified query.
+	 * Get the URL for the specified query.
 	 * @param url JDBC URL to which this query applies
 	 * @param pq the query
-	 * @return the File
+	 * @return the URL
 	 * @throws SQLException if there isn't a query managed for this query
 	 */
-	File getQuery(String url, ParameterizedQuery pq) throws SQLException {
-		File rv=(File)getMap(url, queryMap).get(pq);
+	URL getQuery(String url, ParameterizedQuery pq) throws SQLException {
+		URL rv=(URL)getMap(url, queryMap).get(pq);
 		if(rv == null) {
 			throw new SQLException("No mapping registered for query " + pq
 				+ " in DB specified as " + url);
@@ -531,7 +530,7 @@ public class FileDriver extends SpyObject implements Driver {
 		public ResultSet executeQuery() throws SQLException {
 			FileDriver fd=(FileDriver)DriverManager.getDriver(
 				URL_PREFIX + "blah");
-			File f=fd.getQuery(url, new ParameterizedQuery(getQuery(),
+			URL f=fd.getQuery(url, new ParameterizedQuery(getQuery(),
 				getApplicableArgs()));
 			ResultSet rs=new FileResultSet(f);
 			return(rs);
