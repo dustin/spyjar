@@ -152,8 +152,8 @@ public class ThreadPool extends ThreadPoolExecutor {
 	 */
 	public synchronized void start() {
 		int threads=prestartAllCoreThreads();
-		System.out.println("Started " + threads
-				+ " of " + getCorePoolSize() + " threads");
+		getLogger().info("Started %d of %d threads", threads,
+			getCorePoolSize());
 	}
 
 	private Logger getLogger() {
