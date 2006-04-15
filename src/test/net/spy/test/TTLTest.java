@@ -119,12 +119,12 @@ public class TTLTest extends TestCase {
 		TestTTLBad1 ttl=new TestTTLBad1(100);
 		String firstRv=ttl.getMessageFromBundle("x", "y", "z");
 
-		assertTrue(firstRv.startsWith(
+		assertTrue(firstRv, firstRv.startsWith(
 			"ResourceBundle not found while reporting TTL expiration:  x"));
 
 		String secondRv=ttl.getMessageFromBundle("net.spy.util.messages",
 			"y", "z");
-		assertTrue(secondRv.startsWith(
+		assertTrue(secondRv, secondRv.startsWith(
 			"Resource not found while reporting TTL expiration:  y"));
 	}
 
