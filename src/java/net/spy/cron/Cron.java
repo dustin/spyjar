@@ -7,6 +7,7 @@ package net.spy.cron;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import net.spy.SpyThread;
 import net.spy.util.ThreadPool;
@@ -60,18 +61,10 @@ public final class Cron extends SpyThread {
 		getThreadGroup().setDaemon(true);
 
 		if(tp==null) {
-			tp=new ThreadPool(name + "Pool");
-			tp.setStartThreads(5);
-			tp.setMinIdleThreads(0);
-			tp.setMinTotalThreads(1);
-			tp.setMaxTotalThreads(100);
+			tp=new ThreadPool(name + "Pool", 1, 10, Thread.NORM_PRIORITY,
+					new LinkedBlockingQueue<Runnable>(128));
 		}
 		threads=tp;
-		try {
-			threads.start();
-		} catch(IllegalStateException e) {
-			getLogger().warn("Threads were already started", e);
-		}
 
 		validJobFound=System.currentTimeMillis();
 		start();
