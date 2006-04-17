@@ -3,9 +3,13 @@
 
 package net.spy.db;
 
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+
 import net.spy.SpyObject;
 import net.spy.util.SpyConfig;
-import net.spy.util.ThreadPool;
 
 /**
  * Asynchronous Saver.
@@ -13,42 +17,38 @@ import net.spy.util.ThreadPool;
 public class TransactionPipeline extends SpyObject {
 
 	// Thread pool name
-	private static final String POOL_NAME="TransactionPipeline Workers ";
+	private static final String POOL_NAME="TransactionPipeline Worker";
 	// Default size of the transaction pipeline pool
 	private static final int DEFAULT_POOL_SIZE=1;
 
 	// Minimum amount of time (in milliseconds) a transaction has to have been
 	// in the pipeline before it will be considered for processing
 	private static final int MIN_TRANS_AGE=500;
-	// Maximum amount of time we'll sleep waiting for transactions
-	private static final int MAX_SLEEP_TIME=MIN_TRANS_AGE*3;
 
 	// The thread pool.
-	private ThreadPool pool=null;
+	private ScheduledThreadPoolExecutor pool=null;
 
 	/**
 	 * Get an instance of TransactionPipeline.
 	 */
 	public TransactionPipeline() {
 		super();
-		pool=new ThreadPool(POOL_NAME, DEFAULT_POOL_SIZE);
+		pool=new ScheduledThreadPoolExecutor(DEFAULT_POOL_SIZE,
+				new ThreadFactory() {
+					public Thread newThread(Runnable r) {
+						Thread rv=new Thread(r, POOL_NAME);
+						return rv;
+					}
+		});
 	}
 
 	/** 
 	 * Shut down the pipeline.
 	 */
 	public synchronized void shutdown() {
-		if(pool == null) {
-			throw new IllegalStateException("Already shut down!");
-		}
-		try {
-			// Let the pool shut down and all that.
-			pool.waitForCompletion();
-		} catch(InterruptedException e) {
-			getLogger().warn("Interrupted waiting for pool completion", e);
-		}
-		// Mark it as null so we won't do it again
-		pool=null;
+		assert pool != null : "Trying to double-shutdown a pool.";
+		pool.shutdown();
+		pool = null;
 	}
 
 	/** 
@@ -58,8 +58,10 @@ public class TransactionPipeline extends SpyObject {
 	 * @param conf the configuration
 	 * @param context a context for the save
 	 */
-	public void addTransaction(Savable s, SpyConfig conf, SaveContext context) {
-		pool.addTask(new PipelineTask(s, conf, context));
+	public ScheduledFuture<?> addTransaction(
+			Savable s, SpyConfig conf, SaveContext ctx) {
+		return pool.schedule(new PipelineTask(s, conf, ctx), MIN_TRANS_AGE,
+				TimeUnit.MILLISECONDS);
 	}
 
 	/** 
@@ -68,8 +70,8 @@ public class TransactionPipeline extends SpyObject {
 	 * @param s the savable
 	 * @param conf the configuration
 	 */
-	public void addTransaction(Savable s, SpyConfig conf) {
-		addTransaction(s, conf, null);
+	public ScheduledFuture<?> addTransaction(Savable s, SpyConfig conf) {
+		return addTransaction(s, conf, null);
 	}
 
 	private static final class PipelineTask extends SpyObject
@@ -82,8 +84,6 @@ public class TransactionPipeline extends SpyObject {
 		private Saver saver=null;
 		private Savable toSave=null;
 
-		private long startDate=0;
-
 		private PipelineTask(Savable s, SpyConfig conf, SaveContext context) {
 			super();
 			this.originalStack=new Exception("Original request");
@@ -91,8 +91,6 @@ public class TransactionPipeline extends SpyObject {
 
 			this.toSave=s;
 			this.saver=new Saver(conf, context);
-
-			startDate=System.currentTimeMillis();
 		}
 
 		/** 
@@ -100,16 +98,6 @@ public class TransactionPipeline extends SpyObject {
 		 */
 		public void run() {
 			try {
-				// How long should we sleep before processing?
-				long age=System.currentTimeMillis() - startDate;
-				int sleepTime=(int)(MIN_TRANS_AGE - age);
-				if(sleepTime > MAX_SLEEP_TIME) {
-					sleepTime=MAX_SLEEP_TIME;
-				}
-				if(sleepTime > 0) {
-					getLogger().debug("Sleeping for %sms", sleepTime);
-					Thread.sleep(sleepTime);
-				}
 				saver.save(toSave);
 			} catch(Throwable t) {
 				getLogger().error("Error saving asynchronous transaction", t);
