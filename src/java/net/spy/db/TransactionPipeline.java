@@ -81,16 +81,18 @@ public class TransactionPipeline extends SpyObject {
 		// pipeline request was original requested
 		private Throwable originalStack=null;
 
-		private Saver saver=null;
 		private Savable toSave=null;
+		private SpyConfig conf=null;
+		private SaveContext context=null;
 
-		private PipelineTask(Savable s, SpyConfig conf, SaveContext context) {
+		private PipelineTask(Savable s, SpyConfig cnf, SaveContext ctx) {
 			super();
 			this.originalStack=new Exception("Original request");
 			originalStack.fillInStackTrace();
 
 			this.toSave=s;
-			this.saver=new Saver(conf, context);
+			conf=cnf;
+			context=ctx;
 		}
 
 		/** 
@@ -98,7 +100,7 @@ public class TransactionPipeline extends SpyObject {
 		 */
 		public void run() {
 			try {
-				saver.save(toSave);
+				new Saver(conf, context).save(toSave);
 			} catch(Throwable t) {
 				getLogger().error("Error saving asynchronous transaction", t);
 				getLogger().error("Sent from", originalStack);

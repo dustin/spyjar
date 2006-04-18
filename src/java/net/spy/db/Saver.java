@@ -87,7 +87,14 @@ public class Saver extends SpyObject {
 
 			complete=true;
 		} catch(SQLException se) {
+			getLogger().error("Exception saving object", se);
 			throw new SaveException("Error saving object", se);
+		} catch(RuntimeException e) {
+			getLogger().error("Runtime exception saving object", e);
+			throw e;
+		} catch(Error e) {
+			getLogger().error("Error saving object", e);
+			throw e;
 		} finally {
 			// figure out whether we need to commit or roll back
 			if(conn!=null) {
