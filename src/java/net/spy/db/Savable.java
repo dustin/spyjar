@@ -39,7 +39,7 @@ public interface Savable {
 	 * @param context SaveContext being used in this Saver session
 	 * @return a collection of objects this SavableNode depends on
 	 */
-	Collection<? extends Savable> getPreSavables(SaveContext context);
+	Collection<Savable> getPreSavables(SaveContext context);
 
 	/** 
 	 * Get a Collection of all of the SavableNodes this SavableNode is
@@ -48,6 +48,6 @@ public interface Savable {
 	 * @param context SaveContext being used in this Saver session
 	 * @return a collection of objects this SavableNode depends on
 	 */
-	Collection<? extends Savable> getPostSavables(SaveContext context);
+	Collection<Savable> getPostSavables(SaveContext context);
 
 }

@@ -608,7 +608,6 @@ public class SaverTest extends MockObjectTestCase {
 
 		public void save(Connection conn, SaveContext ctx) {
 			saved=true;
-			setSaved();
 		}
 	}
 
@@ -618,7 +617,7 @@ public class SaverTest extends MockObjectTestCase {
 	private static final class TestSavable extends BasicSavable
 		implements TransactionListener {
 
-		public Collection preSavs=null;
+		public Collection<Savable> preSavs=null;
 		public Collection postSavs=null;
 		public int id=0;
 		public boolean committed=false;
@@ -626,15 +625,16 @@ public class SaverTest extends MockObjectTestCase {
 		public TestSavable(int i) {
 			super();
 			this.id=i;
-			this.preSavs=new ArrayList<TestSavable>();
-			this.postSavs=new ArrayList<Collection<TestSavable>>();
+			this.preSavs=new ArrayList<Savable>();
+			this.postSavs=new ArrayList<Savable>();
 		}
 
-		public Collection getPreSavables(SaveContext ctx) {
+		public Collection<Savable> getPreSavables(SaveContext ctx) {
 			return(preSavs);
 		}
 
-		public Collection getPostSavables(SaveContext ctx) {
+		@SuppressWarnings("unchecked")
+		public Collection<Savable> getPostSavables(SaveContext ctx) {
 			return(postSavs);
 		}
 
@@ -653,6 +653,7 @@ public class SaverTest extends MockObjectTestCase {
 		}
 
 		public void transactionCommited() {
+			super.transactionCommited();
 			committed=true;
 		}
 	}

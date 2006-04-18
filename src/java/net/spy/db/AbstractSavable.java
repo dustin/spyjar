@@ -11,7 +11,8 @@ import net.spy.SpyObject;
 /**
  * Abstract implementation of {@link Savable}.
  */
-public abstract class AbstractSavable extends SpyObject implements Savable {
+public abstract class AbstractSavable extends SpyObject
+	implements Savable, TransactionListener {
 
 	private boolean asIsNew=false;
 	private boolean asIsModified=false;
@@ -75,7 +76,7 @@ public abstract class AbstractSavable extends SpyObject implements Savable {
 	 * The default implementation returns null, indicating that there are
 	 * no prerequisite objects.
 	 */
-	public Collection<? extends Savable> getPreSavables(SaveContext context) {
+	public Collection<Savable> getPreSavables(SaveContext context) {
 		return(null);
 	}
 
@@ -84,14 +85,14 @@ public abstract class AbstractSavable extends SpyObject implements Savable {
 	 * implementation returns null, indicating that there are no dependent
 	 * objects.
 	 */
-	public Collection<? extends Savable> getPostSavables(SaveContext context) {
+	public Collection<Savable> getPostSavables(SaveContext context) {
 		return(null);
 	}
 
-	/** 
-	 * Unset the flags indicating that this object needs to be saved.
+	/**
+	 * Whenever this transaction is committed, automatically flag it as saved.
 	 */
-	protected void setSaved() {
+	public void transactionCommited() {
 		setNew(false);
 		setModified(false);
 	}
