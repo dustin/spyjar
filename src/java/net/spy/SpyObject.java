@@ -12,7 +12,7 @@ import net.spy.log.LoggerFactory;
  */
 public class SpyObject extends Object {
 
-	private Logger logger=null;
+	private transient Logger logger=null;
 
 	/**
 	 * Get an instance of SpyObject.
