@@ -39,7 +39,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 
 	private static final int DEFAULT_LRU_CACHE_SIZE=100;
 
-	private Logger logger = null;
+	private transient Logger logger = null;
 
 	/**
 	 * Get an DiskObject using the given directory.

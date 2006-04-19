@@ -39,7 +39,7 @@ public class TTL extends TimerTask {
 	private int reportInterval=DEFAULT_REPORT_INTERVAL;
 	private int maxNReports=DEFAULT_N_REPORTS;
 
-	private Logger logger=null;
+	private transient Logger logger=null;
 
 	/**
 	 * Get an instance of TTL.

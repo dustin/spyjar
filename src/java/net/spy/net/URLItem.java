@@ -40,7 +40,7 @@ public class URLItem extends TimerTask {
 
 	private IOException lastError=null;
 
-	private Logger logger=null;
+	private transient Logger logger=null;
 
 	/**
 	 * Get an instance of URLItem.

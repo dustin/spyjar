@@ -17,7 +17,7 @@ import net.spy.log.LoggerFactory;
  */
 public class JobQueue<T extends Job> extends ArrayList<T> {
 
-	private Logger logger=null;
+	private transient Logger logger=null;
 
 	/**
 	 * Get a new job queue.

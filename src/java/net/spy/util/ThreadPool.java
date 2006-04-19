@@ -79,7 +79,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 	// for jobs to finish
 	private static final int WAIT_TIMEOUT=5000;
 
-	private Logger logger=null;
+	private transient Logger logger=null;
 
 	public ThreadPool(final String name, int n, int max, int prio,
 			BlockingQueue<Runnable> q) {

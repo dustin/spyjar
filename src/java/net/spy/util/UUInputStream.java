@@ -29,7 +29,7 @@ public class UUInputStream extends ByteConverionInputStream {
 	private boolean started=false;
 	private boolean finished=false;
 
-	private Logger logger = null;
+	private transient Logger logger = null;
 
 	/**
 	 * Get a UUInputStream decoding the given InputStream.

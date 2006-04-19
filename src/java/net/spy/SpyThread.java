@@ -12,7 +12,7 @@ import net.spy.log.LoggerFactory;
  */
 public class SpyThread extends Thread {
 
-	private Logger logger=null;
+	private transient Logger logger=null;
 
 	// Thread has *eight* constructors.  Damnit.
 
