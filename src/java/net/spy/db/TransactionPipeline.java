@@ -30,14 +30,17 @@ public class TransactionPipeline extends SpyObject {
 
 	/**
 	 * Get an instance of TransactionPipeline.
+	 *
+	 * @param tg the thread group under which threads will be created
+	 * @param name an optional suffix to the names of the worker created
 	 */
-	public TransactionPipeline(String name) {
+	public TransactionPipeline(final ThreadGroup tg, String name) {
 		super();
 		final String n=POOL_NAME+(name==null?"": " " + name);
 		pool=new ScheduledThreadPoolExecutor(DEFAULT_POOL_SIZE,
 				new ThreadFactory() {
 					public Thread newThread(Runnable r) {
-						Thread rv=new Thread(r, n);
+						Thread rv=new Thread(tg, r, n);
 						return rv;
 					}
 		});
@@ -47,7 +50,7 @@ public class TransactionPipeline extends SpyObject {
 	 * Get a transaction pipeline with no specific name.
 	 */
 	public TransactionPipeline() {
-		this(null);
+		this(null, null);
 	}
 
 	/** 
