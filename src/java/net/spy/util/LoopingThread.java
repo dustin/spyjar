@@ -96,6 +96,7 @@ public abstract class LoopingThread extends SpyThread {
 	 * The run loop itself.
 	 */
 	public void run() {
+		startingUp();
 		while(keepGoing) {
 			// Normally, we'd want to delay before the run loop, but here
 			// it doesn't so much matter because there's no exception
@@ -105,6 +106,19 @@ public abstract class LoopingThread extends SpyThread {
 			performDelay();
 		}
 		getLogger().info("Thread finishing.");
+		shuttingDown();
+	}
+
+	/** 
+	 * Hook method invoked when the thread is starting up.
+	 */
+	protected void startingUp() {
+	}
+
+	/** 
+	 * Hook method invoked when the thread is shutting down.
+	 */
+	protected void shuttingDown() {
 	}
 
 }
