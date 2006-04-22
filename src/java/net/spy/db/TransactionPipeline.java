@@ -31,15 +31,23 @@ public class TransactionPipeline extends SpyObject {
 	/**
 	 * Get an instance of TransactionPipeline.
 	 */
-	public TransactionPipeline() {
+	public TransactionPipeline(String name) {
 		super();
+		final String n=POOL_NAME+(name==null?"": " " + name);
 		pool=new ScheduledThreadPoolExecutor(DEFAULT_POOL_SIZE,
 				new ThreadFactory() {
 					public Thread newThread(Runnable r) {
-						Thread rv=new Thread(r, POOL_NAME);
+						Thread rv=new Thread(r, n);
 						return rv;
 					}
 		});
+	}
+
+	/** 
+	 * Get a transaction pipeline with no specific name.
+	 */
+	public TransactionPipeline() {
+		this(null);
 	}
 
 	/** 
