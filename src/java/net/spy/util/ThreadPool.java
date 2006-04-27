@@ -69,7 +69,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 	// can't tell the difference between adds and check outs).
 	private ThreadPoolObserver monitor=null;
 
-	// 16,384 should be enough for anybody.
+	// 8,192 should be enough for anybody.
 	private static final int DEFAULT_LIST_LIMIT=8192;
 
 	// Default number of threads for a thread pool
@@ -81,6 +81,15 @@ public class ThreadPool extends ThreadPoolExecutor {
 
 	private transient Logger logger=null;
 
+	/**
+	 * Get an instance of ThreadPool.
+	 * 
+	 * @param name the name of this pool
+	 * @param n the core size of this pool
+	 * @param max the maximum size of this pool
+	 * @param prio the priority of threads created within this pool
+	 * @param q the work queue
+	 */
 	public ThreadPool(final String name, int n, int max, int prio,
 			BlockingQueue<Runnable> q) {
 		super(n, max, 1, TimeUnit.SECONDS,
@@ -94,39 +103,46 @@ public class ThreadPool extends ThreadPoolExecutor {
 	 * Get an instance of ThreadPool.
 	 *
 	 * @param name Name of the pool.
-	 * @param n Number of threads.
+	 * @param n number of threads
+	 * @param max the maximum number of threads
 	 * @param prio Priority of the child threads.
+	 * @param size the queue size (as an ArrayBlockingQueue)
 	 */
 	public ThreadPool(final String name, int n, int max, int prio, int size) {
 		this(name, n, max, prio, new ArrayBlockingQueue<Runnable>(size, true));
 	}
 
 	/**
-	 * @param name
-	 * @param n
-	 * @param prio
+	 * Get an instance of ThreadPool.
+	 * 
+	 * @param name name of the pool
+	 * @param n core pool size
+	 * @param max max pool size
+	 * @param prio priority of threads created within this pool
 	 */
 	public ThreadPool(String name, int n, int max, int prio) {
 		this(name, n, max, prio, DEFAULT_LIST_LIMIT);
 	}
 
 	/**
-	 * @param name
-	 * @param n
-	 * @param prio
+	 * Get an instance of ThreadPool.
+	 * 
+	 * @param name name of the pool
+	 * @param n core pool size
+	 * @param max max pool size
 	 */
 	public ThreadPool(String name, int n, int max) {
 		this(name, n, max, Thread.NORM_PRIORITY);
 	}
 
 	/**
-	 * Get an instance of ThreadPool with a normal priority.
+	 * Get an instance of ThreadPool.
 	 *
 	 * @param name Name of the pool.
 	 * @param n Number of threads.
 	 */
 	public ThreadPool(String name, int n) {
-		this(name, n, Thread.NORM_PRIORITY);
+		this(name, n, n);
 	}
 
 	/**

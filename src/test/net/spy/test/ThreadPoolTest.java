@@ -38,7 +38,8 @@ public class ThreadPoolTest extends TestCase {
 		} catch(IllegalArgumentException e) {
 			// pass
 		}
-		ThreadPool tp=new ThreadPool("Test3", 1);
+		ThreadPool tp=new ThreadPool("Test3", 25);
+		tp.start();
 		tp.shutdown();
 	}
 
