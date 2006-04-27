@@ -5,19 +5,18 @@ package net.spy.util;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import net.spy.SpyObject;
 
 /**
- * Object that will wait until a condition becomes true.
+ * Object that will wait until a predicate determines that the value has been
+ * set to a particular value.
+ * 
+ * Note that the predicate is not guaranteed to see every value change.  It is
+ * quite likely that changes will be missed when the value is changing rapidly.
  */
 public class SynchronizationObject<T> extends SpyObject {
 
-	private Lock lock=null;
-	private Condition changeCondition=null;
 	private T theObject=null;
 
 	/**
@@ -26,33 +25,23 @@ public class SynchronizationObject<T> extends SpyObject {
 	public SynchronizationObject(T o) {
 		super();
 		theObject=o;
-		lock=new ReentrantLock();
-		changeCondition=lock.newCondition();
 	}
 
 	/**
 	 * Get the current value of this lock.
 	 */
-	public Object get() {
-		lock.lock();
-		try {
-			return theObject;
-		} finally {
-			lock.unlock();
-		}
+	public synchronized T get() {
+		return theObject;
 	}
 
 	/**
 	 * Set a new value and signal anyone listening for a value change.
 	 */
-	public void set(T o) {
-		lock.lock();
-		try {
-			theObject=o;
-			changeCondition.signalAll();
-		} finally {
-			lock.unlock();
-		}
+	public synchronized T set(T o) {
+		T rv=theObject;
+		theObject=o;
+		notifyAll();
+		return rv;
 	}
 
 	/**
@@ -73,25 +62,27 @@ public class SynchronizationObject<T> extends SpyObject {
 	 * @throws TimeoutException if a timeout occurs before the condition
 	 *         becomes true
 	 */
-	public void waitUntilTrue(Predicate<T> p, long timeout, TimeUnit timeunit)
+	public synchronized void waitUntilTrue(Predicate<T> p,
+		long timeout, TimeUnit timeunit)
 		throws InterruptedException, TimeoutException {
 
 		assert p != null : "Null predicate";
 		assert timeout >= 0 : "Invalid timeout";
 
-		lock.lock();
-		try {
-			long now=System.currentTimeMillis();
-			long theEnd=now + timeout;
-			while(!p.evaluate(theObject)) {
-				if(now >= theEnd) {
-					throw new TimeoutException();
-				}
-				changeCondition.await(theEnd - now, timeunit);
-				now=System.currentTimeMillis();
+		long now=System.currentTimeMillis();
+		long theEnd=now + timeunit.toMillis(timeout);
+		// If theEnd is negative here, it's because we rolled over, likely
+		// because the timeout was too far in the future.  Might as well make
+		// it effectively infinite.
+		if(theEnd < 0) {
+			theEnd=Long.MAX_VALUE;
+		}
+		while(!p.evaluate(theObject)) {
+			if(now >= theEnd) {
+				throw new TimeoutException();
 			}
-		} finally {
-			lock.unlock();
+			wait(timeunit.toMillis(theEnd - now));
+			now=System.currentTimeMillis();
 		}
 	}
 
