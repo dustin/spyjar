@@ -6,9 +6,16 @@ package net.spy.net;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
-import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import net.spy.SpyObject;
 
@@ -20,8 +27,8 @@ public class URLWatcher extends SpyObject {
 
 	private static URLWatcher instance=null;
 
-	private Timer timer=null;
-	private Map<URL, URLItem> items=null;
+	private ScheduledExecutorService executor=null;
+	private Map<URL, FutureURL> items=null;
 
 	// This lets it know when to give up
 	private int recentTouches=0;
@@ -31,8 +38,14 @@ public class URLWatcher extends SpyObject {
 	 */
 	protected URLWatcher() {
 		super();
-		timer=new Timer("URLWatcher", true);
-		items=new ConcurrentHashMap<URL, URLItem>();
+		executor=new ScheduledThreadPoolExecutor(2, new ThreadFactory() {
+			public Thread newThread(Runnable r) {
+				Thread t=new Thread(r, "URLWatcher worker");
+				t.setDaemon(true);
+				return t;
+			}
+		});
+		items=new ConcurrentHashMap<URL, FutureURL>();
 	}
 
 	/** 
@@ -41,7 +54,7 @@ public class URLWatcher extends SpyObject {
 	 * @return the URLWatcher
 	 */
 	public static synchronized URLWatcher getInstance() {
-		if(instance==null || instance.timer == null) {
+		if(instance==null || instance.executor == null) {
 			instance=new URLWatcher();
 		}
 		return(instance);
@@ -68,12 +81,13 @@ public class URLWatcher extends SpyObject {
 	// Get the URLItem for the given URL.
 	@SuppressWarnings("unchecked")
 	private URLItem getURLItem(URL u) {
-		URLItem rv=items.get(u);
-		if(rv != null && !rv.isRunning()) {
+		FutureURL rv=items.get(u);
+		if(rv != null && !rv.urlItem.isRunning()) {
 			items.remove(u);
+			rv.future.cancel(false);
 			rv=null;
 		}
-		return(rv);
+		return(rv == null ? null : rv.urlItem);
 	}
 
 	/** 
@@ -89,20 +103,24 @@ public class URLWatcher extends SpyObject {
 
 	/** 
 	 * Start watching the given URL.
+	 * 
 	 * @param u The item to watch
+	 * @throws TimeoutException 
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	 */
 	@SuppressWarnings("unchecked")
 	public void startWatching(URLItem u) {
 		if(!isWatching(u.getURL())) {
-			items.put(u.getURL(), u);
-			timer.scheduleAtFixedRate(u, 0, u.getUpdateFrequency());
-		}
-		// After adding it, wait a bit to see if it can grab the content
-		synchronized(u) {
+			ScheduledFuture f=executor.scheduleAtFixedRate(u, 0,
+					u.getUpdateFrequency(), TimeUnit.MILLISECONDS);
+			items.put(u.getURL(), new FutureURL(f, u));
 			try {
-				u.wait(5000);
-			} catch(InterruptedException e) {
-				getLogger().info("Someone interrupted my sleep", e);
+				u.waitForContent(5, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				getLogger().warn("Someone interrupted my sleep", e);
+			} catch (TimeoutException e) {
+				getLogger().warn("Timed out waiting for initial update");
 			}
 		}
 	}
@@ -115,9 +133,12 @@ public class URLWatcher extends SpyObject {
 			// Throw away the instance
 			instance=null;
 			// Shut down the cron
-			if(timer != null) {
-				timer.cancel();
-				timer=null;
+			if(executor != null) {
+				List<Runnable> cancelled=executor.shutdownNow();
+				if(cancelled.size() > 0) {
+					getLogger().info("Shutting down cancelled %s", cancelled);
+				}
+				executor=null;
 			}
 		}
 	}
@@ -145,4 +166,14 @@ public class URLWatcher extends SpyObject {
 		return(ui.getContent());
 	}
 
+	private static class FutureURL {
+		public URLItem urlItem;
+		public ScheduledFuture future;
+
+		public FutureURL(ScheduledFuture f, URLItem u) {
+			super();
+			future=f;
+			urlItem=u;
+		}
+	}
 }

@@ -11,15 +11,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-import net.spy.log.Logger;
-import net.spy.log.LoggerFactory;
+import net.spy.SpyObject;
+import net.spy.util.SynchronizationObject;
 
 /**
  * A particular URL that's being watched.
  */
-public class URLItem extends TimerTask {
+public class URLItem extends SpyObject implements Runnable {
 
 	private static final int DEFAULT_UPDATE_FREQ = 1800000;
 	// How long a URL will be watched if nobody wants it (defaults to a
@@ -34,13 +35,11 @@ public class URLItem extends TimerTask {
 	private URL url=null;
 
 	private Map<String, List<String>> lastHeaders=null;
-	private String content=null;
+	private SynchronizationObject<String> content=null;
 	private long lastModified=0;
 	private boolean isRunning=true;
 
 	private IOException lastError=null;
-
-	private transient Logger logger=null;
 
 	/**
 	 * Get an instance of URLItem.
@@ -62,7 +61,7 @@ public class URLItem extends TimerTask {
 		this.updateFrequency=i;
 		this.url=u;
 		lastRequest=System.currentTimeMillis();
-		logger=LoggerFactory.getLogger(getClass());
+		content=new SynchronizationObject<String>(null);
 	}
 
 	/**
@@ -72,34 +71,42 @@ public class URLItem extends TimerTask {
 		return(new HTTPFetch(url, headers));
 	}
 
-	private synchronized void setContent(String to,
+	private void setContent(String to,
 		Map<String, List<String>> headers, long lastMod) {
-		content=to;
+		content.set(to);
 		// Big chunk of debug logging.
-		if(logger.isDebugEnabled()) {
-			logger.debug("Setting content for %s: %s", this,
-					content==null?"<null>":content.length() + " bytes");
+		if(getLogger().isDebugEnabled()) {
+			String c=content.get();
+			getLogger().debug("Setting content for %s: %s", this,
+					c==null?"<null>":c.length() + " bytes");
 		}
 		lastModified=lastMod;
 		lastHeaders=headers;
-
-		// Notify listeners that this has been updated.
-		notifyAll();
 	}
 
 	/** 
 	 * Get the content from the last fetch.
 	 */
-	public synchronized String getContent() throws IOException {
+	public String getContent() throws IOException {
 		lastRequest=System.currentTimeMillis();
 		if(lastError!=null) {
 			throw lastError;
 		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("Getting content for %s:  %s", this,
-					content==null?"<null>":content.length() + " bytes");
+		String c=content.get();
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Getting content for %s:  %s", this,
+					c==null?"<null>":c.length() + " bytes");
 		}
-		return(content);
+		return(c);
+	}
+
+	/**
+	 * Wait for content to arrive.
+	 */
+	public String waitForContent(long dur, TimeUnit timeunit)
+		throws InterruptedException, TimeoutException {
+		content.waitUntilNotNull(dur, timeunit);
+		return content.get();
 	}
 
 	/** 
@@ -168,25 +175,24 @@ public class URLItem extends TimerTask {
 		numUpdates++;
 
 		try {
-			logger.info("Updating %s", url);
+			getLogger().info("Updating %s", url);
 			HTTPFetch hf=getFetcher(headers);
 			hf.setIfModifiedSince(lastModified);
 
 			if(hf.getStatus() == HttpURLConnection.HTTP_OK) {
-				logger.info("Updated %s", url);
+				getLogger().info("Updated %s", url);
 				setContent(hf.getData(), hf.getResponseHeaders(),
 					hf.getLastModified());
 			} else {
-				logger.info("Not saving content due to response status %s",
+				getLogger().info("Not saving content due to response status %s",
 					hf.getStatus());
 			}
 		} catch(IOException e) {
 			lastError=e;
 		}
 		if((System.currentTimeMillis() - lastRequest) > maxIdleTime) {
-			cancel();
 			isRunning=false;
-			logger.info("Stopped updating %s", url);
+			getLogger().info("Stopped updating %s", url);
 		}
 	}
 
