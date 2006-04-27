@@ -113,12 +113,14 @@ public abstract class LoopingThread extends SpyThread {
 	 * Hook method invoked when the thread is starting up.
 	 */
 	protected void startingUp() {
+		// hook goes here
 	}
 
 	/** 
 	 * Hook method invoked when the thread is shutting down.
 	 */
 	protected void shuttingDown() {
+		// hook goes here
 	}
 
 }
