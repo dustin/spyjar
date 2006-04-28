@@ -177,8 +177,7 @@ public final class Cron extends SpyThread {
 					getLogger().debug("Not sleeping, game over.");
 				}
 			} catch(Exception e) {
-				// Don't care, flip faster
-				e.printStackTrace();
+				getLogger().warn("Exception in cron loop", e);
 			}
 		} // still running
 		getLogger().info("shut down at");
