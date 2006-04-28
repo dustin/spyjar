@@ -154,15 +154,6 @@ public class ThreadPool extends ThreadPoolExecutor {
 		this(name, DEFAULT_NUM_THREADS, Thread.NORM_PRIORITY);
 	}
 
-	/**
-	 * Set the maximum task queue size.  This may only be done before starting
-	 * the pool.
-	 * @deprecated this doesn't work
-	 */
-	public void setMaxTaskQueueSize(int to) {
-		throw new RuntimeException("Cannot set size after queue exists");
-	}
-
 	/** 
 	 * Start the ThreadPool.
 	 */
@@ -192,16 +183,6 @@ public class ThreadPool extends ThreadPoolExecutor {
 	}
 
 	/** 
-	 * Get the total number of threads in this pool.
-	 * 
-	 * @return the number of threads
-	 * @deprecated use getPoolSize()
-	 */
-	public int getThreadCount() {
-		return(getPoolSize());
-	}
-
-	/** 
 	 * String me.
 	 */
 	public String toString() {
@@ -210,86 +191,11 @@ public class ThreadPool extends ThreadPoolExecutor {
 	}
 
 	/** 
-	 * Get the maximum size of the task queue.
-	 * @deprecated get the maximum queue size
-	 */
-	public int getMaxTaskQueueSize() {
-		BlockingQueue<Runnable> q=getQueue();
-		return(q.size() + q.remainingCapacity());
-	}
-
-	/** 
 	 * Get the minimum number of threads that may exist in the thread pool
 	 * at any moment.
 	 */
 	public int getMinTotalThreads() {
 		return(getCorePoolSize());
-	}
-
-	/** 
-	 * Set the minimum number of threads that may exist in the thread pool
-	 * at any moment.
-	 * 
-	 * @param mtt a value &ge; 0
-	 * @deprecated use setCorePoolSize
-	 */
-	public void setMinTotalThreads(int mtt) {
-		setCorePoolSize(mtt);
-	}
-
-	/** 
-	 * Get the minimum number of idle threads.
-	 * @deprecated this is going away
-	 */
-	public int getMinIdleThreads() {
-		return(getCorePoolSize());
-	}
-
-	/** 
-	 * Set the minimum number of idle threads to maintain.
-	 * 
-	 * @param mit a value &ge; 0
-	 * @deprecated no longer used
-	 */
-	public void setMinIdleThreads(int mit) {
-		throw new RuntimeException("No longer supported");
-	}
-
-	/** 
-	 * Get the maximum number of total threads this pool may have.
-	 * @deprecated use getMaximumPoolSize()
-	 */
-	public int getMaxTotalThreads() {
-		return(getMaximumPoolSize());
-	}
-
-	/** 
-	 * Set the maximum number of threads that may be in this pool.
-	 * 
-	 * @param mtt a value &ge; 0
-	 * @deprecated use setMaximumPoolSize(int)
-	 */
-	public void setMaxTotalThreads(int mtt) {
-		setMaximumPoolSize(mtt);
-	}
-
-	/** 
-	 * Get the number of threads to spin up when bringing up this
-	 * ThreadPool.
-	 * @deprecated use getCorePoolSize()
-	 */
-	public int getStartThreads() {
-		return(getCorePoolSize());
-	}
-
-	/** 
-	 * Set the number of threads to start when bringing up this pool.
-	 * 
-	 * @param st a value &ge; 0
-	 * @deprecated use setCorePoolSize
-	 */
-	public void setStartThreads(int st) {
-		setCorePoolSize(st);
 	}
 
 	/** 
@@ -308,15 +214,6 @@ public class ThreadPool extends ThreadPoolExecutor {
 	public void setPriority(int p) {
 		MyThreadFactory t=(MyThreadFactory)getThreadFactory();
 		t.setPriority(p);
-	}
-
-	/** 
-	 * Set the BlockingQueue to contain the tasks on which this ThreadPool
-	 * will be listening.
-	 * @deprecated this is no longer supported
-	 */
-	public void setTasks(BlockingQueue<Runnable> t) {
-		throw new RuntimeException("This is no longer supported");
 	}
 
 	/** 
@@ -387,14 +284,6 @@ public class ThreadPool extends ThreadPoolExecutor {
 		return wasDone;
 	}
 
-	/**
-	 * Find out how many threads are still active (not shut down) in the pool.
-	 * @deprecated use getActiveCount()
-	 */
-	public int getActiveThreadCount() {
-		return(getActiveCount());
-	}
-
 	/** 
 	 * Shut down all of the threads after all jobs are complete, and wait
 	 * for all tasks to complete.
@@ -410,7 +299,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 	public void waitForCompletion() throws InterruptedException {
 		waitForTaskCount(0);
 		shutdown();
-		waitForThreads();
+		awaitTermination(86400, TimeUnit.SECONDS);
 	}
 
 	/**
@@ -426,22 +315,6 @@ public class ThreadPool extends ThreadPoolExecutor {
 				monitor.wait(WAIT_TIMEOUT);
 			}
 		}
-	}
-
-	/**
-	 * Wait until there are no more threads processing.
-	 *
-	 * This will return when all threads have shut down.
-	 *
-	 * @throws IllegalStateException if shutdown() has not been called
-	 * @throws InterruptedException if sleep() is interrupted
-	 * @deprecated use awaitTermination(int, TimeUnit)
-	 */
-	public void waitForThreads() throws InterruptedException {
-		if(!isShutdown()) {
-			throw new IllegalStateException("Not shut down.");
-		}
-		awaitTermination(86400, TimeUnit.SECONDS);
 	}
 
 	private final static class MyThreadFactory implements ThreadFactory {

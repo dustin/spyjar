@@ -44,35 +44,6 @@ public class ThreadPoolTest extends TestCase {
 	}
 
 	/** 
-	 * Test the mutators.
-	 */
-	public void testMutators() throws Exception {
-		ThreadPool tp=new ThreadPool("testMutators");
-		tp.setMinTotalThreads(5);
-		try {
-			tp.setMinTotalThreads(-5);
-			fail("Allowed me to set min total threads size to -5");
-		} catch(IllegalArgumentException e) {
-			// pass
-		}
-		tp.setMaxTotalThreads(5);
-		try {
-			tp.setMaxTotalThreads(-5);
-			fail("Allowed me to set min total threads size to -5");
-		} catch(IllegalArgumentException e) {
-			// pass
-		}
-		tp.setStartThreads(5);
-		try {
-			tp.setStartThreads(-5);
-			fail("Allowed me to set start threads threads size to -5");
-		} catch(IllegalArgumentException e) {
-			// pass
-		}
-		tp.shutdown();
-	}
-
-	/** 
 	 * Test the basics of the thread pool.
 	 */
 	public void testBasicThreadPool() throws Exception {
@@ -152,13 +123,6 @@ public class ThreadPoolTest extends TestCase {
 	public void testShutdown() throws Exception {
 		ThreadPool tp=new ThreadPool("TestThreadPool");
 		tp.addTask(new TestRunnable());
-
-		// make sure we can't wait for the threads before shutting down
-		try {
-			tp.waitForThreads();
-		} catch(IllegalStateException e) {
-			// pass
-		}
 
 		// Happier shutdown
 		tp.waitForCompletion();

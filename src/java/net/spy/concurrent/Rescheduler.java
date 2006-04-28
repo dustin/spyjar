@@ -235,7 +235,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		}
 
 		public int compareTo(WatchingTuple wt) {
-			return wt.currentFuture.compareTo(wt.currentFuture);
+			return currentFuture.compareTo(wt.currentFuture);
 		}
 
 	}

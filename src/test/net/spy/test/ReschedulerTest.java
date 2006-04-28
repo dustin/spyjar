@@ -55,6 +55,8 @@ public class ReschedulerTest extends TestCase {
 		assertEquals(0, tc.retries);
 		Future<String> f=sched.submit(tc);
 		assertEquals("X", f.get());
+		assertTrue(f.isDone());
+		assertFalse(f.isCancelled());
 		assertFalse(tc.gaveUp);
 		assertEquals(3, tc.runs);
 		assertEquals(2, tc.retries);

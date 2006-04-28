@@ -79,6 +79,11 @@ public class SynchronizationObjectTest extends TestCase {
 		so.waitUntilEquals(19L, 50, TimeUnit.MILLISECONDS);
 	}
 
+	public void testString() {
+		so.set(42L);
+		assertEquals("{SynchronizationObject obj=42}", so.toString());
+	}
+
 	// This test fails on my macbook.  The predicate is not evaluated for
 	// every change.
 	public void xtestFastSequenceSets() throws Exception {
