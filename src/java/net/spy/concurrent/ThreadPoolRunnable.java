@@ -2,7 +2,7 @@
 //
 // arch-tag: 8C61966C-1110-11D9-AB4C-000A957659CC
 
-package net.spy.util;
+package net.spy.concurrent;
 
 /**
  * Interface that flags a class as having overridden toString() for debug

@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import net.spy.SpyObject;
-import net.spy.util.SynchronizationObject;
+import net.spy.concurrent.SynchronizationObject;
 
 /**
  * A particular URL that's being watched.

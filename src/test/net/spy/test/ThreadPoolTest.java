@@ -11,7 +11,7 @@ import java.util.concurrent.RejectedExecutionException;
 import junit.framework.TestCase;
 
 import net.spy.SpyObject;
-import net.spy.util.ThreadPool;
+import net.spy.concurrent.ThreadPool;
 
 /**
  * Test the ThreadPool.

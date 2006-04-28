@@ -1,7 +1,7 @@
 // Copyright (c) 2006  Dustin Sallings <dustin@spy.net>
 // arch-tag: D2ED63F5-18BB-4FAA-BB2C-7B55EBDB1D14
 
-package net.spy.util;
+package net.spy.concurrent;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;

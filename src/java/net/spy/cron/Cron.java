@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import net.spy.SpyThread;
-import net.spy.util.ThreadPool;
+import net.spy.concurrent.ThreadPool;
 
 /**
  * Watches a JobQueue and invokes the Jobs when they're ready.

@@ -2,7 +2,7 @@
 //
 // arch-tag: 8C2BBA05-1110-11D9-983C-000A957659CC
 
-package net.spy.util;
+package net.spy.concurrent;
 
 import net.spy.SpyObject;
 

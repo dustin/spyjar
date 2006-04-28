@@ -2,7 +2,7 @@
 //
 // arch-tag: 8BA62098-1110-11D9-B9A3-000A957659CC
 
-package net.spy.util;
+package net.spy.concurrent;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

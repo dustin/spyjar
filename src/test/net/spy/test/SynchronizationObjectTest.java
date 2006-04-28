@@ -10,7 +10,7 @@ import java.util.concurrent.TimeoutException;
 
 import junit.framework.TestCase;
 
-import net.spy.util.SynchronizationObject;
+import net.spy.concurrent.SynchronizationObject;
 
 /**
  * Test the synchronization object.

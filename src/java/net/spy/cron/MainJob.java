@@ -6,8 +6,8 @@ package net.spy.cron;
 
 import java.util.Date;
 
+import net.spy.concurrent.ThreadPoolRunnable;
 import net.spy.util.SpyUtil;
-import net.spy.util.ThreadPoolRunnable;
 
 /**
  * A job that invokes a class's main() method at run time.
