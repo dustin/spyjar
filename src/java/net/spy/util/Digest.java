@@ -15,14 +15,35 @@ import net.spy.SpyObject;
  */
 public class Digest extends SpyObject {
 
-	private static final String HASH="SHA";
+	private static final String DEFAULTHASH="SHA";
 	private boolean prefixHash=true;
+
+	private String hashAlg=null;
+	private int digLen=0;
 
 	/**
 	 * Get a new Digest object.
 	 */
 	public Digest() {
+		this(DEFAULTHASH);
+	}
+
+	/**
+	 * Get a Digest object with the given hash algorithm.
+	 */
+	public Digest(String alg) {
 		super();
+		hashAlg=alg;
+		MessageDigest d=getMessageDigest();
+		digLen=d.getDigestLength();
+		assert digLen != 0 : "Couldn't calculate digest length";
+	}
+
+	/**
+	 * Get the hash type to be used by this password digest thing.
+	 */
+	public String getHashAlg() {
+		return hashAlg;
 	}
 
 	/** 
@@ -47,19 +68,20 @@ public class Digest extends SpyObject {
 
 		String htype=hash.substring(0,
 			hash.indexOf('}')+1).toUpperCase();
-		if(!(htype.equals("{" + HASH + "}") || htype.equals("{S" + HASH + "}"))) {
-			getLogger().warn("Invalid hash type ``%s'' in %s, assuming %s",
-					htype, hash, HASH);
+		if(htype.equals("{" + hashAlg + "}")
+				|| htype.equals("{S" + hashAlg + "}")) {
+			String data=hash.substring(hash.indexOf('}')+1);
+
+			Base64 base64d=new Base64();
+			byte datab[]=base64d.decode(data);
+			byte salt[]=new byte[datab.length-digLen];
+			System.arraycopy(datab, digLen, salt, 0, salt.length);
+			String newhash=getHash(pw, salt);
+
+			rv=hash.equals(newhash);
+		} else {
+			getLogger().warn("Invalid hash type ``%s'' in %s", htype, hash);
 		}
-		String data=hash.substring(hash.indexOf('}')+1);
-
-		Base64 base64d=new Base64();
-		byte datab[]=base64d.decode(data);
-		byte salt[]=new byte[datab.length-20];
-		System.arraycopy(datab, 20, salt, 0, salt.length);
-		String newhash=getHash(pw, salt);
-
-		rv=hash.equals(newhash);
 
 		return(rv);
 	}
@@ -78,18 +100,23 @@ public class Digest extends SpyObject {
 	 * static salts.
 	 */
 	protected String getHash(String word, byte salt[]) {
-		MessageDigest md=null;
-		try {
-			md=MessageDigest.getInstance(HASH);
-		} catch(NoSuchAlgorithmException e) {
-			throw new Error("There's no " + HASH + "?");
-		}
+		MessageDigest md = getMessageDigest();
 		md.update(word.getBytes());
 		md.update(salt);
 		byte pwhash[]=md.digest();
-		String hout = getPrefix("{S" + HASH + "}")
+		String hout = getPrefix("{S" + hashAlg + "}")
 			+ Base64.getInstance().encode(cat(pwhash, salt));
 		return(hout.trim());
+	}
+
+	private MessageDigest getMessageDigest() {
+		MessageDigest md=null;
+		try {
+			md=MessageDigest.getInstance(hashAlg);
+		} catch(NoSuchAlgorithmException e) {
+			throw new RuntimeException("No such digest:  " + hashAlg, e);
+		}
+		return md;
 	}
 
 	/** 
@@ -99,12 +126,7 @@ public class Digest extends SpyObject {
 	 * @return the hash
 	 */
 	public byte[] getSaltFreeHashBytes(String s) {
-		MessageDigest md=null;
-		try {
-			md=MessageDigest.getInstance(HASH);
-		} catch(NoSuchAlgorithmException e) {
-			throw new Error("There's no " + HASH + "?");
-		}
+		MessageDigest md = getMessageDigest();
 		md.update(s.getBytes());
 		byte hash[]=md.digest();
 		return(hash);
@@ -115,7 +137,7 @@ public class Digest extends SpyObject {
 	 * checksumming, not passwords.
 	 */
 	public String getSaltFreeHash(String s) {
-		String hout = getPrefix("{" + HASH + "}")
+		String hout = getPrefix("{" + hashAlg + "}")
 			+ Base64.getInstance().encode(getSaltFreeHashBytes(s));
 		return(hout);
 	}

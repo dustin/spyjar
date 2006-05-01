@@ -14,7 +14,7 @@ import net.spy.SpyThread;
 /**
  * Listen for multicast request to clear cache for a given prefix.
  */
-public final class CacheClearRequestListener extends SpyThread {
+public class CacheClearRequestListener extends SpyThread {
 
 	private MulticastSocket s=null;
 	private InetAddress group=null;
@@ -34,13 +34,17 @@ public final class CacheClearRequestListener extends SpyThread {
 		setDaemon(true);
 		setName("SpyCacheClearRequestListener");
 
-		this.group=g;
-		this.port=p;
+		group=g;
+		port=p;
 
-		s=new MulticastSocket(p);
+		s=makeMCastSocket(port);
 		s.joinGroup(g);
 
 		start();
+	}
+
+	protected MulticastSocket makeMCastSocket(int p) throws IOException {
+		return new MulticastSocket(p);
 	}
 
 	/**

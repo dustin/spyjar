@@ -39,6 +39,19 @@ public class URLWatcherTest extends TestCase {
 		uw=null;
 	}
 
+	/**
+	 * Test singleton stuff.
+	 */
+	public void testSingleton() throws Exception {
+		URLWatcher.setInstance(uw);
+		assertSame(uw, URLWatcher.getInstance());
+		URLWatcher.setInstance(null);
+	}
+
+	public void testStringing() throws Exception {
+		assertTrue(uw.toString().endsWith("0 pages monitored"));
+	}
+
 	/** 
 	 * Test basic URL watching functionality.
 	 */

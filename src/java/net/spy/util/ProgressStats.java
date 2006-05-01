@@ -34,18 +34,27 @@ public class ProgressStats extends Object {
 		this.todo=size;
 	}
 
-	/** 
+	/**
+	 * Get the current time for this ProgressStats instance.  This exists as a
+	 * test fixture, but if you want to do something more exciting with it,
+	 * go right ahead.
+	 */
+	protected long getTime() {
+		return System.currentTimeMillis();
+	}
+
+	/**
 	 * Mark us having started processing something.
 	 */
 	public void start() {
-		lastTime=System.currentTimeMillis();
+		lastTime=getTime();
 	}
 
 	/** 
 	 * Mark this iteration as complete.
 	 */
 	public void stop() {
-		long thistime=System.currentTimeMillis();
+		long thistime=getTime();
 		lastProcessTime=thistime-lastTime;
 		done++;
 		totalTime+=lastProcessTime;
@@ -118,8 +127,7 @@ public class ProgressStats extends Object {
 		// Estimated number of seconds left
 		double estimate=getEstimatedTimeRemaining(average);
 		// Estimated time of completion
-		Date ofCompletion=new Date(System.currentTimeMillis()
-			+ (1000*(long)estimate));
+		Date ofCompletion=new Date(getTime() + (1000*(long)estimate));
 
 		// Assemble arguments
 		Object args[]={

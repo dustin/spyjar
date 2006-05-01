@@ -6,9 +6,8 @@ package net.spy.test;
 
 import java.util.HashSet;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
 import net.spy.util.Digest;
 import net.spy.util.PwGen;
 
@@ -16,29 +15,6 @@ import net.spy.util.PwGen;
  * Test the digest imlementation and password generator.
  */
 public class DigestTest extends TestCase {
-
-	/**
-	 * Get an instance of DigestTest.
-	 */
-	public DigestTest(String name) {
-		super(name);
-	}
-
-	/** 
-	 * Get the test suite.
-	 * 
-	 * @return this test
-	 */
-	public static Test suite() {
-		return new TestSuite(DigestTest.class);
-	}
-
-	/** 
-	 * Run this test.
-	 */
-	public static void main(String args[]) {
-		junit.textui.TestRunner.run(suite());
-	}
 
 	/** 
 	 * A basic test of the password generator.  Ensure the password
@@ -59,8 +35,24 @@ public class DigestTest extends TestCase {
 	 * Test the password hashing.  Do a couple rounds of passwords and make
 	 * sure the hashing consistently works.
 	 */
-	public void testPasswordHash() {
+	public void testPasswordHashSHA() {
 		Digest d=new Digest();
+		assertEquals("SHA", d.getHashAlg());
+
+		for(int i=0; i<10; i++) {
+			String pw=PwGen.getPass(8);
+			String hpw=d.getHash(pw);
+			assertTrue("Password checking failed", d.checkPassword(pw, hpw));
+		}
+	}
+
+	/** 
+	 * Test the password hashing.  Do a couple rounds of passwords and make
+	 * sure the hashing consistently works.
+	 */
+	public void testPasswordHashMD5() {
+		Digest d=new Digest("MD5");
+		assertEquals("MD5", d.getHashAlg());
 
 		for(int i=0; i<10; i++) {
 			String pw=PwGen.getPass(8);
@@ -80,4 +72,22 @@ public class DigestTest extends TestCase {
 		assertEquals("qUqP5cyxm6YcTAhz05Hph5gvu9M=", d.getSaltFreeHash("test"));
 	}
 
+	public void testUnknownHash() throws Exception {
+		String pw="DR4TQS96";
+		String noprefixSalted="d0f4wGSDm5EHbLcbyPUEbKwrxj9bHFvM1dAzrw==";
+		String noprefixUnsalted="ErIKWQQHaOgcy1G+qpuoMUshEEo=";
+		assertFalse("Default digest shouldn't work (salted)",
+				new Digest().checkPassword(pw, noprefixSalted));
+		assertFalse("Default digest shouldn't work (unsalted)",
+				new Digest().checkPassword(pw, noprefixUnsalted));
+	}
+
+	public void testBadHash() throws Exception {
+		try {
+			Digest d=new Digest("BadAssHash");
+			fail("Didn't expect to be able to make a BadAssHash:  " + d);
+		} catch(RuntimeException e) {
+			assertEquals("No such digest:  BadAssHash", e.getMessage());
+		}
+	}
 }

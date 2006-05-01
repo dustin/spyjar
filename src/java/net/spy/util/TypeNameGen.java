@@ -40,7 +40,7 @@ public class TypeNameGen extends Object {
 		ps.println("\t/**");
 		ps.println("\t * Get the name of the given java.sql.Types type.");
 		ps.println("\t */");
-		ps.println("\tpublic static String getTypeName(int type) {");
+		ps.println("\tpublic final static String getTypeName(int type) {");
 		ps.println("\t\tString rv=null;\n");
 		ps.println("\t\tswitch(type) {");
 

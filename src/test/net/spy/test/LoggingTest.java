@@ -58,8 +58,11 @@ public class LoggingTest extends TestCase {
 	 */
 	public void testOtherLogging() {
 		logger.warn("warn message");
+		logger.warn("test %s", "message");
 		logger.error("error message");
+		logger.error("test %s", "message");
 		logger.fatal("fatal message");
+		logger.fatal("test %s", "message");
 		logger.log(null, "test null", null);
 		assertEquals(getClass().getName(), logger.getName());
 	}

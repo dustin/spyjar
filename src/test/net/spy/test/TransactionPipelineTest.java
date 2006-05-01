@@ -48,6 +48,7 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 		tp.addTransaction(ts, successConfig);
 		Thread.sleep(750);
 		assertFalse(ts.isNew());
+		tp.shutdown();
 	}
 
 	/**
@@ -66,6 +67,7 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 		}
 		f.get(750, TimeUnit.MILLISECONDS);
 		assertFalse(ts.isNew());
+		tp.shutdown();
 	}
 
 	/**
@@ -85,6 +87,7 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 		assertTrue(ts2.isNew());
 		f.get(350, TimeUnit.MILLISECONDS);
 		assertFalse(ts2.isNew());
+		tp.shutdown();
 	}
 
 	private static class TestSavable extends AbstractSavable {

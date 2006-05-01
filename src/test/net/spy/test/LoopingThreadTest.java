@@ -26,11 +26,50 @@ public class LoopingThreadTest extends TestCase {
 		assertTrue("Ran too many times", tlt.runs < 12);
 	}
 
+	public void testNameConstructor() throws Exception {
+		TestLoopingThread tlt=new TestLoopingThread("X");
+		assertEquals("X", tlt.getName());
+	}
+
+	public void testThreadGroupConstructor() throws Exception {
+		ThreadGroup tg=new ThreadGroup("Test");
+		tg.setDaemon(true);
+		TestLoopingThread tlt=new TestLoopingThread(tg, "Y");
+		assertEquals("Y", tlt.getName());
+		assertSame(tg, tlt.getThreadGroup());
+		tg.destroy();
+	}
+
+	public void testInterruption() throws Exception {
+		TestLoopingThread tlt=new TestLoopingThread();
+		tlt.setMsPerLoop(10000);
+		tlt.start();
+		Thread.sleep(100);
+		assertTrue(tlt.started);
+		assertFalse(tlt.isInterrupted());
+		tlt.interrupt();
+		assertTrue(tlt.isInterrupted());
+		tlt.requestStop();
+		Thread.sleep(100);
+		assertTrue(tlt.shutdown);
+	}
+
 	private static class TestLoopingThread extends LoopingThread {
 
 		public int runs=0;
 		public boolean started=false;
 		public boolean shutdown=false;
+
+		public TestLoopingThread() {
+			super();
+		}
+		public TestLoopingThread(String name) {
+			super(name);
+		}
+		public TestLoopingThread(ThreadGroup tg, String name) {
+			super(tg, name);
+		}
+
 		protected void runLoop() {
 			runs++;
 		}

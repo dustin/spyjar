@@ -10,9 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
 import net.spy.util.AbstractSPNode;
 import net.spy.util.NoPathException;
 import net.spy.util.SPNode;
@@ -33,27 +32,6 @@ public class ShortestPathTest extends TestCase {
 	private StringNode nodeE=null;
 	private StringNode nodeF=null;
 	private StringNode nodeG=null;
-
-	/**
-	 * Get an instance of ShortestPathTest.
-	 */
-	public ShortestPathTest(String name) {
-		super(name);
-	}
-
-	/** 
-	 * Get the suite.
-	 */
-	public static Test suite() {
-		return new TestSuite(ShortestPathTest.class);
-	}
-
-	/** 
-	 * Run this test.
-	 */
-	public static void main(String args[]) {
-		junit.textui.TestRunner.run(suite());
-	}
 
 	/** 
 	 * Create the collection of nodes.
@@ -123,6 +101,15 @@ public class ShortestPathTest extends TestCase {
 			assertEquals("Incorrect cost for " + a + " -> " + b,
 				cost, nextHop.getCost());
 		}
+	}
+
+	public void testEquality() throws Exception {
+		StringNode sn1=new StringNode("Test");
+		StringNode sn2=new StringNode("Test");
+		assertEquals(sn1, sn2);
+		assertEquals(sn2, sn1);
+		assertFalse(sn1.equals("Test"));
+		assertFalse("Test".equals(sn1));
 	}
 
 	public void testSPVertexStuff() {

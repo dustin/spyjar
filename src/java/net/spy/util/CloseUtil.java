@@ -13,7 +13,7 @@ import net.spy.log.LoggerFactory;
 /**
  * Object closer.
  */
-public class CloseUtil {
+public final class CloseUtil {
 
 	private static Logger logger=LoggerFactory.getLogger(CloseUtil.class);
 

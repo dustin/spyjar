@@ -9,7 +9,7 @@ import java.security.SecureRandom;
 /**
  * Password generator.
  */
-public class PwGen extends Object {
+public final class PwGen extends Object {
 
 	/**
 	 * Character set containing numeric and uppercase letters.
