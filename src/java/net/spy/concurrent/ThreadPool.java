@@ -4,8 +4,10 @@
 
 package net.spy.concurrent;
 
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
@@ -78,6 +80,11 @@ public class ThreadPool extends ThreadPoolExecutor {
 	// Maximum amount of time to wait for an object notification while waiting
 	// for jobs to finish
 	private static final int WAIT_TIMEOUT=5000;
+
+	// Stores a mapping between a runnable and what thread is executing it so
+	// afterExecute can update the thread.  Stupid inconsistent API.
+	private Map<Runnable, WorkerThread> currentWorkers=
+		new ConcurrentHashMap<Runnable, WorkerThread>();
 
 	private transient Logger logger=null;
 
@@ -232,9 +239,21 @@ public class ThreadPool extends ThreadPoolExecutor {
 		this.monitor=m;
 	}
 
+	protected void beforeExecute(Thread t, Runnable r) {
+		super.beforeExecute(t, r);
+		assert t instanceof WorkerThread : "Thread is not a WorkerThread";
+		WorkerThread wt=(WorkerThread)t;
+		wt.setRunning(r);
+		currentWorkers.put(r, wt);
+	}
+
 	protected void afterExecute(Runnable r, Throwable t) {
 		super.afterExecute(r, t);
 		monitor.completedJob(r);
+		WorkerThread wt=currentWorkers.get(r);
+		assert wt != null : "Lost worker for " + r;
+		wt.setRunning(null);
+		currentWorkers.remove(r);
 	}
 
 	/**
@@ -317,6 +336,44 @@ public class ThreadPool extends ThreadPoolExecutor {
 		}
 	}
 
+	/**
+	 * Thread that will perform the work for this thread pool.
+	 */
+	static final class WorkerThread extends Thread {
+
+		private volatile Runnable running=null;
+		private long started=0;
+
+		public WorkerThread(Runnable r, String name) {
+			super(r, name);
+		}
+
+		public void setRunning(Runnable to) {
+			running=to;
+			if(running != null) {
+				started=System.currentTimeMillis();
+			}
+		}
+
+		public String toString() {
+			String rv=null;
+			Runnable r=running;
+			if(r != null) {
+				long now=System.currentTimeMillis();
+				String runString=r.getClass().getName();
+				if(r instanceof ThreadPoolRunnable) {
+					ThreadPoolRunnable tpr=(ThreadPoolRunnable)r;
+					runString=tpr.toString();
+				}
+				rv=super.toString() + " - running " + runString + " for "
+					+ (now - started) + "ms";
+			} else {
+				rv=super.toString() + " idle";
+			}
+			return rv;
+		}
+	}
+
 	private final static class MyThreadFactory implements ThreadFactory {
 		private String name=null;
 		private int priority=Thread.NORM_PRIORITY;
@@ -335,7 +392,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 		}
 
 		public Thread newThread(Runnable r) {
-			Thread t=new Thread(r, name + " worker");
+			Thread t=new WorkerThread(r, name + " worker");
 			t.setPriority(priority);
 			return t;
 		}
