@@ -336,44 +336,6 @@ public class ThreadPool extends ThreadPoolExecutor {
 		}
 	}
 
-	/**
-	 * Thread that will perform the work for this thread pool.
-	 */
-	static final class WorkerThread extends Thread {
-
-		private volatile Runnable running=null;
-		private long started=0;
-
-		public WorkerThread(Runnable r, String name) {
-			super(r, name);
-		}
-
-		public void setRunning(Runnable to) {
-			running=to;
-			if(running != null) {
-				started=System.currentTimeMillis();
-			}
-		}
-
-		public String toString() {
-			String rv=null;
-			Runnable r=running;
-			if(r != null) {
-				long now=System.currentTimeMillis();
-				String runString=r.getClass().getName();
-				if(r instanceof ThreadPoolRunnable) {
-					ThreadPoolRunnable tpr=(ThreadPoolRunnable)r;
-					runString=tpr.toString();
-				}
-				rv=super.toString() + " - running " + runString + " for "
-					+ (now - started) + "ms";
-			} else {
-				rv=super.toString() + " idle";
-			}
-			return rv;
-		}
-	}
-
 	private final static class MyThreadFactory implements ThreadFactory {
 		private String name=null;
 		private int priority=Thread.NORM_PRIORITY;

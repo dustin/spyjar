@@ -3,12 +3,12 @@
 
 package net.spy.db;
 
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import net.spy.SpyObject;
+import net.spy.concurrent.TrackingScheduledExecutor;
 import net.spy.util.SpyConfig;
 
 /**
@@ -26,7 +26,7 @@ public class TransactionPipeline extends SpyObject {
 	private static final int MIN_TRANS_AGE=500;
 
 	// The thread pool.
-	private ScheduledThreadPoolExecutor pool=null;
+	private ScheduledExecutorService pool=null;
 
 	/**
 	 * Get an instance of TransactionPipeline.
@@ -34,16 +34,10 @@ public class TransactionPipeline extends SpyObject {
 	 * @param tg the thread group under which threads will be created
 	 * @param name an optional suffix to the names of the worker created
 	 */
-	public TransactionPipeline(final ThreadGroup tg, String name) {
+	public TransactionPipeline(ThreadGroup tg, String name) {
 		super();
 		final String n=POOL_NAME+(name==null?"": " " + name);
-		pool=new ScheduledThreadPoolExecutor(DEFAULT_POOL_SIZE,
-				new ThreadFactory() {
-					public Thread newThread(Runnable r) {
-						Thread rv=new Thread(tg, r, n);
-						return rv;
-					}
-		});
+		pool=new TrackingScheduledExecutor(DEFAULT_POOL_SIZE, tg, n);
 	}
 
 	/** 
