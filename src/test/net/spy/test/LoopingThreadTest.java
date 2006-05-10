@@ -19,7 +19,7 @@ public class LoopingThreadTest extends TestCase {
 		tlt.start();
 		Thread.sleep(100);
 		tlt.requestStop();
-		Thread.sleep(100);
+		Thread.sleep(250);
 		assertTrue("Didn't start?", tlt.started);
 		assertTrue("Didn't finish?", tlt.shutdown);
 		assertTrue("Didn't run enough", tlt.runs > 8);
@@ -48,6 +48,7 @@ public class LoopingThreadTest extends TestCase {
 		assertTrue(tlt.started);
 		assertFalse(tlt.isInterrupted());
 		tlt.interrupt();
+		Thread.yield();
 		assertTrue(tlt.isInterrupted());
 		tlt.requestStop();
 		Thread.sleep(100);
