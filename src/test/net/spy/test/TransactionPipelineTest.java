@@ -17,6 +17,7 @@ import org.jmock.core.constraint.IsEqual;
 import org.jmock.core.matcher.InvokeOnceMatcher;
 import org.jmock.core.stub.ReturnStub;
 
+import net.spy.concurrent.SynchronizationObject;
 import net.spy.db.AbstractSavable;
 import net.spy.db.QuerySelector;
 import net.spy.db.SaveContext;
@@ -46,7 +47,7 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 		TestSavable ts=new TestSavable("testSimpleTransaction");
 		assertTrue(ts.isNew());
 		tp.addTransaction(ts, successConfig);
-		Thread.sleep(750);
+		ts.so.waitUntilNotNull(1, TimeUnit.SECONDS);
 		assertFalse(ts.isNew());
 		tp.shutdown();
 	}
@@ -82,7 +83,7 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 		assertTrue(ts1.isNew());
 		TestSavable ts2=new TestSavable("testTwoTransactions(2)");
 		ScheduledFuture<?>f=tp.addTransaction(ts2, successConfig);
-		Thread.sleep(350);
+		ts1.so.waitUntilNotNull(1, TimeUnit.SECONDS);
 		assertFalse(ts1.isNew());
 		assertTrue(ts2.isNew());
 		f.get(350, TimeUnit.MILLISECONDS);
@@ -93,6 +94,8 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 	private static class TestSavable extends AbstractSavable {
 
 		private String which=null;
+		public SynchronizationObject<Boolean> so=
+			new SynchronizationObject<Boolean>(null);
 
 		public TestSavable(String w) {
 			super();
@@ -121,7 +124,12 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 				}
 			}
 		}
-		
+
+		public void transactionCommited() {
+			super.transactionCommited();
+			so.set(Boolean.TRUE);
+		}
+
 	}
 
 	/** 
