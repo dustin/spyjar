@@ -29,6 +29,12 @@ arch-tag: 2A68027B-714D-465F-A2B5-D105CE22459C
 		</dependency>
 
 		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
+		</dependency>
+
+		<dependency>
 			<groupId>jmock</groupId>
 			<artifactId>jmock</artifactId>
 			<version>1.0.1</version>
