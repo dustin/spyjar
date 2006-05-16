@@ -21,4 +21,27 @@ public class AssumptionTest extends TestCase {
 		sb.delete(sb.length()-2, sb.length());
 		assertEquals("blah", sb.toString());
 	}
+
+	public void testThreadInterruption() throws Exception {
+		TestThread tt=new TestThread();
+		tt.start();
+		Thread.yield();
+		assertFalse(tt.wasInterrupted);
+		tt.interrupt();
+		Thread.sleep(100);
+		assertTrue(tt.wasInterrupted);
+		// Throwing interrupted exceptions clears the interrupted state
+		assertFalse(tt.isInterrupted());
+	}
+
+	private static class TestThread extends Thread {
+		public volatile boolean wasInterrupted=false;
+		public void run() {
+			try {
+				sleep(10000);
+			} catch(InterruptedException e) {
+				wasInterrupted=true;
+			}
+		}
+	}
 }
