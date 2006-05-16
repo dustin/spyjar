@@ -88,8 +88,17 @@ public abstract class LoopingThread extends SpyThread {
 				wait(getMsPerLoop());
 			}
 		} catch(InterruptedException e) {
-			getLogger().warn("Somebody interrupted my sleep", e);
+			delayInterrupted(e);
 		}
+	}
+
+	/** 
+	 * This method is invoked when the delay is interrupted.
+	 * 
+	 * @param e the interrupted exception
+	 */
+	protected void delayInterrupted(InterruptedException e) {
+		getLogger().warn("Somebody interrupted my sleep", e);
 	}
 
 	/** 

@@ -46,10 +46,10 @@ public class LoopingThreadTest extends TestCase {
 		tlt.start();
 		Thread.sleep(100);
 		assertTrue(tlt.started);
-		assertFalse(tlt.isInterrupted());
+		assertFalse(tlt.wasInterrupted);
 		tlt.interrupt();
 		Thread.yield();
-		assertTrue(tlt.isInterrupted());
+		assertTrue(tlt.wasInterrupted);
 		tlt.requestStop();
 		Thread.sleep(100);
 		assertTrue(tlt.shutdown);
@@ -57,9 +57,10 @@ public class LoopingThreadTest extends TestCase {
 
 	private static class TestLoopingThread extends LoopingThread {
 
-		public int runs=0;
-		public boolean started=false;
-		public boolean shutdown=false;
+		public volatile int runs=0;
+		public volatile boolean started=false;
+		public volatile boolean shutdown=false;
+		public volatile boolean wasInterrupted=false;
 
 		public TestLoopingThread() {
 			super();
@@ -82,7 +83,10 @@ public class LoopingThreadTest extends TestCase {
 			super.startingUp();
 			started=true;
 		}
+		protected void delayInterrupted(InterruptedException e) {
+			super.delayInterrupted(e);
+			wasInterrupted=true;
+		}
 
-		
 	}
 }
