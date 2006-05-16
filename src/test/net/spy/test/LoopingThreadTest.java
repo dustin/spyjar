@@ -48,7 +48,7 @@ public class LoopingThreadTest extends TestCase {
 		assertTrue(tlt.started);
 		assertFalse(tlt.wasInterrupted);
 		tlt.interrupt();
-		Thread.yield();
+		Thread.sleep(100);
 		assertTrue(tlt.wasInterrupted);
 		tlt.requestStop();
 		Thread.sleep(100);
