@@ -164,30 +164,8 @@ public class RangeTest extends TestCase {
 
 	public void testDefaultParams() {
 		Range<Integer> r=new Range<Integer>(new Integer(0), new Integer(100));
-		assertEquals(Range.INCLUSIVE, r.getLowMatch());
-		assertEquals(Range.INCLUSIVE, r.getHighMatch());
-	}
-
-	public void testInvalidMatchCatch() {
-		Range<Integer> r=new Range<Integer>(new Integer(0), new Integer(100));
-		for(int i=-100; i<100; i++) {
-			if(i == Range.INCLUSIVE || i == Range.EXCLUSIVE) {
-				// Skip these
-			} else {
-				try {
-					r.setLowMatch(i);
-					fail("Allowed to set low match to " + i);
-				} catch(IllegalArgumentException e) {
-					// pass
-				}
-				try {
-					r.setHighMatch(i);
-					fail("Allowed to set high match to " + i);
-				} catch(IllegalArgumentException e) {
-					// pass
-				}
-			}
-		}
+		assertEquals(Range.MatchType.INCLUSIVE, r.getLowMatch());
+		assertEquals(Range.MatchType.INCLUSIVE, r.getHighMatch());
 	}
 
 	public void testRangeOperations() {
@@ -202,12 +180,12 @@ public class RangeTest extends TestCase {
 
 		// Exclusive matched ends
 		Range<Integer> athroughbx=new Range<Integer>(a, b);
-		athroughbx.setHighMatch(Range.EXCLUSIVE);
+		athroughbx.setHighMatch(Range.MatchType.EXCLUSIVE);
 		Range<Integer> axthroughb=new Range<Integer>(a, b);
-		axthroughb.setLowMatch(Range.EXCLUSIVE);
+		axthroughb.setLowMatch(Range.MatchType.EXCLUSIVE);
 		Range<Integer> axthroughbx=new Range<Integer>(a, b);
-		axthroughbx.setLowMatch(Range.EXCLUSIVE);
-		axthroughbx.setHighMatch(Range.EXCLUSIVE);
+		axthroughbx.setLowMatch(Range.MatchType.EXCLUSIVE);
+		axthroughbx.setHighMatch(Range.MatchType.EXCLUSIVE);
 
 		// Things to look for
 		Integer a0=new Integer(1);

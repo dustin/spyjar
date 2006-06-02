@@ -10,21 +10,13 @@ package net.spy.util;
 public class Range<T extends Comparable<T>> extends Object
 	implements Comparable<Range<T>> {
 
-	/** 
-	 * Match type for inclusive matches.
-	 */
-	public static final int INCLUSIVE=1;
-
-	/** 
-	 * Match type for exclusive matches.
-	 */
-	public static final int EXCLUSIVE=2;
+	public enum MatchType { INCLUSIVE, EXCLUSIVE }
 
 	private T low=null;
 	private T high=null;
 
-	private int lowMatch=INCLUSIVE;
-	private int highMatch=INCLUSIVE;
+	private MatchType lowMatch=MatchType.INCLUSIVE;
+	private MatchType highMatch=MatchType.INCLUSIVE;
 
 	/**
 	 * Get an instance of Range.
@@ -51,21 +43,12 @@ public class Range<T extends Comparable<T>> extends Object
 					"Low object must not be greater than the high object");
 			}
 		}
-
-		validateMatch(lowMatch);
-		validateMatch(highMatch);
-	}
-
-	private void validateMatch(int m) {
-		if(m != INCLUSIVE && m != EXCLUSIVE) {
-			throw new IllegalArgumentException("Invalid match type");
-		}
 	}
 
 	/** 
 	 * Get the low match type.
 	 */
-	public int getLowMatch() {
+	public MatchType getLowMatch() {
 		return(lowMatch);
 	}
 
@@ -74,15 +57,14 @@ public class Range<T extends Comparable<T>> extends Object
 	 * 
 	 * @param lm either INCLUSIVE or EXCLUSIVE
 	 */
-	public void setLowMatch(int lm) {
-		validateMatch(lm);
+	public void setLowMatch(MatchType lm) {
 		lowMatch=lm;
 	}
 
 	/** 
 	 * Get the high match type.
 	 */
-	public int getHighMatch() {
+	public MatchType getHighMatch() {
 		return(highMatch);
 	}
 
@@ -91,8 +73,7 @@ public class Range<T extends Comparable<T>> extends Object
 	 * 
 	 * @param hm either INCLUSIVE or EXCLUSIVE
 	 */
-	public void setHighMatch(int hm) {
-		validateMatch(hm);
+	public void setHighMatch(MatchType hm) {
 		this.highMatch=hm;
 	}
 
@@ -117,7 +98,7 @@ public class Range<T extends Comparable<T>> extends Object
 		StringBuilder sb=new StringBuilder(256);
 
 		sb.append("{Range ");
-		if(lowMatch == INCLUSIVE) {
+		if(lowMatch == MatchType.INCLUSIVE) {
 			sb.append('[');
 		} else {
 			sb.append('(');
@@ -126,7 +107,7 @@ public class Range<T extends Comparable<T>> extends Object
 
 		sb.append(", ");
 		sb.append(high);
-		if(highMatch == INCLUSIVE) {
+		if(highMatch == MatchType.INCLUSIVE) {
 			sb.append(']');
 		} else {
 			sb.append(')');
@@ -147,11 +128,11 @@ public class Range<T extends Comparable<T>> extends Object
 		int lowCompare=0;
 		int highCompare=0;
 
-		if(lowMatch == EXCLUSIVE) {
+		if(lowMatch == MatchType.EXCLUSIVE) {
 			lowCompare=1;
 		}
 
-		if(highMatch == EXCLUSIVE) {
+		if(highMatch == MatchType.EXCLUSIVE) {
 			highCompare=-1;
 		}
 
