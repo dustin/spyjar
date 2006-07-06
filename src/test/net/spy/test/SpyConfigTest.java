@@ -39,7 +39,7 @@ public class SpyConfigTest extends TestCase {
 		assertEquals(0, conf.size());
 
 		assertFalse(conf.loadConfig(nonsenseFile));
-		File a[]=new File[1];
+		File[] a=new File[1];
 		a[0]=nonsenseFile;
 		assertFalse(conf.loadConfig(a));
 	}
@@ -56,7 +56,7 @@ public class SpyConfigTest extends TestCase {
 		assertTrue(conf2.loadConfig(confFile));
 		assertEquals(5, conf2.size());
 
-		File a[]=new File[2];
+		File[] a=new File[2];
 		a[0]=new File("/some/nonsense/file");
 		a[1]=confFile;
 		SpyConfig conf3=new SpyConfig();

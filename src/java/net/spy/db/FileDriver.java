@@ -240,7 +240,7 @@ public class FileDriver extends SpyObject implements Driver {
 
 	private static final class ParameterizedQuery extends SpyObject {
 		private String query=null;
-		private Object args[]=null;
+		private Object[] args=null;
 
 		public ParameterizedQuery(String q, Object a[]) {
 			super();

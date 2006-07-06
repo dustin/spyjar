@@ -39,13 +39,13 @@ public class SpyUtilTest extends TestCase {
 	 * Test the basics of split.
 	 */
 	public void testSplit() {
-		String a[]=SpyUtil.split(",", "a,b,c");
+		String[] a=SpyUtil.split(",", "a,b,c");
 		assertEquals(a.length, 3);
 		assertEquals("a", a[0]);
 		assertEquals("b", a[1]);
 		assertEquals("c", a[2]);
 
-		String a2[]=SpyUtil.split(",", "abc");
+		String[] a2=SpyUtil.split(",", "abc");
 		assertEquals(a2.length, 1);
 		assertEquals("abc", a2[0]);
 	}
@@ -72,7 +72,7 @@ public class SpyUtilTest extends TestCase {
 	 * Test the byte array to hex string thing.
 	 */
 	public void testByteAToHexString() {
-		byte bytes[]={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+		byte[] bytes={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 		String s=SpyUtil.byteAToHexString(bytes);
 		assertEquals("000102030405060708090a0b0c0d0e0f10", s);
 	}
@@ -85,8 +85,8 @@ public class SpyUtilTest extends TestCase {
 		assertSame(Boolean.FALSE, SpyUtil.getBoolean("false"));
 		assertSame(Boolean.FALSE, SpyUtil.getBoolean("nope"));
 
-		assertSame(Boolean.TRUE, SpyUtil.getBoolean(true));
-		assertSame(Boolean.FALSE, SpyUtil.getBoolean(false));
+		assertSame(Boolean.TRUE, Boolean.valueOf(true));
+		assertSame(Boolean.FALSE, Boolean.valueOf(false));
 	}
 
 	/** 
@@ -108,13 +108,13 @@ public class SpyUtilTest extends TestCase {
 	 * Test the shuffle method.
 	 */
 	public void testShuffle() throws Exception {
-		Object a[]=new Object[10];
+		Object[] a=new Object[10];
 		for(int i=0; i<10; i++) {
 			a[i]=new Integer(i);
 		}
 
 		int match=0;
-		Object b[]=SpyUtil.shuffle(a);
+		Object[] b=SpyUtil.shuffle(a);
 		for(int i=0; i<10; i++) {
 			if(a[i].equals(b[i])) {
 				match++;
@@ -156,7 +156,7 @@ public class SpyUtilTest extends TestCase {
 	 * Test the run class.
 	 */
 	public void testRunClass() throws Exception {
-		String args[]=new String[0];
+		String[] args=new String[0];
 		SpyUtil.runClass("net.spy.test.SpyUtilTest", args);
 
 		args=new String[1];
@@ -178,7 +178,7 @@ public class SpyUtilTest extends TestCase {
 	 */
 	public void testTypeNameGen() throws Exception {
 		String tmpFile="/tmp/tn" + PwGen.getPass(12) + ".tmp";
-		String args[]={tmpFile};
+		String[] args={tmpFile};
 		SpyUtil.runClass("net.spy.util.TypeNameGen", args);
 		File f=new File(tmpFile);
 		f.delete();
@@ -189,7 +189,7 @@ public class SpyUtilTest extends TestCase {
 	 */
 	public void testInterfaceImplementor() throws Exception {
 		String tmpDir="/tmp/ii" + PwGen.getPass(12);
-		String args[]={"-superclass", "java.util.HashMap",
+		String[] args={"-superclass", "java.util.HashMap",
 			"-interface", "java.sql.ResultSet",
 			"-outputclass", "test.TestResult",
 			"-outputdir", tmpDir};
@@ -203,7 +203,7 @@ public class SpyUtilTest extends TestCase {
 	 */
 	public void testProxyInterfaceImplementor() throws Exception {
 		String tmpDir="/tmp/pii" + PwGen.getPass(12);
-		String args[]={"-superclass", "java.util.HashMap",
+		String[] args={"-superclass", "java.util.HashMap",
 			"-interface", "java.sql.ResultSet",
 			"-outputclass", "test.TestResult",
 			"-outputdir", tmpDir};

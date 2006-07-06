@@ -45,7 +45,7 @@ public class TypeNameGen extends Object {
 		ps.println("\t\tswitch(type) {");
 
 		// Fill in the switch statement with all the known types.
-		Field fields[]=Types.class.getDeclaredFields();
+		Field[] fields=Types.class.getDeclaredFields();
 		for(int i=0; i<fields.length; i++) {
 			ps.println("\t\t\tcase Types." + fields[i].getName() + ":");
 			ps.println("\t\t\t\trv=\"" + fields[i].getName() + "\";");

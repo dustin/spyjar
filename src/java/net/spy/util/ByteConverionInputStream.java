@@ -34,7 +34,7 @@ public abstract class ByteConverionInputStream extends FilterInputStream {
 	 * @see FilterInputStream
 	 */
 	public int read(byte data[], int offset, int len) throws IOException {
-		byte tmpbuf[]=new byte[len];
+		byte[] tmpbuf=new byte[len];
 
 		int lastread=0;
 		int bytesread=0;

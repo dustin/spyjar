@@ -217,7 +217,7 @@ public class SPGen extends SpyObject {
 			}
 			javaResultTypes.putAll(tmp);
 
-			Field fields[]=java.sql.Types.class.getDeclaredFields();
+			Field[] fields=java.sql.Types.class.getDeclaredFields();
 			types=new HashSet<String>();
 
 			for(int i=0; i<fields.length; i++) {
@@ -277,7 +277,7 @@ public class SPGen extends SpyObject {
 	// Create a specific set method for a given parameter.
 	private String createSetMethod(Parameter p) throws Exception {
 		String rv=null;
-		String atypes[]=null;
+		String[] atypes=null;
 
 		// Get the type map entry for this parameter
 		try {
@@ -287,7 +287,7 @@ public class SPGen extends SpyObject {
 			atypes=SpyUtil.split(" ", typeString);
 		} catch(MissingResourceException e) {
 			getLogger().warn("Can't set all types for " + p, e);
-			String typesTmp[]={"java.lang.Object"};
+			String[] typesTmp={"java.lang.Object"};
 			atypes=typesTmp;
 		}
 
@@ -590,12 +590,12 @@ public class SPGen extends SpyObject {
 				out.println("\n\t\t// Set the parameters.");
 				for (Parameter p : args) {
 					if (p.isRequired()) {
-						if (!p.isOutput()) {
-							out.println("\t\tsetRequired(\"" + p.getName()
-								+ "\", " + p.getType() + ");");
-						} else {
+						if (p.isOutput()) {
 							out.println("\t\tsetOutput(\"" + p.getName()
-								+ "\", " + p.getType() + ");");
+									+ "\", " + p.getType() + ");");
+						} else {
+							out.println("\t\tsetRequired(\"" + p.getName()
+									+ "\", " + p.getType() + ");");
 						}
 					} else {
 						out.println("\t\tsetOptional(\"" + p.getName()
@@ -634,11 +634,11 @@ public class SPGen extends SpyObject {
 		// Create set methods for all the individual parameters
 		int count=1;
 		for(Parameter p : args) {
-			if (!p.isOutput()) {
-				out.println(createSetMethod(p));
-			} else {
+			if (p.isOutput()) {
 				// output param
 				out.println(createGetOutputMethod(p, count));
+			} else {
+				out.println(createSetMethod(p));
 			}
 			count++;
 		}
@@ -713,7 +713,7 @@ public class SPGen extends SpyObject {
 	private String docifySQL(String sql) {
 		StringBuilder sb=new StringBuilder(sql.length());
 
-		char acters[]=sql.toCharArray();
+		char[] acters=sql.toCharArray();
 		for(int i=0; i<acters.length; i++) {
 			switch(acters[i]) {
 				case '>':

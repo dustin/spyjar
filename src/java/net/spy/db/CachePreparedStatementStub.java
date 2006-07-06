@@ -75,7 +75,7 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 			if(o instanceof CachePreparedStatementStub) {
 				CachePreparedStatementStub cpss=(CachePreparedStatementStub)o;
 				String oQuery=cpss.getQuery();
-				Object otherArgs[]=cpss.getArgs();
+				Object[] otherArgs=cpss.getArgs();
 
 				if(oQuery != null && oQuery.equals(getQuery())) {
 					// Finally, true if the args are equal.
@@ -137,7 +137,7 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 		pst.setMaxRows(maxRows);
 
 		// Set allllllll the types
-		Object args[]=getArgs();
+		Object[] args=getArgs();
 		for(int i=0; i<args.length; i++) {
 			try {
 				switch(getTypes()[i]) {

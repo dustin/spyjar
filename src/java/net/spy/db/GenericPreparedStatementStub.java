@@ -16,8 +16,8 @@ import net.spy.util.SpyUtil;
 public abstract class GenericPreparedStatementStub extends SpyObject {
 
 	private String query=null;
-	private Object args[] = null;
-	private int types[] = null;
+	private Object[] args = null;
+	private int[] types = null;
 
 	public GenericPreparedStatementStub(String q) {
 		super();
@@ -41,7 +41,7 @@ public abstract class GenericPreparedStatementStub extends SpyObject {
 	 * @return the arguments, with DBNulls replaced with null
 	 */
 	protected Object[] getApplicableArgs() {
-		Object rv[]=new Object[args.length];
+		Object[] rv=new Object[args.length];
 		for(int i=0; i<args.length; i++) {
 			if(args[i] instanceof DBNull) {
 				rv[i]=null;
@@ -74,7 +74,7 @@ public abstract class GenericPreparedStatementStub extends SpyObject {
 	}
 
 	public void setBoolean(int a0, boolean a1) throws SQLException {
-		setArg(a0, SpyUtil.getBoolean(a1), Types.BIT);
+		setArg(a0, Boolean.valueOf(a1), Types.BIT);
 	}
 
 	public void setDate(int a0, Date a1) throws SQLException {

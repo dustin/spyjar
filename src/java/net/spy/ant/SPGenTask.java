@@ -128,8 +128,8 @@ public class SPGenTask extends MatchingTask {
 		ds.setIncludes(includes);
 		ds.setBasedir(srcDir);
 		ds.scan();
-		String files[] = ds.getIncludedFiles();
-		String toDoFiles[] = trimSPTList(files);
+		String[] files = ds.getIncludedFiles();
+		String[] toDoFiles = trimSPTList(files);
 
 		if(toDoFiles.length > 0) {
 			log("Compiling " + toDoFiles.length + " of " + files.length
@@ -156,7 +156,7 @@ public class SPGenTask extends MatchingTask {
 			}
 		}
 
-		String rv[]=new String[a.size()];
+		String[] rv=new String[a.size()];
 		for(int i=0; i<a.size(); i++) {
 			rv[i]=a.get(i);
 		}

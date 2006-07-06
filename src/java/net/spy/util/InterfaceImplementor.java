@@ -148,7 +148,7 @@ public class InterfaceImplementor extends SpyObject {
 	// Extract the methods from the above.
 	private void getMethods(Class c) {
 		// First, get the declared ones
-		Method methods[]=c.getDeclaredMethods();
+		Method[] methods=c.getDeclaredMethods();
 		for(int i=0; i<methods.length; i++) {
 			int modifiers=methods[i].getModifiers();
 			// Ignore abstract methods
@@ -213,7 +213,7 @@ public class InterfaceImplementor extends SpyObject {
 		String name=method.getName();
 
 		// OK, now deal with parameters
-		Class types[]=method.getParameterTypes();
+		Class[] types=method.getParameterTypes();
 
 		ret+=name + "(";
 		if(types.length > 0) {
@@ -236,7 +236,7 @@ public class InterfaceImplementor extends SpyObject {
 	 */
 	protected String getDocLink(Method method) {
 		String ret=method.getName();
-		Class types[]=method.getParameterTypes();
+		Class[] types=method.getParameterTypes();
 		ret+="(";
 		if(types.length > 0) {
 			for(int i=0; i<types.length; i++) {
@@ -253,7 +253,7 @@ public class InterfaceImplementor extends SpyObject {
 	private String getExSignature(Method method) {
 		String ret="";
 		// Now flip through the exceptions
-		Class e[]=method.getExceptionTypes();
+		Class[] e=method.getExceptionTypes();
 		if(e.length>0) {
 			ret+="\n\t\tthrows ";
 			for(int i=0; i<e.length; i++) {
@@ -275,7 +275,7 @@ public class InterfaceImplementor extends SpyObject {
 		// Add the modifiers to our string
 		ret=Modifier.toString(modifiers) + " " + outclass;
 
-		Class types[]=con.getParameterTypes();
+		Class[] types=con.getParameterTypes();
 		ret+="(";
 		if(types.length > 0) {
 			for(int i=0; i<types.length; i++) {
@@ -287,7 +287,7 @@ public class InterfaceImplementor extends SpyObject {
 		ret+=") ";
 
 		// Now flip through the exceptions
-		Class e[]=con.getExceptionTypes();
+		Class[] e=con.getExceptionTypes();
 		if(e.length>0) {
 			ret+="\n\t\tthrows ";
 			for(int i=0; i<e.length; i++) {
@@ -305,7 +305,7 @@ public class InterfaceImplementor extends SpyObject {
 	 */
 	protected String getDocLink(Constructor con) {
 		String ret=con.getName();
-		Class types[]=con.getParameterTypes();
+		Class[] types=con.getParameterTypes();
 		ret+="(";
 		if(types.length > 0) {
 			for(int i=0; i<types.length; i++) {
@@ -338,7 +338,7 @@ public class InterfaceImplementor extends SpyObject {
 			+ "\t */\n";
 		ret+="\t" + getSignature(method) + " {\n";
 
-		Class e[]=method.getExceptionTypes();
+		Class[] e=method.getExceptionTypes();
 		// If we can throw an exception, do so.
 		if(e.length>0) {
 			ret+="\t\tthrow new "
@@ -377,7 +377,7 @@ public class InterfaceImplementor extends SpyObject {
 		ret+="\t" + getSignature(con) + " {\n";
 
 		ret+="\t\tsuper(";
-		Class params[]=con.getParameterTypes();
+		Class[] params=con.getParameterTypes();
 		if(params.length>0) {
 			for(int i=0; i<params.length; i++) {
 				ret+="a" + i + ", ";
@@ -439,7 +439,7 @@ public class InterfaceImplementor extends SpyObject {
 		// If there's a superclass, grab all of the constructors from that
 		// superclass and make sure they all get called.
 		if(superClass!=null && buildConstructors()) {
-			Constructor constructors[]=superClass.getConstructors();
+			Constructor[] constructors=superClass.getConstructors();
 			for(int i=0; i<constructors.length; i++) {
 				ret+=implementConstructor(constructors[i]);
 			}
@@ -452,7 +452,7 @@ public class InterfaceImplementor extends SpyObject {
 		}
 
 		// Now, implement the methods of the interface
-		Method methods[]=interfaceClass.getMethods();
+		Method[] methods=interfaceClass.getMethods();
 		for(int i=0; i<methods.length; i++) {
 			String sig=getSignature(methods[i]);
 			if(!definedFunctions.contains(sig)) {

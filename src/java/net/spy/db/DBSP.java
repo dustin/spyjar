@@ -607,7 +607,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	 */
 	public void set(String which,boolean a1)
 		throws SQLException {
-		setArg(which, SpyUtil.getBoolean(a1), Types.BIT);
+		setArg(which, Boolean.valueOf(a1), Types.BIT);
 
 	}
 
@@ -1148,13 +1148,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		 * Get the {@link java.sql.Types} type of this parameter.
 		 */
 		public int getJavaType() {
-			int rv=0;
-			if(value==null) {
-				rv=Types.NULL;
-			} else {
-				rv=javaType;
-			}
-			return(rv);
+			return(value == null ? Types.NULL : javaType);
 		}
 
 		/**
@@ -1172,12 +1166,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		}
 
 		public String toString() {
-			String valName=null;
-			if (value==null) {
-				valName="NULL";
-			} else {
-				valName="'" + value + "'";
-			}
+			String valName=(value == null ? valName="NULL" : "'" + value + "'");
 			return "{Arg: type=" + javaType
 				+ "(" + TypeNames.getTypeName(javaType)
 				+ "), name=" + getName() + ", value=" + valName + "}";

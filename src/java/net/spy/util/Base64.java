@@ -9,7 +9,7 @@ package net.spy.util;
  */
 public class Base64 extends Object {
 
-	private static final char CHARMAP[]={
+	private static final char[] CHARMAP={
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
@@ -98,7 +98,7 @@ public class Base64 extends Object {
 				insize--;
 			}
 		}
-		byte rv[]=new byte[size];
+		byte[] rv=new byte[size];
 		int pos=0;
 		int count=0;
 		int packer=0;
@@ -138,7 +138,7 @@ public class Base64 extends Object {
 
 		// If there were any invalid characters, our size was wrong.
 		if(invalid>0) {
-			byte tmp[]=new byte[pos];
+			byte[] tmp=new byte[pos];
 			System.arraycopy(rv, 0, tmp, 0, pos);
 			rv=tmp;
 		}

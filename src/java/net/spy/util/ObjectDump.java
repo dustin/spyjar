@@ -31,7 +31,7 @@ public class ObjectDump extends SpyObject {
 	// Get all of the fields available to this class or any of its super
 	// classes.
     private void getAllFields(Class<?> c, Set<Field> s) throws Exception {
-        Field fields[]=c.getDeclaredFields();
+        Field[] fields=c.getDeclaredFields();
 		for(Field field : fields) {
             field.setAccessible(true);
             s.add(field);

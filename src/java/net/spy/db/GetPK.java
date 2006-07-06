@@ -176,7 +176,8 @@ public class GetPK extends SpyObject {
 			try {
 				rv=ks.nextKey();
 			} catch(OverDrawnException ode2) {
-				throw new Error("Primary keys not available after load.");
+				throw new AssertionError(
+						"Primary keys not available after load.");
 			}
 		}
 

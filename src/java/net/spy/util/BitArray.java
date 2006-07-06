@@ -44,7 +44,7 @@ public class BitArray extends Object {
 	public BitArray(String bitString) {
 		this(bitString.length());
 
-		char acters[]=bitString.toCharArray();
+		char[] acters=bitString.toCharArray();
 		for(char c : acters) {
 			if(!Character.isWhitespace(c)) {
 				switch(c) {

@@ -34,7 +34,7 @@ public abstract class GenericResultSetStub extends SpyObject
 	private Map<String, Integer> columns=null;
 
 	// This is the current result we're looking at.
-	private Object result[]=null;
+	private Object[] result=null;
 
 	// We're going to keep a copy of the ResultSetMetaData from the
 	// original query.  Let's find out if those things require an active
@@ -81,7 +81,7 @@ public abstract class GenericResultSetStub extends SpyObject
 		while(rs.next()) {
 
 			// Get an array to store them
-			Object ars[]=new Object[ncolumns];
+			Object[] ars=new Object[ncolumns];
 
 			// Flip through the columns
 			for(int i=1; i<=ncolumns; i++) {
@@ -163,11 +163,7 @@ public abstract class GenericResultSetStub extends SpyObject
 		}
 
 		// Check for NULL
-		if(result[index]==null) {
-			wasNull=true;
-		} else {
-			wasNull=false;
-		}
+		wasNull = result[index]==null;
 
 		// OK, return the column
 		return(result[index]);

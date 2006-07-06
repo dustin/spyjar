@@ -329,8 +329,8 @@ public class ThreadPool extends ThreadPoolExecutor {
 	 * @throws InterruptedException if wait fails
 	 */
 	public void waitForTaskCount(int num) throws InterruptedException {
-		while(getQueue().size() > num) {
-			synchronized(monitor) {
+		synchronized(monitor) {
+			while(getQueue().size() > num) {
 				monitor.wait(WAIT_TIMEOUT);
 			}
 		}

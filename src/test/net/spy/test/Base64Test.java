@@ -104,7 +104,7 @@ public class Base64Test extends TestCase {
 	 */
 	public void testAlphabet() {
 		Base64 b64=Base64.getInstance();
-		char CHARMAP[]={
+		char[] CHARMAP={
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
@@ -155,12 +155,12 @@ public class Base64Test extends TestCase {
 	 * Test input stream implementation.
 	 */
 	public void testInputStream() throws Exception {
-		byte buffer[]=new byte[1024];
+		byte[] buffer=new byte[1024];
 
 		for(Iterator i=cases.entrySet().iterator(); i.hasNext();) {
 			Map.Entry me=(Map.Entry)i.next();
 
-			byte input[]=((String)me.getKey()).getBytes(CHARSET);
+			byte[] input=((String)me.getKey()).getBytes(CHARSET);
 			ByteArrayInputStream bis=new ByteArrayInputStream(input);
 
 			Base64InputStream b64is=new Base64InputStream(bis);
@@ -225,12 +225,12 @@ public class Base64Test extends TestCase {
 
 		String src=Base64.getInstance().encode(bos.toByteArray());
 
-		byte b1[]=Base64.getInstance().decode(src);
+		byte[] b1=Base64.getInstance().decode(src);
 
 		ByteArrayInputStream bis=new ByteArrayInputStream(
 			src.getBytes(CHARSET));
 		Base64InputStream b64is=new Base64InputStream(bis);
-		byte b2[]=new byte[b1.length];
+		byte[] b2=new byte[b1.length];
 		int bytesRead=b64is.read(b2);
 
 		assertEquals(b1.length, bytesRead);

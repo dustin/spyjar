@@ -81,7 +81,7 @@ public abstract class DBCP extends DBSP {
 		// Get the statement
 		if (pst==null) {
 			if(getCacheTime()>0) {
-				throw new Error ("Not Implemented!!");
+				throw new IllegalArgumentException("Not Implemented!!");
 				//pst=prepareStatement(query, getCacheTime());
 			} else {
 				pst=prepareCall(getQuery());
@@ -209,7 +209,7 @@ public abstract class DBCP extends DBSP {
 		// Get a prepared statement, varies whether it's cachable or not.
 		if (pst==null) {
 			if(getCacheTime()>0) {
-				throw new Error("Not Implemented");
+				throw new IllegalArgumentException("Not Implemented");
 				//pst=prepareCall(query, getCacheTime());
 			} else {
 				pst=prepareCall(query);

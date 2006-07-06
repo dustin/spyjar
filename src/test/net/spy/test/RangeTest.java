@@ -51,7 +51,7 @@ public class RangeTest extends TestCase {
 		Integer e=new Integer(5);
 		Integer f=new Integer(6);
 
-		String sortedVals[]={
+		String[] sortedVals={
 			"null-1", "null-2", "1-1", "1-2", "1-null", "2-2",
 			"2-3", "2-null", "3-3", "3-4", "4-4", "4-5", "5-5", "5-6", "6-6"
 			};

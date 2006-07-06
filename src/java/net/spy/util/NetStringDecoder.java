@@ -72,7 +72,7 @@ public class NetStringDecoder extends SpyObject {
 		}
 
 		// Read enough data
-		byte tmp[]=new byte[size];
+		byte[] tmp=new byte[size];
 		int bytesread=0;
 		while(bytesread < size) {
 			int r=is.read(tmp, bytesread, (size-bytesread));

@@ -60,11 +60,11 @@ public final class Cron extends SpyThread {
 		// Set the thread group to a daemon
 		getThreadGroup().setDaemon(true);
 
-		if(tp==null) {
-			tp=new ThreadPool(name + "Pool", 1, 10, Thread.NORM_PRIORITY,
+		threads=tp;
+		if(threads==null) {
+			threads=new ThreadPool(name + "Pool", 1, 10, Thread.NORM_PRIORITY,
 					new LinkedBlockingQueue<Runnable>(128));
 		}
-		threads=tp;
 
 		validJobFound=System.currentTimeMillis();
 		start();

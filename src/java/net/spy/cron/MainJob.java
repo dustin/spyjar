@@ -18,7 +18,7 @@ public class MainJob extends Job implements ThreadPoolRunnable {
 	// the class.
 	private ClassLoader classLoader=null;
 	private String classname=null;
-	private String args[]=null;
+	private String[] args=null;
 
 	/**
 	 * Get a new ``at style'' MainJob.

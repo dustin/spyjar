@@ -159,11 +159,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 					backIterator.remove();
 				}
 			}
-			if(current==null) {
-				hasNext=false;
-			} else {
-				hasNext=true;
-			}
+			hasNext = current != null;
 		} // findNext
 
 	}

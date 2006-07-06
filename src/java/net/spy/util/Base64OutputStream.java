@@ -16,8 +16,8 @@ public class Base64OutputStream extends FilterOutputStream {
 	private Base64 base64=null;
 	private int currentByte=0;
 	private int currentOutput=0;
-	private byte buffer[]=null;
-	private byte crlf[]=null;
+	private byte[] buffer=null;
+	private byte[] crlf=null;
 
 	/**
 	 * Get a new Base64OutputStream encoding the given OutputStream.
@@ -49,7 +49,7 @@ public class Base64OutputStream extends FilterOutputStream {
 	 */
 	public void close() throws IOException {
 		if(currentByte>0) {
-			byte tmp[]=new byte[currentByte];
+			byte[] tmp=new byte[currentByte];
 			System.arraycopy(buffer, 0, tmp, 0, currentByte);
 			out.write(base64.encode(tmp).getBytes());
 			out.write(crlf);

@@ -302,7 +302,7 @@ public class SaverTest extends MockObjectTestCase {
 		s.save(ts1);
 
 		// That should yield the following sequence:
-		int seq[]={2, 3, 1, 4, 5, 7, 8, 6, 11, 10, 12, 13};
+		int[] seq={2, 3, 1, 4, 5, 7, 8, 6, 11, 10, 12, 13};
 		ArrayList al=new ArrayList();
 		for(int i=0; i<seq.length; i++) {
 			al.add(new Integer(seq[i]));

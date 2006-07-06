@@ -55,7 +55,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			List<Object[]> results=new ArrayList<Object[]>();
 			String tmp=lnr.readLine();
 			while(tmp != null) {
-				Object result[]=mmd.parseLine(tmp);
+				Object[] result=mmd.parseLine(tmp);
 				results.add(result);
 				tmp=lnr.readLine();
 			}
@@ -125,9 +125,9 @@ public class FileResultSetStub extends GenericResultSetStub {
 	}
 
 	private abstract static class MultiDateParser extends PreParser {
-		private SimpleDateFormat formats[]=null;
+		private SimpleDateFormat[] formats=null;
 
-		public MultiDateParser(String formatStrings[]) {
+		public MultiDateParser(String[] formatStrings) {
 			super();
 			formats=new SimpleDateFormat[formatStrings.length];
 			for(int i=0; i<formatStrings.length; i++) {
@@ -247,8 +247,8 @@ public class FileResultSetStub extends GenericResultSetStub {
 
 	private static final class MyMetaData implements ResultSetMetaData {
 
-		private String names[]=null;
-		private int types[]=null;
+		private String[] names=null;
+		private int[] types=null;
 
 		public MyMetaData(String line) throws SQLException {
 			super();
@@ -284,7 +284,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			// Parse the line
 			ParserFactory pf=ParserFactory.getInstance();
 			StringTokenizer st=new StringTokenizer(line, "\t");
-			Object rv[]=new Object[names.length];
+			Object[] rv=new Object[names.length];
 			int i=0;
 			while(st.hasMoreTokens()) {
 				String toParse=st.nextToken();

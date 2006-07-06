@@ -46,7 +46,7 @@ public class CacheClearListenerTest extends TestCase {
 
 		assertTrue(c.toString().endsWith("processed 0 requests"));
 
-		byte data[]="cleartest".getBytes();
+		byte[] data="cleartest".getBytes();
 		q.put(new DatagramPacket(data, data.length, addr, port));
 		Thread.sleep(100);
 

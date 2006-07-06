@@ -35,7 +35,7 @@ public class SpyUtil {
 	 */
 	public static Object[] shuffle(Object in[]) {
 		Object tmp;
-		Object ret[] = new Object[in.length];
+		Object[] ret = new Object[in.length];
 		System.arraycopy(in, 0, ret, 0, in.length);
 		SecureRandom r = new SecureRandom();
 		int i;
@@ -66,7 +66,7 @@ public class SpyUtil {
 	public static String[] split(String on, String input) {
 		StringTokenizer st = new StringTokenizer(input, on);
 
-		String ret[]=new String[st.countTokens()];
+		String[] ret=new String[st.countTokens()];
 
 		int i=0;
 		while(st.hasMoreTokens()) {
@@ -83,7 +83,7 @@ public class SpyUtil {
 	 * @return a String with the contents of the reader
 	 */
 	public static String getReaderAsString(Reader r) throws IOException {
-		char c[]=new char[8192];
+		char[] c=new char[8192];
 		StringBuilder rv=new StringBuilder(8192);
 
 		int size;
@@ -199,13 +199,13 @@ public class SpyUtil {
 		Class<?> tclass=Class.forName(classname, true, cl);
 
 		// Find the method
-		Class paramtypes[] = new Class[1];
-		String tmp[]=new String[0];
+		Class[] paramtypes = new Class[1];
+		String[] tmp=new String[0];
 		paramtypes[0]=tmp.getClass();
 		Method m = tclass.getMethod("main", paramtypes);
 
 		// Set the arguments.
-		Object params[]=new Object[1];
+		Object[] params=new Object[1];
 		params[0]=args;
 
 		// Run it!
@@ -243,22 +243,6 @@ public class SpyUtil {
 	}
 
 	/** 
-	 * Get a boolean instance.
-	 * 
-	 * @param b the type of Boolean instance you want
-	 * @return a shared instance of Boolean
-	 */
-	public static Boolean getBoolean(boolean b) {
-		Boolean rv=null;
-		if(b) {
-			rv=Boolean.TRUE;
-		} else {
-			rv=Boolean.FALSE;
-		}
-		return(rv);
-	}
-
-	/** 
 	 * Remove HTML tags from a string.
 	 * 
 	 * @param contents the string whose HTML tags need removed.
@@ -268,7 +252,7 @@ public class SpyUtil {
 		int inTag=0;
 		StringBuilder sb=new StringBuilder(contents.length());
 
-		char chars[]=contents.toCharArray();
+		char[] chars=contents.toCharArray();
 
 		for(char c : chars) {
 			if(c == '<') {
@@ -290,7 +274,7 @@ public class SpyUtil {
 	 * Recursively remove a path.
 	 */
 	public static void rmDashR(File tmp) {
-		File f[]=tmp.listFiles();
+		File[] f=tmp.listFiles();
 		if(f!=null) {
 			for(int i=0; i<f.length; i++) {
 				if(f[i].isDirectory()) {

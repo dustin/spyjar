@@ -73,8 +73,8 @@ public class CacheClearRequestListener extends SpyThread {
 	 * Do that crazy flush thing.
 	 */
 	public void flush(DatagramPacket recv) {
-		byte data[]=recv.getData();
-		byte tmp[]=new byte[recv.getLength()];
+		byte[] data=recv.getData();
+		byte[] tmp=new byte[recv.getLength()];
 		System.arraycopy(data, 0, tmp, 0, tmp.length);
 		String prefix=new String(tmp);
 		getLogger().info("CacheClearRequestListener flushing ``%s''"
@@ -92,7 +92,7 @@ public class CacheClearRequestListener extends SpyThread {
 	public void run() {
 		while(running) {
 			try {
-				byte data[]=new byte[1500];
+				byte[] data=new byte[1500];
 				DatagramPacket recv = new DatagramPacket(data, data.length);
 				s.receive(recv);
 				flush(recv);

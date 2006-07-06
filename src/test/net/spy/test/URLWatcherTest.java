@@ -104,7 +104,7 @@ public class URLWatcherTest extends TestCase {
 	 * Test with several URLs.
 	 */
 	public void testLotsOfURLs() throws IOException, InterruptedException {
-		String urls[]={"http://bleu.west.spy.net/",
+		String[] urls={"http://bleu.west.spy.net/",
 			"http://bleu.west.spy.net/~dustin/",
 			"http://bleu.west.spy.net/~dustin/music/",
 			"http://bleu.west.spy.net/~dustin/eiffel/",

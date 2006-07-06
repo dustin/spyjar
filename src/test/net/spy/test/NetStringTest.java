@@ -80,7 +80,7 @@ public class NetStringTest extends TestCase {
 		NetStringDecoder nsd=new NetStringDecoder(encoding);
 		ByteArrayOutputStream os=new ByteArrayOutputStream(256);
 
-		String tmp[]={"", "a", "bc", "def", "ghij", "this is a mofo test"};
+		String[] tmp={"", "a", "bc", "def", "ghij", "this is a mofo test"};
 
 		for(int i=0; i<tmp.length; i++) {
 			nse.encodeString(tmp[i], os);

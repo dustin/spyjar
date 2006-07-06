@@ -91,7 +91,7 @@ public final class LoggerFactory extends Object {
 		if(instanceConstructor==null) {
 			getConstructor();
 		}
-		Object args[]={name};
+		Object[] args={name};
 		Logger rv=instanceConstructor.newInstance(args);
 
 		return (rv);
@@ -124,12 +124,12 @@ public final class LoggerFactory extends Object {
 		// Find the best constructor
 		try {
 			// Try to find a constructor that takes a single string
-			Class args[]={String.class};
+			Class[] args={String.class};
 			instanceConstructor=c.getConstructor(args);
 		} catch(NoSuchMethodException e) {
 			try {
 				// Try to find an empty constructor
-				Class args[]={};
+				Class[] args={};
 				instanceConstructor=c.getConstructor(args);
 			} catch(NoSuchMethodException e2) {
 				System.err.println("Warning:  " + className
@@ -137,7 +137,7 @@ public final class LoggerFactory extends Object {
 
 				// Try to find a constructor that takes a single string
 				try {
-					Class args[]={String.class};
+					Class[] args={String.class};
 					instanceConstructor=
 						DefaultLogger.class.getConstructor(args);
 				} catch(NoSuchMethodException e3) {

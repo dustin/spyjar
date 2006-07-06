@@ -180,7 +180,7 @@ public class LoggingTest extends TestCase {
      * Test picking up an exception argument.
      */
     public void testExceptionArg() throws Exception {
-        Object args[]=new Object[]{"a", 42, new Exception("test")};
+        Object[] args=new Object[]{"a", 42, new Exception("test")};
         Throwable t=((AbstractLogger)logger).getThrowable(args);
         assertNotNull(t);
         assertEquals("test", t.getMessage());
@@ -190,7 +190,7 @@ public class LoggingTest extends TestCase {
      * Test when the last argument is not an exception.
      */
     public void testNoExceptionArg() throws Exception {
-        Object args[]=new Object[]{"a", 42, new Exception("test"), "x"};
+        Object[] args=new Object[]{"a", 42, new Exception("test"), "x"};
         Throwable t=((AbstractLogger)logger).getThrowable(args);
         assertNull(t);
     }

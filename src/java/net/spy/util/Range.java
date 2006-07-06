@@ -192,13 +192,7 @@ public class Range<T extends Comparable<T>> extends Object
 	 * 	object's hash code
 	 */
 	public int hashCode() {
-		int rv=0;
-		if(low != null) {
-			rv=low.hashCode();
-		} else {
-			rv=high.hashCode();
-		}
-		return(rv);
+		return(low != null ? low.hashCode() : high.hashCode());
 	}
 
 	// Compare two ranges based on their low value

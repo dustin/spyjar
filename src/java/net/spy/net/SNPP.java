@@ -275,7 +275,7 @@ public class SNPP extends SpyObject {
 	 */
 	public void message(String msg) throws Exception {
 		String tmp="";
-		String atmp[]=SpyUtil.split("\r\n", msg);
+		String[] atmp=SpyUtil.split("\r\n", msg);
 		for(int i=0; i<atmp.length; i++) {
 			tmp+=atmp[i] + " ";
 		}
@@ -349,7 +349,7 @@ public class SNPP extends SpyObject {
 		if(goesBothWays) {
 			// If it looks 2way, we get the stuff
 			if(currentStatusType == MTYPE_SUCCESS_2WAY) {
-				String a[]=SpyUtil.split(" ", currentMessage);
+				String[] a=SpyUtil.split(" ", currentMessage);
 				msgTag=a[0] + " " + a[1];
 			}
 		}

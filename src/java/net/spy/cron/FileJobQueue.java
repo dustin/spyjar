@@ -150,13 +150,13 @@ public class FileJobQueue extends JobQueue<MainJob> {
 			return(null);
 		}
 
-		String stuff[]=SpyUtil.split(" ", line);
+		String[] stuff=SpyUtil.split(" ", line);
 		String dateS=stuff[0];
 		String fieldS=stuff[1];
 		String incrS=stuff[2];
 		String classS=stuff[3];
 
-		String args[]=new String[stuff.length-4];
+		String[] args=new String[stuff.length-4];
 		// If there were args, copy them in instead.
 		if(stuff.length>4) {
 			System.arraycopy(stuff, 4, args, 0, args.length);
@@ -225,14 +225,14 @@ public class FileJobQueue extends JobQueue<MainJob> {
 	private Collection<TimeFormat> getFormats() {
 		Collection<TimeFormat> rv=new ArrayList<TimeFormat>();
 
-		int f1[]={Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH,
+		int[] f1={Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH,
 					Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};
 		rv.add(new TimeFormat("yyyyMMdd-HHmmss", f1));
 
-		int f2[]={Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};
+		int[] f2={Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};
 		rv.add(new TimeFormat("HHmmss", f2));
 
-		int f3[]={Calendar.MINUTE, Calendar.SECOND};
+		int[] f3={Calendar.MINUTE, Calendar.SECOND};
 		rv.add(new TimeFormat("mmss", f3));
 
 		return (rv);
@@ -284,7 +284,7 @@ public class FileJobQueue extends JobQueue<MainJob> {
 
 	private static final class TimeFormat extends Object {
 		private SimpleDateFormat format=null;
-		private int fields[]=null;
+		private int[] fields=null;
 
 		private TimeFormat(String fmt, int flds[]) {
 			super();

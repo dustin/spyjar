@@ -101,7 +101,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 		ret+="\t" + getSignature(method) + " {\n";
 
 		// Get the parameters
-		Class types[]=method.getParameterTypes();
+		Class[] types=method.getParameterTypes();
 		ArrayList<String> l=new ArrayList<String>(types.length);
 		for(int i=0; i<types.length; i++) {
 			l.add("a" + i);

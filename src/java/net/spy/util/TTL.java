@@ -176,7 +176,7 @@ public class TTL extends TimerTask {
 	 */
 	protected void reportWithFormat(String msg) {
 		long now=System.currentTimeMillis();
-		Object args[]={new Long(now-startTime), new Long(ttl), extraInfo};
+		Object[] args={new Long(now-startTime), new Long(ttl), extraInfo};
 
 		MessageFormat mf=new MessageFormat(msg);
 		String toLog=mf.format(args);

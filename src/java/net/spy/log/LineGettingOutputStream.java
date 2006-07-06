@@ -24,7 +24,7 @@ public abstract class LineGettingOutputStream extends OutputStream {
 	 * Write a byte.
 	 */
 	public void write(int b) throws IOException {
-		byte ba[]=new byte[1];
+		byte[] ba=new byte[1];
 		ba[0]=(byte)b;
 		write(ba, 0, 1);
 	}

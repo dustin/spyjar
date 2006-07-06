@@ -76,7 +76,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 		try {
 			md=MessageDigest.getInstance("SHA");
 		} catch(NoSuchAlgorithmException e) {
-			throw new Error("There's no SHA?");
+			throw new AssertionError("There's no SHA?");
 		}
 		if(key instanceof String) {
 			String k=(String)key;
@@ -218,7 +218,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 		private void init(File f) throws IOException, ClassNotFoundException {
 			if(f.isDirectory()) {
 				// If it's a directory, recurse
-				File stuff[]=f.listFiles();
+				File[] stuff=f.listFiles();
 				for(int i=0; i<stuff.length; i++) {
 					init(stuff[i]);
 				}

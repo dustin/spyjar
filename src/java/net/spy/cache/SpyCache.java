@@ -230,7 +230,7 @@ public class SpyCache extends SpyObject {
 			getLogger().debug("Shutting down %s", this);
 			shutdown=true;
 			synchronized(this) {
-				notify();
+				notifyAll();
 			}
 		}
 

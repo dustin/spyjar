@@ -73,8 +73,8 @@ public class Digest extends SpyObject {
 			String data=hash.substring(hash.indexOf('}')+1);
 
 			Base64 base64d=new Base64();
-			byte datab[]=base64d.decode(data);
-			byte salt[]=new byte[datab.length-digLen];
+			byte[] datab=base64d.decode(data);
+			byte[] salt=new byte[datab.length-digLen];
 			System.arraycopy(datab, digLen, salt, 0, salt.length);
 			String newhash=getHash(pw, salt);
 
@@ -103,7 +103,7 @@ public class Digest extends SpyObject {
 		MessageDigest md = getMessageDigest();
 		md.update(word.getBytes());
 		md.update(salt);
-		byte pwhash[]=md.digest();
+		byte[] pwhash=md.digest();
 		String hout = getPrefix("{S" + hashAlg + "}")
 			+ Base64.getInstance().encode(cat(pwhash, salt));
 		return(hout.trim());
@@ -128,7 +128,7 @@ public class Digest extends SpyObject {
 	public byte[] getSaltFreeHashBytes(String s) {
 		MessageDigest md = getMessageDigest();
 		md.update(s.getBytes());
-		byte hash[]=md.digest();
+		byte[] hash=md.digest();
 		return(hash);
 	}
 
@@ -147,7 +147,7 @@ public class Digest extends SpyObject {
 	 */
 	public String getHash(String word) {
 		// 8 bytes of salt should be enough sodium for anyone
-		byte salt[]=new byte[8];
+		byte[] salt=new byte[8];
 		SecureRandom sr=new SecureRandom();
 		sr.nextBytes(salt);
 
@@ -156,7 +156,7 @@ public class Digest extends SpyObject {
 	}
 
 	private byte[] cat(byte a[], byte b[]) {
-		byte r[]= new byte [a.length + b.length];
+		byte[] r= new byte [a.length + b.length];
 		System.arraycopy (a, 0, r, 0, a.length);
 		System.arraycopy (b, 0, r, a.length, b.length);
 		return(r);

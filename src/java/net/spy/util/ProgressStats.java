@@ -130,7 +130,7 @@ public class ProgressStats extends Object {
 		Date ofCompletion=new Date(getTime() + (1000*(long)estimate));
 
 		// Assemble arguments
-		Object args[]={
+		Object[] args={
 			new Double(average),
 			new Double(estimate),
 			ofCompletion,

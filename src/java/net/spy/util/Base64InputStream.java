@@ -15,7 +15,7 @@ public class Base64InputStream extends ByteConverionInputStream {
 	private Base64 base64=null;
 	// Properly initialized, this will be zero
 	private int currentOut=9;
-	private byte outbuffer[]=null;
+	private byte[] outbuffer=null;
 
 	/**
 	 * Get a new Base64InputStream decoding the given InputStream.
@@ -43,7 +43,7 @@ public class Base64InputStream extends ByteConverionInputStream {
 	}
 
 	private void decodeMore() throws IOException {
-		byte tmp[]=new byte[4];
+		byte[] tmp=new byte[4];
 		boolean more=true;
 
 		int bytesread=0;
@@ -64,7 +64,7 @@ public class Base64InputStream extends ByteConverionInputStream {
 		String todecode=null;
 
 		if(bytesread<4) {
-			byte tmptmp[]=new byte[bytesread];
+			byte[] tmptmp=new byte[bytesread];
 			System.arraycopy(tmp, 0, tmptmp, 0, bytesread);
 			todecode=new String(tmptmp);
 		} else {

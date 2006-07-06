@@ -18,7 +18,7 @@ public class ProgressStatsTest extends TestCase {
 	public void testSimple() throws Exception {
 		tk.t=1146460996000L;
 		ProgressStats tps=new TestProgressStats(5, tk);
-		String msgs[]={
+		String[] msgs={
 				"4 remaining.  Avg=15s, Estimate=60s (Sun Apr30 22:24:47)",
 				"3 remaining.  Avg=20s, Estimate=60s (Sun Apr30 22:25:17)",
 				"2 remaining.  Avg=22.5s, Estimate=45s (Sun Apr30 22:25:32)",
