@@ -27,14 +27,27 @@ public class Instantiator<C> extends SpyObject {
 	}
 
 	/**
-	 * Create an instantiator for the given configuration name and default.
-	 * @param className the name of the default implementation
+	 * Create an instantiator for the given class name.
+	 * @param className the name of the class to instantiate
 	 * 
 	 * @throws Exception if the instance can't be instantiated
 	 */
 	public Instantiator(String className) throws Exception {
 		super();
 		setInstance(createInstance(className));
+	}
+
+	/**
+	 * Create an instantiator for the given class name in the given class
+	 * loader.
+	 * @param className the name of the class to load
+	 * @param cl the class loader to use to instantiate the class
+	 * 
+	 * @throws Exception if the instance can't be instantiated
+	 */
+	public Instantiator(String className, ClassLoader cl) throws Exception {
+		super();
+		setInstance(createInstance(className, cl));
 	}
 
 	/**
@@ -59,6 +72,23 @@ public class Instantiator<C> extends SpyObject {
 	protected C createInstance(String className) throws Exception {
 		getLogger().info("Initializing %s", className);
 		Class<C> c=(Class<C>) Class.forName(className);
+		C rv=c.newInstance();
+		getLogger().info("Initialization complete.");
+		return rv;
+	}
+
+	/**
+	 * Create an instance of the given class (expected to be a C).
+	 * 
+	 * @param className the name of the class
+	 * @return the new instance
+	 * @throws Exception if the class can't be instantiated
+	 */
+	@SuppressWarnings("unchecked")
+	protected C createInstance(String className, ClassLoader cl)
+		throws Exception {
+		getLogger().info("Initializing %s in %s", className, cl);
+		Class<C> c=(Class<C>) Class.forName(className, true, cl);
 		C rv=c.newInstance();
 		getLogger().info("Initialization complete.");
 		return rv;
