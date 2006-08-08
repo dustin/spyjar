@@ -79,6 +79,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 							wt.futureFuture, wt.e));
 				} else {
 					getLogger().info("No retry for %s", wt.callable);
+					getLogger().debug("Fatal error in RetryableCallable", wt.e);
 					wt.callable.givingUp();
 					wt.futureFuture.sync.set(wt.e);
 				}
