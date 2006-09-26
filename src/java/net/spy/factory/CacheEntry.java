@@ -22,6 +22,16 @@ public interface CacheEntry<T extends Instance> {
 	 */
 	T getById(int id);
 
+	/**
+	 * Get an object by alternate cache ID.
+	 * 
+	 * @param cacheName the name of the alt cache
+	 * @param key the key within that cache
+	 * @return the object, or null if there's no object in that cache
+	 * 	with that key
+	 */
+	T getByAltCache(String cacheName, Object key);
+
 	/** 
 	 * Get all objects in this cache.
 	 */

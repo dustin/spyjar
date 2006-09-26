@@ -9,6 +9,7 @@ import java.util.Collection;
 import junit.framework.TestCase;
 
 import net.spy.cache.SpyCache;
+import net.spy.factory.CacheKey;
 import net.spy.factory.CacheRefresher;
 import net.spy.factory.GenFactory;
 import net.spy.factory.Instance;
@@ -52,6 +53,10 @@ public class FactoryTest extends TestCase {
 			TestInstance ti=tf.getObject(i);
 			assertNotNull("Null at " + i, ti);
 			assertEquals(ti.getId(), i);
+
+			ti=tf.getObject("iprop", String.valueOf(i));
+			assertNotNull("Null at iprop/" + i, ti);
+			assertEquals(ti.getId(), i);
 		}
 
 		assertEquals(NUM_OBJECTS, tf.getObjects().size());
@@ -59,6 +64,8 @@ public class FactoryTest extends TestCase {
 		// Try non-existing objects
 		TestInstance ti=tf.getObject(NUM_OBJECTS + 138);
 		assertNull(ti);
+		ti=tf.getObject("iprop", String.valueOf(NUM_OBJECTS + 138));
+		assertNull("Null at iprop/" + (NUM_OBJECTS+138), ti);
 
 		assertEquals(1, tf.numRuns);
 	}
@@ -66,6 +73,7 @@ public class FactoryTest extends TestCase {
 	private void checkSecondPass() {
 		// Now that object should be there.
 		TestInstance ti=tf.getObject(NUM_OBJECTS + 138);
+		assertNotNull("Was null on second pass", ti);
 		assertEquals(ti.getId(), NUM_OBJECTS + 138);
 
 		// And this object shouldn't
@@ -90,7 +98,7 @@ public class FactoryTest extends TestCase {
 		checkFirstPass();
 
 		// Let the stuff have time to recache.
-		Thread.sleep(100);
+		Thread.sleep(250);
 
 		checkSecondPass();
 	}
@@ -118,7 +126,7 @@ public class FactoryTest extends TestCase {
 		checkFirstPass();
 
 		// With a bit more time passed, we should be on the new set.
-		Thread.sleep(25);
+		Thread.sleep(100);
 		checkSecondPass();
 	}
 
@@ -159,7 +167,7 @@ public class FactoryTest extends TestCase {
 		}
 	}
 
-	private static class TestInstance extends Object implements Instance {
+	public static class TestInstance extends Object implements Instance {
 		private int oid=0;
 		public TestInstance(int id) {
 			super();
@@ -168,6 +176,15 @@ public class FactoryTest extends TestCase {
 
 		public int getId() {
 			return(oid);
+		}
+
+		@CacheKey(name="iprop")
+		public String getIndexedProp() {
+			return String.valueOf(oid);
+		}
+
+		public String getNonindexedProp() {
+			return String.valueOf(0-oid);
 		}
 
 		public int hashCode() {

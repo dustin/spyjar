@@ -99,6 +99,19 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 	}
 
 	/** 
+	 * This method is called whenever getObject(String,Object) would return
+	 * null.  The result of this object will be used instead.  Alternatively,
+	 * one may throw a RuntimeException indicating a failure.
+	 * 
+	 * @param cacheName the name of the cache that was accessed
+	 * @param key the key under that cache that was accessed
+	 * @return null
+	 */
+	protected T handleNullLookup(String cacheName, Object key) {
+		return null;
+	}
+
+	/** 
 	 * Get an object by ID.
 	 * 
 	 * @param id the object ID
@@ -109,6 +122,22 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 		T rv=ce.getById(id);
 		if(rv == null) {
 			rv=handleNullLookup(id);
+		}
+		return(rv);
+	}
+
+	/**
+	 * Get an object from an alternate cache by cache name and key.
+	 * 
+	 * @param cacheName the name of the alt cache
+	 * @param key the key under which to look
+	 * @return the object instance, or null if there's no such object
+	 */
+	public T getObject(String cacheName, Object key) {
+		CacheEntry<T> ce=getCache();
+		T rv=ce.getByAltCache(cacheName, key);
+		if(rv == null) {
+			rv=handleNullLookup(cacheName, key);
 		}
 		return(rv);
 	}

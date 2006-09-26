@@ -3,6 +3,8 @@
 
 package net.spy.factory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ public class HashCacheEntry<T extends Instance> extends SpyObject
 	implements CacheEntry<T> {
 
 	private Map<Integer, T> cache=null;
+	private Map<String, Map<Object, T>> altCache=null;
 
 	/**
 	 * Get an instance of HashCacheEntry.
@@ -24,6 +27,19 @@ public class HashCacheEntry<T extends Instance> extends SpyObject
 	public HashCacheEntry() {
 		super();
 		cache=new HashMap<Integer, T>();
+		altCache=new HashMap<String, Map<Object, T>>();
+	}
+
+	private Object invoke(Method m, T i) {
+		try {
+			return m.invoke(i, new Object[]{});
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/** 
@@ -31,6 +47,17 @@ public class HashCacheEntry<T extends Instance> extends SpyObject
 	 */
 	public void cacheInstance(T i) {
 		cache.put(i.getId(), i);
+		for(Method m : i.getClass().getMethods()) {
+			CacheKey ck=m.getAnnotation(CacheKey.class);
+			if(ck != null) {
+				Map<Object, T> ccache=altCache.get(ck.name());
+				if(ccache == null) {
+					ccache=new HashMap<Object, T>();
+					altCache.put(ck.name(), ccache);
+				}
+				ccache.put(invoke(m, i), i);
+			}
+		}
 	}
 
 	/** 
@@ -49,6 +76,15 @@ public class HashCacheEntry<T extends Instance> extends SpyObject
 	 */
 	public Collection<T> getAllObjects() {
 		return(Collections.unmodifiableCollection(cache.values()));
+	}
+
+	public T getByAltCache(String cacheName, Object key) {
+		T rv=null;
+		Map<Object, T>ccache=altCache.get(cacheName);
+		if(ccache != null) {
+			rv=ccache.get(key);
+		}
+		return rv;
 	}
 
 }
