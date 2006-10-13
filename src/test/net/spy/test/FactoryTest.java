@@ -8,7 +8,7 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
-import net.spy.cache.SpyCache;
+import net.spy.cache.SimpleCache;
 import net.spy.factory.CacheKey;
 import net.spy.factory.CacheRefresher;
 import net.spy.factory.GenFactory;
@@ -29,7 +29,7 @@ public class FactoryTest extends TestCase {
 	}
 
 	public void tearDown() {
-		SpyCache.getInstance().uncache(TEST_KEY);
+		SimpleCache.getInstance().remove(TEST_KEY);
 		if(CacheRefresher.getInstance() != null) {
 			CacheRefresher.getInstance().shutdown();
 		}
