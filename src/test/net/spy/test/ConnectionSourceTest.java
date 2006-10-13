@@ -3,7 +3,10 @@
 
 package net.spy.test;
 
+import java.util.concurrent.Callable;
+
 import junit.framework.TestCase;
+
 import net.spy.db.ConnectionSourceFactory;
 import net.spy.util.SpyConfig;
 
@@ -21,8 +24,14 @@ public class ConnectionSourceTest extends TestCase {
 		super(name);
 	}
 
-	protected void setUp() {
+	protected void setUp() throws Exception {
+		super.setUp();
 		csf=ConnectionSourceFactory.getInstance();
+	}
+
+	protected void tearDown() throws Exception {
+		ConnectionSourceFactory.setInstance(null);
+		super.tearDown();
 	}
 
 	private SpyConfig makeConfig(String className) {
@@ -72,6 +81,15 @@ public class ConnectionSourceTest extends TestCase {
 			assertTrue(e.getMessage().startsWith(
 				"Cannot initialize connection source: " + testSrc));
 		}
+	}
+
+	public void testSingleton() throws Throwable {
+		ConnectionSourceFactory.setInstance(null);
+		int n=SyncThread.getDistinctResultCount(50, new Callable<Object>() {
+			public Object call() {
+				return ConnectionSourceFactory.getInstance();
+			}});
+		assertEquals(1, n);
 	}
 
 }

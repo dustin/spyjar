@@ -43,6 +43,13 @@ public class ConnectionSourceFactory extends SpyObject {
 		return(rv);
 	}
 
+	/**
+	 * Set the singleton instance.
+	 */
+	public static void setInstance(ConnectionSourceFactory to) {
+		instanceRef.set(to);
+	}
+
 	/** 
 	 * Get a connection source by name.
 	 * @param conf configuration specifying how to get the source
