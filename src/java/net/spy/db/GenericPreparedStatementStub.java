@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 import java.sql.Types;
 
 import net.spy.SpyObject;
-import net.spy.util.SpyUtil;
 
 public abstract class GenericPreparedStatementStub extends SpyObject {
 

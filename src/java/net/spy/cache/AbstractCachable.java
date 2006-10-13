@@ -4,6 +4,9 @@
 
 package net.spy.cache;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * Abstract implementation of Cachable.
  */
@@ -13,8 +16,8 @@ public abstract class AbstractCachable
 	private Object key=null;
 	private Object value=null;
 	private long cacheTime=0;
-	private int accesses=0;
-	private long lastAccess=0;
+	private AtomicInteger accesses=new AtomicInteger(0);
+	private AtomicLong lastAccess=new AtomicLong(0);
 
 	/**
 	 * Get an instance of AbstractCachable.
@@ -51,7 +54,7 @@ public abstract class AbstractCachable
 	 * Get the timestamp of the last access of this object.
 	 */
 	public long getLastAccessTime() {
-		return(lastAccess);
+		return(lastAccess.get());
 	}
 
 	/** 
@@ -59,18 +62,20 @@ public abstract class AbstractCachable
 	 * 
 	 * @param t the time at which the access occurred
 	 */
-	public synchronized void setAccessTime(long t) {
-		if(t>lastAccess) {
-			lastAccess=t;
+	public void setAccessTime(long t) {
+
+		long oldtime=lastAccess.get();
+		if(t>oldtime) {
+			lastAccess.compareAndSet(oldtime, t);
 		}
-		accesses++;
+		accesses.incrementAndGet();
 	}
 
 	/** 
 	 * Get the number of times this object has been accessed.
 	 */
 	public int getAccessCount() {
-		return(accesses);
+		return(accesses.intValue());
 	}
 
 	// get the contained object as a CacheListener if'n it is one

@@ -6,9 +6,9 @@ package net.spy.log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Factory to get logger instances.
@@ -26,10 +26,11 @@ import java.util.Map;
  */
 public final class LoggerFactory extends Object {
 
-	private Map<String, Logger> instances=null;
-	private Constructor<? extends Logger> instanceConstructor=null;
+	private static AtomicReference<LoggerFactory> instanceRef=
+			new AtomicReference<LoggerFactory>(null);
 
-	private static LoggerFactory instance=null;
+	private ConcurrentMap<String, Logger> instances=null;
+	private Constructor<? extends Logger> instanceConstructor=null;
 
 	/**
 	 * Get an instance of LoggerFactory.
@@ -37,13 +38,13 @@ public final class LoggerFactory extends Object {
 	private LoggerFactory() {
 		super();
 
-		instances=Collections.synchronizedMap(new HashMap<String, Logger>());
+		instances=new ConcurrentHashMap<String, Logger>();
 	}
 
-	private static synchronized void init() {
-		if(instance==null) {
-			instance=new LoggerFactory();
-		}
+	private static void init() {
+        if(instanceRef.get()==null) {
+            instanceRef.compareAndSet(null, new LoggerFactory());
+        }
 	}
 
 	/** 
@@ -63,25 +64,33 @@ public final class LoggerFactory extends Object {
 	 * @return a Logger instance
 	 */
 	public static Logger getLogger(String name) {
-		init();
-		return(instance.internalGetLogger(name));
+        if(name == null) {
+            throw new NullPointerException("Logger name may not be null.");
+        }
+        init();
+        return(instanceRef.get().internalGetLogger(name));
 	}
 
 	// Get an instance of Logger from internal mechanisms.
 	private Logger internalGetLogger(String name) {
-		Logger rv=instances.get(name);
+        assert name != null : "Name was null";
+        Logger rv=instances.get(name);
 
-		if (rv==null) {
+        if (rv==null) {
+        	Logger newLogger=null;
 			try {
-				rv=getNewInstance(name);
+				newLogger=getNewInstance(name);
 			} catch(Exception e) {
 				throw new RuntimeException("Problem getting logger", e);
 			}
-			// Remember it for later
-			instances.put(name, rv);
-		}
+            Logger tmp=instances.putIfAbsent(name, newLogger);
+            // Return either the new logger we've just made, or one that was
+            // created while we were waiting
+            rv = tmp == null ? newLogger : tmp;
+        }
 
-		return(rv);
+        return(rv);
+
 	}
 
 	private Logger getNewInstance(String name)

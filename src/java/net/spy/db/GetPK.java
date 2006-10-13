@@ -8,7 +8,9 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.SpyObject;
 import net.spy.db.sp.SelectPrimaryKey;
@@ -68,16 +70,17 @@ import net.spy.util.SpyConfig;
  */
 public class GetPK extends SpyObject {
 
-	private static GetPK instance=null;
+	private static AtomicReference<GetPK> instanceRef=
+		new AtomicReference<GetPK>(null);
 
-	private HashMap<String, KeyStore> caches=null;
+	private ConcurrentMap<String, KeyStore> caches=null;
 
 	/** 
 	 * Constructor for an extensible Singleton.
 	 */
 	protected GetPK() {
 		super();
-		caches=new HashMap<String, KeyStore>();
+		caches=new ConcurrentHashMap<String, KeyStore>();
 	}
 
 	/** 
@@ -85,19 +88,24 @@ public class GetPK extends SpyObject {
 	 * 
 	 * @return the instance
 	 */
-	public static synchronized GetPK getInstance() {
-		if(instance==null) {
-			instance=new GetPK();
+	public static GetPK getInstance() {
+		GetPK rv=instanceRef.get();
+		if(rv==null) {
+			rv=new GetPK();
+			if(!instanceRef.compareAndSet(null, rv)) {
+				rv=instanceRef.get();
+				assert rv != null;
+			}
 		}
-		return(instance);
+		return(rv);
 	}
 
 	/**
 	 * Set the singleton instance.
 	 * @param to the new singleton instance
 	 */
-	public static synchronized void setInstance(GetPK to) {
-		instance=to;
+	public static void setInstance(GetPK to) {
+		instanceRef.set(to);
 	}
 
 	/** 
@@ -170,6 +178,7 @@ public class GetPK extends SpyObject {
 			rv=ks.nextKey();
 		} catch(OverDrawnException ode) {
 			// Overdrawn, need to fetch the cache.
+			caches.remove(key);
 			getKeysFromDB(db, table, key);
 			// Get the new key store
 			KeyStore ks=caches.get(key);
@@ -311,9 +320,9 @@ public class GetPK extends SpyObject {
 
 			KeyStore ks=new KeyStore(start, end);
 			getLogger().debug("Got a new keystore for %s:  %s", table, ks);
-			synchronized(caches) {
-				caches.put(key, ks);
-			}
+			// Note that this may blindly remove an existing keystore.  That's
+			// considered OK as it'll just be an unexpected burn.
+			caches.put(key, ks);
 
 			complete=true;
 

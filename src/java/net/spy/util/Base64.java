@@ -4,6 +4,8 @@
 
 package net.spy.util;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
  * Base64 block encoder/decoder.
  */
@@ -17,7 +19,8 @@ public class Base64 extends Object {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
 	};
 
-	private static Base64 instance=null;
+	private static AtomicReference<Base64> instanceRef=
+		new AtomicReference<Base64>(null);
 
 	/**
 	 * Get a base64 encode/decoder.
@@ -29,11 +32,13 @@ public class Base64 extends Object {
 	/** 
 	 * Get the singleton base64 instance.
 	 */
-	public static synchronized Base64 getInstance() {
-		if(instance == null) {
-			instance=new Base64();
+	public static Base64 getInstance() {
+		Base64 rv=instanceRef.get();
+		if(rv == null) {
+			rv=new Base64();
+			instanceRef.compareAndSet(null, rv);
 		}
-		return(instance);
+		return(rv);
 	}
 
 	/**

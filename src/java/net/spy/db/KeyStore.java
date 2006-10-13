@@ -5,6 +5,7 @@
 package net.spy.db;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Store a range of primary keys.
@@ -13,7 +14,7 @@ public class KeyStore extends Object {
 
 	private BigDecimal start=null;
 	private BigDecimal end=null;
-	private BigDecimal current=null;
+	private AtomicReference<BigDecimal> current=null;
 
 	private static final BigDecimal ONE=new BigDecimal(1);
 
@@ -23,7 +24,7 @@ public class KeyStore extends Object {
 	public KeyStore(BigDecimal s, BigDecimal e) {
 		super();
 		this.start=s;
-		this.current=s;
+		this.current=new AtomicReference<BigDecimal>(s);
 		this.end=e;
 	}
 
@@ -40,14 +41,19 @@ public class KeyStore extends Object {
 	 * @return the next available key
 	 * @throws OverDrawnException if there are no keys left in this store
 	 */
-	public synchronized BigDecimal nextKey() throws OverDrawnException {
-		BigDecimal rv=current;
-		// Make sure we don't run out
-		if(current.compareTo(end) > 0) {
-			throw new OverDrawnException();
+	public BigDecimal nextKey() throws OverDrawnException {
+		boolean found=false;
+		BigDecimal rv=null;
+		// keep cycling until we're overdrawn or the atomic is happy
+		while(!found) {
+			rv=current.get();
+			// Make sure we don't run out
+			if(rv.compareTo(end) > 0) {
+				throw new OverDrawnException();
+			}
+			// increment
+			found=current.compareAndSet(rv, rv.add(ONE));
 		}
-		// increment
-		current=current.add(ONE);
 		return(rv);
 	}
 

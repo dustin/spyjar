@@ -3,8 +3,9 @@
 
 package net.spy.db;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.SpyObject;
 import net.spy.util.SpyConfig;
@@ -14,26 +15,32 @@ import net.spy.util.SpyConfig;
  */
 public class ConnectionSourceFactory extends SpyObject {
 
-	private static ConnectionSourceFactory instance=null;
+	private static AtomicReference<ConnectionSourceFactory> instanceRef=
+		new AtomicReference<ConnectionSourceFactory>(null);
 
-	private Map<String, ConnectionSource> sources=null;
+	private ConcurrentMap<String, ConnectionSource> sources=null;
 
 	/**
 	 * Get an instance of ConnectionSourceFactory.
 	 */
 	private ConnectionSourceFactory() {
 		super();
-		sources=new HashMap<String, ConnectionSource>();
+		sources=new ConcurrentHashMap<String, ConnectionSource>();
 	}
 
 	/** 
 	 * Get the singleton ConnectionSourceFactory instance.
 	 */
-	public static synchronized ConnectionSourceFactory getInstance() {
-		if(instance == null) {
-			instance=new ConnectionSourceFactory();
+	public static ConnectionSourceFactory getInstance() {
+		ConnectionSourceFactory rv=instanceRef.get();
+		if(rv == null) {
+			rv=new ConnectionSourceFactory();
+			if(! instanceRef.compareAndSet(null, rv)) {
+				rv=instanceRef.get();
+				assert rv != null;
+			}
 		}
-		return(instance);
+		return(rv);
 	}
 
 	/** 
@@ -59,9 +66,11 @@ public class ConnectionSourceFactory extends SpyObject {
 				Class<? extends ConnectionSource> connectionSourceClass
 					=(Class<? extends ConnectionSource>)Class.forName(
 							connectionClassName);
-				source=connectionSourceClass.newInstance();
+				ConnectionSource newSource=connectionSourceClass.newInstance();
 
-				sources.put(connectionClassName, source);
+				ConnectionSource oldSource=sources.putIfAbsent(
+						connectionClassName, newSource);
+				source = oldSource == null ? newSource : oldSource;
 			} catch(Exception e) {
 				RuntimeException re=new RuntimeException(
 					"Cannot initialize connection source: "

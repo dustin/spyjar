@@ -174,8 +174,8 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 	/**
 	 * Set the TimerTask for the update 
 	 */
-	void setNextRefresh(TimerTask nextRefresh) {
-		this.nextRefresh = nextRefresh;
+	void setNextRefresh(TimerTask next) {
+		nextRefresh = next;
 	}
 
 }
