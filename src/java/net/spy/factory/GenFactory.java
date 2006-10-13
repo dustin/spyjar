@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.TimerTask;
 
 import net.spy.SpyObject;
-import net.spy.cache.SpyCache;
+import net.spy.cache.SimpleCache;
 
 /**
  * Generic object instance cache for objects collections suitable of being
@@ -49,7 +49,7 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 	@SuppressWarnings("unchecked")
 	protected CacheEntry<T> getCache() {
 		CacheEntry<T> rv=null;
-		SpyCache sc=SpyCache.getInstance();
+		SimpleCache sc=SimpleCache.getInstance();
 		rv=(CacheEntry)sc.get(cacheKey);
 		if(rv == null) {
 			rv=setCache();
@@ -64,7 +64,7 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 			rv.cacheInstance(inst);
 		}
 		lastRefresh=System.currentTimeMillis();
-		SpyCache sc=SpyCache.getInstance();
+		SimpleCache sc=SimpleCache.getInstance();
 		sc.store(cacheKey, rv, cacheTime);
 		return(rv);
 	}

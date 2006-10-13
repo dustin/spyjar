@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Arrays;
 
-import net.spy.cache.SpyCache;
+import net.spy.cache.SimpleCache;
 
 /**
  * Prepared statement for executing cached queries
@@ -93,7 +93,7 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 
 		int hc=hashCode();
 		String key="dbcache_prepared_" + hc;
-		SpyCache cache=SpyCache.getInstance();
+		SimpleCache cache=SimpleCache.getInstance();
 		CachedResultSet crs=(CachedResultSet)cache.get(key);
 		if(crs==null) {
 			crs=realExecuteQuery();

@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import net.spy.cache.SpyCache;
+import net.spy.cache.SimpleCache;
 import net.spy.util.SpyConfig;
 
 /**
@@ -51,7 +51,7 @@ public class SpyCacheDB extends SpyDB {
 	public ResultSet executeQuery(String query, long lifetime)
 		throws SQLException {
 
-		SpyCache cache=SpyCache.getInstance();
+		SimpleCache cache=SimpleCache.getInstance();
 		String key="cachedb_" + query;
 		CachedResultSet crs=(CachedResultSet)cache.get(key);
 		if(crs==null) {
