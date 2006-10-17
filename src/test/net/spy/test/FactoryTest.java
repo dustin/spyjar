@@ -11,8 +11,8 @@ import junit.framework.TestCase;
 import net.spy.cache.SimpleCache;
 import net.spy.factory.CacheKey;
 import net.spy.factory.CacheRefresher;
+import net.spy.factory.CacheType;
 import net.spy.factory.GenFactory;
-import net.spy.factory.Instance;
 
 /**
  * Test the generic factory code.
@@ -29,7 +29,7 @@ public class FactoryTest extends TestCase {
 	}
 
 	public void tearDown() {
-		SimpleCache.getInstance().remove(TEST_KEY);
+		SimpleCache.setInstance(null);
 		if(CacheRefresher.getInstance() != null) {
 			CacheRefresher.getInstance().shutdown();
 		}
@@ -126,8 +126,14 @@ public class FactoryTest extends TestCase {
 		checkFirstPass();
 
 		// With a bit more time passed, we should be on the new set.
-		Thread.sleep(100);
+		Thread.sleep(250);
 		checkSecondPass();
+	}
+
+	public void testMultiFetch() throws Exception {
+		assertEquals(0, tf.getObjects("multi", 0).size());
+		assertEquals(0, tf.getObjects("constant", 0).size());
+		assertEquals(1000, tf.getObjects("constant", 19).size());
 	}
 
 	public void testInvalidCacheRefresherAssignment() {
@@ -167,7 +173,8 @@ public class FactoryTest extends TestCase {
 		}
 	}
 
-	public static class TestInstance extends Object implements Instance {
+	public static class TestInstance extends Object {
+		@CacheKey(name="id")
 		private int oid=0;
 		public TestInstance(int id) {
 			super();
@@ -176,6 +183,11 @@ public class FactoryTest extends TestCase {
 
 		public int getId() {
 			return(oid);
+		}
+
+		@CacheKey(name="constant", type=CacheType.MULTI)
+		public int getConstant() {
+			return 19;
 		}
 
 		@CacheKey(name="iprop")

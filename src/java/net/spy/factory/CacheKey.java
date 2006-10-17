@@ -12,11 +12,13 @@ import java.lang.annotation.Target;
 /**
  * Specifies an alternate cache key for a given field.
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CacheKey {
 	/**
 	 * The name under which this is cached.
 	 */
 	String name();
+
+	CacheType type() default CacheType.SINGLE;
 }

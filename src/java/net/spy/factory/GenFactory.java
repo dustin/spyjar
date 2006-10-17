@@ -13,7 +13,7 @@ import net.spy.cache.SimpleCache;
  * Generic object instance cache for objects collections suitable of being
  * stored completely in memory.
  */
-public abstract class GenFactory<T extends Instance> extends SpyObject {
+public abstract class GenFactory<T> extends SpyObject {
 
 	private String cacheKey=null;
 	private long cacheTime=0;
@@ -47,10 +47,10 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 	 * @return a CacheEntry
 	 */
 	@SuppressWarnings("unchecked")
-	protected CacheEntry<T> getCache() {
-		CacheEntry<T> rv=null;
+	protected Storage<T> getCache() {
+		Storage<T> rv=null;
 		SimpleCache sc=SimpleCache.getInstance();
-		rv=(CacheEntry)sc.get(cacheKey);
+		rv=(Storage)sc.get(cacheKey);
 		if(rv == null) {
 			rv=setCache();
 		}
@@ -58,11 +58,8 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 	}
 
 	// Set the cache
-	private CacheEntry<T> setCache() {
-		CacheEntry<T> rv=getNewCacheEntry();
-		for(T inst : getInstances()) {
-			rv.cacheInstance(inst);
-		}
+	private Storage<T> setCache() {
+		Storage<T> rv=new Storage<T>(getInstances());
 		lastRefresh=System.currentTimeMillis();
 		SimpleCache sc=SimpleCache.getInstance();
 		sc.store(cacheKey, rv, cacheTime);
@@ -70,33 +67,9 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 	}
 
 	/** 
-	 * Get a CacheEntry instance to be populated with a collection of
-	 * Instance objects.
-	 *
-	 * The default implentation returns an instance of HashCacheEntry.
-	 * 
-	 * @return an empty CacheEntry instance.
-	 */
-	protected CacheEntry<T> getNewCacheEntry() {
-		return new HashCacheEntry<T>();
-	}
-
-	/** 
 	 * Get the collection of all Instance objects to be cached.
 	 */
 	protected abstract Collection<T> getInstances();
-
-	/** 
-	 * This method is called whenever getObject would return null.  The result
-	 * of this object will be used instead.  Alternatively, one may throw a
-	 * RuntimeException indicating a failure.
-	 * 
-	 * @param id the ID of the object that was requested.
-	 * @return null
-	 */
-	protected T handleNullLookup(int id) {
-		return(null);
-	}
 
 	/** 
 	 * This method is called whenever getObject(String,Object) would return
@@ -111,21 +84,6 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 		return null;
 	}
 
-	/** 
-	 * Get an object by ID.
-	 * 
-	 * @param id the object ID
-	 * @return the object instance, or null if there's no such object
-	 */
-	public T getObject(int id) {
-		CacheEntry<T> ce=getCache();
-		T rv=ce.getById(id);
-		if(rv == null) {
-			rv=handleNullLookup(id);
-		}
-		return(rv);
-	}
-
 	/**
 	 * Get an object from an alternate cache by cache name and key.
 	 * 
@@ -134,19 +92,44 @@ public abstract class GenFactory<T extends Instance> extends SpyObject {
 	 * @return the object instance, or null if there's no such object
 	 */
 	public T getObject(String cacheName, Object key) {
-		CacheEntry<T> ce=getCache();
-		T rv=ce.getByAltCache(cacheName, key);
+		Storage<T> ce=getCache();
+		T rv=ce.getObject(cacheName, key);
 		if(rv == null) {
 			rv=handleNullLookup(cacheName, key);
 		}
 		return(rv);
 	}
 
+	/**
+	 * Convenience method for getObject(String,Object) assuming an integer
+	 * field uniquely cached as ``id.''
+	 * 
+	 * @param id the id value
+	 * @return the object stored with this id
+	 */
+	public T getObject(int id) {
+		return getObject("id", id);
+	}
+
+	/**
+	 * Get all of the objects mapped with the given key under the given
+	 * cache name.
+	 * 
+	 * @param cacheName the name of the cache
+	 * @param key the key with that name
+	 * @return the objects mapped to that key, or an empty string if none
+	 */
+	public Collection<T> getObjects(String cacheName, Object key) {
+		Collection<T> rv=getCache().getObjects(cacheName, key);
+		assert rv != null;
+		return rv;
+	}
+
 	/** 
 	 * Get all objects cached by this factory.
 	 */
 	public Collection<T> getObjects() {
-		CacheEntry<T> ce=getCache();
+		Storage<T> ce=getCache();
 		return(ce.getAllObjects());
 	}
 
