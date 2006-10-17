@@ -48,8 +48,8 @@ public class FactoryStorageTest extends TestCase {
 	}
 
 	public void testMissingAltKeyLookup() throws Exception {
-		assertEquals(0, cache.getObjects("blah", 19));
-		assertEquals(0, cache.getObjects("ak", 19));
+		assertEquals(0, cache.getObjects("blah", 19).size());
+		assertEquals(0, cache.getObjects("ak", 19).size());
 	}
 	
 	public void testFailingCache() throws Exception {
