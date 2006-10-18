@@ -62,6 +62,19 @@ public class FactoryStorageTest extends TestCase {
 		}
 	}
 
+	public void testSubclass() throws Exception {
+		Storage<ObSub> c=new Storage<ObSub>(
+				Arrays.asList(
+						new ObSub(1, 1, "one", "oneone"),
+						new ObSub(2, 2, "two", "twotwo")));
+		// Note:  these aren't inherited
+		assertNull(c.getObject("id", 1));
+		// This is a public method, so it'll get picked up
+		assertEquals(1, c.getObjects("ak", 1).size());
+		// This is in the subclass, so it will, too
+		assertNotNull(c.getObject("other", "oneone"));
+	}
+
 	public static class Fob {
 		@CacheKey(name="x")
 		public int getSome() throws Exception {
@@ -89,6 +102,15 @@ public class FactoryStorageTest extends TestCase {
 
 		public String toString() {
 			return "Ob#" + id + " ak=" + altKey + " n=" + name + "}";
+		}
+	}
+
+	public static class ObSub extends Ob {
+		@CacheKey(name="other")
+		public String other=null;
+		public ObSub(int i, int a, String n, String o) {
+			super(i, a, n);
+			other=o;
 		}
 	}
 }

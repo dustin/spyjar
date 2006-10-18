@@ -16,6 +16,10 @@ import net.spy.SpyObject;
 
 /**
  * An implementation of CacheEntry that is backed by a HashMap.
+ * 
+ * This implementation will find any public methods on the given objects
+ * containing a CacheKey annotation, or any fields with any visibility declared
+ * only within the classes of the given objects and use them as cache hints.
  */
 public class Storage<T> extends SpyObject {
 
