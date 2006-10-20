@@ -98,7 +98,7 @@ public class FactoryTest extends TestCase {
 		checkFirstPass();
 
 		// Let the stuff have time to recache.
-		Thread.sleep(250);
+		Thread.sleep(300);
 
 		checkSecondPass();
 	}
