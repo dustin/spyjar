@@ -3,8 +3,6 @@
 
 package net.spy.factory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -81,19 +79,10 @@ public class Storage<T> extends SpyObject {
 	 * Cache this instance.
 	 */
 	private void cacheInstance(T i) throws Exception {
-		for(Field f : i.getClass().getDeclaredFields()) {
-			CacheKey ck=f.getAnnotation(CacheKey.class);
-			if(ck != null) {
-				f.setAccessible(true);
-				storeEntry(ck, f.get(i), i);
-				f.setAccessible(false);
-			}
-		}
-		for(Method m : i.getClass().getMethods()) {
-			CacheKey ck=m.getAnnotation(CacheKey.class);
-			if(ck != null) {
-				storeEntry(ck, m.invoke(i, new Object[0]), i);
-			}
+		CacheKeyFinder ckf=CacheKeyFinder.getInstance();
+		Map<CacheKey,CacheKeyFinder.Accessor> m=ckf.getCacheKeys(i.getClass());
+		for(Map.Entry<CacheKey, CacheKeyFinder.Accessor> me : m.entrySet()) {
+			storeEntry(me.getKey(), me.getValue().get(i), i);
 		}
 	}
 

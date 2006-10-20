@@ -11,6 +11,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import net.spy.factory.CacheKey;
+import net.spy.factory.CacheKeyFinder;
 import net.spy.factory.CacheType;
 import net.spy.factory.Storage;
 
@@ -24,6 +25,7 @@ public class FactoryStorageTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		CacheKeyFinder.setInstance(null);
 		obs=Arrays.asList(new Ob(1, 10, "one"),
 				new Ob(2, 10, "two"),
 				new Ob(3, 11, "three"));
@@ -67,10 +69,12 @@ public class FactoryStorageTest extends TestCase {
 				Arrays.asList(
 						new ObSub(1, 1, "one", "oneone"),
 						new ObSub(2, 2, "two", "twotwo")));
-		// Note:  these aren't inherited
-		assertNull(c.getObject("id", 1));
+		// Inherited
+		assertEquals(1, c.getObject("id", 1).getAltKey());
 		// This is a public method, so it'll get picked up
 		assertEquals(1, c.getObjects("ak", 1).size());
+		// This should be picked up from an interface
+		assertEquals(1, c.getObjects("akak", 1).size());
 		// This is in the subclass, so it will, too
 		assertNotNull(c.getObject("other", "oneone"));
 	}
@@ -101,11 +105,16 @@ public class FactoryStorageTest extends TestCase {
 		}
 
 		public String toString() {
-			return "Ob#" + id + " ak=" + altKey + " n=" + name + "}";
+			return "Ob#" + id + " ak=" + altKey + " n=" + name;
 		}
 	}
 
-	public static class ObSub extends Ob {
+	public static interface AltAltKeyCache {
+		@CacheKey(name="akak", type=CacheType.MULTI)
+		public int getAltKey();
+	}
+
+	public static class ObSub extends Ob implements AltAltKeyCache {
 		@CacheKey(name="other")
 		public String other=null;
 		public ObSub(int i, int a, String n, String o) {

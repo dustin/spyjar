@@ -1,0 +1,143 @@
+// Copyright (c) 2006  Dustin Sallings <dustin@spy.net>
+// arch-tag: 2006EE78-D5DB-40B7-ABAF-D4B0A50E5072
+
+package net.spy.factory;
+
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import net.spy.SpyObject;
+
+/**
+ * Locate relevant CacheKeys for a given class.
+ */
+public class CacheKeyFinder extends SpyObject {
+
+	private static CacheKeyFinder instance=null;
+
+	private ConcurrentMap<Class<?>, Map<CacheKey, Accessor>> memo=
+		new ConcurrentHashMap<Class<?>, Map<CacheKey, Accessor>>();
+
+	protected CacheKeyFinder() {
+		super();
+	}
+
+	/**
+	 * Get the singleton CacheKeyFinder instance.
+	 */
+	public static synchronized CacheKeyFinder getInstance() {
+		if(instance == null) {
+			instance=new CacheKeyFinder();
+		}
+		return instance;
+	}
+
+	/**
+	 * Set the singleton CacheKeyFinder instance.
+	 */
+	public static void setInstance(CacheKeyFinder to) {
+		instance=to;
+	}
+
+	/**
+	 * Get the cache keys for the given class.
+	 * 
+	 * @param c the class to search
+	 * @return the cache keys for the given class
+	 */
+	public Map<CacheKey, Accessor> getCacheKeys(Class<?> c) {
+		Map<CacheKey, Accessor> rv=memo.get(c);
+		if(rv == null) {
+			synchronized(c) {
+				rv=memo.get(c);
+				if(rv == null) {
+					rv=new HashMap<CacheKey, Accessor>();
+					lookupCacheKeys(rv, c);
+				}
+			}
+		}
+		return rv;
+	}
+
+	private void lookupCacheKeys(Map<CacheKey, Accessor> rv, Class<?> c) {
+		// Get the recursion out of the way first
+		Class sup=c.getSuperclass();
+		if(sup != null) {
+			lookupCacheKeys(rv, sup);
+		}
+		for(Class i : c.getInterfaces()) {
+			lookupCacheKeys(rv, i);
+		}
+
+		// Do the real work
+		for(Method m : c.getDeclaredMethods()) {
+			CacheKey ck=m.getAnnotation(CacheKey.class);
+			if(ck != null) {
+				rv.put(ck, new MethodAccessor(m));
+			}
+		}
+		for(Field f : c.getDeclaredFields()) {
+			CacheKey ck=f.getAnnotation(CacheKey.class);
+			if(ck != null) {
+				rv.put(ck, new FieldAccessor(f));
+			}
+		}
+	}
+
+	/**
+	 * Class to access an object from within another object.
+	 */
+	public static abstract class Accessor {
+		private AccessibleObject ao=null;
+		protected Accessor(AccessibleObject o) {
+			ao=o;
+		}
+		/**
+		 * Get the value from the given object.
+		 * 
+		 * @param o the object
+		 * @return the value
+		 * @throws Exception if an exception is thrown while accessing
+		 */
+		public final Object get(Object o) throws Exception {
+			boolean accessible=ao.isAccessible();
+			if(!accessible) {
+				ao.setAccessible(true);
+			}
+			Object rv=realGet(o);
+			if(!accessible) {
+				ao.setAccessible(false);
+			}
+			return rv;
+		}
+		protected abstract Object realGet(Object o) throws Exception;
+	}
+
+	private static class MethodAccessor extends Accessor {
+		private Method method=null;
+		public MethodAccessor(Method m) {
+			super(m);
+			method=m;
+		}
+		protected Object realGet(Object o) throws Exception {
+			Object rv=method.invoke(o, new Object[0]);
+			return rv;
+		}
+	}
+
+	private static class FieldAccessor extends Accessor {
+		private Field field=null;
+		public FieldAccessor(Field f) {
+			super(f);
+			field=f;
+		}
+		public Object realGet(Object o) throws Exception {
+			return field.get(o);
+		}
+	}
+}
