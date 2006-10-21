@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.SpyObject;
 import net.spy.db.sp.SelectPrimaryKey;
@@ -70,8 +69,7 @@ import net.spy.util.SpyConfig;
  */
 public class GetPK extends SpyObject {
 
-	private static AtomicReference<GetPK> instanceRef=
-		new AtomicReference<GetPK>(null);
+	private static GetPK instance=null;
 
 	private ConcurrentMap<String, KeyStore> caches=null;
 
@@ -88,24 +86,19 @@ public class GetPK extends SpyObject {
 	 * 
 	 * @return the instance
 	 */
-	public static GetPK getInstance() {
-		GetPK rv=instanceRef.get();
-		if(rv==null) {
-			rv=new GetPK();
-			if(!instanceRef.compareAndSet(null, rv)) {
-				rv=instanceRef.get();
-				assert rv != null;
-			}
+	public static synchronized GetPK getInstance() {
+		if(instance == null) {
+			instance=new GetPK();
 		}
-		return(rv);
+		return instance;
 	}
 
 	/**
 	 * Set the singleton instance.
 	 * @param to the new singleton instance
 	 */
-	public static void setInstance(GetPK to) {
-		instanceRef.set(to);
+	public static synchronized void setInstance(GetPK to) {
+		instance=to;
 	}
 
 	/** 

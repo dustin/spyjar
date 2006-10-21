@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.SpyObject;
 
@@ -16,8 +15,7 @@ import net.spy.SpyObject;
  */
 public class Stats extends SpyObject {
 
-	private static AtomicReference<Stats> instanceRef=
-		new AtomicReference<Stats>(null);
+	private static Stats instance=null;
 
 	private ConcurrentMap<String, Stat> stats=null;
 
@@ -29,25 +27,18 @@ public class Stats extends SpyObject {
 	/**
 	 * Get the singleton Stats instance.
 	 */
-	public static Stats getInstance() {
-		Stats rv=instanceRef.get();
-		if(rv == null) {
-			synchronized(Stats.class) {
-				rv=instanceRef.get();
-				if(rv == null) {
-					rv=new Stats();
-					instanceRef.set(rv);
-				}
-			}
+	public static synchronized Stats getInstance() {
+		if(instance == null) {
+			instance=new Stats();
 		}
-		return rv;
+		return instance;
 	}
 
 	/**
 	 * Set the singleton stats instance.
 	 */
-	public static void setInstance(Stats to) {
-		instanceRef.set(to);
+	public static synchronized void setInstance(Stats to) {
+		instance=to;
 	}
 
 	/**

@@ -8,7 +8,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Factory to get logger instances.
@@ -26,8 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public final class LoggerFactory extends Object {
 
-	private static AtomicReference<LoggerFactory> instanceRef=
-			new AtomicReference<LoggerFactory>(null);
+	private static LoggerFactory instance=null;
 
 	private ConcurrentMap<String, Logger> instances=null;
 	private Constructor<? extends Logger> instanceConstructor=null;
@@ -42,8 +40,8 @@ public final class LoggerFactory extends Object {
 	}
 
 	private static void init() {
-        if(instanceRef.get()==null) {
-            instanceRef.compareAndSet(null, new LoggerFactory());
+        if(instance == null) {
+        	instance=new LoggerFactory();
         }
 	}
 
@@ -68,7 +66,7 @@ public final class LoggerFactory extends Object {
             throw new NullPointerException("Logger name may not be null.");
         }
         init();
-        return(instanceRef.get().internalGetLogger(name));
+        return(instance.internalGetLogger(name));
 	}
 
 	// Get an instance of Logger from internal mechanisms.

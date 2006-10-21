@@ -8,7 +8,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.SpyObject;
 
@@ -17,8 +16,7 @@ import net.spy.SpyObject;
  */
 public class SimpleCache extends SpyObject {
 
-	private static AtomicReference<SimpleCache> instanceRef=
-		new AtomicReference<SimpleCache>(null);
+	private static SimpleCache instance=null;
 
 	private ConcurrentMap<String, Object> storage=null;
 	private Timer timer=null;
@@ -35,28 +33,22 @@ public class SimpleCache extends SpyObject {
 	/**
 	 * Get the singleton SimpleCache instance.
 	 */
-	public static SimpleCache getInstance() {
-		SimpleCache rv=instanceRef.get();
-		if(rv == null) {
-			rv=new SimpleCache();
-			if(! instanceRef.compareAndSet(null, rv)) {
-				rv.timer.cancel();
-				rv=instanceRef.get();
-				assert rv != null;
-			}
+	public static synchronized SimpleCache getInstance() {
+		if(instance == null) {
+			instance=new SimpleCache();
 		}
-		return rv;
+		return instance;
 	}
 
 	/**
 	 * Set the singleton SimpleCache instance.
 	 * This also cleanly shuts down the previous instance.
 	 */
-	public static void setInstance(SimpleCache to) {
-		SimpleCache old=instanceRef.getAndSet(to);
-		if(old != null) {
-			old.timer.cancel();
+	public static synchronized void setInstance(SimpleCache to) {
+		if(instance != null) {
+			instance.timer.cancel();
 		}
+		instance=to;
 	}
 
 	/**

@@ -5,7 +5,6 @@ package net.spy.db;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.SpyObject;
 import net.spy.util.SpyConfig;
@@ -15,8 +14,7 @@ import net.spy.util.SpyConfig;
  */
 public class ConnectionSourceFactory extends SpyObject {
 
-	private static AtomicReference<ConnectionSourceFactory> instanceRef=
-		new AtomicReference<ConnectionSourceFactory>(null);
+	private static ConnectionSourceFactory instance=null;
 
 	private ConcurrentMap<String, ConnectionSource> sources=null;
 
@@ -31,23 +29,18 @@ public class ConnectionSourceFactory extends SpyObject {
 	/** 
 	 * Get the singleton ConnectionSourceFactory instance.
 	 */
-	public static ConnectionSourceFactory getInstance() {
-		ConnectionSourceFactory rv=instanceRef.get();
-		if(rv == null) {
-			rv=new ConnectionSourceFactory();
-			if(! instanceRef.compareAndSet(null, rv)) {
-				rv=instanceRef.get();
-				assert rv != null;
-			}
+	public static synchronized ConnectionSourceFactory getInstance() {
+		if(instance == null) {
+			instance=new ConnectionSourceFactory();
 		}
-		return(rv);
+		return instance;
 	}
 
 	/**
 	 * Set the singleton instance.
 	 */
-	public static void setInstance(ConnectionSourceFactory to) {
-		instanceRef.set(to);
+	public static synchronized void setInstance(ConnectionSourceFactory to) {
+		instance=to;
 	}
 
 	/** 
