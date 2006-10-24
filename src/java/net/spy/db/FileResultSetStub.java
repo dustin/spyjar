@@ -31,10 +31,10 @@ public class FileResultSetStub extends GenericResultSetStub {
 	/**
 	 * Get an instance of FileResultSetStub.
 	 */
-	public FileResultSetStub(URL f) throws SQLException {
+	public FileResultSetStub(URL f, int maxResults) throws SQLException {
 		super();
 		try {
-			initFromURL(f);
+			initFromURL(f, maxResults);
 		} catch(IOException e) {
 			SQLException toThrow=new SQLException(
 				"Could not initialize results from " + f);
@@ -43,7 +43,8 @@ public class FileResultSetStub extends GenericResultSetStub {
 		}
 	}
 
-	private void initFromURL(URL u) throws SQLException, IOException {
+	private void initFromURL(URL u, int maxResults)
+		throws SQLException, IOException {
 		InputStream is=null;
 		try {
 			is=u.openStream();
@@ -54,7 +55,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 
 			List<Object[]> results=new ArrayList<Object[]>();
 			String tmp=lnr.readLine();
-			while(tmp != null) {
+			while(tmp != null && results.size() < maxResults) {
 				Object[] result=mmd.parseLine(tmp);
 				results.add(result);
 				tmp=lnr.readLine();

@@ -72,10 +72,32 @@ public class FileResultSetTest extends TestCase {
 		assertEquals(parsedDate, rs.getDate(colInt));
 	}
 
+	public void testCountResultSet() throws Exception {
+		String path = "file://" + System.getProperty("basedir")
+			+ "/src/test/net/spy/test/db/resulttest.txt";
+		FileResultSet rs = new FileResultSet(new URL(path), Integer.MAX_VALUE);
+		int i=0;
+		while(rs.next()) {
+			i++;
+		}
+		assertEquals(3, i);
+	}
+
+	public void testLimitedResultSet() throws Exception {
+		String path = "file://" + System.getProperty("basedir")
+			+ "/src/test/net/spy/test/db/resulttest.txt";
+		FileResultSet rs = new FileResultSet(new URL(path), 2);
+		int i=0;
+		while(rs.next()) {
+			i++;
+		}
+		assertEquals(2, i);
+	}
+
 	public void testResultSet1() throws Exception {
 		String path = "file://" + System.getProperty("basedir")
 			+ "/src/test/net/spy/test/db/resulttest.txt";
-		FileResultSet rs = new FileResultSet(new URL(path));
+		FileResultSet rs = new FileResultSet(new URL(path), Integer.MAX_VALUE);
 		
 		try {
 			String s=rs.getString("col_two");
@@ -133,7 +155,7 @@ public class FileResultSetTest extends TestCase {
 	public void testBadResultSet1() throws MalformedURLException {
 		URL f = new URL("file:///tmp/nonExistentPath.txt");
 		try {
-			FileResultSet rs = new FileResultSet(f);
+			FileResultSet rs = new FileResultSet(f, Integer.MAX_VALUE);
 			fail("Got a result set from a non-existent file:  "
 				+ rs);
 		} catch(SQLException e) {

@@ -341,17 +341,11 @@ public class FileDriver extends SpyObject implements Driver {
 		implements Connection {
 		
 		private String url=null;
-
 		private boolean closed = false;
-
 		private boolean autoCommit = false;
-
 		private String catalog = "testCatalog";
-
 		private int transactionIsolation = TRANSACTION_SERIALIZABLE;
-
 		private boolean readOnly = false;
-
 		private int holdAbility = 0;
 
 		private Map<String, Class<?>> typeMap = null;
@@ -521,6 +515,7 @@ public class FileDriver extends SpyObject implements Driver {
 		implements PreparedStatement {
 		
 		private String url=null;
+		private int maxRows = Integer.MAX_VALUE;
 
 		public FilePreparedStatement(String u, String q) {
 			super(q);
@@ -532,7 +527,7 @@ public class FileDriver extends SpyObject implements Driver {
 				URL_PREFIX + "blah");
 			URL f=fd.getQuery(url, new ParameterizedQuery(getQuery(),
 				getApplicableArgs()));
-			ResultSet rs=new FileResultSet(f);
+			ResultSet rs=new FileResultSet(f, maxRows);
 			return(rs);
 		}	
 		
@@ -660,11 +655,12 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 
 		public int getMaxRows() throws SQLException {
-			return(0);
+			return maxRows;
 		}
 
-		public void setMaxRows(int arg0) throws SQLException {
-			// Do nothing
+		public void setMaxRows(int to) throws SQLException {
+			assert to >= 0;
+			maxRows=(to == 0 ? Integer.MAX_VALUE : to);
 		}
 
 		public void setEscapeProcessing(boolean arg0) throws SQLException {

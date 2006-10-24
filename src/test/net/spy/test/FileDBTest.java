@@ -105,6 +105,23 @@ public class FileDBTest extends TestCase {
 		conn.close();
 	}
 
+	public void testLimitedFileDB() throws Exception {
+		fd.registerQuery(url,
+				"select * from something", getPath("resulttest.txt"));
+		Connection conn=DriverManager.getConnection(url);
+		PreparedStatement pst=conn.prepareStatement(
+			"select * from something");
+		pst.setMaxRows(2);
+		ResultSet rs=pst.executeQuery();
+		int i=0;
+		while(rs.next()) {
+			i++;
+		}
+		assertEquals(2, i);
+		rs.close();
+		conn.close();
+	}
+
 	public void testMissingUpdate() throws Exception {
 		Connection conn=DriverManager.getConnection(url);
 		try {
