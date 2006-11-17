@@ -16,7 +16,7 @@ public abstract class LoopingThread extends SpyThread {
 	 */
 	public static final int DEFAULT_MS_PER_LOOP=5000;
 
-	private boolean keepGoing=true;
+	private volatile boolean keepGoing=true;
 	private int msPerLoop=DEFAULT_MS_PER_LOOP;
 
 	/**
