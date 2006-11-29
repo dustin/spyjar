@@ -914,6 +914,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	/**
 	 * Close this statement and whatever the superclass wants to do.
 	 */
+	@Override
 	public void close() {
 		if(pst!=null) {
 			try {
@@ -1017,6 +1018,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		/**
 		 * String me.
 		 */
+		@Override
 		public String toString() {
 			return("{" + getClass().getName() + " " + getName() + "}");
 		}
@@ -1026,6 +1028,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		 *
 		 * @return getName().hashCode()
 		 */
+		@Override
 		public int hashCode() {
 			return(name.hashCode());
 		}
@@ -1037,6 +1040,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		 * @return true if <code>o</code> is a NamedObject object with the
 		 * 			same name
 		 */
+		@Override
 		public boolean equals(Object o) {
 			boolean rv=false;
 
@@ -1114,6 +1118,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			return(javaType);
 		}
 
+		@Override
 		public String toString() {
 			return "{Param: type="
 				+ TypeNames.getTypeName(javaType)
@@ -1165,6 +1170,7 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 			return(rv);
 		}
 
+		@Override
 		public String toString() {
 			String valName=(value == null ? valName="NULL" : "'" + value + "'");
 			return "{Arg: type=" + javaType

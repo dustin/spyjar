@@ -26,6 +26,7 @@ public class TokerTest extends TestCase {
         super(name);
     }
 
+	@Override
 	protected void setUp() {
 		toker=new SpyToker();
 		vars=new HashMap<String, String>();

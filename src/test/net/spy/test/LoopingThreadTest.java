@@ -72,17 +72,21 @@ public class LoopingThreadTest extends TestCase {
 			super(tg, name);
 		}
 
+		@Override
 		protected void runLoop() {
 			runs++;
 		}
+		@Override
 		protected void shuttingDown() {
 			super.shuttingDown();
 			shutdown=true;
 		}
+		@Override
 		protected void startingUp() {
 			super.startingUp();
 			started=true;
 		}
+		@Override
 		protected void delayInterrupted(InterruptedException e) {
 			super.delayInterrupted(e);
 			wasInterrupted=true;

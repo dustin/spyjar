@@ -43,6 +43,7 @@ public abstract class Job extends SpyObject implements Runnable {
 	/**
 	 * Get a string representation of this Job.
 	 */
+	@Override
 	public String toString() {
 		return("Job:" + getName());
 	}

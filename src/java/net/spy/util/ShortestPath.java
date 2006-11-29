@@ -13,7 +13,7 @@ import java.util.ArrayList;
  *
  * @see ShortestPathFinder
  */
-public class ShortestPath<N extends SPNode> extends ArrayList<N> {
+public class ShortestPath<N extends SPNode<N>> extends ArrayList<N> {
 
 	private int cost=0;
 

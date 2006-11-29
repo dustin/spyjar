@@ -28,10 +28,10 @@ import net.spy.util.TimeStampedHashMap;
  */
 public class SpyCache extends SpyObject {
 
-	private TimeStampedHashMap<String, Cachable> cacheStore=null;
+	TimeStampedHashMap<String, Cachable> cacheStore=null;
 	private SpyCacheCleaner cacheCleaner=null;
 
-	private CacheDelegate delegate=null;
+	CacheDelegate delegate=null;
 
 	private static SpyCache instance=null;
 
@@ -234,6 +234,7 @@ public class SpyCache extends SpyObject {
 			}
 		}
 
+		@Override
 		public String toString() {
 			return(super.toString() + " - "
 				+ passes + " runs, mod age:  " + cacheStore.getUseAge()
@@ -305,6 +306,7 @@ public class SpyCache extends SpyObject {
 		/** 
 		 * Loop until there's no need to loop any more.
 		 */
+		@Override
 		public void run() {
 
 			// It will keep going until nothing's been touched in the cache
@@ -348,7 +350,7 @@ public class SpyCache extends SpyObject {
 		}
 	} // Cleaner class
 
-	private static class SpyCacheItem extends AbstractCachable {
+	static class SpyCacheItem extends AbstractCachable {
 		private long exptime=0;
 
 		public SpyCacheItem(Object key, Object value, long cacheTime) {
@@ -357,6 +359,7 @@ public class SpyCache extends SpyObject {
 			exptime=getCacheTime()+cacheTime;
 		}
 
+		@Override
 		public String toString() {
 			String out="{Cached item:  " + getCacheKey();
 			if(exptime>0) {
@@ -388,7 +391,7 @@ public class SpyCache extends SpyObject {
 	} // SpyCacheItem
 
 	// This allows us to always have a delegate object registered.
-	private static class DummyDelegate extends Object implements CacheDelegate {
+	static class DummyDelegate extends Object implements CacheDelegate {
 		public void cachedObject(String key, Cachable value) {
 			// Dummy implementation
 		}

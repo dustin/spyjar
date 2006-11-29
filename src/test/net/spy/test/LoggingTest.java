@@ -33,6 +33,7 @@ public class LoggingTest extends TestCase {
 	/** 
 	 * Set up logging.
 	 */
+	@Override
 	public void setUp() {
 		logger=LoggerFactory.getLogger(getClass());
 	}

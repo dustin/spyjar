@@ -19,13 +19,13 @@ import net.spy.util.CloseUtil;
  */
 public class CloseUtilTest extends MockObjectTestCase {
 
-	private Object getSuccess(Class c) {
+	private Object getSuccess(Class<?> c) {
 		Mock m=mock(c);
 		m.expects(once()).method("close");
 		return(m.proxy());
 	}
 
-	private Object getFailure(Class c, Class<? extends Throwable> e)
+	private Object getFailure(Class<?> c, Class<? extends Throwable> e)
 		throws Exception {
 		Mock m=mock(c);
 		m.expects(once()).method("close").will(throwException(e.newInstance()));

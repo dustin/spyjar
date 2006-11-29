@@ -91,6 +91,7 @@ public class JDBCPoolFiller extends PoolFiller {
 	 *
 	 * @exception PoolException if a new connection could not be made.
 	 */
+	@Override
 	public PoolAble getObject() throws PoolException {
 		JDBCPoolAble p = null;
 		try {

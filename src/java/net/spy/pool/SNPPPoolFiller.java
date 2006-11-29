@@ -32,6 +32,7 @@ public class SNPPPoolFiller extends PoolFiller {
 	 *
 	 * @exception PoolException if a new connection could not be made.
 	 */
+	@Override
 	public PoolAble getObject() throws PoolException {
 		SNPPPoolAble sp = null;
 		try {

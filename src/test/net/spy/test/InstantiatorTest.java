@@ -15,6 +15,7 @@ import junit.framework.TestCase;
  */
 public class InstantiatorTest extends TestCase {
 
+	@SuppressWarnings("unchecked")
 	public void testSimple() throws Exception {
 		Instantiator<Map> i=new Instantiator<Map>("java.util.HashMap");
 		assertTrue(i.getInstance() instanceof HashMap);
@@ -25,6 +26,7 @@ public class InstantiatorTest extends TestCase {
 		assertEquals(i.getInstance(), i2.getInstance());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testWithClassLoader() throws Exception {
 		Instantiator<Map> i=new Instantiator<Map>("java.util.HashMap",
 			getClass().getClassLoader());

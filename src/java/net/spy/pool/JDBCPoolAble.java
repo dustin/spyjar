@@ -30,6 +30,7 @@ public class JDBCPoolAble extends PoolAble {
 	/**
 	 * @see PoolAble
 	 */
+	@Override
 	public void discard() {
 		try {
 			Connection c=(Connection)intGetObject();
@@ -51,6 +52,7 @@ public class JDBCPoolAble extends PoolAble {
 	 *
 	 * @return true if the object will be usable
 	 */
+	@Override
 	public boolean isAlive() {
 		boolean ret=false;
 		try {
@@ -76,6 +78,7 @@ public class JDBCPoolAble extends PoolAble {
 	 *
 	 * @see PoolAble
 	 */
+	@Override
 	public synchronized void checkIn() {
 		try {
 			Connection c=(Connection)intGetObject();

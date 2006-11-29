@@ -172,6 +172,7 @@ public abstract class GenericResultSetStub extends SpyObject
 	/**
 	 * Debug routine for displaying the current row of the ResultSet.
 	 */
+	@Override
 	public String toString() {
 		StringBuilder sb=new StringBuilder(256);
 		sb.append("Result row:\n");

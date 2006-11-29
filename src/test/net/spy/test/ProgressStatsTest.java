@@ -11,6 +11,7 @@ public class ProgressStatsTest extends TestCase {
 
 	private TimeKeeper tk=null;
 
+	@Override
 	protected void setUp() {
 		tk=new TimeKeeper();
 	}
@@ -43,19 +44,20 @@ public class ProgressStatsTest extends TestCase {
 		}
 	}
 
-	private static class TestProgressStats extends ProgressStats {
+	static class TestProgressStats extends ProgressStats {
 		private TimeKeeper tk=null;
 		public TestProgressStats(int size, TimeKeeper t) {
 			super(size);
 			tk=t;
 		}
+		@Override
 		protected long getTime() {
 			return tk.t;
 		}
 
 	}
 
-	private static class TimeKeeper {
-		public long t=0;
+	static class TimeKeeper {
+		long t=0;
 	}
 }

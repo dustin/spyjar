@@ -36,6 +36,7 @@ public class WorkerThread extends Thread {
 		}
 	}
 
+	@Override
 	public String toString() {
 		String rv=null;
 		Runnable r=running;

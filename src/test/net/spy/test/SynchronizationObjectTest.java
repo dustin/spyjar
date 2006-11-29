@@ -18,19 +18,22 @@ import net.spy.concurrent.SynchronizationObject;
 public class SynchronizationObjectTest extends TestCase {
 
 	private Timer timer=null;
-	private SynchronizationObject<Long> so=null;
+	SynchronizationObject<Long> so=null;
 
+	@Override
 	protected void setUp() {
 		timer=new Timer(true);
 		so=new SynchronizationObject<Long>(null);
 	}
 
+	@Override
 	protected void tearDown() {
 		timer.cancel();
 	}
 
 	private void setToIn(final Long v, long delay) {
 		timer.schedule(new TimerTask() {
+			@Override
 			public void run() {
 				so.set(v);
 			}}, delay);
@@ -59,6 +62,7 @@ public class SynchronizationObjectTest extends TestCase {
 	public void testInterrupt() throws Exception {
 		final Thread t=Thread.currentThread();
 		timer.schedule(new TimerTask() {
+			@Override
 			public void run() {
 				t.interrupt();
 			}	
@@ -88,6 +92,7 @@ public class SynchronizationObjectTest extends TestCase {
 	// every change.
 	public void xtestFastSequenceSets() throws Exception {
 		Thread t=new Thread() {
+			@Override
 			public void run() {
 				try {
 					Thread.sleep(500);

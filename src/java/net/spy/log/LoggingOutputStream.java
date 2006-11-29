@@ -36,6 +36,7 @@ public class LoggingOutputStream extends LineGettingOutputStream {
 	 * 
 	 * @param chunk 
 	 */
+	@Override
 	protected void processChunk(String chunk) {
 		logger.log(level, chunk);
 	}

@@ -23,6 +23,7 @@ public class SpyConfigTest extends TestCase {
 		super(name);
 	}
 
+	@Override
 	protected void setUp() {
 		nonsenseFile=new File("/some/nonsense/file");
 		confFile=new File(System.getProperties().get("basedir")

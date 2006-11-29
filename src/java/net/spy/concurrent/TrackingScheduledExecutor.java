@@ -55,6 +55,7 @@ public class TrackingScheduledExecutor extends ScheduledThreadPoolExecutor {
 		});
 	}
 
+	@Override
 	protected void beforeExecute(Thread t, Runnable r) {
 		super.beforeExecute(t, r);
 		assert t instanceof WorkerThread : "Thread is not a WorkerThread";
@@ -63,6 +64,7 @@ public class TrackingScheduledExecutor extends ScheduledThreadPoolExecutor {
 		currentWorkers.put(r, wt);
 	}
 
+	@Override
 	protected void afterExecute(Runnable r, Throwable t) {
 		super.afterExecute(r, t);
 		WorkerThread wt=currentWorkers.get(r);

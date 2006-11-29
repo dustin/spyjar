@@ -70,7 +70,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 		Object parseString(String s) throws Exception;
 	}
 	
-	private static abstract class PreParser implements Parser {
+	static abstract class PreParser implements Parser {
 		public final Object parseString(String s) throws Exception {
 			Object rv=null;
 			String cleanedUp=cleanString(s);
@@ -113,19 +113,21 @@ public class FileResultSetStub extends GenericResultSetStub {
 		protected abstract Object subParse(String s) throws Exception;
 	}
 
-	private static final class NumberParser extends PreParser {
+	static final class NumberParser extends PreParser {
+		@Override
 		public Object subParse(String s) throws Exception {
 			return(new BigDecimal(s));
 		}
 	}
 	
-	private static final class StringParser extends PreParser {
+	static final class StringParser extends PreParser {
+		@Override
 		public Object subParse(String s) {
 			return(s);
 		}
 	}
 
-	private abstract static class MultiDateParser extends PreParser {
+	abstract static class MultiDateParser extends PreParser {
 		private SimpleDateFormat[] formats=null;
 
 		public MultiDateParser(String[] formatStrings) {
@@ -155,6 +157,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			super(new String[]{"HH:mm:ss.SSS", "HH:mm:ss"});
 		}
 
+		@Override
 		public Object subParse(String s) throws Exception {
 			return(new java.sql.Time(parseDate(s)));
 		}
@@ -166,6 +169,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 				"yyyyMMdd", "yyyy-MM-dd", "yyyy/MM/dd", "dd/MM/yyyy"});
 		}
 
+		@Override
 		public Object subParse(String s) throws Exception {
 			return(new java.sql.Date(parseDate(s)));
 		}
@@ -187,12 +191,13 @@ public class FileResultSetStub extends GenericResultSetStub {
 				});
 		}
 
+		@Override
 		public Object subParse(String s) throws Exception {
 			return(new java.sql.Timestamp(parseDate(s)));
 		}
 	}
 
-	private static final class ParserFactory extends Object {
+	static final class ParserFactory extends Object {
 		private static ParserFactory instance=null;
 		private Map<Integer, PreParser> parsers=null;
 		private ParserFactory() {
@@ -213,6 +218,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			parsers.put(new Integer(Types.DATE), new DateParser());
 			parsers.put(new Integer(Types.TIME), new TimeParser());
 			parsers.put(new Integer(Types.BIT), new PreParser() {
+				@Override
 				public Object subParse(String s) throws Exception {
 					Boolean rv=Boolean.FALSE;
 					try {
@@ -246,7 +252,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 		}
 	}
 
-	private static final class MyMetaData implements ResultSetMetaData {
+	static final class MyMetaData implements ResultSetMetaData {
 
 		private String[] names=null;
 		private int[] types=null;

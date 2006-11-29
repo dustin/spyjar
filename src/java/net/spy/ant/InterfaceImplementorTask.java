@@ -100,6 +100,7 @@ public class InterfaceImplementorTask extends Task {
 	/** 
 	 * Perform the transformation.
 	 */
+	@Override
 	public void execute() throws BuildException {
 		validateArgs();
 		generateWith(InterfaceImplementor.class);

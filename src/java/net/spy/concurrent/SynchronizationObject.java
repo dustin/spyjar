@@ -47,6 +47,7 @@ public class SynchronizationObject<T> extends SpyObject {
 	/**
 	 * String this SynchronizationObject.
 	 */
+	@Override
 	public String toString() {
 		return "{SynchronizationObject obj=" + get() + "}";
 	}

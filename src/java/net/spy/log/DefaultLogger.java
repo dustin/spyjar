@@ -28,6 +28,7 @@ public class DefaultLogger extends AbstractLogger {
 	/** 
 	 * False.
 	 */
+	@Override
 	public boolean isDebugEnabled() {
 		return(false);
 	}
@@ -35,6 +36,7 @@ public class DefaultLogger extends AbstractLogger {
 	/** 
 	 * True.
 	 */
+	@Override
 	public boolean isInfoEnabled() {
 		return(true);
 	}
@@ -42,6 +44,7 @@ public class DefaultLogger extends AbstractLogger {
 	/** 
 	 * @see AbstractLogger
 	 */
+	@Override
 	public synchronized void log(Level level, Object message, Throwable e) {
 		if(level == Level.INFO
 			|| level == Level.WARN

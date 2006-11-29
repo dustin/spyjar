@@ -29,6 +29,7 @@ public class ReferenceSetsTest extends TestCase {
 	 * -- this test is disabled, as it doesn't seem to work reliably on my
 	 * -- core duo.  I wouldn't necessarily expect it to.
 	 */
+	@SuppressWarnings("unchecked")
 	public void xtestGCWeakHash() {
 		Set<String> s=new java.util.HashSet<String>();
 		for(int i=0; i<100; i++) {
@@ -137,6 +138,7 @@ public class ReferenceSetsTest extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void runIteratorTest(Set s) {
 		Iterator i=null;
 		for(i=s.iterator(); i.hasNext();) {

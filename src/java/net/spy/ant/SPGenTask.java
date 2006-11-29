@@ -105,6 +105,7 @@ public class SPGenTask extends MatchingTask {
 	/**
 	 * Performs the operation.
 	 **/
+	@Override
 	public void execute() throws BuildException {
 		if (srcDir == null) {
 			throw new BuildException("srcdir attribute must be set!",

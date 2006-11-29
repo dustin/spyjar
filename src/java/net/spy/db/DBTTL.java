@@ -29,6 +29,7 @@ public class DBTTL extends TTL {
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		return("DBTTL:  " + getTTL());
 	}
@@ -36,6 +37,7 @@ public class DBTTL extends TTL {
 	/** 
 	 * Report DB specific message.
 	 */
+	@Override
 	protected void doReport() {
 		// Get the message.
 		String msg=getMessageFromBundle("net.spy.db.messages",

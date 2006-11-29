@@ -28,6 +28,7 @@ public class Base64InputStream extends ByteConverionInputStream {
 	/**
 	 * Get the next decoded byte in this stream.
 	 */
+	@Override
 	public int read() throws IOException {
 		int rv=-1;
 
@@ -80,6 +81,7 @@ public class Base64InputStream extends ByteConverionInputStream {
 	 * This is kind of a guess based on the number of bytes available.  It
 	 * probably works.
 	 */
+	@Override
 	public int available() throws IOException {
 		int rv=in.available();
 		rv=(rv*3)/4;

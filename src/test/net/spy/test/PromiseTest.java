@@ -102,6 +102,7 @@ public class PromiseTest extends TestCase {
 			myInt=what;
 		}
 
+		@Override
 		protected Object execute() throws BrokenPromiseException {
 			return new Integer(myInt++);
 		}
@@ -113,6 +114,7 @@ public class PromiseTest extends TestCase {
 			super();
 		}
 
+		@Override
 		protected Object execute() throws BrokenPromiseException {
 			throw new BrokenPromiseException("Fail");
 		}
@@ -123,6 +125,7 @@ public class PromiseTest extends TestCase {
 			super();
 		}
 
+		@Override
 		protected Object execute() throws BrokenPromiseException {
 			return(null);
 		}

@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 
 public class CacheClearListenerTest extends TestCase {
 
+	@Override
 	protected void tearDown() {
 		SpyCache.shutdown();
 	}
@@ -38,6 +39,7 @@ public class CacheClearListenerTest extends TestCase {
 
 		CacheClearRequestListener c=new CacheClearRequestListener(addr, port) {
 
+			@Override
 			protected MulticastSocket makeMCastSocket(int p)
 				throws IOException {
 				return new LoopbackMulticastSocket(q);
@@ -70,7 +72,8 @@ public class CacheClearListenerTest extends TestCase {
             queue = q;
         }
 
-        public void send(DatagramPacket p) throws IOException {
+        @Override
+		public void send(DatagramPacket p) throws IOException {
         	try {
 				queue.put(p);
 			} catch (InterruptedException e) {
@@ -78,7 +81,8 @@ public class CacheClearListenerTest extends TestCase {
 			}
         }
 
-        public void receive(DatagramPacket p) throws IOException {
+        @Override
+		public void receive(DatagramPacket p) throws IOException {
                 try {
                     DatagramPacket rcvPkt = queue.remove();
                     assert p.getOffset() == 0
@@ -101,19 +105,23 @@ public class CacheClearListenerTest extends TestCase {
                 }
         }
 
-        public boolean isBound() {
+        @Override
+		public boolean isBound() {
             return (isBound);
         }
 
-        public void joinGroup(InetAddress sa) throws IOException {
+        @Override
+		public void joinGroup(InetAddress sa) throws IOException {
             isBound = true;
         }
 
-        public void leaveGroup(InetAddress sa) throws IOException {
+        @Override
+		public void leaveGroup(InetAddress sa) throws IOException {
             isBound = false;
         }
 
-        public void close() {
+        @Override
+		public void close() {
             queue.clear();
             super.close();
         }

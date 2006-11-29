@@ -23,6 +23,7 @@ public class SimpleCacheTest extends TestCase {
 	/** 
 	 * Get the cache.
 	 */
+	@Override
 	protected void setUp() {
 		cache=SimpleCache.getInstance();
 	}
@@ -30,6 +31,7 @@ public class SimpleCacheTest extends TestCase {
 	/** 
 	 * Get rid of the cache.
 	 */
+	@Override
 	protected void tearDown() {
 		SimpleCache.setInstance(null);
 	}

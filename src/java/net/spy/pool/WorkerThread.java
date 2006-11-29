@@ -28,6 +28,7 @@ class WorkerThread extends LoopingThread implements RunnableRunner {
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		// Get a copy of this so if we lose the reference in anotther
 		// thread, we'll still have our copy long enough to print it
@@ -62,6 +63,7 @@ class WorkerThread extends LoopingThread implements RunnableRunner {
 	/** 
 	 * Run the task.
 	 */
+	@Override
 	protected synchronized void runLoop() {
 		if(theRunnable != null) {
 			try {

@@ -47,6 +47,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		start();
 	}
 
+	@Override
 	public void run() {
 		while(!isShutdown()) {
 			WatchingTuple wt=null;
@@ -185,7 +186,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		executor.execute(arg0);
 	}
 
-	private static class CompositeExecutorException extends ExecutionException {
+	static class CompositeExecutorException extends ExecutionException {
 		Collection<ExecutionException> exceptions=null;
 		public CompositeExecutorException(ExecutionException e) {
 			super("Too many failures");
@@ -193,6 +194,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 			exceptions.add(e);
 		}
 
+		@Override
 		public void printStackTrace(PrintStream p) {
 			super.printStackTrace(p);
 			for(ExecutionException e : exceptions) {
@@ -205,6 +207,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 			}
 		}
 
+		@Override
 		public void printStackTrace(PrintWriter p) {
 			super.printStackTrace(p);
 			for(ExecutionException e : exceptions) {
@@ -214,7 +217,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		}
 	}
 
-	private static class WatchingTuple implements Comparable<WatchingTuple> {
+	static class WatchingTuple implements Comparable<WatchingTuple> {
 
 		public CompositeExecutorException e=null;
 		public ScheduledFuture<?> currentFuture=null;
@@ -241,10 +244,11 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 
 	}
 
-	private static class FutureFuture<T> implements ScheduledFuture<T> {
+	static class FutureFuture<T> implements ScheduledFuture<T> {
 
-		private Object defaultObj=null;
-		private SynchronizationObject<Object> sync=null;
+		// Access by a future get
+		Object defaultObj=null;
+		SynchronizationObject<Object> sync=null;
 		private Future<T> currentFuture=null;
 		private long delay=0;
 

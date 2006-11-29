@@ -21,9 +21,9 @@ import java.util.NoSuchElementException;
 public class RingBuffer<T> extends AbstractCollection<T>
 	implements Serializable {
 
-	private T[] buf=null;
-	private int start=0;
-	private int end=0;
+	T[] buf=null;
+	int start=0;
+	int end=0;
 	private boolean wrapped=false;
 	private int size=0;
 
@@ -60,6 +60,7 @@ public class RingBuffer<T> extends AbstractCollection<T>
 	 * @param o the object to add
 	 * @return true
 	 */
+	@Override
 	public boolean add(T o) {
 		if(end>=buf.length) {
 			// Will get set to 0
@@ -92,6 +93,7 @@ public class RingBuffer<T> extends AbstractCollection<T>
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuilder sb=new StringBuilder(256);
 		sb.append("{RingBuffer cap=");
@@ -115,6 +117,7 @@ public class RingBuffer<T> extends AbstractCollection<T>
 	/**
 	 * Get the number of objects in this RingBuffer.
 	 */
+	@Override
 	public int size() {
 		return(size);
 	}
@@ -132,13 +135,14 @@ public class RingBuffer<T> extends AbstractCollection<T>
 	 * 
 	 * @return an iterator
 	 */
+	@Override
 	public Iterator<T> iterator() {
 		return (new RingBufferIterator());
 	}
 
 	// Iterator implementation
 
-	private class RingBufferIterator extends Object
+	class RingBufferIterator extends Object
 		implements Iterator<T>, Serializable {
 
 		private int pos=0;

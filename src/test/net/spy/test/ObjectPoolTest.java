@@ -31,6 +31,7 @@ public class ObjectPoolTest extends TestCase {
 	/** 
 	 * Basic object pool test.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testBasicObjectPool() throws Exception {
 		SpyConfig conf=new SpyConfig();
 		conf.put("test.min", "1");
@@ -89,6 +90,7 @@ public class ObjectPoolTest extends TestCase {
 		public PlainObjectFiller(String nm, SpyConfig cnf) {
 			super(nm, cnf);
 		}
+		@Override
 		public PoolAble getObject() throws PoolException {
 			return(new PlainPoolAble(new Integer(id++), getPoolHash()));
 		}

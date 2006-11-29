@@ -21,11 +21,13 @@ public class ReschedulerTest extends TestCase {
 
 	private Rescheduler sched=null;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		sched=new Rescheduler(new InlineScheduledExecutorService());
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		sched.shutdown();
@@ -114,8 +116,8 @@ public class ReschedulerTest extends TestCase {
 	// Support classes
 	//
 
-	private static class TestRunnable implements Runnable {
-		public int runs=0;
+	static class TestRunnable implements Runnable {
+		int runs=0;
 		public void run() {
 			runs++;
 		}
@@ -137,9 +139,9 @@ public class ReschedulerTest extends TestCase {
 	public static class TestRtryCallable<T> extends TestCallable<T>
 		implements RetryableCallable<T> {
 
-		private int retries=0;
-		private int maxRetries=0;
-		private int failures=0;
+		int retries=0;
+		int maxRetries=0;
+		int failures=0;
 		public boolean gaveUp=false;
 
 		public TestRtryCallable(T v, int fail, int nretries) {
@@ -164,6 +166,7 @@ public class ReschedulerTest extends TestCase {
 			retries++;
 		}
 
+		@Override
 		public T call() throws Exception {
 			T rv=super.call();
 			if(--failures >= 0) {

@@ -39,8 +39,8 @@ public class InterfaceImplementor extends SpyObject {
 
 	// Functions that are already defined.
 	private HashSet<String> definedFunctions=null;
-	private Class interfaceClass=null;
-	private Class superClass=null;
+	private Class<?> interfaceClass=null;
+	private Class<?> superClass=null;
 	private String outpackage=null;
 	private String outclass="BLAH";
 
@@ -53,7 +53,7 @@ public class InterfaceImplementor extends SpyObject {
 	 * @exception IllegalArgumentException if the passed in class is not
 	 * 			an interface
 	 */
-	public InterfaceImplementor(Class c) {
+	public InterfaceImplementor(Class<?> c) {
 		super();
 
 		// Verify the interface isn't null
@@ -76,14 +76,14 @@ public class InterfaceImplementor extends SpyObject {
 	/** 
 	 * Get the interface we're implementing.
 	 */
-	protected Class getInterface() {
+	protected Class<?> getInterface() {
 		return(interfaceClass);
 	}
 
 	/** 
 	 * Get the parent class of the generated class.
 	 */
-	protected Class getSuperclass() {
+	protected Class<?> getSuperclass() {
 		return(superClass);
 	}
 
@@ -124,7 +124,7 @@ public class InterfaceImplementor extends SpyObject {
 	 * @exception IllegalArgumentException if the passed in class isn't
 	 * 		valid for this operation.
 	 */
-	public void setSuperClass(Class c) {
+	public void setSuperClass(Class<?> c) {
 		if(c==null) {
 			throw new NullPointerException("Null class is invalid.");
 		}
@@ -146,7 +146,7 @@ public class InterfaceImplementor extends SpyObject {
 	}
 
 	// Extract the methods from the above.
-	private void getMethods(Class c) {
+	private void getMethods(Class<?> c) {
 		// First, get the declared ones
 		Method[] methods=c.getDeclaredMethods();
 		for(int i=0; i<methods.length; i++) {
@@ -167,7 +167,7 @@ public class InterfaceImplementor extends SpyObject {
 		}
 	}
 
-	private String decodeType(Class type) {
+	private String decodeType(Class<?> type) {
 		String rv=null;
 		if(type.isArray()) {
 			rv=decodeType(type.getComponentType()) + "[]";
@@ -206,7 +206,7 @@ public class InterfaceImplementor extends SpyObject {
 		ret=Modifier.toString(modifiers);
 
 		// Get the return type
-		Class rt=method.getReturnType();
+		Class<?> rt=method.getReturnType();
 		ret+=" " + decodeType(rt) + " ";
 
 		// Add the method name
@@ -267,7 +267,7 @@ public class InterfaceImplementor extends SpyObject {
 	}
 
 	// Get the constructor signature
-	private String getSignature(Constructor con) {
+	private String getSignature(Constructor<?> con) {
 		String ret=null;
 
 		// Get the modifiers
@@ -303,7 +303,7 @@ public class InterfaceImplementor extends SpyObject {
 	/** 
 	 * Get the relative javadoc signature for this Constructor.
 	 */
-	protected String getDocLink(Constructor con) {
+	protected String getDocLink(Constructor<?> con) {
 		String ret=con.getName();
 		Class[] types=con.getParameterTypes();
 		ret+="(";
@@ -347,7 +347,7 @@ public class InterfaceImplementor extends SpyObject {
 				+ " not implemented yet.\");\n";
 		} else {
 			// OK, let's check the return value...
-			Class rt=method.getReturnType();
+			Class<?> rt=method.getReturnType();
 			if(rt.isPrimitive()) {
 				if(rt == Boolean.TYPE) {
 					ret+="\t\treturn false;\n";
@@ -366,7 +366,7 @@ public class InterfaceImplementor extends SpyObject {
 	}
 
 	// Implement a constructor that calls the super constructor
-	private String implementConstructor(Constructor con) {
+	private String implementConstructor(Constructor<?> con) {
 		String ret="\t/**\n"
 			+ "\t * Constructor provided by InterfaceImplementor.\n";
 		if(superClass != null) {

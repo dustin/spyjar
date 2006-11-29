@@ -24,10 +24,12 @@ public class FactoryTest extends TestCase {
 
 	private TestFactory tf=null;
 
+	@Override
 	public void setUp() {
 		tf=new TestFactory();
 	}
 
+	@Override
 	public void tearDown() {
 		SimpleCache.setInstance(null);
 		if(CacheRefresher.getInstance() != null) {
@@ -199,10 +201,12 @@ public class FactoryTest extends TestCase {
 			return String.valueOf(0-oid);
 		}
 
+		@Override
 		public int hashCode() {
 			return(oid);
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			boolean rv=false;
 			if(o instanceof TestInstance) {
@@ -226,6 +230,7 @@ public class FactoryTest extends TestCase {
 			this(TEST_KEY, 10000);
 		}
 
+		@Override
 		public Collection<TestInstance> getInstances() {
 			Collection<TestInstance> rv=new ArrayList<TestInstance>();
 			int startId=lastObject;

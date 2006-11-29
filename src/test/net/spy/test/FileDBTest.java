@@ -32,6 +32,7 @@ public class FileDBTest extends TestCase {
 	private SpyConfig conf2=null;
 	private SpyConfig poolConf=null;
 
+	@Override
 	protected void setUp() throws Exception {
 		Class.forName("net.spy.db.FileDriver");
 		fd=(FileDriver)DriverManager.getDriver(url);
@@ -82,6 +83,7 @@ public class FileDBTest extends TestCase {
 		fd.registerUpdate(url, new ClobTest(conf), new Object[]{"test"}, 1);
 	}
 
+	@Override
 	protected void tearDown() {
 		fd.clearQueries();
 	}

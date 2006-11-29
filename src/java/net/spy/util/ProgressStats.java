@@ -155,6 +155,7 @@ public class ProgressStats extends Object {
 	 * 
 	 * @return getStats()
 	 */
+	@Override
 	public String toString() {
 		return(getStats());
 	}

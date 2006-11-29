@@ -75,7 +75,8 @@ public class ComputingStat extends Stat {
         return decayAvg;
     }
 
-    public synchronized String getStat() {
+    @Override
+	public synchronized String getStat() {
         return String.format(
             "compstat: count=%d sum=%f min=%f avg=%f davg=%f max=%f stddev=%f",
             n, sum, min, mean, decayAvg, max, getStddev());

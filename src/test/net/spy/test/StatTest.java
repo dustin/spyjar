@@ -13,11 +13,13 @@ import net.spy.stat.Stats;
 
 public class StatTest extends TestCase {
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		Stats.setInstance(null);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		Stats.setInstance(null);
 		super.tearDown();
@@ -172,13 +174,15 @@ public class StatTest extends TestCase {
             super();
             throw new Exception("Can't instantiate me");
         }
-        public String getStat() {
+        @Override
+		public String getStat() {
             return(getClass().getName());
         }
     }
 
     private static class BrokenStat2 extends Stat {
-        public String getStat() {
+        @Override
+		public String getStat() {
             return(getClass().getName());
         }
     }
@@ -188,7 +192,8 @@ public class StatTest extends TestCase {
             super();
             throw new IllegalArgumentException("Objection!");
         }
-        public String getStat() {
+        @Override
+		public String getStat() {
             return(getClass().getName());
         }
     }

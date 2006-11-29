@@ -56,16 +56,16 @@ public class SPGen extends SpyObject {
 	private Map<String, List<String>> queries=null;
 	private String currentQuery=QuerySelector.DEFAULT_QUERY;
 	private List<Result> results=null;
-	private List<Parameter> args=null;
+	List<Parameter> args=null;
 	private Set<String> interfaces=null;
 	private Set<String> imports=null;
 	private int timeout=0;
 
 	private static Set<String> types=null;
-	private static Map<String, String> javaTypes=null;
-	private static Map<String, String> javaResultTypes=null;
+	static Map<String, String> javaTypes=null;
+	static Map<String, String> javaResultTypes=null;
 
-	private boolean looseTypes=false;
+	boolean looseTypes=false;
 
 	private boolean typeDbsp=false;
 	private boolean typeDbcp=false;
@@ -976,7 +976,7 @@ public class SPGen extends SpyObject {
 
 	// Private class for results
 
-	private static class Result extends Object {
+	static class Result extends Object {
 		private String name=null;
 		private String type=null;
 		private String description=null;
@@ -1054,7 +1054,7 @@ public class SPGen extends SpyObject {
 
 	// Private class for parameters
 
-	private class Parameter extends Object {
+	class Parameter extends Object {
 		private String name=null;
 		private boolean required=false;
 		private String type=null;
@@ -1142,6 +1142,7 @@ public class SPGen extends SpyObject {
 			return(rv);
 		}
 
+		@Override
 		public String toString() {
 			return("{Parameter " + name + "}");
 		}
@@ -1149,6 +1150,7 @@ public class SPGen extends SpyObject {
 		/** 
 		 * Get the hash code of the name of this parameter.
 		 */
+		@Override
 		public int hashCode() {
 			return(name.hashCode());
 		}
@@ -1157,6 +1159,7 @@ public class SPGen extends SpyObject {
 		 * True if the given objet is an instance of Parameter with the
 		 * same name.
 		 */
+		@Override
 		public boolean equals(Object o) {
 			boolean rv=false;
 			if(o instanceof Parameter) {
@@ -1207,7 +1210,7 @@ public class SPGen extends SpyObject {
 
 	// Default values for parameters
 
-	private class Default extends Object {
+	class Default extends Object {
 		private String name=null;
 		// Class of this parameter
 		private String type=null;
@@ -1321,6 +1324,7 @@ public class SPGen extends SpyObject {
 		}
 
 		// String me
+		@Override
 		public String toString() {
 			String rv="{Default " + name + " (" + type + ") " + value + "}";
 			return(rv);

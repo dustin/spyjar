@@ -53,6 +53,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	/** 
 	 * Get the Iterator for the backing Map.
 	 */
+	@Override
 	public Iterator<T> iterator() {
 		return(map.keySet().iterator());
 	}
@@ -60,6 +61,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	/** 
 	 * Get the number of keys currently contained in this Set.
 	 */
+	@Override
 	public int size() {
 		return(map.size());
 	}
@@ -67,6 +69,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	/** 
 	 * True if this set contains no elements.
 	 */
+	@Override
 	public boolean isEmpty() {
 		return(map.isEmpty());
 	}
@@ -74,6 +77,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	/** 
 	 * True if this Set contains the given Object.
 	 */
+	@Override
 	public boolean contains(Object o) {
 		return(map.containsKey(o));
 	}
@@ -84,6 +88,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	 * @param o the object to add
 	 * @return true if this object was just added, false if it already existed
 	 */
+	@Override
 	public boolean add(T o) {
 		Object old=map.put(o, PRESENT);
 		return(old == null);
@@ -95,6 +100,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	 * @param o Object to be removed
 	 * @return true if the Set did contain this object (but now doesn't)
 	 */
+	@Override
 	public boolean remove(Object o) {
 		Object old=map.remove(o);
 		return(old==PRESENT);
@@ -103,6 +109,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 	/** 
 	 * Remove all entries from this Set.
 	 */
+	@Override
 	public void clear() {
 		map.clear();
 	}

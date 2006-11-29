@@ -66,11 +66,11 @@ public class CacheKeyFinder extends SpyObject {
 
 	private void lookupCacheKeys(Map<CacheKey, Accessor> rv, Class<?> c) {
 		// Get the recursion out of the way first
-		Class sup=c.getSuperclass();
+		Class<?> sup=c.getSuperclass();
 		if(sup != null) {
 			lookupCacheKeys(rv, sup);
 		}
-		for(Class i : c.getInterfaces()) {
+		for(Class<?> i : c.getInterfaces()) {
 			lookupCacheKeys(rv, i);
 		}
 
@@ -124,6 +124,7 @@ public class CacheKeyFinder extends SpyObject {
 			super(m);
 			method=m;
 		}
+		@Override
 		protected Object realGet(Object o) throws Exception {
 			Object rv=method.invoke(o, new Object[0]);
 			return rv;
@@ -136,6 +137,7 @@ public class CacheKeyFinder extends SpyObject {
 			super(f);
 			field=f;
 		}
+		@Override
 		public Object realGet(Object o) throws Exception {
 			return field.get(o);
 		}

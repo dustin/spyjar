@@ -34,7 +34,7 @@ import net.spy.util.SpyUtil;
 public class DiskCache extends AbstractMap<Serializable, Serializable> {
 
 	// Base directory for hashing
-	private String basedir = null;
+	String basedir = null;
 	private LRUCache<Serializable, SoftReference<Serializable>> lruCache=null;
 
 	private static final int DEFAULT_LRU_CACHE_SIZE=100;
@@ -106,7 +106,8 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
      * @param v value
      * @return the old object stored in that location (if any)
 	 */
-    public Serializable put(Serializable k, Serializable v) {
+    @Override
+	public Serializable put(Serializable k, Serializable v) {
 		Serializable rv=get(k);
 
 		String pathto=getPath(k);
@@ -134,7 +135,8 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 	 *
 	 * @return the object, or null if there's no such object
 	 */
-    public Serializable get(Object key) {
+    @Override
+	public Serializable get(Object key) {
 		Serializable rv=null;
 
 		if(key==null) {
@@ -190,7 +192,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 		return(rv);
 	}
 
-
+	@Override
 	public Set<Map.Entry<Serializable, Serializable>> entrySet() {
 		Set<Map.Entry<Serializable, Serializable>> rv=null;
 
@@ -244,6 +246,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 		/** 
 		 * Get an iterator.
 		 */
+		@Override
 		public Iterator<Entry<Serializable, Serializable>> iterator() {
 			return(new I(super.iterator()));
 		}
@@ -311,6 +314,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 		/** 
 		 * True if two objects are equal.
 		 */
+		@Override
 		public boolean equals(Object o) {
 			boolean rv=false;
 
@@ -339,6 +343,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 		/** 
 		 * Get the hash code.
 		 */
+		@Override
 		public int hashCode() {
 			return(k.hashCode());
 		}

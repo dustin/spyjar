@@ -34,8 +34,9 @@ public class AssumptionTest extends TestCase {
 		assertFalse(tt.isInterrupted());
 	}
 
-	private static class TestThread extends Thread {
+	static class TestThread extends Thread {
 		public volatile boolean wasInterrupted=false;
+		@Override
 		public void run() {
 			try {
 				sleep(10000);

@@ -33,6 +33,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 	/** 
 	 * Don't create the default constructors.
 	 */
+	@Override
 	protected boolean buildConstructors() {
 		return(false);
 	}
@@ -40,6 +41,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 	/** 
 	 * Create the instance variables and constructor for the proxy.
 	 */
+	@Override
 	protected String preConstructors() {
 		Class<?> i=getInterface();
 
@@ -63,6 +65,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 	 * Before the generated methods, include methods for accessing and
 	 * setting the proxied object.
 	 */
+	@Override
 	protected String preMethods() {
 		Class<?> i=getInterface();
 		String rv=null;
@@ -91,6 +94,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 	 * 
 	 * @param method the method to implement
 	 */
+	@Override
 	protected String implement(Method method) {
 		String ret="\t/**\n"
 			+ "\t * ProxyInterfaceImplementor implementation of "

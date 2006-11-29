@@ -48,6 +48,7 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 	/**
 	 * Get an integer hash code to uniquely identify this object.
 	 */
+	@Override
 	public int hashCode() {
 		int hc=0;
 
@@ -67,6 +68,7 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 	 * Equal if two objects have the same hash code, same query, and same
 	 * parameters.
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 
@@ -206,6 +208,7 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 		throw new SQLException("Illegal?  This operation makes no sense!");
 	}
 	
+	@Override
 	public void close() throws SQLException {
 		super.close();
 		db=null;

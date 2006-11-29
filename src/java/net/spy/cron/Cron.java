@@ -73,6 +73,7 @@ public final class Cron extends SpyThread {
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		String extra=null;
 		if(jobQueue==null) {
@@ -116,6 +117,7 @@ public final class Cron extends SpyThread {
 	/** 
 	 * Do the run thing.
 	 */
+	@Override
 	public void run() {
 		getLogger().info("Starting cron services");
 		while(stillRunning) {

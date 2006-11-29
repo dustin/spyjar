@@ -27,6 +27,7 @@ public class URLWatcherTest extends TestCase {
 	/** 
 	 * Get the URLWatcher.
 	 */
+	@Override
 	protected void setUp() {
 		uw=new TestURLWatcher();
 	}
@@ -34,6 +35,7 @@ public class URLWatcherTest extends TestCase {
 	/** 
 	 * Get rid of the URLWatcher.
 	 */
+	@Override
 	protected void tearDown() {
 		uw.shutdown();
 		uw=null;
@@ -147,7 +149,7 @@ public class URLWatcherTest extends TestCase {
 		}
 	}
 
-	private static class TestURLItem extends URLItem {
+	static class TestURLItem extends URLItem {
 		public TestURLItem(URL u) {
 			super(u);
 		}
@@ -156,17 +158,19 @@ public class URLWatcherTest extends TestCase {
 			super(u, i);
 		}
 
+		@Override
 		protected HTTPFetch getFetcher(Map<String, List<String>> headers) {
 			return new TestHTTPFetch(getURL(), headers);
 		}
 		
 	}
 
-	private static class TestHTTPFetch extends HTTPFetch {
+	static class TestHTTPFetch extends HTTPFetch {
 		public TestHTTPFetch(URL u, Map<String, List<String>> head) {
 			super(u, head);
 		}
 
+		@Override
 		public String getData() throws IOException {
 			try {
 				Thread.sleep(100);
@@ -176,23 +180,27 @@ public class URLWatcherTest extends TestCase {
 			return String.valueOf(System.currentTimeMillis());
 		}
 
+		@Override
 		public long getLastModified() throws IOException {
 			return System.currentTimeMillis();
 		}
 
 		@SuppressWarnings("unchecked")
+		@Override
 		public Map<String, List<String>> getResponseHeaders() {
 			return Collections.EMPTY_MAP;
 		}
 
+		@Override
 		public int getStatus() throws IOException {
 			return 200;
 		}
 		
 	}
 
-	private static class TestURLWatcher extends URLWatcher {
+	static class TestURLWatcher extends URLWatcher {
 
+		@Override
 		protected URLItem getNewURLItem(URL u) {
 			return new TestURLItem(u);
 		}

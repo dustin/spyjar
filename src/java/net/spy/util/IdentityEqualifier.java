@@ -32,6 +32,7 @@ public class IdentityEqualifier extends Object {
 	/** 
 	 * True if this object has the same identity as the given object.
 	 */
+	@Override
 	public boolean equals(Object other) {
 		boolean rv=false;
 
@@ -53,6 +54,7 @@ public class IdentityEqualifier extends Object {
 	 * 
 	 * @return System.identityHashCode for this object.
 	 */
+	@Override
 	public int hashCode() {
 		return(System.identityHashCode(object));
 	}

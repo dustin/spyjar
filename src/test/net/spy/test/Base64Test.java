@@ -44,6 +44,7 @@ public class Base64Test extends TestCase {
 		return new TestSuite(Base64Test.class);
 	}
 
+	@Override
 	protected void setUp() {
 		cases=new HashMap<String, String>();
 
@@ -75,6 +76,7 @@ public class Base64Test extends TestCase {
 	/** 
 	 * Test base64 encoding of strings.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testEncode() throws Exception {
 		for(Iterator i=cases.entrySet().iterator(); i.hasNext();) {
 			Map.Entry me=(Map.Entry)i.next();
@@ -91,6 +93,7 @@ public class Base64Test extends TestCase {
 	/** 
 	 * Test base64 decodes.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testDecode() throws Exception {
 		for(Iterator i=cases.entrySet().iterator(); i.hasNext();) {
 			Map.Entry me=(Map.Entry)i.next();
@@ -102,6 +105,7 @@ public class Base64Test extends TestCase {
 	/** 
 	 * Test the isValidBase64Char implementation.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testAlphabet() {
 		Base64 b64=Base64.getInstance();
 		char[] CHARMAP={
@@ -128,6 +132,7 @@ public class Base64Test extends TestCase {
 	/** 
 	 * Test output stream implementation.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testOutputStream() throws Exception {
 		ByteArrayOutputStream bos=new ByteArrayOutputStream();
 		for(Iterator i=cases.entrySet().iterator(); i.hasNext();) {
@@ -154,6 +159,7 @@ public class Base64Test extends TestCase {
 	/** 
 	 * Test input stream implementation.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testInputStream() throws Exception {
 		byte[] buffer=new byte[1024];
 
@@ -183,6 +189,7 @@ public class Base64Test extends TestCase {
 	 * Test that streaming base64 yields the same result as whole chunk
 	 * encoding.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testBlockOutput() throws Exception {
 		HashMap<String, Comparable> hm=new HashMap<String, Comparable>();
 		hm.put("Some Key", new Integer(13));
@@ -213,6 +220,7 @@ public class Base64Test extends TestCase {
 	 * Test that streaming base64 in yields the same result as whole chunk
 	 * decoding.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testBlockInput() throws Exception {
 		HashMap<String, Comparable> hm=new HashMap<String, Comparable>();
 		hm.put("Some Key", new Integer(13));
@@ -243,6 +251,7 @@ public class Base64Test extends TestCase {
 	 * Test object serialization and compression and all that into base64.
 	 * This particular case failed in the field.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testSerializingStream() throws Exception {
 		ByteArrayOutputStream bos=new ByteArrayOutputStream();
 		Base64OutputStream b64os=new Base64OutputStream(bos);

@@ -281,7 +281,7 @@ public class SpyUtilTest extends TestCase {
 	 */
 	public static void main(String args[]) throws Throwable {
 		if(args.length > 0) {
-			Class c=Class.forName(args[0]);
+			Class<?> c=Class.forName(args[0]);
 			Throwable t=(Throwable)c.newInstance();
 			throw t;
 		}

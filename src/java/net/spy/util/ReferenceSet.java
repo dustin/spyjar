@@ -63,6 +63,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	 * @param o the object
 	 * @return true if the object did not already exist
 	 */
+	@Override
 	public boolean add(T o) {
 		boolean rv=false;
 		
@@ -79,6 +80,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	 * operation, as it walks the entire iterator to make sure all entries
 	 * are still valid references.
 	 */
+	@Override
 	public int size() {
 		int rv=0;
 		for(Iterator<T> i=iterator(); i.hasNext();) {
@@ -95,6 +97,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	 * with HashMap and Iterator that would otherwise require me to
 	 * duplicate all of HashMap.
 	 */
+	@Override
 	public Iterator<T> iterator() {
 		return(new ReferenceIterator<T>(contents.iterator()));
 	}
@@ -116,7 +119,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	 */
 	protected abstract Reference<T> getReference(T o);
 
-	private static class ReferenceIterator<T> extends Object
+	static class ReferenceIterator<T> extends Object
 		implements Iterator<T> {
 
 		private Iterator<Reference <T>> backIterator=null;

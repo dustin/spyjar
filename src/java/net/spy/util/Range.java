@@ -80,20 +80,21 @@ public class Range<T extends Comparable<T>> extends Object
 	/** 
 	 * Get the low object.
 	 */
-	public Comparable getLow() {
+	public Comparable<T> getLow() {
 		return(low);
 	}
 
 	/** 
 	 * Get the high object.
 	 */
-	public Comparable getHigh() {
+	public Comparable<T> getHigh() {
 		return(high);
 	}
 
 	/** 
 	 * Describe this object in Set notation.
 	 */
+	@Override
 	public String toString() {
 		StringBuilder sb=new StringBuilder(256);
 
@@ -177,6 +178,7 @@ public class Range<T extends Comparable<T>> extends Object
 	 * True if the given object is a Range object that represents the same
 	 * range.
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean equals(Object o) {
 		boolean rv=false;
@@ -191,6 +193,7 @@ public class Range<T extends Comparable<T>> extends Object
 	 * @return the low object's hash code if it's available, else the high
 	 * 	object's hash code
 	 */
+	@Override
 	public int hashCode() {
 		return(low != null ? low.hashCode() : high.hashCode());
 	}

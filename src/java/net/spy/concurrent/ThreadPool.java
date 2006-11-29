@@ -192,6 +192,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		return(super.toString() + " - " + getQueue().size()
 				+ " of a maximum " + DEFAULT_LIST_LIMIT + " tasks queud");
@@ -239,6 +240,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 		this.monitor=m;
 	}
 
+	@Override
 	protected void beforeExecute(Thread t, Runnable r) {
 		super.beforeExecute(t, r);
 		assert t instanceof WorkerThread : "Thread is not a WorkerThread";
@@ -247,6 +249,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 		currentWorkers.put(r, wt);
 	}
 
+	@Override
 	protected void afterExecute(Runnable r, Throwable t) {
 		super.afterExecute(r, t);
 		monitor.completedJob(r);
@@ -336,11 +339,11 @@ public class ThreadPool extends ThreadPoolExecutor {
 		}
 	}
 
-	private final static class MyThreadFactory implements ThreadFactory {
+	final static class MyThreadFactory implements ThreadFactory {
 		private String name=null;
-		private int priority=Thread.NORM_PRIORITY;
+		int priority=Thread.NORM_PRIORITY;
 
-		private MyThreadFactory(String nm, int prio) {
+		MyThreadFactory(String nm, int prio) {
 			super();
 			name=nm;
 			setPriority(prio);

@@ -62,7 +62,7 @@ public class SimpleCache extends SpyObject {
 	public Object get(String key) {
 		Object rv=storage.get(key);
 		if(rv != null && rv instanceof Reference) {
-			Reference ref=(Reference)rv;
+			Reference<?> ref=(Reference)rv;
 			rv=ref.get();
 			if(rv == null) {
 				storage.remove(key, ref);

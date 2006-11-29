@@ -64,6 +64,7 @@ public class PooledObject extends SpyObject {
 	 * Finalization will check-in any checked-out object that has not
 	 * already been checked in.
 	 */
+	@Override
 	protected void finalize() {
 		if(poolAble!=null) {
 			if(getLogger().isDebugEnabled()) {

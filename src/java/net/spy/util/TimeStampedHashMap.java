@@ -38,6 +38,7 @@ public class TimeStampedHashMap<K, V> extends HashMap<K, V> {
 	 * @param key the object to get
 	 * @return the object, or null if it's missing
 	 */
+	@Override
 	public V get(Object key) {
 		markGet();
 		V o=super.get(key);
@@ -56,6 +57,7 @@ public class TimeStampedHashMap<K, V> extends HashMap<K, V> {
 	 * @param value the value to store
 	 * @return the object that got displaced for this store, or null
 	 */
+	@Override
 	public V put(K key, V value) {
 		V rv=super.put(key, value);
 		markPut();

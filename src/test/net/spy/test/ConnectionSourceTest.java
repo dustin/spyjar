@@ -24,11 +24,13 @@ public class ConnectionSourceTest extends TestCase {
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		csf=ConnectionSourceFactory.getInstance();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		ConnectionSourceFactory.setInstance(null);
 		super.tearDown();

@@ -24,7 +24,7 @@ import net.spy.util.ShortestPathFinder;
  */
 public class ShortestPathTest extends TestCase {
 
-	private Map<String, StringNode> nodes=null;
+	Map<String, StringNode> nodes=null;
 	private StringNode nodeA=null;
 	private StringNode nodeB=null;
 	private StringNode nodeC=null;
@@ -36,6 +36,7 @@ public class ShortestPathTest extends TestCase {
 	/** 
 	 * Create the collection of nodes.
 	 */
+	@Override
 	protected void setUp() {
 		nodes=new java.util.TreeMap<String, StringNode>();
 
@@ -87,8 +88,8 @@ public class ShortestPathTest extends TestCase {
 	}
 
 	// verify a link matches the way we want
-	private void assertLinkMatch(SPNode a, SPNode b, SPNode expectedNextHop,
-		int cost) {
+	private void assertLinkMatch(StringNode a, StringNode b,
+			SPNode<?> expectedNextHop, int cost) {
 
 		SPVertex<?> nextHop=a.getNextHop(b);
 		if(expectedNextHop == null) {
@@ -1774,8 +1775,8 @@ public class ShortestPathTest extends TestCase {
 		spf.calculatePaths(tmpList);
 	}
 
-	private class StringNode extends AbstractSPNode {
-		private String str=null;
+	class StringNode extends AbstractSPNode<StringNode> {
+		String str=null;
 
 		public StringNode(String s) {
 			super();
@@ -1785,6 +1786,7 @@ public class ShortestPathTest extends TestCase {
 			str=s;
 		}
 
+		@Override
 		public String toString() {
 			return("{StringNode " + str + "}");
 		}
@@ -1809,6 +1811,7 @@ public class ShortestPathTest extends TestCase {
 			return (sb.toString());
 		}
 
+		@SuppressWarnings("unchecked")
 		public void dump() {
 			Set s=new java.util.HashSet();
 			dump(0, s);
@@ -1836,13 +1839,12 @@ public class ShortestPathTest extends TestCase {
 			}
 		}
 
+		@Override
 		public int hashCode() {
 			return(str.hashCode());
 		}
 
-		public int compareTo(Object o) {
-			StringNode sn=(StringNode)o;
-
+		public int compareTo(StringNode sn) {
 			return (str.compareTo(sn.getString()));
 		}
 	}

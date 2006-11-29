@@ -76,6 +76,7 @@ public class RingBufferTest extends TestCase {
 		assertTrue(rb.hasWrapped());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testIterator() {
 		int cap=256;
 		ArrayList<Integer> a=new ArrayList<Integer>(cap*2);

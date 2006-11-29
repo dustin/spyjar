@@ -453,6 +453,7 @@ public class SNPP extends SpyObject {
 		}
 	}
 
+	@Override
 	protected void finalize() throws Throwable {
 		getLogger().debug("Finalizing...");
 		close();

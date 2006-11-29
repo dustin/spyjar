@@ -43,6 +43,7 @@ public class RangeTest extends TestCase {
 	/** 
 	 * Test the Comparable implementation (sorting).
 	 */
+	@SuppressWarnings("unchecked")
 	public void testRangeSorting() {
 		Integer a=new Integer(1);
 		Integer b=new Integer(2);
@@ -106,6 +107,7 @@ public class RangeTest extends TestCase {
 			new Range<Integer>(a, null).compareTo(new Range<Integer>(null, a)));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testRangeEquality() {
 		ArrayList<Range<Integer>> al=new ArrayList<Range<Integer>>();
 		Integer a=new Integer(1);

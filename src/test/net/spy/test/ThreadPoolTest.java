@@ -18,7 +18,7 @@ import net.spy.concurrent.ThreadPool;
  */
 public class ThreadPoolTest extends TestCase {
 	// Thread IDs (inner classes can't have static fields)
-	private static int ids=0;
+	static int ids=0;
 
 	/** 
 	 * Test the constructors.

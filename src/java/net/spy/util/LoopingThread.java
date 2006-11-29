@@ -104,6 +104,7 @@ public abstract class LoopingThread extends SpyThread {
 	/** 
 	 * The run loop itself.
 	 */
+	@Override
 	public void run() {
 		startingUp();
 		while(keepGoing) {

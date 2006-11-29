@@ -79,7 +79,7 @@ public class TransactionPipeline extends SpyObject {
 		return addTransaction(s, conf, null);
 	}
 
-	private static final class PipelineTask extends SpyObject
+	static final class PipelineTask extends SpyObject
 		implements Runnable {
 
 		// Throwable filled in with the stack holding the context of where the
@@ -90,7 +90,7 @@ public class TransactionPipeline extends SpyObject {
 		private SpyConfig conf=null;
 		private SaveContext context=null;
 
-		private PipelineTask(Savable s, SpyConfig cnf, SaveContext ctx) {
+		PipelineTask(Savable s, SpyConfig cnf, SaveContext ctx) {
 			super();
 			this.originalStack=new Exception("Original request");
 			originalStack.fillInStackTrace();

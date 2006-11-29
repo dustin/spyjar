@@ -15,27 +15,28 @@ import net.spy.SpyObject;
 /**
  * Abstract implementation of SPNode to make implementation a bit easier.
  */
-public abstract class AbstractSPNode extends SpyObject implements SPNode {
+public abstract class AbstractSPNode<T extends SPNode<T>>
+	extends SpyObject implements SPNode<T> {
 
-	private SortedSet<SPVertex> links=null;
-	private Map<SPNode, SPVertex> nextHops=null;
+	private SortedSet<SPVertex<T>> links=null;
+	private Map<SPNode<T>, SPVertex<T>> nextHops=null;
 
 	/**
 	 * Get an instance of AbstractSPNode holding its links in the given
 	 * Set.
 	 * @param l the links.
 	 */
-	protected AbstractSPNode(SortedSet<SPVertex> l) {
+	protected AbstractSPNode(SortedSet<SPVertex<T>> l) {
 		super();
 		this.links=l;
-		nextHops=new WeakHashMap<SPNode, SPVertex>();
+		nextHops=new WeakHashMap<SPNode<T>, SPVertex<T>>();
 	}
 
 	/** 
 	 * Get an instance of AbstractSPNode.
 	 */
 	protected AbstractSPNode() {
-		this(new TreeSet<SPVertex>());
+		this(new TreeSet<SPVertex<T>>());
 	}
 
 	/** 
@@ -54,21 +55,21 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	 * 
 	 * @param n the node to which to link
 	 */
-	protected void linkTo(SPNode n) {
+	protected void linkTo(SPNode<T> n) {
 		linkTo(n, SPVertex.DEFAULT_COST);
 	}
 
 	/** 
 	 * @see SPNode 
 	 */
-	public SortedSet<SPVertex> getConnections() {
+	public SortedSet<SPVertex<T>> getConnections() {
 		return( Collections.unmodifiableSortedSet(links));
 	}
 
 	/** 
 	 * @see SPNode
 	 */
-	public Map<SPNode, SPVertex> getNextHops() {
+	public Map<SPNode<T>, SPVertex<T>> getNextHops() {
 		return(Collections.unmodifiableMap(nextHops));
 	}
 
@@ -82,14 +83,14 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	/** 
 	 * @see SPNode
 	 */
-	public SPVertex getNextHop(SPNode n) {
+	public SPVertex<T> getNextHop(SPNode<T> n) {
 		return(nextHops.get(n));
 	}
 
 	/** 
 	 * @see SPNode
 	 */
-	public void addNextHop(SPNode n, SPVertex v) {
+	public void addNextHop(SPNode<T> n, SPVertex<T> v) {
 		nextHops.put(n, v);
 	}
 
@@ -97,13 +98,14 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	 * @see Object
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 
 		try {
 			// Since this object is Comparable, we can use compareTo to
 			// implement equals.
-			rv=(compareTo(o) == 0);
+			rv=(compareTo((T)o) == 0);
 		} catch(ClassCastException cce) {
 			// Ignored, return false
 		}
@@ -114,6 +116,7 @@ public abstract class AbstractSPNode extends SpyObject implements SPNode {
 	/** 
 	 * Must override hashCode along with compareTo();
 	 */
+	@Override
 	public abstract int hashCode();
 
 }

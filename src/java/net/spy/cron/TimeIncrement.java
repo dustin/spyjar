@@ -34,6 +34,7 @@ public class TimeIncrement extends Object {
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		return("{" + getClass().getName() + " field=" + fieldIncrement
 			+ ", amount=" + incAmount + "}");

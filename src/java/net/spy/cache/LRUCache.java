@@ -26,6 +26,7 @@ public class LRUCache<K,V> extends LinkedHashMap<K,V> {
 	/**
 	 * Get the object from the cache, and defereference it if it's a reference.
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public V get(Object o) {
 		V rv=super.get(o);
@@ -35,6 +36,7 @@ public class LRUCache<K,V> extends LinkedHashMap<K,V> {
 		return rv;
 	}
 
+	@Override
 	public V put(K key, V val) {
 		if(val instanceof CacheListener) {
 			CacheListener cl=(CacheListener)val;
@@ -52,6 +54,7 @@ public class LRUCache<K,V> extends LinkedHashMap<K,V> {
 		}
 	}
 
+	@Override
 	protected boolean removeEldestEntry(Map.Entry<K, V> e) {
 		boolean shouldRemove=false;
 		shouldRemove=size() > maxSize;

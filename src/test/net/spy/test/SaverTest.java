@@ -56,6 +56,7 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * Set up the tests.
 	 */
+	@Override
 	protected void setUp() {
 		ConnectionSourceFactory cnf=ConnectionSourceFactory.getInstance();
 
@@ -83,6 +84,7 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * Shut down the tests.
 	 */
+	@Override
 	protected void tearDown() {
 		successSource.clearSeenObjects();
 		isoSource.clearSeenObjects();
@@ -246,8 +248,8 @@ public class SaverTest extends MockObjectTestCase {
 		failingSaverTest(new SQLException("Testing a failure"));
 	}
 
-	private void assertAllSaved(Collection c) {
-		for(Iterator i=c.iterator(); i.hasNext(); ) {
+	private void assertAllSaved(Collection<?> c) {
+		for(Iterator<?> i=c.iterator(); i.hasNext(); ) {
 			TestSavable ts=(TestSavable)i.next();
 			assertTrue(ts.committed);
 		}
@@ -461,6 +463,7 @@ public class SaverTest extends MockObjectTestCase {
 	/** 
 	 * Test the savable HashMap implementation.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testSavableHashMap() throws Exception {
 		// Map constructor
 		Map<String, Savable> m=new HashMap<String, Savable>();
@@ -515,6 +518,7 @@ public class SaverTest extends MockObjectTestCase {
 	 */
 	public static class SuccessConnectionSource extends MockConnectionSource {
 
+		@Override
 		protected void setupMock(Mock connMock, SpyConfig conf) {
 			// autocommit will be enabled, and then disabled
 			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
@@ -532,6 +536,7 @@ public class SaverTest extends MockObjectTestCase {
 	public static class MockConnectionSourceWithIso
 		extends MockConnectionSource {
 
+		@Override
 		protected void setupMock(Mock connMock, SpyConfig conf) {
 			// autocommit will be enabled, and then disabled
 			connMock.expects(new InvokeOnceMatcher())
@@ -565,6 +570,7 @@ public class SaverTest extends MockObjectTestCase {
 	public static class MockFailingConnectionSource
 		extends MockConnectionSource {
 
+		@Override
 		protected void setupMock(Mock connMock, SpyConfig conf) {
 			// autocommit will be enabled, and then disabled
 			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
@@ -598,10 +604,12 @@ public class SaverTest extends MockObjectTestCase {
 			setNew(true);
 		}
 
+		@Override
 		public void setNew(boolean to) {
 			super.setNew(to);
 		}
 
+		@Override
 		public void setModified(boolean to) {
 			super.setModified(to);
 		}
@@ -618,6 +626,7 @@ public class SaverTest extends MockObjectTestCase {
 		implements TransactionListener {
 
 		public Collection<Savable> preSavs=null;
+		@SuppressWarnings("unchecked")
 		public Collection postSavs=null;
 		public int id=0;
 		public boolean committed=false;
@@ -629,15 +638,18 @@ public class SaverTest extends MockObjectTestCase {
 			this.postSavs=new ArrayList<Savable>();
 		}
 
+		@Override
 		public Collection<Savable> getPreSavables(SaveContext ctx) {
 			return(preSavs);
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public Collection<Savable> getPostSavables(SaveContext ctx) {
 			return(postSavs);
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public void save(Connection conn, SaveContext ctx) {
 			super.save(conn, ctx);
@@ -647,11 +659,13 @@ public class SaverTest extends MockObjectTestCase {
 			}
 		}
 
+		@Override
 		public String toString() {
 			return "TestSavable is an object that gets exposes "
 				+ "enough of itself to make for a pretty useful test suite";
 		}
 
+		@Override
 		public void transactionCommited() {
 			super.transactionCommited();
 			committed=true;

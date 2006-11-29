@@ -73,6 +73,7 @@ public class URLWatcher extends SpyObject {
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		int numPages=items.size();
 		return(super.toString() + " - " + numPages + " pages monitored");
@@ -166,11 +167,11 @@ public class URLWatcher extends SpyObject {
 		return(ui.getContent());
 	}
 
-	private static class FutureURL {
-		public URLItem urlItem;
-		public ScheduledFuture future;
+	static class FutureURL {
+		URLItem urlItem;
+		ScheduledFuture<?> future;
 
-		public FutureURL(ScheduledFuture f, URLItem u) {
+		public FutureURL(ScheduledFuture<?> f, URLItem u) {
 			super();
 			future=f;
 			urlItem=u;

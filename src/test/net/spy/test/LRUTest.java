@@ -98,6 +98,7 @@ public class LRUTest extends TestCase {
 	/** 
 	 * Test cache listener.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testCacheListener() {
 		LRUCache<Comparable, Object> cache
 			=new LRUCache<Comparable, Object>(10);

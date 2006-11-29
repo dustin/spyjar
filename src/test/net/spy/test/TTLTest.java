@@ -22,10 +22,12 @@ public class TTLTest extends TestCase {
 		super(name);
 	}
 
+	@Override
 	protected void setUp() {
 		mon=TTLMonitor.getTTLMonitor();
 	}
 
+	@Override
 	protected void tearDown() {
 		mon.shutdown();
 	}
@@ -133,12 +135,14 @@ public class TTLTest extends TestCase {
 			super(delay);
 		}
 
+		@Override
 		public String getMessageFromBundle(String bundleName,
 			String msgNoArg, String msgWithArg) {
 			return(super.getMessageFromBundle(bundleName,
 				msgNoArg, msgWithArg));
 		}
 
+		@Override
 		protected void doReport() {
 			reportWithFormat(getMessageFromBundle("net.spy.nonexistent",
 				"ttl.msg", "ttl.msg.witharg"));
@@ -150,6 +154,7 @@ public class TTLTest extends TestCase {
 			super(delay);
 		}
 
+		@Override
 		protected void doReport() {
 			reportWithFormat(getMessageFromBundle("net.spy.util.messages",
 				"ttlBAD.msg", "ttlBAD.msg.witharg"));

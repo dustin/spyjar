@@ -12,14 +12,14 @@ public class NoPathException extends Exception {
 	/**
 	 * Get an instance of NoPathException.
 	 */
-	public NoPathException(SPNode from, SPNode to) {
+	public NoPathException(SPNode<?> from, SPNode<?> to) {
 		super("No path from " + from + " to " + to);
 	}
 
 	/**
 	 * Get an instance of NoPathException with a message.
 	 */
-	public NoPathException(SPNode from, SPNode to, String msg) {
+	public NoPathException(SPNode<?> from, SPNode<?> to, String msg) {
 		super("No path from " + from + " to " + to + " - " + msg);
 	}
 

@@ -114,8 +114,8 @@ public class ShortestPathFinder extends Object {
 	 * 
 	 * @param nodes the nodes to calculate
 	 */
-	public void calculatePaths(Collection<? extends SPNode> nodes) {
-		for(SPNode node : nodes) {
+	public void calculatePaths(Collection<? extends SPNode<?>> nodes) {
+		for(SPNode<?> node : nodes) {
 			calculatePaths(node);
 		}
 	}
@@ -126,13 +126,13 @@ public class ShortestPathFinder extends Object {
 	 * 
 	 * @param node the node from which to calculate paths
 	 */
-	public void calculatePaths(SPNode node) {
+	public void calculatePaths(SPNode<?> node) {
 		// Clear the current list
 		node.clearNextHops();
 
 		for(SPVertex<?> spv : node.getConnections()) {
 			recordLink(node, spv.getCost(), spv.getTo(), spv.getTo(),
-				new HashSet<SPNode>());
+				new HashSet<SPNode<?>>());
 		}
 	}
 
@@ -153,8 +153,8 @@ public class ShortestPathFinder extends Object {
 	// Calculate the links in node ``node'' at the given cost, routed over
 	// the given next hop, starting at node ``other'' and maintaining seen
 	// links in s
-	private void recordLink(SPNode node, int cost, SPNode nextHop,
-		SPNode other, Set<SPNode> s) {
+	private void recordLink(SPNode<?> node, int cost, SPNode<?> nextHop,
+		SPNode<?> other, Set<SPNode<?>> s) {
 
 		// Make sure we're not looping over a path we've already seen.
 		if(!s.contains(other)) {
@@ -170,7 +170,7 @@ public class ShortestPathFinder extends Object {
 				// link and the cost of this link.
 				int nextCost=cost+spv.getCost();
 				// This is the node we've found in this loop
-				SPNode thisNode=spv.getTo();
+				SPNode<?> thisNode=spv.getTo();
 				// recurse
 				recordLink(node, nextCost, nextHop, thisNode, s);
 			}

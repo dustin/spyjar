@@ -94,6 +94,7 @@ public class BuildInfoTask extends Task {
 	/** 
 	 * Create the BuildInfo class.
 	 */
+	@Override
 	public void execute() throws BuildException {
 		if(pkg == null) {
 			throw new BuildException("package name required");

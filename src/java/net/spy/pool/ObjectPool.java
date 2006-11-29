@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import net.spy.SpyObject;
+import net.spy.SpyThread;
 import net.spy.util.SpyConfig;
 import net.spy.util.TimeStampedHashMap;
 
@@ -145,6 +146,7 @@ public class ObjectPool extends SpyObject {
 	/**
 	 * Dump out the object pools.
 	 */
+	@Override
 	public String toString() {
 		StringBuilder out=new StringBuilder(TOSTRING_LEN);
 		ArrayList<PoolContainer> a=new ArrayList<PoolContainer>();
@@ -225,7 +227,7 @@ public class ObjectPool extends SpyObject {
 	}
 
 	// This is a private class that keeps the pool clean.
-	private class ObjectPoolCleaner extends Thread {
+	private static class ObjectPoolCleaner extends SpyThread {
 
 		// The object pool reference we'll be cleaning.
 		private ObjectPool op=null;
@@ -247,6 +249,7 @@ public class ObjectPool extends SpyObject {
 
 		// Look like a normal thread, but report number of times the thing's
 		// cleaned.
+		@Override
 		public String toString() {
 			StringBuilder sb=new StringBuilder(TOSTRING_LEN);
 			sb.append(super.toString());
@@ -271,6 +274,7 @@ public class ObjectPool extends SpyObject {
 			getLogger().debug("Finished cleaning, looks like this:  %s", op);
 		}
 
+		@Override
 		public void run() {
 			// Only do six cleans (sleeping ten minutes, that's an hour!)
 			while(numCleans<NUM_CLEANS) {

@@ -23,6 +23,7 @@ public class FactoryStorageTest extends TestCase {
 	private List<Ob> obs=null;
 	private Storage<Ob> cache=null;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		CacheKeyFinder.setInstance(null);
@@ -104,6 +105,7 @@ public class FactoryStorageTest extends TestCase {
 			return altKey;
 		}
 
+		@Override
 		public String toString() {
 			return "Ob#" + id + " ak=" + altKey + " n=" + name;
 		}

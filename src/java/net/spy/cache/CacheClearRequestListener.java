@@ -50,6 +50,7 @@ public class CacheClearRequestListener extends SpyThread {
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		return super.toString()
 			+ " on " + group.getHostAddress() + ":" + port
@@ -89,6 +90,7 @@ public class CacheClearRequestListener extends SpyThread {
 	/**
 	 * Run.
 	 */
+	@Override
 	public void run() {
 		while(running) {
 			try {

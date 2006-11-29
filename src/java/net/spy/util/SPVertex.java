@@ -11,8 +11,8 @@ import java.lang.ref.WeakReference;
  *
  * @see ShortestPathFinder
  */
-public class SPVertex<N extends SPNode> extends Object
-	implements Comparable<SPVertex> {
+public class SPVertex<N extends SPNode<N>> extends Object
+	implements Comparable<SPVertex<N>> {
 
 	// A weak reference to the next spnode
 	private WeakReference<N> to=null;
@@ -38,6 +38,7 @@ public class SPVertex<N extends SPNode> extends Object
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		return("{SPVertex cost=" + cost + " dest=" + to.get() + "}");
 	}
@@ -72,8 +73,7 @@ public class SPVertex<N extends SPNode> extends Object
 	 * Weight will be considered first.  If vertices are at the same
 	 * weight, the destination nodes will be compared.
 	 */
-	@SuppressWarnings("unchecked")
-	public int compareTo(SPVertex other) {
+	public int compareTo(SPVertex<N> other) {
 		int rv=0;
 
 		if( getCost() > other.getCost()) {

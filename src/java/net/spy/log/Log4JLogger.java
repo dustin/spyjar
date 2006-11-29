@@ -27,6 +27,7 @@ public class Log4JLogger extends AbstractLogger {
 	/** 
 	 * True if the underlying logger would allow debug messages through.
 	 */
+	@Override
 	public boolean isDebugEnabled() {
 		return(l4jLogger.isDebugEnabled());
 	}
@@ -34,6 +35,7 @@ public class Log4JLogger extends AbstractLogger {
 	/** 
 	 * True if the underlying logger would allow info messages through.
 	 */
+	@Override
 	public boolean isInfoEnabled() {
 		return(l4jLogger.isInfoEnabled());
 	}
@@ -45,6 +47,7 @@ public class Log4JLogger extends AbstractLogger {
 	 * @param message object message
 	 * @param e optional throwable
 	 */
+	@Override
 	public void log(Level level, Object message, Throwable e) {
 		org.apache.log4j.Level pLevel=org.apache.log4j.Level.DEBUG;
 

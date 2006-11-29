@@ -38,6 +38,7 @@ public class Base64OutputStream extends FilterOutputStream {
 	 * 
 	 * @see FilterOutputStream
 	 */
+	@Override
 	public void write(byte data[], int offset, int length) throws IOException {
 		for(int i=offset; i<offset+length; i++) {
 			write(data[i]);
@@ -47,6 +48,7 @@ public class Base64OutputStream extends FilterOutputStream {
 	/**
 	 * Close this stream and finish up the Base64.
 	 */
+	@Override
 	public void close() throws IOException {
 		if(currentByte>0) {
 			byte[] tmp=new byte[currentByte];

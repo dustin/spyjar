@@ -53,6 +53,7 @@ public abstract class DBSQL extends DBSP {
 	/**
 	 * Prepare the SQL for execution.
 	 */
+	@Override
 	protected void prepare() throws SQLException {
 		if(getPreparedStatement() == null) {
 			if(registeredQueries!=null) {

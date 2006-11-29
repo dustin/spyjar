@@ -190,6 +190,7 @@ public class BitArray extends Object {
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuilder sb=new StringBuilder(bitList.size());
 

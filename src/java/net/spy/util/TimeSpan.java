@@ -67,6 +67,7 @@ public class TimeSpan extends Object {
 	/**
 	 * Print out the timespan.
 	 */
+	@Override
 	public String toString() {
 		StringBuilder sb=new StringBuilder(64);
 		boolean hasDays=false;

@@ -27,6 +27,7 @@ public class SNPPPoolAble extends PoolAble {
 	/**
 	 * @see PoolAble
 	 */
+	@Override
 	public void discard() {
 		try {
 			SNPP snpp=(SNPP)intGetObject();
@@ -45,6 +46,7 @@ public class SNPPPoolAble extends PoolAble {
 	 *
 	 * @return true if the object will be usable
 	 */
+	@Override
 	public boolean isAlive() {
 		boolean ret=false;
 		try {

@@ -46,7 +46,8 @@ public class CounterStat extends Stat {
     /** 
      * Get the count as a string.
      */
-    public String getStat() {
+    @Override
+	public String getStat() {
         return(String.valueOf(count));
     }
 

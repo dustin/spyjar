@@ -40,7 +40,7 @@ public abstract class MockConnectionSource extends Object
 		mocks.clear();
 	}
 
-	public Collection getSeenObjects() {
+	public Collection<?> getSeenObjects() {
 		return(mocks.values());
 	}
 
@@ -73,7 +73,7 @@ public abstract class MockConnectionSource extends Object
 	 * Verify all of the connections that were handed out.
 	 */
 	public void verifyConnections() throws Exception {
-		for(Iterator i=getSeenObjects().iterator(); i.hasNext(); ) {
+		for(Iterator<?> i=getSeenObjects().iterator(); i.hasNext(); ) {
 			Mock m=(Mock)i.next();
 			m.verify();
 		}

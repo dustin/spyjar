@@ -33,6 +33,7 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 
 	private SpyConfig successConfig=null;
 
+	@Override
 	protected void setUp() {
 		successConfig=new SpyConfig();
 		successConfig.put("dbConnectionSource",
@@ -125,6 +126,7 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 			}
 		}
 
+		@Override
 		public void transactionCommited() {
 			super.transactionCommited();
 			so.set(Boolean.TRUE);
@@ -137,6 +139,7 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 	 */
 	public static class SuccessConnectionSource extends MockConnectionSource {
 
+		@Override
 		protected void setupMock(Mock connMock, SpyConfig conf) {
 			// autocommit will be enabled, and then disabled
 			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")

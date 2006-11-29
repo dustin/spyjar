@@ -23,6 +23,7 @@ public abstract class LineGettingOutputStream extends OutputStream {
 	/**
 	 * Write a byte.
 	 */
+	@Override
 	public void write(int b) throws IOException {
 		byte[] ba=new byte[1];
 		ba[0]=(byte)b;
@@ -32,6 +33,7 @@ public abstract class LineGettingOutputStream extends OutputStream {
 	/**
 	 * Do the actual writing.
 	 */
+	@Override
 	public void write(byte b[], int offset, int length) throws IOException {
 		// Make a string and get rid of the extra space at the ends.
 		String msgS=new String(b, offset, length).trim();

@@ -34,6 +34,7 @@ public class SPTTest extends MockObjectTestCase {
 	private Connection conn;
 	private Mock stMock;
 
+	@Override
 	public void setUp() {
 		connMock = mock(Connection.class);
 		conn = (Connection) connMock.proxy();
@@ -140,7 +141,7 @@ public class SPTTest extends MockObjectTestCase {
 		dt.close();
 
 		// Validate all of the queries
-		Map queries=dt.getRegisteredQueries();
+		Map<String, String> queries=dt.getRegisteredQueries();
 		assertEquals("select ? as the_int\n",
 			queries.get(QuerySelector.DEFAULT_QUERY));
 		assertEquals("select ? as the_int from unused\n",
@@ -241,7 +242,8 @@ public class SPTTest extends MockObjectTestCase {
 	}
 
 	private void failedCoercion(DBSP db, String field, String val,
-		Class expectedException, String expectedMessage) throws SQLException {
+		Class<?> expectedException, String expectedMessage)
+		throws SQLException {
 		// This should be OK
 		db.setCoerced(field, null);
 		try {
@@ -291,6 +293,7 @@ public class SPTTest extends MockObjectTestCase {
 	// A dumb connection source that's just used to make the PK related SPT
 	// constructors happy.
 	public static class PKConnectionSource extends MockConnectionSource {
+		@Override
 		protected void setupMock(Mock connMock, SpyConfig conf) {
 			// nothing
 		}
@@ -299,6 +302,7 @@ public class SPTTest extends MockObjectTestCase {
 	public abstract static class AbsConnSrc extends MockConnectionSource {
 		protected abstract String getQuery();
 
+		@Override
 		protected void setupMock(Mock connMock, SpyConfig conf) {
 			Mock dbMdMock=new Mock(DatabaseMetaData.class);
 			dbMdMock.expects(new InvokeAtLeastOnceMatcher())
@@ -346,12 +350,14 @@ public class SPTTest extends MockObjectTestCase {
 	}
 
 	public static class GeneralConnectionSource extends AbsConnSrc {
+		@Override
 		public String getQuery() {
 			return("select ? as the_int\n");
 		}
 	}
 
 	public static class OracleConnectionSource extends AbsConnSrc {
+		@Override
 		public String getQuery() {
 			return("select ? as the_int from dual\n");
 		}

@@ -29,6 +29,7 @@ import org.jmock.core.stub.StubSequence;
  */
 public class PKTest extends TestCase {
 	
+	@Override
 	protected void tearDown() {
 		GetPK.setInstance(null);
 	}
@@ -94,7 +95,7 @@ public class PKTest extends TestCase {
 		mockSource.verifyConnections();
 	}
 
-	private abstract static class BaseConnectionSource
+	abstract static class BaseConnectionSource
 		extends MockConnectionSource {
 
 		protected static final String UPDATE=
@@ -214,6 +215,7 @@ public class PKTest extends TestCase {
 		private static final int INCR=100;
 		private static int startPoint=0;
 
+		@Override
 		protected void setupMock(Mock connMock, SpyConfig conf) {
 			// autocommit will be enabled, and then disabled
 			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")
@@ -236,6 +238,7 @@ public class PKTest extends TestCase {
 
 	public static class MissingKeySource extends BaseConnectionSource {
 
+		@Override
 		protected void setupMock(Mock connMock, SpyConfig conf) {
 			// autocommit will be enabled, and then disabled
 			connMock.expects(new InvokeOnceMatcher()).method("setAutoCommit")

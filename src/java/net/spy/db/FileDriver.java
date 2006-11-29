@@ -258,11 +258,13 @@ public class FileDriver extends SpyObject implements Driver {
 			this(q, new Object[0]);
 		}
 
+		@Override
 		public int hashCode() {
 			int rv=query.hashCode() ^ args.length;
 			return(rv);
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			boolean rv=false;
 			if(o instanceof ParameterizedQuery) {
@@ -290,6 +292,7 @@ public class FileDriver extends SpyObject implements Driver {
 			return(rv);
 		}
 
+		@Override
 		public String toString() {
 			ArrayList<String> paramStrings=new ArrayList<String>(args.length);
 			for(int i=0; i<args.length; i++) {

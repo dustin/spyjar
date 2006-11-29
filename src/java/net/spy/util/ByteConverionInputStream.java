@@ -23,6 +23,7 @@ public abstract class ByteConverionInputStream extends FilterInputStream {
 	/**
 	 * Marking and resetting are not supported in this filter by default.
 	 */
+	@Override
 	public boolean markSupported() {
 		return(false);
 	}
@@ -33,6 +34,7 @@ public abstract class ByteConverionInputStream extends FilterInputStream {
 	 *
 	 * @see FilterInputStream
 	 */
+	@Override
 	public int read(byte data[], int offset, int len) throws IOException {
 		byte[] tmpbuf=new byte[len];
 

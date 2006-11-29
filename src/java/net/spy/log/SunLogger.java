@@ -26,6 +26,7 @@ public class SunLogger extends AbstractLogger {
 	/** 
 	 * True if the underlying logger would allow Level.FINE through.
 	 */
+	@Override
 	public boolean isDebugEnabled() {
 		return(sunLogger.isLoggable(java.util.logging.Level.FINE));
 	}
@@ -33,6 +34,7 @@ public class SunLogger extends AbstractLogger {
 	/** 
 	 * True if the underlying logger would allow Level.INFO through.
 	 */
+	@Override
 	public boolean isInfoEnabled() {
 		return(sunLogger.isLoggable(java.util.logging.Level.INFO));
 	}
@@ -44,6 +46,7 @@ public class SunLogger extends AbstractLogger {
 	 * @param message object message
 	 * @param e optional throwable
 	 */
+	@Override
 	public void log(Level level, Object message, Throwable e) {
 		java.util.logging.Level sLevel=java.util.logging.Level.SEVERE;
 

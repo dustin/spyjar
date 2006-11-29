@@ -23,6 +23,7 @@ public class ProxyInterfaceImplementorTask extends InterfaceImplementorTask {
 	/** 
 	 * Perform the generation.
 	 */
+	@Override
 	public void execute() throws BuildException {
 		generateWith(ProxyInterfaceImplementor.class);
 	}

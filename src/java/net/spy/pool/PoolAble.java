@@ -297,6 +297,7 @@ public abstract class PoolAble extends SpyObject {
 	 *
 	 * @return a string representation of this object.
 	 */
+	@Override
 	public synchronized String toString() {
 		StringBuilder out=new StringBuilder(TOSTRING_LEN);
 		out.append(debugName());

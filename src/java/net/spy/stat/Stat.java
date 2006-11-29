@@ -38,7 +38,8 @@ public abstract class Stat extends SpyObject {
     /** 
      * getName()=getStat()
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return getName() + "=" + getStat();
     }
 

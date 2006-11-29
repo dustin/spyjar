@@ -26,6 +26,7 @@ public class CacheTest extends TestCase {
 	/** 
 	 * Get the cache.
 	 */
+	@Override
 	protected void setUp() {
 		cache=SpyCache.getInstance();
 	}
@@ -33,6 +34,7 @@ public class CacheTest extends TestCase {
 	/** 
 	 * Get rid of the cache.
 	 */
+	@Override
 	protected void tearDown() {
 		SpyCache.shutdown();
 	}
@@ -142,7 +144,7 @@ public class CacheTest extends TestCase {
 		assertEquals(4, td.cached);
 	}
 
-	private static class TestDelegate implements CacheDelegate  {
+	static class TestDelegate implements CacheDelegate  {
 		public int cached=0;
 		public int uncached=0;
 		public void cachedObject(String key, Cachable value) {

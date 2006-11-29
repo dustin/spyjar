@@ -61,6 +61,7 @@ public class DiskCacheTest extends TestCase {
 	/** 
 	 * Get the cache.
 	 */
+	@Override
 	protected void setUp() throws Exception {
 		cache=new DiskCache(getTmpDir());
 	}
@@ -68,6 +69,7 @@ public class DiskCacheTest extends TestCase {
 	/** 
 	 * Get rid of the cache.
 	 */
+	@Override
 	protected void tearDown() throws Exception {
 		cache = null;
 		SpyUtil.rmDashR(new File(tmpdir));
@@ -105,6 +107,7 @@ public class DiskCacheTest extends TestCase {
 	/** 
 	 * Test basic functionality of the disk cache.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testBasicDiskCache() throws Exception {
 		Map<String, String> pairs=initCache();
 
@@ -145,6 +148,7 @@ public class DiskCacheTest extends TestCase {
 	/** 
 	 * Test basic functionality of the disk cache.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testBasicDiskCacheNew() throws Exception {
 		Map<String, String> pairs=initCache();
 
@@ -209,6 +213,7 @@ public class DiskCacheTest extends TestCase {
 	/** 
 	 * Test cache walking.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testCacheWalkingWithRemoval() throws Exception {
 		initCache();
 

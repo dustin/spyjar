@@ -28,6 +28,7 @@ public class DBNull extends Object {
 	/**
 	 * Get the hashcode for this object.
 	 */
+	@Override
 	public int hashCode() {
 		return(type);
 	}
@@ -35,6 +36,7 @@ public class DBNull extends Object {
 	/**
 	 *  String me.
 	 */
+	@Override
 	public String toString() {
 		return("{DBNull type=" + TypeNames.getTypeName(type) + "}");
 	}
@@ -42,6 +44,7 @@ public class DBNull extends Object {
 	/**
 	 * True if o is a DBNull of the same type.
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 		if(o instanceof DBNull) {

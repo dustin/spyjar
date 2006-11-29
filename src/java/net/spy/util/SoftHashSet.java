@@ -41,16 +41,18 @@ public class SoftHashSet<T extends Object> extends ReferenceSet<T> {
 	/** 
 	 * Return a soft reference.
 	 */
+	@Override
 	protected Reference<T> getReference(T o) {
 		return(new MySoftReference<T>(o));
 	}
 
-	private static class MySoftReference<T> extends SoftReference<T> {
+	static class MySoftReference<T> extends SoftReference<T> {
 
 		public MySoftReference(T o) {
 			super(o);
 		}
 
+		@Override
 		public int hashCode() {
 			int rv=0;
 			Object o=get();

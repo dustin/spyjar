@@ -282,11 +282,11 @@ public class FileJobQueue extends JobQueue<MainJob> {
 		return(rv);
 	}
 
-	private static final class TimeFormat extends Object {
+	static final class TimeFormat extends Object {
 		private SimpleDateFormat format=null;
 		private int[] fields=null;
 
-		private TimeFormat(String fmt, int flds[]) {
+		TimeFormat(String fmt, int flds[]) {
 			super();
 			this.format=new SimpleDateFormat(fmt);
 			this.format.setLenient(false);
@@ -296,14 +296,14 @@ public class FileJobQueue extends JobQueue<MainJob> {
 		/** 
 		 * Get the format this thing is holding.
 		 */
-		private SimpleDateFormat getFormat() {
+		SimpleDateFormat getFormat() {
 			return(format);
 		}
 		
 		/** 
 		 * Get the java.util.Calendar fields that should be preserved.
 		 */
-		private int[] getFields() {
+		int[] getFields() {
 			return(fields);
 		}
 	}

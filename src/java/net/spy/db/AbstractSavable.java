@@ -100,6 +100,7 @@ public abstract class AbstractSavable extends SpyObject
 	/** 
 	 * If this object is still <q>dirty</q> during finalization, log it.
 	 */
+	@Override
 	protected void finalize() throws Throwable {
 		if(isNew() || isModified()) {
 			getLogger().debug("Finalizing and object that needs saving",
