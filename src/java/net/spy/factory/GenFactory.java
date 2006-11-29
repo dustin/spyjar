@@ -66,6 +66,16 @@ public abstract class GenFactory<T> extends SpyObject {
 		return(rv);
 	}
 
+	/**
+	 * Store or update an object in the cache.
+	 * 
+	 * @param i the object to store
+	 * @throws Exception if the cache cannot be updated with this instance
+	 */
+	protected void cacheInstance(T i) throws Exception {
+		getCache().cacheInstance(i);
+	}
+
 	/** 
 	 * Get the collection of all Instance objects to be cached.
 	 */

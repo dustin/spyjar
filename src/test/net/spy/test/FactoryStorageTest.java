@@ -50,6 +50,14 @@ public class FactoryStorageTest extends TestCase {
 		assertEquals(2, cache.getObjects("ak", 10).size());
 	}
 
+	public void testCacheInsertion() throws Exception {
+		assertNull(cache.getObject("id", 4));
+		Ob o=new Ob(4, 44, "four");
+		cache.cacheInstance(o);
+		assertSame(o, cache.getObject("id", 4));
+		assertSame(o, cache.getObjects("ak", 44).iterator().next());
+	}
+
 	public void testMissingAltKeyLookup() throws Exception {
 		assertEquals(0, cache.getObjects("blah", 19).size());
 		assertEquals(0, cache.getObjects("ak", 19).size());

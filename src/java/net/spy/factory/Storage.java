@@ -78,7 +78,7 @@ public class Storage<T> extends SpyObject {
 	/** 
 	 * Cache this instance.
 	 */
-	private void cacheInstance(T i) throws Exception {
+	public void cacheInstance(T i) throws Exception {
 		CacheKeyFinder ckf=CacheKeyFinder.getInstance();
 		Map<CacheKey,CacheKeyFinder.Accessor> m=ckf.getCacheKeys(i.getClass());
 		for(Map.Entry<CacheKey, CacheKeyFinder.Accessor> me : m.entrySet()) {

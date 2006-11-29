@@ -50,6 +50,14 @@ public class FactoryTest extends TestCase {
 		checkSecondPass();
 	}
 
+	public void testInsertion() throws Exception {
+		tf.recache();
+		assertNull(tf.getObject(891885));
+		TestInstance ti=new TestInstance(891885);
+		tf.cacheInstance(ti);
+		assertNotNull(tf.getObject(891885));
+	}
+
 	private void checkFirstPass() {
 		for(int i=0; i<NUM_OBJECTS; i++) {
 			TestInstance ti=tf.getObject(i);
@@ -228,6 +236,11 @@ public class FactoryTest extends TestCase {
 
 		public TestFactory() {
 			this(TEST_KEY, 10000);
+		}
+
+		@Override
+		public void cacheInstance(TestInstance i) throws Exception {
+			super.cacheInstance(i);
 		}
 
 		@Override
