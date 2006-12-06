@@ -26,7 +26,6 @@ public class ShortestPath<N extends SPNode<N>> extends ArrayList<N> {
 	 * @throws NoPathException if there's no path to the destination
 	 * @throws NullPointerException if from or to is null
 	 */
-	@SuppressWarnings("unchecked")
 	public ShortestPath(N from, N to) throws NoPathException {
 		super();
 

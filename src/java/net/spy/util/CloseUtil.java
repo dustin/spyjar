@@ -6,7 +6,6 @@ package net.spy.util;
 import java.io.Closeable;
 import java.sql.Connection;
 
-import net.spy.db.DBSPLike;
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
 
@@ -34,19 +33,6 @@ public final class CloseUtil {
      * Close a JDBC connection.
      */
     public static void close(Connection closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                logger.info("Unable to close %s", closeable, e);
-            }
-        }
-    }
-
-    /**
-     * Close a DBSP instance.
-     */
-    public static void close(DBSPLike closeable) {
         if (closeable != null) {
             try {
                 closeable.close();

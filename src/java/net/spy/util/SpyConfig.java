@@ -178,6 +178,8 @@ public class SpyConfig extends Properties {
 		}
 	}
 
+	// Unchecked because Properties is a Map<Object, Object>, but should only
+	// contain String, String.
 	@SuppressWarnings("unchecked")
 	private Map<String, String> mapConfig(File file) throws IOException {
 		Properties p = new Properties();

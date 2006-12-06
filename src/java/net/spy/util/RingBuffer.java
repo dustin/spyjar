@@ -46,7 +46,7 @@ public class RingBuffer<T> extends AbstractCollection<T>
 	 * @param s the maximum number of objects to be held in the ring
 	 * @param fill a Collection whose elements will be used to fill the buffer
 	 */
-	public RingBuffer(int s, Collection<T> fill) {
+	public RingBuffer(int s, Collection<? extends T> fill) {
 		this(s);
 		for(T ob : fill) {
 			add(ob);

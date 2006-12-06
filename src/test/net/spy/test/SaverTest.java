@@ -639,13 +639,13 @@ public class SaverTest extends MockObjectTestCase {
 		}
 
 		@Override
-		public Collection<Savable> getPreSavables(SaveContext ctx) {
+		public Collection<? extends Savable> getPreSavables(SaveContext ctx) {
 			return(preSavs);
 		}
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public Collection<Savable> getPostSavables(SaveContext ctx) {
+		public Collection<? extends Savable> getPostSavables(SaveContext ctx) {
 			return(postSavs);
 		}
 

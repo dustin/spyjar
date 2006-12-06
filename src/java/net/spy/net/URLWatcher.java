@@ -80,7 +80,6 @@ public class URLWatcher extends SpyObject {
 	}
 
 	// Get the URLItem for the given URL.
-	@SuppressWarnings("unchecked")
 	private URLItem getURLItem(URL u) {
 		FutureURL rv=items.get(u);
 		if(rv != null && !rv.urlItem.isRunning()) {
@@ -110,10 +109,9 @@ public class URLWatcher extends SpyObject {
 	 * @throws ExecutionException 
 	 * @throws InterruptedException 
 	 */
-	@SuppressWarnings("unchecked")
 	public void startWatching(URLItem u) {
 		if(!isWatching(u.getURL())) {
-			ScheduledFuture f=executor.scheduleAtFixedRate(u, 0,
+			ScheduledFuture<?> f=executor.scheduleAtFixedRate(u, 0,
 					u.getUpdateFrequency(), TimeUnit.MILLISECONDS);
 			items.put(u.getURL(), new FutureURL(f, u));
 			try {

@@ -109,7 +109,6 @@ public class FileJobQueue extends JobQueue<MainJob> {
 	}
 
 	// Init the job queue.
-	@SuppressWarnings("unchecked")
 	private void initQueue(Reader r) throws IOException {
 		LineNumberReader lnr=new LineNumberReader(r);
 

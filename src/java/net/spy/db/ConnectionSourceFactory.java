@@ -50,7 +50,6 @@ public class ConnectionSourceFactory extends SpyObject {
 	 * @exception RuntimeException if the specified connection source
 	 *   cannot be instantiated
 	 */
-	@SuppressWarnings("unchecked")
 	public ConnectionSource getConnectionSource(SpyConfig conf) {
 		String connectionClassName=conf.get("dbConnectionSource",
 			"net.spy.db.ObjectPoolConnectionSource");
@@ -63,6 +62,7 @@ public class ConnectionSourceFactory extends SpyObject {
 			try {
 				getLogger().debug("Instantiating %s", connectionClassName);
 
+				@SuppressWarnings("unchecked")
 				Class<? extends ConnectionSource> connectionSourceClass
 					=(Class<? extends ConnectionSource>)Class.forName(
 							connectionClassName);

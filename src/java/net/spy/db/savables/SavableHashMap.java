@@ -22,7 +22,7 @@ import net.spy.db.SaveException;
  *
  * @author <a href="mailto:dsallings@2wire.com">Dustin Sallings</a>
  */
-public class SavableHashMap<K, V> extends HashMap<K, Savable>
+public class SavableHashMap<K, V extends Savable> extends HashMap<K, V>
 	implements Savable {
 
     /**
@@ -36,7 +36,7 @@ public class SavableHashMap<K, V> extends HashMap<K, Savable>
 	 * Get an instance of SavableHashMap populated with the given
 	 * Map of objects.
 	 */
-	public SavableHashMap(Map<K, Savable> map) {
+	public SavableHashMap(Map<K, V> map) {
 		super(map);
 	}
 
@@ -83,14 +83,14 @@ public class SavableHashMap<K, V> extends HashMap<K, Savable>
 	/** 
 	 * @return null
 	 */
-	public Collection<Savable> getPreSavables(SaveContext context) {
+	public Collection<? extends Savable> getPreSavables(SaveContext context) {
 		return(null);
 	}
 
 	/** 
 	 * @return values()
 	 */
-	public Collection<Savable> getPostSavables(SaveContext context) {
+	public Collection<? extends Savable> getPostSavables(SaveContext context) {
 		return(values());
 	}
 

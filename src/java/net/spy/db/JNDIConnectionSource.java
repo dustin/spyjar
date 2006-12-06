@@ -49,7 +49,6 @@ public class JNDIConnectionSource extends SpyObject
 	 * @throws SQLException  
 	 * @see ConnectionSource
 	 */
-	@SuppressWarnings("unchecked")
 	public Connection getConnection(SpyConfig conf) throws SQLException {
 		String source=conf.get("dbSource");
 
@@ -58,7 +57,8 @@ public class JNDIConnectionSource extends SpyObject
 			// we need to convert the SpyConfig to a Hashtable since
 			// the receiving end may not know what a SpyConfig is, but it
 			// should surely know what a Hashtable is as that's what it's
-			// expecting per the javadocs.  
+			// expecting per the javadocs.
+			@SuppressWarnings("unchecked")
 			Hashtable env=new Hashtable(conf);
 
 			Context initial = new InitialContext(env);

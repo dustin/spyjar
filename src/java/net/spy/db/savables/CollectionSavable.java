@@ -17,12 +17,12 @@ import net.spy.db.SaveException;
  */
 public class CollectionSavable extends AbstractSavable {
 
-	private Collection<Savable> collection=null;
+	private Collection<? extends Savable> collection=null;
 
 	/**
 	 * Get an instance of CollectionSavable.
 	 */
-	public CollectionSavable(Collection<Savable> c) {
+	public CollectionSavable(Collection<? extends Savable> c) {
 		super();
 		this.collection=c;
 	}
@@ -31,7 +31,7 @@ public class CollectionSavable extends AbstractSavable {
 	 * Get the collection.
 	 */
 	@Override
-	public Collection<Savable> getPostSavables(SaveContext context) {
+	public Collection<? extends Savable> getPostSavables(SaveContext context) {
 		return(collection);
 	}
 

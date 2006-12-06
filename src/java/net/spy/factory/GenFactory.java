@@ -46,11 +46,10 @@ public abstract class GenFactory<T> extends SpyObject {
 	 * 
 	 * @return a CacheEntry
 	 */
-	@SuppressWarnings("unchecked")
 	protected Storage<T> getCache() {
-		Storage<T> rv=null;
 		SimpleCache sc=SimpleCache.getInstance();
-		rv=(Storage)sc.get(cacheKey);
+		@SuppressWarnings("unchecked")
+		Storage<T> rv=(Storage)sc.get(cacheKey);
 		if(rv == null) {
 			rv=setCache();
 		}

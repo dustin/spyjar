@@ -32,13 +32,13 @@ public class QuerySelectorFactory extends SpyObject {
 		return (qs);
 	}
 
-	@SuppressWarnings("unchecked")
 	private static synchronized void initQuerySelector() {
 		if(qs == null) {
 			String selectorClassName=System.getProperty(
 				PROPERTY_NAME,
 				DEFAULT_SELECTOR);
 			try {
+				@SuppressWarnings("unchecked")
 				Class<? extends QuerySelector> c
 					=(Class<? extends QuerySelector>) Class.forName(
 							selectorClassName);

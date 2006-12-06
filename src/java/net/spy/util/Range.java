@@ -179,11 +179,12 @@ public class Range<T extends Comparable<T>> extends Object
 	 * range.
 	 */
 	@Override
+	// Unchecked Range cast.
 	@SuppressWarnings("unchecked")
 	public boolean equals(Object o) {
 		boolean rv=false;
 		if(o instanceof Range) {
-			rv= (compareTo((Range)o)==0);
+			rv= (compareTo((Range<T>)o)==0);
 		}
 		return(rv);
 	}

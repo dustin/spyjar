@@ -68,9 +68,9 @@ public class Instantiator<C> extends SpyObject {
 	 * @return the new instance
 	 * @throws Exception if the class can't be instantiated
 	 */
-	@SuppressWarnings("unchecked")
 	protected C createInstance(String className) throws Exception {
 		getLogger().info("Initializing %s", className);
+		@SuppressWarnings("unchecked")
 		Class<C> c=(Class<C>) Class.forName(className);
 		C rv=c.newInstance();
 		getLogger().info("Initialization complete.");
@@ -84,10 +84,10 @@ public class Instantiator<C> extends SpyObject {
 	 * @return the new instance
 	 * @throws Exception if the class can't be instantiated
 	 */
-	@SuppressWarnings("unchecked")
 	protected C createInstance(String className, ClassLoader cl)
 		throws Exception {
 		getLogger().info("Initializing %s in %s", className, cl);
+		@SuppressWarnings("unchecked")
 		Class<C> c=(Class<C>) Class.forName(className, true, cl);
 		C rv=c.newInstance();
 		getLogger().info("Initialization complete.");

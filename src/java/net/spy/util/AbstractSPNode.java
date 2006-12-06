@@ -45,9 +45,8 @@ public abstract class AbstractSPNode<T extends SPNode<T>>
 	 * @param n SPNode to which to link
 	 * @param cost cost of this link
 	 */
-	@SuppressWarnings("unchecked")
-	protected void linkTo(SPNode n, int cost) {
-		links.add(new SPVertex(n, cost));
+	protected void linkTo(T n, int cost) {
+		links.add(new SPVertex<T>(n, cost));
 	}
 
 	/** 
@@ -55,7 +54,7 @@ public abstract class AbstractSPNode<T extends SPNode<T>>
 	 * 
 	 * @param n the node to which to link
 	 */
-	protected void linkTo(SPNode<T> n) {
+	protected void linkTo(T n) {
 		linkTo(n, SPVertex.DEFAULT_COST);
 	}
 

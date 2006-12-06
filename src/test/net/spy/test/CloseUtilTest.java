@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
-import net.spy.db.DBSPLike;
 import net.spy.util.CloseUtil;
 
 /**
@@ -48,14 +47,5 @@ public class CloseUtilTest extends MockObjectTestCase {
 	public void testConnectionCloseException() throws Exception {
 		CloseUtil.close((Connection)getFailure(
 				Connection.class, SQLException.class));
-	}
-
-	public void testDBSPClose() throws Exception {
-		CloseUtil.close((DBSPLike)getSuccess(DBSPLike.class));
-	}
-
-	public void testDBSPCloseException() throws Exception {
-		CloseUtil.close((DBSPLike)getFailure(
-				DBSPLike.class, RuntimeException.class));
 	}
 }

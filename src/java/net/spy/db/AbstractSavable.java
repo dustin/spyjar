@@ -76,7 +76,7 @@ public abstract class AbstractSavable extends SpyObject
 	 * The default implementation returns null, indicating that there are
 	 * no prerequisite objects.
 	 */
-	public Collection<Savable> getPreSavables(SaveContext context) {
+	public Collection<? extends Savable> getPreSavables(SaveContext context) {
 		return(null);
 	}
 
@@ -85,7 +85,7 @@ public abstract class AbstractSavable extends SpyObject
 	 * implementation returns null, indicating that there are no dependent
 	 * objects.
 	 */
-	public Collection<Savable> getPostSavables(SaveContext context) {
+	public Collection<? extends Savable> getPostSavables(SaveContext context) {
 		return(null);
 	}
 
