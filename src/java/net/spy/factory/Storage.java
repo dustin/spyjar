@@ -84,6 +84,11 @@ public class Storage<T> extends SpyObject {
 		for(Map.Entry<CacheKey, CacheKeyFinder.Accessor> me : m.entrySet()) {
 			storeEntry(me.getKey(), me.getValue().get(i), i);
 		}
+		if(!allObjects.contains(i)) {
+			Collection<T> newAll=new ArrayList<T>(allObjects);
+			newAll.add(i);
+			allObjects=Collections.unmodifiableCollection(newAll);
+		}
 	}
 
 	/** 
