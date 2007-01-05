@@ -68,7 +68,7 @@ public class Storage<T> extends SpyObject {
 	private void index() {
 		for(T i : allObjects) {
 			try {
-				cacheInstance(i);
+				internalCacheInstance(i);
 			} catch(Exception e) {
 				throw new RuntimeException("Problem indexing at " + i, e);
 			}
@@ -79,15 +79,19 @@ public class Storage<T> extends SpyObject {
 	 * Cache this instance.
 	 */
 	public void cacheInstance(T i) throws Exception {
-		CacheKeyFinder ckf=CacheKeyFinder.getInstance();
-		Map<CacheKey,CacheKeyFinder.Accessor> m=ckf.getCacheKeys(i.getClass());
-		for(Map.Entry<CacheKey, CacheKeyFinder.Accessor> me : m.entrySet()) {
-			storeEntry(me.getKey(), me.getValue().get(i), i);
-		}
+		internalCacheInstance(i);
 		if(!allObjects.contains(i)) {
 			Collection<T> newAll=new ArrayList<T>(allObjects);
 			newAll.add(i);
 			allObjects=Collections.unmodifiableCollection(newAll);
+		}
+	}
+
+	private void internalCacheInstance(T i) throws Exception {
+		CacheKeyFinder ckf=CacheKeyFinder.getInstance();
+		Map<CacheKey,CacheKeyFinder.Accessor> m=ckf.getCacheKeys(i.getClass());
+		for(Map.Entry<CacheKey, CacheKeyFinder.Accessor> me : m.entrySet()) {
+			storeEntry(me.getKey(), me.getValue().get(i), i);
 		}
 	}
 

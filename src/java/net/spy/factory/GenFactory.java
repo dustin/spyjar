@@ -66,7 +66,7 @@ public abstract class GenFactory<T> extends SpyObject {
 	}
 
 	/**
-	 * Store or update an object in the cache.
+	 * Store or update an individual object in the cache.
 	 * 
 	 * @param i the object to store
 	 * @throws Exception if the cache cannot be updated with this instance
