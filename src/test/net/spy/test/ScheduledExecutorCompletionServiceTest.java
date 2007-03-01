@@ -4,11 +4,16 @@
 package net.spy.test;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
+import net.spy.concurrent.CompositeExecutorException;
+import net.spy.concurrent.Rescheduler;
+import net.spy.concurrent.RetryableCallable;
 import net.spy.concurrent.ScheduledCompletionService;
 import net.spy.concurrent.ScheduledExecutorCompletionService;
 
@@ -17,13 +22,13 @@ import net.spy.concurrent.ScheduledExecutorCompletionService;
  */
 public class ScheduledExecutorCompletionServiceTest extends TestCase {
 
-	private ScheduledThreadPoolExecutor tpe=null;
+	private ScheduledExecutorService tpe=null;
 	private ScheduledCompletionService<Object> scs=null;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		tpe=new ScheduledThreadPoolExecutor(2);
+		tpe=new Rescheduler(new ScheduledThreadPoolExecutor(2));
 		scs=new ScheduledExecutorCompletionService<Object>(tpe);
 	}
 
@@ -48,6 +53,13 @@ public class ScheduledExecutorCompletionServiceTest extends TestCase {
 		assertSame(rv, f.get());
 	}
 
+	public void testRetryableCallableNow() throws Exception {
+		Object rv=new Object();
+		scs.submit(new TestRetryableCallable(rv));
+		Future<Object> f=scs.take();
+		assertSame(rv, f.get());
+	}
+
 	public void testScheduledRunnable() throws Exception {
 		scs.schedule(new TestRunnable(), 100, TimeUnit.MILLISECONDS);
 		assertNull(scs.poll());
@@ -65,6 +77,33 @@ public class ScheduledExecutorCompletionServiceTest extends TestCase {
 		assertSame(rv, f.get());
 	}
 
+	public void testScheduledRetryableCallable() throws Exception {
+		Object rv=new Object();
+		scs.schedule(new TestRetryableCallable(rv), 100, TimeUnit.MILLISECONDS);
+		assertNull(scs.poll());
+		Future<Object> f=scs.take();
+		assertSame(rv, f.get());
+	}
+
+	public void testFailedScheduledRetryableCallable() throws Exception {
+		Object rv=new Object();
+		scs.schedule(new TestRetryableCallable(rv, 2), 100,
+				TimeUnit.MILLISECONDS);
+		assertNull(scs.poll());
+		Future<Object> f=scs.take();
+		try {
+			Object x=f.get();
+			fail("Expected failure, got " + x);
+		} catch(CompositeExecutorException e) {
+			assertEquals("Too many failures", e.getMessage());
+			assertEquals(2, e.getExceptions().size());
+			for(ExecutionException t : e.getExceptions()) {
+				assertEquals("Damn!", t.getCause().getMessage());
+				assertSame(Exception.class, t.getCause().getClass());
+			}
+		}
+	}
+
 	static class TestRunnable implements Runnable {
 		public void run() {
 			// look, I ran
@@ -79,6 +118,43 @@ public class ScheduledExecutorCompletionServiceTest extends TestCase {
 		}
 		public Object call() throws Exception {
 			return rv;
+		}
+	}
+
+	static class TestRetryableCallable 
+		extends TestCallable implements RetryableCallable<Object> {
+		int failures=0;
+		int maxFailures=0;
+		private long retryTime=10;
+
+		public TestRetryableCallable(Object o, int m) {
+			super(o);
+			maxFailures=m;
+		}
+
+		public TestRetryableCallable(Object o) {
+			this(o, 4);
+		}
+
+		public Object call() throws Exception {
+			if(failures < 3) {
+				failures++;
+				throw new Exception("Damn!");
+			}
+			return super.call();
+		}
+
+		public long getRetryDelay() {
+			return retryTime;
+		}
+		public void givingUp() {
+			// OK
+			
+		}
+		public void retrying() {
+			if(++failures >= maxFailures) {
+				retryTime=-1;
+			}
 		}
 	}
 }
