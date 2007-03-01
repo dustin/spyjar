@@ -11,6 +11,7 @@ import java.util.concurrent.Future;
 
 import junit.framework.TestCase;
 
+import net.spy.concurrent.CompositeExecutorException;
 import net.spy.concurrent.Rescheduler;
 import net.spy.concurrent.RetryableCallable;
 
@@ -75,6 +76,8 @@ public class ReschedulerTest extends TestCase {
 			fail("Expected failure, got " + s);
 		} catch(ExecutionException e) {
 			assertEquals("Too many failures", e.getMessage());
+			assertEquals(4,
+					((CompositeExecutorException)e).getExceptions().size());
 			StringWriter sw=new StringWriter();
 			PrintWriter pw=new PrintWriter(sw);
 			e.printStackTrace(pw);

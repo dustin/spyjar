@@ -3,9 +3,6 @@
 
 package net.spy.concurrent;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -19,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import net.spy.SpyThread;
-import net.spy.util.RingBuffer;
 
 /**
  * ScheduledExecutorService wrapper that allows RetryableCallable objects to
@@ -67,7 +63,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 				if(wt.e == null) {
 					wt.e=new CompositeExecutorException(e);
 				} else {
-					wt.e.exceptions.add(e);
+					wt.e.addException(e);
 				}
 
 				long retryDelay=wt.callable.getRetryDelay();
@@ -186,37 +182,6 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		executor.execute(arg0);
 	}
 
-	static class CompositeExecutorException extends ExecutionException {
-		Collection<ExecutionException> exceptions=null;
-		public CompositeExecutorException(ExecutionException e) {
-			super("Too many failures");
-			exceptions=new RingBuffer<ExecutionException>(10);
-			exceptions.add(e);
-		}
-
-		@Override
-		public void printStackTrace(PrintStream p) {
-			super.printStackTrace(p);
-			for(ExecutionException e : exceptions) {
-				try {
-					p.write("Also caused by: ".getBytes());
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				e.printStackTrace(p);
-			}
-		}
-
-		@Override
-		public void printStackTrace(PrintWriter p) {
-			super.printStackTrace(p);
-			for(ExecutionException e : exceptions) {
-				p.print("Also caused by: ");
-				e.printStackTrace(p);
-			}
-		}
-	}
-
 	static class WatchingTuple implements Comparable<WatchingTuple> {
 
 		public CompositeExecutorException e=null;
@@ -250,22 +215,24 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		Object defaultObj=null;
 		SynchronizationObject<Object> sync=null;
 		private Future<T> currentFuture=null;
-		private long delay=0;
+		private long when=0;
 
 		public FutureFuture(Future<T> f, long d) {
 			super();
+			assert d >= 0 : "Delay is not in the future";
 			currentFuture=f;
-			delay=d;
+			when=System.currentTimeMillis() + d;
 			defaultObj=new Object();
 			sync=new SynchronizationObject<Object>(defaultObj);
 		}
 
 		public long getDelay(TimeUnit unit) {
-			return delay;
+			return TimeUnit.MILLISECONDS.convert(
+					when - System.currentTimeMillis(), unit);
 		}
 
 		public int compareTo(Delayed d) {
-			return new Long(delay).compareTo(
+			return new Long(getDelay(TimeUnit.MILLISECONDS)).compareTo(
 					d.getDelay(TimeUnit.MILLISECONDS));
 		}
 
