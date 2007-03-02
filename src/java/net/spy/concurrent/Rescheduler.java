@@ -5,17 +5,21 @@ package net.spy.concurrent;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import net.spy.SpyThread;
+import net.spy.concurrent.SynchronizationObject.Predicate;
 
 /**
  * ScheduledExecutorService wrapper that allows RetryableCallable objects to
@@ -27,7 +31,7 @@ import net.spy.SpyThread;
 public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 
 	private ScheduledExecutorService executor;
-	private PriorityBlockingQueue<WatchingTuple> queue;
+	BlockingQueue<FutureFuture<?>> completed;
 	private volatile boolean shutdown=false;
 
 	/**
@@ -39,46 +43,36 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 	public Rescheduler(ScheduledExecutorService x) {
 		super("Rescheduler");
 		executor=x;
-		queue=new PriorityBlockingQueue<WatchingTuple>();
+		completed=new LinkedBlockingQueue<FutureFuture<?>>();
 		start();
 	}
 
 	@Override
+	@SuppressWarnings("unchecked") // discarding future type
 	public void run() {
 		while(!isShutdown()) {
-			WatchingTuple wt=null;
+			FutureFuture future=null;
 			try {
-				wt=queue.take();
-				getLogger().debug("Got %s", wt);
-				// Wait for completion
-				Object o=wt.currentFuture.get();
-				wt.futureFuture.sync.set(o);
+				future=completed.take();
+				Object o=future.getCurrentFuture().get();
+				future.setResult(o);
 			} catch (InterruptedException e) {
-				if(!isShutdown()) {
-					getLogger().info("Someone interrupted us while waiting.", e);
-				}
+				getLogger().info("Interrupted", e);
 			} catch (ExecutionException e) {
-				assert wt != null : "Lost my watch?";
-				getLogger().debug("Execution of %s failed.", wt.callable, e);
-				if(wt.e == null) {
-					wt.e=new CompositeExecutorException(e);
-				} else {
-					wt.e.addException(e);
-				}
-
-				long retryDelay=wt.callable.getRetryDelay();
-				if(retryDelay >= 0) {
-					getLogger().debug("Scheduling %s for retry", wt.callable);
-					wt.callable.retrying();
-					ScheduledFuture<?> f=executor.schedule(wt.callable,
-							retryDelay, TimeUnit.MILLISECONDS);
-					queue.put(new WatchingTuple(f, wt.callable,
-							wt.futureFuture, wt.e));
-				} else {
-					getLogger().info("No retry for %s", wt.callable);
-					getLogger().debug("Fatal error in RetryableCallable", wt.e);
-					wt.callable.givingUp();
-					wt.futureFuture.sync.set(wt.e);
+				assert future != null : "Lost the future";
+				future.addException(e);
+				long nextTime=future.callable.getRetryDelay();
+				if(!future.isCancelled()) {
+					if(nextTime >= 0) {
+						future.callable.retrying();
+						future.clearCurrentFuture();
+						scheduleFutureFuture(future,
+								nextTime, TimeUnit.MILLISECONDS);
+					} else {
+						future.callable.givingUp();
+						assert future.exceptions != null : "Exceptions is null";
+						future.setResult(future.exceptions);
+					}
 				}
 			}
 		}
@@ -89,18 +83,34 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		return executor.schedule(r, delay, unit);
 	}
 
+	private <T> void scheduleFutureFuture(final FutureFuture<T> ff,
+			long delay, TimeUnit unit) {
+		FutureTask<T> ft=new FutureTask<T>(ff.callable) {
+			@Override
+			protected void done() {
+				completed.add(ff);
+			}
+		};
+		executor.schedule(ft, delay, unit);
+		ff.setCurrentFuture(ft);
+	}
+
 	/**
 	 * Process the given callable.  If this is a RetryableCallable, it may be
 	 * retried if execution fails.
 	 */
-	public <V> ScheduledFuture<V> schedule(Callable<V> c, long delay,
+	public <T> ScheduledFuture<T> schedule(Callable<T> c, long delay,
 			TimeUnit unit) {
-		ScheduledFuture<V> rv=executor.schedule(c, delay, unit);
+		ScheduledFuture<T> rv=null;
 		if(c instanceof RetryableCallable) {
-			getLogger().debug("Scheduling a retryable:  %s", c);
-			FutureFuture<V> ff=new FutureFuture<V>(rv, unit.toMillis(delay));
-			queue.put(new WatchingTuple(rv, (RetryableCallable<?>) c, ff));
+			RetryableCallable<T> rc=(RetryableCallable<T>)c;
+			final ScheduledFutureFuture<T> ff=new ScheduledFutureFuture<T>(rc,
+					unit.convert(delay, TimeUnit.MILLISECONDS));
+
+			scheduleFutureFuture(ff, delay, unit);
 			rv=ff;
+		} else {
+			rv=executor.schedule(c, delay, unit);
 		}
 		return rv;
 	}
@@ -120,9 +130,9 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		return executor.awaitTermination(arg0, arg1);
 	}
 
-	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> arg0)
+	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> c)
 			throws InterruptedException {
-		return executor.invokeAll(arg0);
+		return executor.invokeAll(c);
 	}
 
 	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> arg0,
@@ -167,7 +177,23 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 	 * retried if execution fails.
 	 */
 	public <T> Future<T> submit(Callable<T> c) {
-		return schedule(c, 0, TimeUnit.SECONDS);
+		Future<T> rv=null;
+		if(c instanceof RetryableCallable) {
+			RetryableCallable<T> rc=(RetryableCallable<T>)c;
+			final FutureFuture<T> ff=new FutureFuture<T>(rc);
+			FutureTask<T> ft=new FutureTask<T>(rc) {
+				@Override
+				protected void done() {
+					completed.add(ff);
+				}
+			};
+			executor.submit(ft);
+			ff.setCurrentFuture(ft);
+			rv=ff;
+		} else {
+			rv=executor.submit(c);
+		}
+		return rv;
 	}
 
 	public Future<?> submit(Runnable arg0) {
@@ -182,64 +208,60 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		executor.execute(arg0);
 	}
 
-	static class WatchingTuple implements Comparable<WatchingTuple> {
+	static class FutureFuture<T> implements Future<T> {
 
-		public CompositeExecutorException e=null;
-		public ScheduledFuture<?> currentFuture=null;
-		public RetryableCallable<?> callable=null;
-		public FutureFuture<?> futureFuture=null;
+		RetryableCallable<T> callable=null;
+		Object defaultObj=new Object();
+		Object cancelObj=new Object();
+		CompositeExecutorException exceptions=null;
+		private SynchronizationObject<Future<T>> futureSync=
+			new SynchronizationObject<Future<T>>(null);
+		private SynchronizationObject<Object> sync=
+			new SynchronizationObject<Object>(defaultObj);
 
-		public WatchingTuple(ScheduledFuture<?> f, RetryableCallable<?> c,
-				FutureFuture<?> ff, CompositeExecutorException exception) {
+		public FutureFuture(RetryableCallable<T> c) {
 			super();
-			currentFuture=f;
 			callable=c;
-			futureFuture=ff;
-			e=exception;
 		}
 
-		public WatchingTuple(ScheduledFuture<?> f, RetryableCallable<?> c,
-				FutureFuture<?> ff) {
-			this(f, c, ff, null);
+		public void addException(ExecutionException e) {
+			if(exceptions == null) {
+				exceptions=new CompositeExecutorException(e);
+			} else {
+				exceptions.addException(e);
+			}
 		}
 
-		public int compareTo(WatchingTuple wt) {
-			return currentFuture.compareTo(wt.currentFuture);
+		public void setResult(Object t) {
+			sync.set(t);
 		}
 
-	}
-
-	static class FutureFuture<T> implements ScheduledFuture<T> {
-
-		// Access by a future get
-		Object defaultObj=null;
-		SynchronizationObject<Object> sync=null;
-		private Future<T> currentFuture=null;
-		private long when=0;
-
-		public FutureFuture(Future<T> f, long d) {
-			super();
-			assert d >= 0 : "Delay is not in the future";
-			currentFuture=f;
-			when=System.currentTimeMillis() + d;
-			defaultObj=new Object();
-			sync=new SynchronizationObject<Object>(defaultObj);
+		public Future<T> getCurrentFuture() throws InterruptedException {
+			try {
+				futureSync.waitUntilNotNull(
+						Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+			} catch (TimeoutException e) {
+				throw new RuntimeException(e);
+			}
+			Future<T> f=futureSync.get();
+			assert f != null : "Current future fetch failed";
+			return f;
 		}
 
-		public long getDelay(TimeUnit unit) {
-			return TimeUnit.MILLISECONDS.convert(
-					when - System.currentTimeMillis(), unit);
+		public void clearCurrentFuture() {
+			setCurrentFuture(null);
 		}
 
-		public int compareTo(Delayed d) {
-			return new Long(getDelay(TimeUnit.MILLISECONDS)).compareTo(
-					d.getDelay(TimeUnit.MILLISECONDS));
+		public void setCurrentFuture(Future<T> to) {
+			futureSync.set(to);
 		}
 
 		public boolean cancel(boolean mayInterruptIfRunning) {
-			boolean rv=currentFuture.cancel(mayInterruptIfRunning);
-			if(rv) {
-				sync.set(null);
+			boolean rv=false;
+			sync.set(cancelObj);
+			Future<T> f=futureSync.get();
+			if(f != null) {
+				rv=f.cancel(mayInterruptIfRunning);
 			}
 			return rv;
 		}
@@ -249,35 +271,56 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 				return get(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 			} catch (TimeoutException e) {
 				throw new RuntimeException(
-						"Timeout on infinite sleep.  World over?");
+						"Infinite sleep over.  The end is near", e);
 			}
 		}
 
-		@SuppressWarnings("unchecked")
 		public T get(long timeout, TimeUnit unit)
 			throws InterruptedException, ExecutionException, TimeoutException {
-			sync.waitUntilTrue(new SynchronizationObject.Predicate<Object>() {
+			sync.waitUntilTrue(new Predicate<Object>(){
 				public boolean evaluate(Object o) {
 					return o != defaultObj;
-				}
-			}, timeout, unit);
+				}}, timeout, unit);
 			Object o=sync.get();
-			T rv=null;
-			if(o instanceof CompositeExecutorException) {
+			if(o == cancelObj) {
+				throw new CancellationException("Cancelled");
+			} else if(o instanceof CompositeExecutorException) {
 				throw (ExecutionException)o;
 			} else {
-				rv=(T)o;
+				@SuppressWarnings("unchecked")
+				T rv=(T)o;
+				return rv;
 			}
-			return rv;
 		}
 
 		public boolean isCancelled() {
-			return currentFuture.isCancelled();
+			return sync.get() == cancelObj;
 		}
 
 		public boolean isDone() {
-			return defaultObj != sync.get();
+			return sync.get() != defaultObj;
 		}
-		
+	}
+
+	static class ScheduledFutureFuture<T> extends FutureFuture<T>
+		implements ScheduledFuture<T> {
+
+		private long when=0;
+
+		public ScheduledFutureFuture(RetryableCallable<T> c, long delay) {
+			super(c);
+			when=System.currentTimeMillis()+delay;
+		}
+
+		public long getDelay(TimeUnit unit) {
+			return TimeUnit.MILLISECONDS.convert(
+					when-System.currentTimeMillis(), unit);
+		}
+
+		public int compareTo(Delayed d) {
+			return new Long(getDelay(TimeUnit.MILLISECONDS))
+				.compareTo(d.getDelay(TimeUnit.MILLISECONDS));
+		}
+
 	}
 }
