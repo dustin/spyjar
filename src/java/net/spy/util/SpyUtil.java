@@ -197,7 +197,7 @@ public class SpyUtil {
 		Class<?> tclass=Class.forName(classname, true, cl);
 
 		// Find the method
-		Class[] paramtypes = new Class[1];
+		Class<?>[] paramtypes = new Class[1];
 		String[] tmp=new String[0];
 		paramtypes[0]=tmp.getClass();
 		Method m = tclass.getMethod("main", paramtypes);

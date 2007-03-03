@@ -70,7 +70,7 @@ public class InterfaceImplementorTask extends Task {
 		InterfaceImplementor ii=null;
 		// Instantiate the InterfaceImplementor.
 		try {
-			Class[] params={Class.class};
+			Class<?>[] params={Class.class};
 			Constructor<? extends InterfaceImplementor> cons
 				=c.getConstructor(params);
 			Object[] args={theInterface};
