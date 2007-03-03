@@ -45,13 +45,18 @@ public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 	@SuppressWarnings("unchecked") // discarding future type
 	void examineCompletion(final FutureFuture future) {
 		try {
-			Object o=future.getCurrentFuture().get();
-			future.setResult(o);
+			boolean set=false;
+			while(!set) {
+				try {
+					future.setResult(future.getCurrentFuture().get());
+					set=true;
+				} catch(InterruptedException e) {
+					getLogger().info("Interrupted.  Retrying", e);
+				}
+			}
 			future.callable.executionComplete(true);
 		} catch(CancellationException e) {
 			future.setCancelled();
-		} catch (InterruptedException e) {
-			getLogger().info("Interrupted", e);
 		} catch (ExecutionException e) {
 			assert future != null : "Lost the future";
 			future.addException(e);

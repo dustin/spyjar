@@ -49,6 +49,9 @@ public class ReschedulerTest extends TestCase {
 		schedPooled.shutdown();
 		assertTrue(schedPooled.awaitTermination(
 				Long.MAX_VALUE, TimeUnit.MILLISECONDS));
+		// Note:  This is always true because the inline scheduler never says no
+		assertFalse(schedInline.isShutdown());
+		assertTrue(schedPooled.isShutdown());
 	}
 
 	// Plain runnable (no special handling)
