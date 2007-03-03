@@ -5,6 +5,7 @@ package net.spy.test;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import junit.framework.TestCase;
 import net.spy.concurrent.CompositeExecutorException;
@@ -156,13 +158,61 @@ public class ReschedulerTest extends TestCase {
 				new TestCallable<String>("B"),
 				new TestCallable<String>("C"));
 
-		Set<String> expected=new HashSet<String>();
+		List<String> expected=new ArrayList<String>();
 		expected.addAll(Arrays.asList("A", "B", "C"));
 
-		Set<String> got=new HashSet<String>();
+		List<String> got=new ArrayList<String>();
 		List<Future<String>> res=sched.invokeAll(callables);
 		for(Future<String> f : res) {
 			got.add(f.get());
+		}
+
+		assertEquals(expected, got);
+	}
+
+	@SuppressWarnings("unchecked") // java 1.5 screwed up invokeAll's definition
+	public void testInvokeAllWithRetry() throws Exception {
+		Collection callables=Arrays.asList(
+				new TestRtryCallable<String>("A", 2, 3),
+				new TestRtryCallable<String>("B", 2, 3),
+				new TestRtryCallable<String>("C", 2, 3));
+
+		List<String> expected=new ArrayList<String>();
+		expected.addAll(Arrays.asList("A", "B", "C"));
+
+		List<String> got=new ArrayList<String>();
+		List<Future<String>> res=sched.invokeAll(callables);
+		for(Future<String> f : res) {
+			got.add(f.get());
+		}
+
+		assertEquals(expected, got);
+	}
+
+	@SuppressWarnings("unchecked") // java 1.5 screwed up invokeAll's definition
+	public void testInvokeAllWithRetryTimeout() throws Exception {
+		// I need a proper threadpool for this.  The inline processor won't
+		// return until everything completes.
+		sched.shutdown();
+		sched=null;
+		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
+
+		Collection callables=Arrays.asList(
+				new TestRtryCallable<String>("A", 1, 9, 10),
+				new TestRtryCallable<String>("B", 5, 9, 100),
+				new TestRtryCallable<String>("C", 7, 9, 1000));
+
+		// Only one of these should finish.
+		List<String> expected=new ArrayList<String>();
+		expected.addAll(Arrays.asList("A"));
+
+		List<String> got=new ArrayList<String>();
+		List<Future<String>> res=sched.invokeAll(callables,
+				20, TimeUnit.MILLISECONDS);
+		for(Future<String> f : res) {
+			if(f.isDone()) {
+				got.add(f.get());
+			}
 		}
 
 		assertEquals(expected, got);
@@ -208,23 +258,120 @@ public class ReschedulerTest extends TestCase {
 	}
 
 	public void testInvokeAnyTimeout() throws Exception {
+		// I need a proper threadpool for this.  The inline processor won't
+		// return until everything completes.
+		sched.shutdown();
+		sched=null;
+		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
+
 		// java 1.5 screwed up invokeAny's definition
 		@SuppressWarnings("unchecked")
-		Collection c=Arrays.asList(
+		Collection<Callable<String>> callables=new ArrayList<Callable<String>>(
+				Arrays.asList(
 				new TestCallable<String>("A"),
-				new TestCallable<String>("B"),
-				new TestCallable<String>("C"));
+				new TestCallable<String>("B", 30),
+				new TestCallable<String>("C", 30)));
+
+		String res=sched.invokeAny(callables, 10, TimeUnit.MILLISECONDS);
+
+		assertEquals("A", res);
+	}
+
+	public void testInvokeAnyWithRetryTimeoutTimedOut() throws Exception {
+		// I need a proper threadpool for this.  The inline processor won't
+		// return until everything completes.
+		sched.shutdown();
+		sched=null;
+		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
+
 		// java 1.5 screwed up invokeAny's definition
 		@SuppressWarnings("unchecked")
-		Collection<Callable<String>> callables=c;
+		Collection<Callable<String>> callables=new ArrayList<Callable<String>>(
+				Arrays.asList(
+				new TestRtryCallable<String>("A", 5, 9, 1000),
+				new TestRtryCallable<String>("B", 5, 9, 1000),
+				new TestRtryCallable<String>("C", 5, 9, 1000)));
 
-		Set<String> expected=new HashSet<String>();
-		expected.addAll(Arrays.asList("A", "B", "C"));
+		try {
+			String res=sched.invokeAny(callables, 10, TimeUnit.MILLISECONDS);
+			fail("Expected timeout, got " + res);
+		} catch(TimeoutException e) {
+			// OK
+		}
+	}
 
-		String res=sched.invokeAny(callables,
-				10, TimeUnit.MILLISECONDS);
+	public void testInvokeAnyException() throws Exception {
+		// I need a proper threadpool for this.  The inline processor won't
+		// return until everything completes.
+		sched.shutdown();
+		sched=null;
+		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
 
-		assertTrue(expected.contains(res));
+		// java 1.5 screwed up invokeAny's definition
+		@SuppressWarnings("unchecked")
+		Collection<Callable<String>> callables=new ArrayList<Callable<String>>(
+				Arrays.asList(
+				new TestRtryCallable<String>("A", 4, 3),
+				new TestRtryCallable<String>("B", 4, 3),
+				new TestRtryCallable<String>("C", 4, 3)));
+
+		try {
+			String res=sched.invokeAny(callables);
+			fail("Expected exception, got " + res);
+		} catch(ExecutionException e) {
+			// OK
+		}
+	}
+
+	public void testInvokeAnyExceptionTimeout() throws Exception {
+		// I need a proper threadpool for this.  The inline processor won't
+		// return until everything completes.
+		sched.shutdown();
+		sched=null;
+		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
+
+		// java 1.5 screwed up invokeAny's definition
+		@SuppressWarnings("unchecked")
+		Collection<Callable<String>> callables=new ArrayList<Callable<String>>();
+		for(int i=0; i<3; i++) {
+			callables.add(new Callable<String>(){
+				public String call() throws Exception {
+					throw new Exception("Nope");
+				}});
+		}
+
+		try {
+			String res=sched.invokeAny(callables, 10, TimeUnit.MILLISECONDS);
+			fail("Expected exception, got " + res);
+		} catch(ExecutionException e) {
+			// OK
+		}
+	}
+
+	@SuppressWarnings("unchecked") // java 1.5 screwed up invokeAll's definition
+	public void testInvokeAnyWithRetry() throws Exception {
+		Collection<Callable<String>> callables=new ArrayList<Callable<String>>(
+				Arrays.asList(
+				new TestRtryCallable<String>("A", 4, 5),
+				new TestRtryCallable<String>("B", 6, 5),
+				new TestRtryCallable<String>("C", 3, 5)));
+
+		String res=sched.invokeAny(callables);
+
+		assertEquals("Got " + res + ", expected C", "C", res);
+	}
+
+	@SuppressWarnings("unchecked") // java 1.5 screwed up invokeAll's definition
+	public void testInvokeAnyWithRetryTimeout() throws Exception {
+		Collection<Callable<String>> callables=new ArrayList<Callable<String>>(
+				Arrays.asList(
+				new TestRtryCallable<String>("A", 4, 3),
+				new TestRtryCallable<String>("B", 1, 3),
+				new TestRtryCallable<String>("C", 3, 5)));
+
+		String res=sched.invokeAny(callables, 10, TimeUnit.SECONDS);
+
+		assertEquals("B", res);
 	}
 
 	// A few retries and then success
@@ -306,11 +453,19 @@ public class ReschedulerTest extends TestCase {
 	public static class TestCallable<T> implements Callable<T> {
 		public int runs=0;
 		private T val=null;
+		private long sleeptime=0;
 		public TestCallable(T v) {
+			this(v, 0);
+		}
+		public TestCallable(T v, long st) {
 			super();
 			val=v;
+			sleeptime=st;
 		}
 		public T call() throws Exception {
+			if(sleeptime > 0) {
+				Thread.sleep(sleeptime);
+			}
 			runs++;
 			return val;
 		}
@@ -322,27 +477,32 @@ public class ReschedulerTest extends TestCase {
 		int retries=0;
 		int maxRetries=0;
 		int failures=0;
+		private long baseDelay=10;
 		public boolean gaveUp=false;
 
-		public TestRtryCallable(T v, int fail, int nretries) {
+		public TestRtryCallable(T v, int fail, int nretries, long delay) {
 			super(v);
 			maxRetries=nretries;
 			failures=fail;
 		}
 
+		public TestRtryCallable(T v, int fail, int nretries) {
+			this(v, fail, nretries, 10);
+		}
+
 		public long getRetryDelay() {
-			long rv=10;
+			long rv=baseDelay;
 			if(retries >= maxRetries) {
 				rv=-1;
 			}
 			return rv;
 		}
 
-		public void givingUp() {
-			gaveUp=true;
+		public void executionComplete(boolean success) {
+			gaveUp=!success;
 		}
 
-		public void retrying() {
+		public void retryingForException(ExecutionException exception) {
 			retries++;
 		}
 

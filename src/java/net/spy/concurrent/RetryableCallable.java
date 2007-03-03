@@ -4,6 +4,7 @@
 package net.spy.concurrent;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Interface for callables that may need to be retried if unsuccessful.
@@ -19,12 +20,15 @@ public interface RetryableCallable<V> extends Callable<V> {
 
 	/**
 	 * Method called before scheduling this callable for retry.
+	 *
+	 * @param exception exception that occured
 	 */
-	void retrying();
+	void retryingForException(ExecutionException exception);
 
 	/**
-	 * Method called indicating we've given up on retry attemps for this
-	 * callable.
+	 * Invoked when the execution of a retryable is complete.
+	 * 
+	 * @param successful if true, the execution was successful
 	 */
-	void givingUp();
+	void executionComplete(boolean successful);
 }

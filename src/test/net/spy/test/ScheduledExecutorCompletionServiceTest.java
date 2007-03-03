@@ -147,11 +147,12 @@ public class ScheduledExecutorCompletionServiceTest extends TestCase {
 		public long getRetryDelay() {
 			return retryTime;
 		}
-		public void givingUp() {
+
+		public void executionComplete(boolean success) {
 			// OK
-			
 		}
-		public void retrying() {
+
+		public void retryingForException(ExecutionException exception) {
 			if(++failures >= maxFailures) {
 				retryTime=-1;
 			}

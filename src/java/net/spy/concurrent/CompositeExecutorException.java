@@ -27,6 +27,13 @@ public class CompositeExecutorException extends ExecutionException {
 		exceptions.add(e);
 	}
 
+	public CompositeExecutorException(
+			Collection<? extends ExecutionException> e) {
+		super("Too many failures");
+		exceptions=new RingBuffer<ExecutionException>(MAX_EXCEPTIONS);
+		exceptions.addAll(e);
+	}
+
 	/**
 	 * Add an exception to this composite executor exception.
 	 */

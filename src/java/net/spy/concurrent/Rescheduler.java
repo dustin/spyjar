@@ -3,6 +3,7 @@
 
 package net.spy.concurrent;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -56,6 +57,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 				future=completed.take();
 				Object o=future.getCurrentFuture().get();
 				future.setResult(o);
+				future.callable.executionComplete(true);
 			} catch (InterruptedException e) {
 				getLogger().info("Interrupted", e);
 			} catch (ExecutionException e) {
@@ -64,12 +66,12 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 				long nextTime=future.callable.getRetryDelay();
 				if(!future.isCancelled()) {
 					if(nextTime >= 0) {
-						future.callable.retrying();
+						future.callable.retryingForException(null);
 						future.clearCurrentFuture();
 						scheduleFutureFuture(future,
 								nextTime, TimeUnit.MILLISECONDS);
 					} else {
-						future.callable.givingUp();
+						future.callable.executionComplete(false);
 						assert future.exceptions != null : "Exceptions is null";
 						future.setResult(future.exceptions);
 					}
@@ -105,7 +107,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		if(c instanceof RetryableCallable) {
 			RetryableCallable<T> rc=(RetryableCallable<T>)c;
 			final ScheduledFutureFuture<T> ff=new ScheduledFutureFuture<T>(rc,
-					unit.convert(delay, TimeUnit.MILLISECONDS));
+					TimeUnit.MILLISECONDS.convert(delay, unit));
 
 			scheduleFutureFuture(ff, delay, unit);
 			rv=ff;
@@ -130,25 +132,122 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		return executor.awaitTermination(arg0, arg1);
 	}
 
-	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> c)
+	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> callables)
 			throws InterruptedException {
-		return executor.invokeAll(c);
+		List<Future<T>> rv=new ArrayList<Future<T>>(callables.size());
+		RetryableExecutorCompletionService<T> ecs=
+			new RetryableExecutorCompletionService<T>(this);
+		for(Callable<T> c : callables) {
+			rv.add(ecs.submit(c));
+		}
+		for(int i=0; i<callables.size(); i++) {
+			ecs.take();
+		}
+		return rv;
 	}
 
-	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> arg0,
-			long arg1, TimeUnit arg2) throws InterruptedException {
-		return executor.invokeAll(arg0, arg1, arg2);
+	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> callables,
+			long timeout, TimeUnit unit) throws InterruptedException {
+
+		long end=System.currentTimeMillis()+TimeUnit.MILLISECONDS.convert(
+				timeout, unit);
+
+		List<Future<T>> rv=new ArrayList<Future<T>>(callables.size());
+		RetryableExecutorCompletionService<T> ecs=
+			new RetryableExecutorCompletionService<T>(this);
+		for(Callable<T> c : callables) {
+			rv.add(ecs.submit(c));
+		}
+		for(int i=0; i<callables.size(); i++) {
+			long now=System.currentTimeMillis();
+			long towait=end-now;
+			if(towait > 0) {
+				ecs.poll(towait, TimeUnit.MILLISECONDS);
+			}
+		}
+		return rv;
 	}
 
-	public <T> T invokeAny(Collection<Callable<T>> arg0)
+	public <T> T invokeAny(Collection<Callable<T>> callables)
 			throws InterruptedException, ExecutionException {
-		return executor.invokeAny(arg0);
+		List<Future<T>> futures=new ArrayList<Future<T>>(callables.size());
+		RetryableExecutorCompletionService<T> ecs=
+			new RetryableExecutorCompletionService<T>(this);
+		for(Callable<T> c : callables) {
+			futures.add(ecs.submit(c));
+		}
+
+		Collection<ExecutionException> exceptions=
+			new ArrayList<ExecutionException>();
+
+		// Everything's submitted.  Wait for stuff to finish.
+		boolean foundResult=false;
+		T rv=null;
+		while(!foundResult && !futures.isEmpty()) {
+			Future<T> f=ecs.take();
+			futures.remove(f);
+			try {
+				rv=f.get();
+				foundResult=true;
+			} catch(ExecutionException e) {
+				exceptions.add(e);
+			}
+		}
+		if(!foundResult) {
+			throw new CompositeExecutorException(exceptions);
+		}
+		for(Future<T> f : futures) {
+			f.cancel(true);
+		}
+		return rv;
 	}
 
-	public <T> T invokeAny(Collection<Callable<T>> arg0, long arg1,
-			TimeUnit arg2) throws InterruptedException, ExecutionException,
+	public <T> T invokeAny(Collection<Callable<T>> callables, long timeout,
+			TimeUnit unit) throws InterruptedException, ExecutionException,
 			TimeoutException {
-		return executor.invokeAny(arg0, arg1, arg2);
+
+		long end=System.currentTimeMillis() +
+			TimeUnit.MILLISECONDS.convert(timeout, unit);
+
+		List<Future<T>> futures=new ArrayList<Future<T>>(callables.size());
+		RetryableExecutorCompletionService<T> ecs=
+			new RetryableExecutorCompletionService<T>(this);
+		for(Callable<T> c : callables) {
+			futures.add(ecs.submit(c));
+		}
+
+		Collection<ExecutionException> exceptions=
+			new ArrayList<ExecutionException>();
+
+		// Everything's submitted.  Wait for stuff to finish.
+		boolean foundResult=false;
+		T rv=null;
+		while(!foundResult && !futures.isEmpty()) {
+			long now=System.currentTimeMillis();
+			long towait=end-now;
+			Future<T> f=ecs.poll(towait, TimeUnit.MILLISECONDS);
+			if(f == null) {
+				throw new TimeoutException(
+						"Timed out waiting " + towait + "ms of "
+						+ timeout + unit.name());
+			} else {
+				futures.remove(f);
+				assert f.isDone() : "Future is not done";
+				try {
+					rv=f.get();
+					foundResult=true;
+				} catch(ExecutionException e) {
+					exceptions.add(e);
+				}
+			}
+		}
+		if(!foundResult) {
+			throw new CompositeExecutorException(exceptions);
+		}
+		for(Future<T> f : futures) {
+			f.cancel(true);
+		}
+		return rv;
 	}
 
 	public void shutdown() {
