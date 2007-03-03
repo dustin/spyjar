@@ -3,26 +3,23 @@
 
 package net.spy.concurent;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import net.spy.SpyObject;
-
 /**
- * ScheduledExecutorService that executes in-line.  Handy for testing.
+ * ScheduledExecutorService that executes in-line.  Handy for testing, probably
+ * shouldn't be used for much else as complicated blocking scenarios may arise.
  */
-public class InlineScheduledExecutorService extends SpyObject implements
-		ScheduledExecutorService {
+public class InlineScheduledExecutorService extends
+	AbstractExecutorService implements ScheduledExecutorService {
 
 	public ScheduledFuture<?> schedule(Runnable command, long delay,
 			TimeUnit unit) {
@@ -31,7 +28,7 @@ public class InlineScheduledExecutorService extends SpyObject implements
 			Thread.sleep(unit.toMillis(delay));
 			command.run();
 		} catch (InterruptedException e) {
-			getLogger().fatal("Interrupted my sleep!", e);
+			e.printStackTrace();
 		}
 		return rv;
 	}
@@ -47,7 +44,7 @@ public class InlineScheduledExecutorService extends SpyObject implements
 				rv=new F<V>(null, e, delay);
 			}
 		} catch (InterruptedException e) {
-			getLogger().fatal("Interrupted my sleep!", e);
+			e.printStackTrace();
 		}
 		return rv;
 	}
@@ -67,35 +64,6 @@ public class InlineScheduledExecutorService extends SpyObject implements
 		return true;
 	}
 
-	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks)
-			throws InterruptedException {
-		List<Future<T>> rv=new ArrayList<Future<T>>(tasks.size());
-		for(Callable<T> c : tasks) {
-			rv.add(schedule(c, 0, TimeUnit.SECONDS));
-		}
-		return rv;
-	}
-
-	public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks,
-			long timeout, TimeUnit unit) throws InterruptedException {
-		List<Future<T>> rv=new ArrayList<Future<T>>(tasks.size());
-		for(Callable<T> c : tasks) {
-			rv.add(schedule(c, 0, TimeUnit.SECONDS));
-		}
-		return rv;
-	}
-
-	public <T> T invokeAny(Collection<Callable<T>> tasks)
-			throws InterruptedException, ExecutionException {
-		return schedule(tasks.iterator().next(), 0, TimeUnit.SECONDS).get();
-	}
-
-	public <T> T invokeAny(Collection<Callable<T>> tasks, long timeout,
-			TimeUnit unit) throws InterruptedException, ExecutionException,
-			TimeoutException {
-		return schedule(tasks.iterator().next(), 0, TimeUnit.SECONDS).get();
-	}
-
 	public boolean isShutdown() {
 		return false;
 	}
@@ -110,19 +78,6 @@ public class InlineScheduledExecutorService extends SpyObject implements
 
 	public List<Runnable> shutdownNow() {
 		return Collections.emptyList();
-	}
-
-	public <T> Future<T> submit(Callable<T> task) {
-		return schedule(task, 0, TimeUnit.SECONDS);
-	}
-
-	public Future<?> submit(Runnable task) {
-		return schedule(task, 0, TimeUnit.SECONDS);
-	}
-
-	public <T> Future<T> submit(Runnable arg0, T arg1) {
-		arg0.run();
-		return new F<T>(arg1, 0);
 	}
 
 	public void execute(Runnable command) {

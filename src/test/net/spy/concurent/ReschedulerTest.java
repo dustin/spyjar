@@ -30,19 +30,24 @@ import net.spy.concurrent.RetryableCallable;
  */
 public class ReschedulerTest extends TestCase {
 
-	private Rescheduler sched=null;
+	private Rescheduler schedInline=null;
+	private Rescheduler schedPooled=null;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		sched=new Rescheduler(new InlineScheduledExecutorService());
+		schedInline=new Rescheduler(new InlineScheduledExecutorService());
+		schedPooled=new Rescheduler(new ScheduledThreadPoolExecutor(3));
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		sched.shutdown();
-		assertTrue(sched.awaitTermination(
+		schedInline.shutdown();
+		assertTrue(schedInline.awaitTermination(
+				Long.MAX_VALUE, TimeUnit.MILLISECONDS));
+		schedPooled.shutdown();
+		assertTrue(schedPooled.awaitTermination(
 				Long.MAX_VALUE, TimeUnit.MILLISECONDS));
 	}
 
@@ -50,7 +55,7 @@ public class ReschedulerTest extends TestCase {
 	public void testBasicRunnable() {
 		TestRunnable tr=new TestRunnable();
 		assertEquals(0, tr.runs);
-		sched.execute(tr);
+		schedInline.execute(tr);
 		assertEquals(1, tr.runs);
 	}
 
@@ -58,7 +63,7 @@ public class ReschedulerTest extends TestCase {
 	public void testBasicRunnableWithValue() throws Exception {
 		TestRunnable tr=new TestRunnable();
 		assertEquals(0, tr.runs);
-		Future<String> f=sched.submit(tr, "X");
+		Future<String> f=schedInline.submit(tr, "X");
 		assertEquals("X", f.get());
 		assertEquals(1, tr.runs);
 	}
@@ -67,7 +72,7 @@ public class ReschedulerTest extends TestCase {
 	public void testBasicCallable() throws Exception {
 		TestCallable<String> tc=new TestCallable<String>("X");
 		assertEquals(0, tc.runs);
-		Future<String> f=sched.submit(tc);
+		Future<String> f=schedInline.submit(tc);
 		assertEquals("X", f.get());
 		assertEquals(1, tc.runs);
 	}
@@ -76,7 +81,7 @@ public class ReschedulerTest extends TestCase {
 	public void testBasicScheduledCallable() throws Exception {
 		TestCallable<String> tc=new TestCallable<String>("X");
 		assertEquals(0, tc.runs);
-		Future<String> f=sched.schedule(tc, 10, TimeUnit.MILLISECONDS);
+		Future<String> f=schedInline.schedule(tc, 10, TimeUnit.MILLISECONDS);
 		assertEquals("X", f.get());
 		assertEquals(1, tc.runs);
 	}
@@ -86,7 +91,7 @@ public class ReschedulerTest extends TestCase {
 		TestRtryCallable<String> tc=new TestRtryCallable<String>("X", 2, 3);
 		assertEquals(0, tc.runs);
 		assertEquals(0, tc.retries);
-		Future<String> f=sched.submit(tc);
+		Future<String> f=schedPooled.submit(tc);
 		assertEquals("X", f.get());
 		assertTrue(f.isDone());
 		assertFalse(f.isCancelled());
@@ -97,33 +102,26 @@ public class ReschedulerTest extends TestCase {
 
 	public void testScheduledFutureSorting() throws Exception {
 		TestRtryCallable<String> tc=new TestRtryCallable<String>("X", 2, 3);
-		ScheduledFuture<String> f1=sched.schedule(
+		ScheduledFuture<String> f1=schedPooled.schedule(
 				tc, 10, TimeUnit.MILLISECONDS);
-		ScheduledFuture<String> f2=sched.schedule(
+		ScheduledFuture<String> f2=schedPooled.schedule(
 				tc, 100, TimeUnit.MILLISECONDS);
 		assertTrue(f1.compareTo(f2) < 0);
 	}
 
 	public void testShutdownNow() throws Exception {
-		sched.shutdown();
-		sched=null;
-		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
 		TestRtryCallable<String> tc=new TestRtryCallable<String>("X", 2, 3);
-		sched.schedule(tc, 1, TimeUnit.SECONDS);
-		sched.schedule(tc, 2, TimeUnit.SECONDS);
-		List<Runnable> l=sched.shutdownNow();
+		schedPooled.schedule(tc, 1, TimeUnit.SECONDS);
+		schedPooled.schedule(tc, 2, TimeUnit.SECONDS);
+		List<Runnable> l=schedPooled.shutdownNow();
 		assertEquals(2, l.size());
 		Thread.sleep(100);
-		assertTrue(sched.isTerminated());
+		assertTrue(schedPooled.isTerminated());
 	}
 
 	public void testFixedRateRunnable() throws Exception {
-		sched.shutdown();
-		sched=null;
-		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
-
 		TestRunnable r=new TestRunnable();
-		ScheduledFuture<?> f=sched.scheduleAtFixedRate(r,
+		ScheduledFuture<?> f=schedPooled.scheduleAtFixedRate(r,
 				10, 10, TimeUnit.MILLISECONDS);
 		assertFalse(f.isDone());
 		assertEquals(0, r.runs);
@@ -135,12 +133,8 @@ public class ReschedulerTest extends TestCase {
 	}
 
 	public void testFixedDelayRunnable() throws Exception {
-		sched.shutdown();
-		sched=null;
-		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
-
 		TestRunnable r=new TestRunnable();
-		ScheduledFuture<?> f=sched.scheduleWithFixedDelay(r,
+		ScheduledFuture<?> f=schedPooled.scheduleWithFixedDelay(r,
 				10, 10, TimeUnit.MILLISECONDS);
 		assertFalse(f.isDone());
 		assertEquals(0, r.runs);
@@ -162,7 +156,7 @@ public class ReschedulerTest extends TestCase {
 		expected.addAll(Arrays.asList("A", "B", "C"));
 
 		List<String> got=new ArrayList<String>();
-		List<Future<String>> res=sched.invokeAll(callables);
+		List<Future<String>> res=schedInline.invokeAll(callables);
 		for(Future<String> f : res) {
 			got.add(f.get());
 		}
@@ -181,7 +175,7 @@ public class ReschedulerTest extends TestCase {
 		expected.addAll(Arrays.asList("A", "B", "C"));
 
 		List<String> got=new ArrayList<String>();
-		List<Future<String>> res=sched.invokeAll(callables);
+		List<Future<String>> res=schedPooled.invokeAll(callables);
 		for(Future<String> f : res) {
 			got.add(f.get());
 		}
@@ -191,12 +185,6 @@ public class ReschedulerTest extends TestCase {
 
 	@SuppressWarnings("unchecked") // java 1.5 screwed up invokeAll's definition
 	public void testInvokeAllWithRetryTimeout() throws Exception {
-		// I need a proper threadpool for this.  The inline processor won't
-		// return until everything completes.
-		sched.shutdown();
-		sched=null;
-		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
-
 		Collection callables=Arrays.asList(
 				new TestRtryCallable<String>("A", 1, 9, 10),
 				new TestRtryCallable<String>("B", 5, 9, 100),
@@ -207,7 +195,7 @@ public class ReschedulerTest extends TestCase {
 		expected.addAll(Arrays.asList("A"));
 
 		List<String> got=new ArrayList<String>();
-		List<Future<String>> res=sched.invokeAll(callables,
+		List<Future<String>> res=schedPooled.invokeAll(callables,
 				20, TimeUnit.MILLISECONDS);
 		for(Future<String> f : res) {
 			if(f.isDone()) {
@@ -229,7 +217,7 @@ public class ReschedulerTest extends TestCase {
 		expected.addAll(Arrays.asList("A", "B", "C"));
 
 		Set<String> got=new HashSet<String>();
-		List<Future<String>> res=sched.invokeAll(callables,
+		List<Future<String>> res=schedInline.invokeAll(callables,
 				10, TimeUnit.MILLISECONDS);
 		for(Future<String> f : res) {
 			got.add(f.get());
@@ -252,18 +240,12 @@ public class ReschedulerTest extends TestCase {
 		Set<String> expected=new HashSet<String>();
 		expected.addAll(Arrays.asList("A", "B", "C"));
 
-		String res=sched.invokeAny(callables);
+		String res=schedInline.invokeAny(callables);
 
 		assertTrue(expected.contains(res));
 	}
 
 	public void testInvokeAnyTimeout() throws Exception {
-		// I need a proper threadpool for this.  The inline processor won't
-		// return until everything completes.
-		sched.shutdown();
-		sched=null;
-		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
-
 		// java 1.5 screwed up invokeAny's definition
 		@SuppressWarnings("unchecked")
 		Collection<Callable<String>> callables=new ArrayList<Callable<String>>(
@@ -272,18 +254,12 @@ public class ReschedulerTest extends TestCase {
 				new TestCallable<String>("B", 30),
 				new TestCallable<String>("C", 30)));
 
-		String res=sched.invokeAny(callables, 10, TimeUnit.MILLISECONDS);
+		String res=schedPooled.invokeAny(callables, 10, TimeUnit.MILLISECONDS);
 
 		assertEquals("A", res);
 	}
 
 	public void testInvokeAnyWithRetryTimeoutTimedOut() throws Exception {
-		// I need a proper threadpool for this.  The inline processor won't
-		// return until everything completes.
-		sched.shutdown();
-		sched=null;
-		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
-
 		// java 1.5 screwed up invokeAny's definition
 		@SuppressWarnings("unchecked")
 		Collection<Callable<String>> callables=new ArrayList<Callable<String>>(
@@ -293,7 +269,8 @@ public class ReschedulerTest extends TestCase {
 				new TestRtryCallable<String>("C", 5, 9, 1000)));
 
 		try {
-			String res=sched.invokeAny(callables, 10, TimeUnit.MILLISECONDS);
+			String res=schedPooled.invokeAny(
+					callables, 10, TimeUnit.MILLISECONDS);
 			fail("Expected timeout, got " + res);
 		} catch(TimeoutException e) {
 			// OK
@@ -301,12 +278,6 @@ public class ReschedulerTest extends TestCase {
 	}
 
 	public void testInvokeAnyException() throws Exception {
-		// I need a proper threadpool for this.  The inline processor won't
-		// return until everything completes.
-		sched.shutdown();
-		sched=null;
-		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
-
 		// java 1.5 screwed up invokeAny's definition
 		@SuppressWarnings("unchecked")
 		Collection<Callable<String>> callables=new ArrayList<Callable<String>>(
@@ -316,7 +287,7 @@ public class ReschedulerTest extends TestCase {
 				new TestRtryCallable<String>("C", 4, 3)));
 
 		try {
-			String res=sched.invokeAny(callables);
+			String res=schedPooled.invokeAny(callables);
 			fail("Expected exception, got " + res);
 		} catch(ExecutionException e) {
 			// OK
@@ -324,12 +295,6 @@ public class ReschedulerTest extends TestCase {
 	}
 
 	public void testInvokeAnyExceptionTimeout() throws Exception {
-		// I need a proper threadpool for this.  The inline processor won't
-		// return until everything completes.
-		sched.shutdown();
-		sched=null;
-		sched=new Rescheduler(new ScheduledThreadPoolExecutor(2));
-
 		// java 1.5 screwed up invokeAny's definition
 		@SuppressWarnings("unchecked")
 		Collection<Callable<String>> callables=new ArrayList<Callable<String>>();
@@ -341,7 +306,8 @@ public class ReschedulerTest extends TestCase {
 		}
 
 		try {
-			String res=sched.invokeAny(callables, 10, TimeUnit.MILLISECONDS);
+			String res=schedPooled.invokeAny(
+					callables, 10, TimeUnit.MILLISECONDS);
 			fail("Expected exception, got " + res);
 		} catch(ExecutionException e) {
 			// OK
@@ -356,7 +322,7 @@ public class ReschedulerTest extends TestCase {
 				new TestRtryCallable<String>("B", 6, 5),
 				new TestRtryCallable<String>("C", 3, 5)));
 
-		String res=sched.invokeAny(callables);
+		String res=schedPooled.invokeAny(callables);
 
 		assertEquals("Got " + res + ", expected C", "C", res);
 	}
@@ -369,7 +335,7 @@ public class ReschedulerTest extends TestCase {
 				new TestRtryCallable<String>("B", 1, 3),
 				new TestRtryCallable<String>("C", 3, 5)));
 
-		String res=sched.invokeAny(callables, 10, TimeUnit.SECONDS);
+		String res=schedPooled.invokeAny(callables, 10, TimeUnit.SECONDS);
 
 		assertEquals("B", res);
 	}
@@ -379,7 +345,7 @@ public class ReschedulerTest extends TestCase {
 		TestRtryCallable<String> tc=new TestRtryCallable<String>("X", 2, 3);
 		assertEquals(0, tc.runs);
 		assertEquals(0, tc.retries);
-		Future<String> f=sched.submit(tc);
+		Future<String> f=schedPooled.submit(tc);
 		f.cancel(true);
 		try {
 			Object o=f.get();
@@ -394,7 +360,7 @@ public class ReschedulerTest extends TestCase {
 		TestRtryCallable<String> tc=new TestRtryCallable<String>("X", 4, 3);
 		assertEquals(0, tc.runs);
 		assertEquals(0, tc.retries);
-		Future<String> f=sched.submit(tc);
+		Future<String> f=schedPooled.submit(tc);
 		try {
 			String s=f.get();
 			fail("Expected failure, got " + s);
@@ -420,7 +386,7 @@ public class ReschedulerTest extends TestCase {
 			new TestRtryCallable<ExecutionException>(e, 0, 1);
 		assertEquals(0, tc.runs);
 		assertEquals(0, tc.retries);
-		Future<ExecutionException> f=sched.submit(tc);
+		Future<ExecutionException> f=schedPooled.submit(tc);
 		assertSame(e, f.get());
 		assertFalse(tc.gaveUp);
 		assertEquals(1, tc.runs);
@@ -432,7 +398,7 @@ public class ReschedulerTest extends TestCase {
 		TestRtryCallable<Object> tc=new TestRtryCallable<Object>(null, 1, 1);
 		assertEquals(0, tc.runs);
 		assertEquals(0, tc.retries);
-		Future<Object> f=sched.submit(tc);
+		Future<Object> f=schedPooled.submit(tc);
 		assertNull(f.get());
 		assertFalse(tc.gaveUp);
 		assertEquals(2, tc.runs);

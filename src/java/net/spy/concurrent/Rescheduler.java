@@ -6,20 +6,18 @@ package net.spy.concurrent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import net.spy.SpyThread;
+import net.spy.SpyObject;
 import net.spy.concurrent.SynchronizationObject.Predicate;
 
 /**
@@ -29,11 +27,9 @@ import net.spy.concurrent.SynchronizationObject.Predicate;
  * Note that while this does back an existing ScheduledExecutorService, any
  * Callables sent directly into that service will not be eligible for retry.
  */
-public class Rescheduler extends SpyThread implements ScheduledExecutorService {
+public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 
 	private ScheduledExecutorService executor;
-	BlockingQueue<FutureFuture<?>> completed;
-	private volatile boolean shutdown=false;
 
 	/**
 	 * Get an instance of Rescheduler with the given backing
@@ -42,43 +38,37 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 	 * @param x the ScheduledExecutorService that will be responsible execution
 	 */
 	public Rescheduler(ScheduledExecutorService x) {
-		super("Rescheduler");
+		super();
 		executor=x;
-		completed=new LinkedBlockingQueue<FutureFuture<?>>();
-		start();
 	}
 
-	@Override
 	@SuppressWarnings("unchecked") // discarding future type
-	public void run() {
-		while(!isShutdown()) {
-			FutureFuture future=null;
-			try {
-				future=completed.take();
-				Object o=future.getCurrentFuture().get();
-				future.setResult(o);
-				future.callable.executionComplete(true);
-			} catch (InterruptedException e) {
-				getLogger().info("Interrupted", e);
-			} catch (ExecutionException e) {
-				assert future != null : "Lost the future";
-				future.addException(e);
-				long nextTime=future.callable.getRetryDelay();
-				if(!future.isCancelled()) {
-					if(nextTime >= 0) {
-						future.callable.retryingForException(null);
-						future.clearCurrentFuture();
-						scheduleFutureFuture(future,
-								nextTime, TimeUnit.MILLISECONDS);
-					} else {
-						future.callable.executionComplete(false);
-						assert future.exceptions != null : "Exceptions is null";
-						future.setResult(future.exceptions);
-					}
+	void examineCompletion(final FutureFuture future) {
+		try {
+			Object o=future.getCurrentFuture().get();
+			future.setResult(o);
+			future.callable.executionComplete(true);
+		} catch(CancellationException e) {
+			future.setCancelled();
+		} catch (InterruptedException e) {
+			getLogger().info("Interrupted", e);
+		} catch (ExecutionException e) {
+			assert future != null : "Lost the future";
+			future.addException(e);
+			long nextTime=future.callable.getRetryDelay();
+			if(!future.isCancelled()) {
+				if(nextTime >= 0) {
+					future.callable.retryingForException(null);
+					future.clearCurrentFuture();
+					scheduleFutureFuture(future,
+							nextTime, TimeUnit.MILLISECONDS);
+				} else {
+					future.callable.executionComplete(false);
+					assert future.exceptions != null : "Exceptions is null";
+					future.setResult(future.exceptions);
 				}
 			}
 		}
-		getLogger().info("Shut down.  Exiting");
 	}
 
 	public ScheduledFuture<?> schedule(Runnable r, long delay, TimeUnit unit) {
@@ -90,7 +80,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 		FutureTask<T> ft=new FutureTask<T>(ff.callable) {
 			@Override
 			protected void done() {
-				completed.add(ff);
+				examineCompletion(ff);
 			}
 		};
 		executor.schedule(ft, delay, unit);
@@ -252,12 +242,10 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 
 	public void shutdown() {
 		executor.shutdown(); 
-		shutdown=true;
-		interrupt();
 	}
 
 	public boolean isShutdown() {
-		return shutdown || executor.isShutdown();
+		return executor.isShutdown();
 	}
 
 	public boolean isTerminated() {
@@ -265,10 +253,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 	}
 
 	public List<Runnable> shutdownNow() {
-		List<Runnable> rv=executor.shutdownNow();
-		shutdown=true;
-		interrupt();
-		return rv;
+		return executor.shutdownNow();
 	}
 
 	/**
@@ -283,7 +268,7 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 			FutureTask<T> ft=new FutureTask<T>(rc) {
 				@Override
 				protected void done() {
-					completed.add(ff);
+					examineCompletion(ff);
 				}
 			};
 			executor.submit(ft);
@@ -355,9 +340,13 @@ public class Rescheduler extends SpyThread implements ScheduledExecutorService {
 			futureSync.set(to);
 		}
 
+		public void setCancelled() {
+			sync.set(cancelObj);
+		}
+
 		public boolean cancel(boolean mayInterruptIfRunning) {
 			boolean rv=false;
-			sync.set(cancelObj);
+			setCancelled();
 			Future<T> f=futureSync.get();
 			if(f != null) {
 				rv=f.cancel(mayInterruptIfRunning);
