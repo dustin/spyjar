@@ -19,16 +19,18 @@ public interface RetryableCallable<V> extends Callable<V> {
 	long getRetryDelay();
 
 	/**
-	 * Method called before scheduling this callable for retry.
+	 * Method called whenever an execution exception occurs while running the
+	 * call() method.  This is a good place to count failures and adjust the
+	 * value to be returned by getRetryDelay().
 	 *
 	 * @param exception exception that occured
 	 */
-	void retryingForException(ExecutionException exception);
+	void onExecutionException(ExecutionException exception);
 
 	/**
 	 * Invoked when the execution of a retryable is complete.
 	 * 
 	 * @param successful if true, the execution was successful
 	 */
-	void executionComplete(boolean successful);
+	void onComplete(boolean successful);
 }

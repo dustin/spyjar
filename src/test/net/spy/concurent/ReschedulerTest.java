@@ -467,11 +467,11 @@ public class ReschedulerTest extends TestCase {
 			return rv;
 		}
 
-		public void executionComplete(boolean success) {
+		public void onComplete(boolean success) {
 			gaveUp=!success;
 		}
 
-		public void retryingForException(ExecutionException exception) {
+		public void onExecutionException(ExecutionException exception) {
 			retries++;
 		}
 

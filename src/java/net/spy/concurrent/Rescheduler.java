@@ -54,7 +54,7 @@ public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 					getLogger().info("Interrupted.  Retrying", e);
 				}
 			}
-			future.callable.executionComplete(true);
+			future.callable.onComplete(true);
 		} catch(CancellationException e) {
 			future.setCancelled();
 		} catch (ExecutionException e) {
@@ -63,12 +63,12 @@ public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 			long nextTime=future.callable.getRetryDelay();
 			if(!future.isCancelled()) {
 				if(nextTime >= 0) {
-					future.callable.retryingForException(null);
+					future.callable.onExecutionException(null);
 					future.clearCurrentFuture();
 					scheduleFutureFuture(future,
 							nextTime, TimeUnit.MILLISECONDS);
 				} else {
-					future.callable.executionComplete(false);
+					future.callable.onComplete(false);
 					assert future.exceptions != null : "Exceptions is null";
 					future.setResult(future.exceptions);
 				}
