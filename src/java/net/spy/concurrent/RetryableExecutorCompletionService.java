@@ -100,7 +100,7 @@ public class RetryableExecutorCompletionService<V>
 			return callable.getRetryDelay();
 		}
 
-		public void executionComplete(boolean success) {
+		public synchronized void executionComplete(boolean success) {
 			callable.executionComplete(success);
 			assert future != null : "Future is null";
 			completionQueue.add(future);
@@ -110,7 +110,7 @@ public class RetryableExecutorCompletionService<V>
 			callable.retryingForException(null);
 		}
 
-		public synchronized V call() throws Exception {
+		public V call() throws Exception {
 			assert future != null : "Future is null";
 			return callable.call();
 		}

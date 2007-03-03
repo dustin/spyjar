@@ -6,7 +6,6 @@ package net.spy.test;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CyclicBarrier;
 
-
 import junit.framework.TestCase;
 
 /**
