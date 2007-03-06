@@ -76,6 +76,7 @@ public class RetryableExecutorCompletionService<V>
 			super(t, r);
 		}
 
+		@Override
 		protected void done() {
 			completionQueue.add(this);
 		}
