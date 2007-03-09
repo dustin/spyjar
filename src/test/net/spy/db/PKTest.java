@@ -73,8 +73,7 @@ public class PKTest extends TestCase {
 	 */
 	public void testPrimaryKeyMissingKey() throws Exception {
 		SpyConfig conf=new SpyConfig();
-		conf.put("dbConnectionSource",
-			"net.spy.test.PKTest$MissingKeySource");
+		conf.put("dbConnectionSource", MissingKeySource.class.getName());
 		GetPK getpk=GetPK.getInstance();
 		try {
 			BigDecimal val=getpk.getPrimaryKey(conf, "test_table");

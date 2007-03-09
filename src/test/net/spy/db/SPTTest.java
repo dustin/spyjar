@@ -154,7 +154,7 @@ public class SPTTest extends MockObjectTestCase {
 	public void testQuerySelectionDefaultByDriver() throws Exception {
 		SpyConfig conf=new SpyConfig();
 		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$GeneralConnectionSource");
+				GeneralConnectionSource.class.getName());
 		runQuerySelectorTest(conf);
 	}
 
@@ -165,7 +165,7 @@ public class SPTTest extends MockObjectTestCase {
 		SpyConfig conf=new SpyConfig();
 		conf.put("dbDriverName", "blah.some.driver.name");
 		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$GeneralConnectionSource");
+				GeneralConnectionSource.class.getName());
 		runQuerySelectorTest(conf);
 	}
 
@@ -175,7 +175,7 @@ public class SPTTest extends MockObjectTestCase {
 	public void testQuerySelectionNonExistent() throws Exception {
 		SpyConfig conf=new SpyConfig();
 		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$GeneralConnectionSource");
+				GeneralConnectionSource.class.getName());
 		conf.put("queryName", "martha");
 		runQuerySelectorTest(conf);
 	}
@@ -188,7 +188,7 @@ public class SPTTest extends MockObjectTestCase {
 		SpyConfig conf=new SpyConfig();
 		conf.put("dbDriverName", "org.postgresql.Driver");
 		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$GeneralConnectionSource");
+				GeneralConnectionSource.class.getName());
 		runQuerySelectorTest(conf);
 	}
 
@@ -199,7 +199,7 @@ public class SPTTest extends MockObjectTestCase {
 		SpyConfig conf=new SpyConfig();
 		conf.put("dbDriverName", "oracle.jdbc.dr");
 		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$GeneralConnectionSource");
+				GeneralConnectionSource.class.getName());
 		runQuerySelectorTest(conf);
 	}
 
@@ -209,7 +209,7 @@ public class SPTTest extends MockObjectTestCase {
 	public void testSelectPrimaryKey() throws Exception {
 		SpyConfig conf=new SpyConfig();
 		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$PKConnectionSource");
+				PKConnectionSource.class.getName());
 		SelectPrimaryKey spk1=new SelectPrimaryKey(conf);
 		spk1.setTableName("test");
 
@@ -224,7 +224,7 @@ public class SPTTest extends MockObjectTestCase {
 	public void testUpdatePrimaryKey() throws Exception {
 		SpyConfig conf=new SpyConfig();
 		conf.put("dbConnectionSource",
-			"net.spy.test.SPTTest$PKConnectionSource");
+				PKConnectionSource.class.getName());
 		UpdatePrimaryKey upk1=new UpdatePrimaryKey(conf);
 		upk1.setTableName("test");
 

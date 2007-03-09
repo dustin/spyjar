@@ -54,23 +54,23 @@ public class SaverTest extends MockObjectTestCase {
 
 		successConfig=new SpyConfig();
 		successConfig.put("dbConnectionSource",
-			"net.spy.test.SaverTest$SuccessConnectionSource");
+				SuccessConnectionSource.class.getName());
 		successSource=
 			(MockConnectionSource)cnf.getConnectionSource(successConfig);
 
 		isoConfig=new SpyConfig();
 		isoConfig.put("dbConnectionSource",
-			"net.spy.test.SaverTest$MockConnectionSourceWithIso");
+				MockConnectionSourceWithIso.class.getName());
 		isoSource=(MockConnectionSource)cnf.getConnectionSource(isoConfig);
 
 		failConfig=new SpyConfig();
 		failConfig.put("dbConnectionSource",
-			"net.spy.test.SaverTest$MockFailingConnectionSource");
+				MockFailingConnectionSource.class.getName());
 		failSource=(MockConnectionSource)cnf.getConnectionSource(failConfig);
 
 		brokenConfig=new SpyConfig();
 		brokenConfig.put("dbConnectionSource",
-			"net.spy.test.SaverTest$BrokenConnectionSource");
+				BrokenConnectionSource.class.getName());
 	}
 
 	/** 
