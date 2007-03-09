@@ -12,9 +12,15 @@ import java.util.concurrent.ExecutionException;
 public interface RetryableCallable<V> extends Callable<V> {
 
 	/**
+	 * Special return value for getRetryDelay indicating no further retries
+	 * should be attempted.
+	 */
+	static final int NO_MORE_RETRIES=-1;
+
+	/**
 	 * Get the number of milliseconds we should wait until the next retry.
 	 * 
-	 * @return ms to wait, or -1 if no more retries should be attempted
+	 * @return ms to wait if positive, else stop retrying
 	 */
 	long getRetryDelay();
 
@@ -31,6 +37,8 @@ public interface RetryableCallable<V> extends Callable<V> {
 	 * Invoked when the execution of a retryable is complete.
 	 * 
 	 * @param successful if true, the execution was successful
+	 * @param result if this execution wasn't successful, the result will be
+	 *   a CompositeExecutorException itemizing the result
 	 */
-	void onComplete(boolean successful);
+	void onComplete(boolean successful, Object result);
 }

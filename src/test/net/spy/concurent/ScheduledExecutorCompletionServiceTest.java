@@ -148,7 +148,7 @@ public class ScheduledExecutorCompletionServiceTest extends TestCase {
 			return retryTime;
 		}
 
-		public void onComplete(boolean success) {
+		public void onComplete(boolean success, Object res) {
 			// OK
 		}
 

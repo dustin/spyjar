@@ -99,6 +99,7 @@ public class ReschedulerTest extends TestCase {
 		assertTrue(f.isDone());
 		assertFalse(f.isCancelled());
 		assertFalse(tc.gaveUp);
+		assertEquals("X", tc.result);
 		assertEquals(3, tc.runs);
 		assertEquals(2, tc.retries);
 	}
@@ -376,6 +377,7 @@ public class ReschedulerTest extends TestCase {
 			e.printStackTrace(pw);
 			assertTrue("Hey, no also caused by",
 					sw.toString().indexOf("Also caused by") > 0);
+			assertSame(e, tc.result);
 		}
 		assertTrue(tc.gaveUp);
 		assertEquals(4, tc.runs);
@@ -446,6 +448,7 @@ public class ReschedulerTest extends TestCase {
 		int retries=0;
 		int maxRetries=0;
 		int failures=0;
+		Object result=null;
 		private long baseDelay=10;
 		public boolean gaveUp=false;
 
@@ -467,8 +470,9 @@ public class ReschedulerTest extends TestCase {
 			return rv;
 		}
 
-		public void onComplete(boolean success) {
+		public void onComplete(boolean success, Object res) {
 			gaveUp=!success;
+			result=res;
 		}
 
 		public void onExecutionException(ExecutionException exception) {

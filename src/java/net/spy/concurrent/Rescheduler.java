@@ -46,15 +46,17 @@ public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 	void examineCompletion(final FutureFuture future) {
 		try {
 			boolean set=false;
+			Object result=null;
 			while(!set) {
 				try {
-					future.setResult(future.getCurrentFuture().get());
+					result=future.getCurrentFuture().get();
 					set=true;
 				} catch(InterruptedException e) {
 					getLogger().info("Interrupted.  Retrying", e);
 				}
 			}
-			future.callable.onComplete(true);
+			future.setResult(result);
+			future.callable.onComplete(true, result);
 		} catch(CancellationException e) {
 			future.setCancelled();
 		} catch (ExecutionException e) {
@@ -68,7 +70,7 @@ public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 					scheduleFutureFuture(future,
 							nextTime, TimeUnit.MILLISECONDS);
 				} else {
-					future.callable.onComplete(false);
+					future.callable.onComplete(false, future.exceptions);
 					assert future.exceptions != null : "Exceptions is null";
 					future.setResult(future.exceptions);
 				}

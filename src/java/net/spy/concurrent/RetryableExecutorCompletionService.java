@@ -101,8 +101,8 @@ public class RetryableExecutorCompletionService<V>
 			return callable.getRetryDelay();
 		}
 
-		public synchronized void onComplete(boolean success) {
-			callable.onComplete(success);
+		public synchronized void onComplete(boolean success, Object res) {
+			callable.onComplete(success, res);
 			assert future != null : "Future is null";
 			completionQueue.add(future);
 		}
