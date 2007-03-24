@@ -1,3 +1,0 @@
-precious ^(velocity.log|tags|target|build.properties|cobertura.ser)$
-
-source ^(.classpath|.project)$
