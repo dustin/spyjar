@@ -131,6 +131,7 @@ public class ScheduledExecutorCompletionServiceTest extends TestCase {
 			this(o, 4);
 		}
 
+		@Override
 		public Object call() throws Exception {
 			if(failures < 3) {
 				failures++;

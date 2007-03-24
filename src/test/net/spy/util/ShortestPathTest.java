@@ -1788,10 +1788,12 @@ public class ShortestPathTest extends TestCase {
 			return(str);
 		}
 
+		@Override
 		public void linkTo(StringNode x, int cost) {
 			super.linkTo(x, cost);
 		}
 
+		@Override
 		public void linkTo(StringNode x) {
 			super.linkTo(x);
 		}
