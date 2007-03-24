@@ -1,7 +1,7 @@
 // Copyright (c) 2006  Dustin Sallings <dustin@spy.net>
 // arch-tag: 910694C6-DD02-4994-BEDA-E7E2911B07AB
 
-package net.spy.concurent;
+package net.spy.concurrent;
 
 import java.util.Collections;
 import java.util.List;

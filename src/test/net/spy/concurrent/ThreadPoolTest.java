@@ -2,15 +2,15 @@
 //
 // arch-tag: 293B0664-1110-11D9-8706-000A957659CC
 
-package net.spy.concurent;
+package net.spy.concurrent;
 
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 
 import junit.framework.TestCase;
+
 import net.spy.SpyObject;
-import net.spy.concurrent.ThreadPool;
 
 /**
  * Test the ThreadPool.

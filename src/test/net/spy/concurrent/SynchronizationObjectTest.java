@@ -1,7 +1,7 @@
 // Copyright (c) 2006  Dustin Sallings <dustin@spy.net>
 // arch-tag: 47F51C59-3747-4A58-81B5-547B132970C0
 
-package net.spy.concurent;
+package net.spy.concurrent;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import junit.framework.TestCase;
-import net.spy.concurrent.SynchronizationObject;
 
 /**
  * Test the synchronization object.

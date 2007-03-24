@@ -1,7 +1,7 @@
 // Copyright (c) 2006  Dustin Sallings <dustin@spy.net>
 // arch-tag: 239ED540-3CB0-4348-A880-FD87A68A2D18
 
-package net.spy.concurent;
+package net.spy.concurrent;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -21,9 +21,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import junit.framework.TestCase;
-import net.spy.concurrent.CompositeExecutorException;
-import net.spy.concurrent.Rescheduler;
-import net.spy.concurrent.RetryableCallable;
 
 /**
  * Test out the ol' rescheduler.

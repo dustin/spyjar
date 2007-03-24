@@ -1,13 +1,10 @@
-package net.spy.concurent;
+package net.spy.concurrent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.TestCase;
-
-import net.spy.concurrent.Mapper;
-import net.spy.concurrent.Transformer;
 
 /**
  * Test the mapper.
