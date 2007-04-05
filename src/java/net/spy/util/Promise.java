@@ -7,10 +7,10 @@ package net.spy.util;
 /**
  * A promise, continuation style code for java.
  */
-public abstract class Promise extends Object {
+public abstract class Promise<T> extends Object {
 
-	private Object rv=null;
-	private boolean hasRun=false;
+	private T rv=null;
+	private volatile boolean hasRun=false;
 	private BrokenPromiseException bpe=null;
 
 	/**
@@ -28,15 +28,19 @@ public abstract class Promise extends Object {
 	 * @exception BrokenPromiseException if there's a problem getting what
 	 * we were promised.
 	 */
-	public final Object getObject() throws BrokenPromiseException {
+	public final T get() throws BrokenPromiseException {
 		if(hasRun == false) {
-			try {
-				rv=execute();
-			} catch(BrokenPromiseException e) {
-				this.bpe=e;
-				throw e;
-			} finally {
-				hasRun=true;
+			synchronized(this) {
+				if(hasRun == false) {
+					try {
+						rv=execute();
+					} catch(BrokenPromiseException e) {
+						this.bpe=e;
+						throw e;
+					} finally {
+						hasRun=true;
+					}
+				}
 			}
 		}
 
@@ -75,7 +79,6 @@ public abstract class Promise extends Object {
 	/**
 	 * Do the actual work required to get the Object we're promised.
 	 */
-	protected abstract Object execute() throws BrokenPromiseException;
+	protected abstract T execute() throws BrokenPromiseException;
 
 }
-

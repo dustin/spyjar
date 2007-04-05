@@ -4,40 +4,26 @@
 
 package net.spy.util;
 
-import junit.framework.Test;
+import java.util.concurrent.Callable;
+
+import net.spy.test.SyncThread;
+
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Test the promise implementation.
  */
 public class PromiseTest extends TestCase {
 
-	/**
-	 * Get an instance of PromiseTest.
-	 */
-	public PromiseTest(String name) {
-		super(name);
-	}
-
-	/** 
-	 * Get the test suite.
-	 * 
-	 * @return this test
-	 */
-	public static Test suite() {
-		return new TestSuite(PromiseTest.class);
-	}
-
 	/** 
 	 * Test a promise that returns an int.
 	 */
 	public void testIntPromise() throws Exception {
-		Promise p=new IntPromise(17);
+		Promise<Integer> p=new IntPromise(17);
 		assertTrue(String.valueOf(p).indexOf("not yet executed") > 0);
 
-		Integer i1=(Integer)p.getObject();
-		Integer i2=(Integer)p.getObject();
+		Integer i1=p.get();
+		Integer i2=p.get();
 		assertNotNull(i1);
 		assertNotNull(i2);
 
@@ -50,10 +36,19 @@ public class PromiseTest extends TestCase {
 		assertSame(i1, i2);
 	}
 
+	public void testConcurrentPromises() throws Throwable {
+		final Promise<Integer> p=new IntPromise(17);
+		int num=SyncThread.getDistinctResultCount(10, new Callable<Integer>() {
+			public Integer call() throws Exception {
+				return p.get();
+			}});
+		assertEquals(1, num);
+	}
+
 	public void testBrokenPromise() throws Exception {
-		Promise p=new PromiseBreaker();
+		Promise<Object> p=new PromiseBreaker();
 		try {
-			Object o=p.getObject();
+			Object o=p.get();
 			fail("Broken promise gave me a value:  " + o);
 		} catch(BrokenPromiseException e) {
 			// pass
@@ -63,7 +58,7 @@ public class PromiseTest extends TestCase {
 
 		// Second time is a different code path
 		try {
-			Object o=p.getObject();
+			Object o=p.get();
 			fail("Broken promise gave me a value the second time:  " + o);
 		} catch(BrokenPromiseException e) {
 			// pass
@@ -71,8 +66,8 @@ public class PromiseTest extends TestCase {
 	}
 
 	public void testNullPromise() throws Exception {
-		Promise p=new NullPromise();
-		assertNull(p.getObject());
+		Promise<Object> p=new NullPromise();
+		assertNull(p.get());
 		assertEquals("Promise {null}", String.valueOf(p));
 	}
 
@@ -91,7 +86,7 @@ public class PromiseTest extends TestCase {
 	// Private inner classes for testing.
 	//
 
-	private class IntPromise extends Promise {
+	private class IntPromise extends Promise<Integer> {
 
 		private int myInt=-1;
 
@@ -101,13 +96,13 @@ public class PromiseTest extends TestCase {
 		}
 
 		@Override
-		protected Object execute() throws BrokenPromiseException {
+		protected Integer execute() throws BrokenPromiseException {
 			return new Integer(myInt++);
 		}
 
 	}
 
-	private class PromiseBreaker extends Promise {
+	private class PromiseBreaker extends Promise<Object> {
 		public PromiseBreaker() {
 			super();
 		}
@@ -118,7 +113,7 @@ public class PromiseTest extends TestCase {
 		}
 	}
 
-	private class NullPromise extends Promise {
+	private class NullPromise extends Promise<Object> {
 		public NullPromise() {
 			super();
 		}
