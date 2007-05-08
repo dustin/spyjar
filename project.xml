@@ -90,15 +90,11 @@ arch-tag: 2A68027B-714D-465F-A2B5-D105CE22459C
 	</contributors>
 
 	<versions>
-		<version>
-			<name>2.1.18</name>
-		</version>
-		<version>
-			<name>2.0.54</name>
-		</version>
-		<version>
-			<name>1.0.37</name>
-		</version>
+		<version><name>2.3.1</name></version>
+		<version><name>2.2.56</name></version>
+		<version><name>2.1.145</name></version>
+		<version><name>2.0.97</name></version>
+		<version><name>1.0.37</name></version>
 	</versions>
 
 	<build>
