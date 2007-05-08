@@ -8,7 +8,7 @@ arch-tag: 2A68027B-714D-465F-A2B5-D105CE22459C
 
 	<pomVersion>3</pomVersion>
 	<groupId>spy</groupId>
-	<currentVersion>2.3</currentVersion>
+	<currentVersion>2.4</currentVersion>
 	<organization>
 		<name>SPY Internetworking</name>
 		<url>http://bleu.west.spy.net/~dustin/</url>

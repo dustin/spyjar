@@ -17,6 +17,10 @@
 		<attainGoal name="spyjar:buildinfo"/>
 	</preGoal>
 
+	<postGoal name="clean">
+		<ant:delete file="cobertura.ser"/>
+	</postGoal>
+
 	<goal name="spyjar:core">
 		<!-- First stage compile. -->
 		<ant:javac srcdir="${maven.src.dir}/java"

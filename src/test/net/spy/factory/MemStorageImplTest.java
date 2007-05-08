@@ -11,9 +11,9 @@ import java.util.List;
 import junit.framework.TestCase;
 
 /**
- * Test the HashCacheEntry thing.
+ * Test the MemStorageImpl thing.
  */
-public class FactoryStorageTest extends TestCase {
+public class MemStorageImplTest extends TestCase {
 
 	private List<Ob> obs=null;
 	private Storage<Ob> cache=null;
@@ -25,7 +25,7 @@ public class FactoryStorageTest extends TestCase {
 		obs=Arrays.asList(new Ob(1, 10, "one"),
 				new Ob(2, 10, "two"),
 				new Ob(3, 11, "three"));
-		cache=new Storage<Ob>(obs);
+		cache=new MemStorageImpl<Ob>(obs);
 	}
 
 	public void testGetAll() throws Exception {
@@ -62,7 +62,7 @@ public class FactoryStorageTest extends TestCase {
 	
 	public void testFailingCache() throws Exception {
 		try {
-			Storage<Fob> c=new Storage<Fob>(
+			Storage<Fob> c=new MemStorageImpl<Fob>(
 					Collections.singleton(new Fob()));
 			fail("expected failure, got " + c);
 		} catch(RuntimeException e) {
@@ -71,7 +71,7 @@ public class FactoryStorageTest extends TestCase {
 	}
 
 	public void testSubclass() throws Exception {
-		Storage<ObSub> c=new Storage<ObSub>(
+		Storage<ObSub> c=new MemStorageImpl<ObSub>(
 				Arrays.asList(
 						new ObSub(1, 1, "one", "oneone"),
 						new ObSub(2, 2, "two", "twotwo")));

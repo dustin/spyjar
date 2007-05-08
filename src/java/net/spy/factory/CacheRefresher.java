@@ -53,7 +53,7 @@ public class CacheRefresher extends SpyObject {
 		instance=null;
 	}
 
-	synchronized void performRecache(GenFactory<?> gf, long when) {
+	synchronized void performRecache(GenFactoryImpl<?> gf, long when) {
 		if(when > gf.getLastRefresh()) {
 			gf.recache();
 		} else {
@@ -69,7 +69,7 @@ public class CacheRefresher extends SpyObject {
 	 * @param when the date we requested the data
 	 * @param delay how long to wait before refreshing
 	 */
-	public synchronized void recache(final GenFactory<?> gf, final long when,
+	public synchronized void recache(final GenFactoryImpl<?> gf, final long when,
 			long delay) {
 
 		TimerTask nextRefresh=gf.getNextRefresh();

@@ -12,7 +12,7 @@ import net.spy.cache.SimpleCache;
 /**
  * Test the generic factory code.
  */
-public class FactoryTest extends TestCase {
+public class GenFactoryImplTest extends TestCase {
 
 	private static final int NUM_OBJECTS=1000;
 	private static final String TEST_KEY = "TestStuff";
@@ -220,7 +220,7 @@ public class FactoryTest extends TestCase {
 		}
 	}
 
-	private static class TestFactory extends GenFactory<TestInstance> {
+	private static class TestFactory extends GenFactoryImpl<TestInstance> {
 
 		private int lastObject=0;
 		public int numRuns=0;
