@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class BitArray extends Object {
 
-	private List<Integer> bitList=null;
+	private final List<Integer> bitList;
 
 	/**
 	 * Get an instance of BitArray with storage for a given number of bits.

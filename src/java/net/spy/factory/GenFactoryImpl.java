@@ -16,8 +16,8 @@ import net.spy.cache.SimpleCache;
 public abstract class GenFactoryImpl<T> extends SpyObject
 	implements GenFactory<T> {
 
-	private String cacheKey=null;
-	private long cacheTime=0;
+	private final String cacheKey;
+	private final long cacheTime;
 	private long lastRefresh=0;
 	private TimerTask nextRefresh=null;
 
@@ -34,8 +34,8 @@ public abstract class GenFactoryImpl<T> extends SpyObject
 		if(time < 1) {
 			throw new IllegalArgumentException("Invalid cache time:  " + time);
 		}
-		this.cacheKey=key;
-		this.cacheTime=time;
+		cacheKey=key;
+		cacheTime=time;
 	}
 
 	/** 

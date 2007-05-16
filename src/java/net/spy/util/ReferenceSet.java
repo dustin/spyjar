@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
  */
 public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 
-	private HashSet<Reference <T>> contents=null;
+	private final HashSet<Reference <T>> contents;
 
 	/**
 	 * Get an instance of ReferenceSet.

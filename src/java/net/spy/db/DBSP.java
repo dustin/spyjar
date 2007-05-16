@@ -34,10 +34,12 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 	private static final int BD_SCALE=4;
 
 	// The set of parameters available to this DBSP (defined in the subclass)
-	private LinkedHashMap<String, Parameter>  parameters=null;
+	private final LinkedHashMap<String, Parameter> parameters=
+		new LinkedHashMap<String, Parameter>();
 
 	// The set of arguments provided to this DBSP at runtime
-	private LinkedHashMap<String, Argument> arguments=null;
+	private final LinkedHashMap<String, Argument> arguments=
+		new LinkedHashMap<String, Argument>();
 
 	// SP name
 	private String spname=null;
@@ -79,8 +81,6 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 
 	// Initialize hashtables
 	private void initsp() {
-		this.parameters=new LinkedHashMap<String, Parameter>();
-		this.arguments=new LinkedHashMap<String, Argument>();
 		// Inherit debug flag from the logger.
 		debug=getLogger().isDebugEnabled();
 	}

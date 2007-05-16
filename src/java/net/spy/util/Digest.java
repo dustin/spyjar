@@ -18,8 +18,8 @@ public class Digest extends SpyObject {
 	private static final String DEFAULTHASH="SHA";
 	private boolean prefixHash=true;
 
-	private String hashAlg=null;
-	private int digLen=0;
+	private final String hashAlg;
+	private final int digLen;
 
 	/**
 	 * Get a new Digest object.

@@ -21,14 +21,14 @@ public class Saver extends SpyObject {
 
 	private static final int MAX_RECURSION_DEPTH=100;
 
-	private SaveContext context=null;
-	private SpyConfig config=null;
+	private final SaveContext context;
+	private final SpyConfig config;
 	private int rdepth=0;
 
 	// Make sure we don't deal with the same object more than once
-	private Set<IdentityEqualifier> listedObjects=null;
+	private final Set<IdentityEqualifier> listedObjects;
 
-	private ConnectionSource connSrc=null;
+	private final ConnectionSource connSrc;
 	private Connection conn=null;
 
 	/**
@@ -43,14 +43,11 @@ public class Saver extends SpyObject {
 	 */
 	public Saver(SpyConfig conf, SaveContext ctx) {
 		super();
-		this.context=ctx;
-		if(this.context == null) {
-			this.context = new SaveContext();
-		}
-		this.config=conf;
+		context = ctx == null ? new SaveContext() : ctx;
+		config=conf;
 		ConnectionSourceFactory csf=ConnectionSourceFactory.getInstance();
 		connSrc=csf.getConnectionSource(conf);
-		this.listedObjects=new HashSet<IdentityEqualifier>();
+		listedObjects=new HashSet<IdentityEqualifier>();
 	}
 
 	/** 

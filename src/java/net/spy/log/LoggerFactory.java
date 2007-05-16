@@ -27,8 +27,8 @@ public final class LoggerFactory extends Object {
 
 	private static LoggerFactory instance=null;
 
-	private ConcurrentMap<String, Logger> instances=null;
-	private Constructor<? extends Logger> instanceConstructor=null;
+	private final ConcurrentMap<String, Logger> instances;
+	private Constructor<? extends Logger> instanceConstructor;
 
 	/**
 	 * Get an instance of LoggerFactory.

@@ -40,10 +40,9 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 	 */
 	public CachePreparedStatementStub(SpyDB d, String query, long cTime) {
 		super(query);
-		this.db=d;
-		this.cacheTime=cTime;
+		db=d;
+		cacheTime=cTime;
 	}
-
 
 	/**
 	 * Get an integer hash code to uniquely identify this object.

@@ -12,9 +12,9 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class KeyStore extends Object {
 
-	private BigDecimal start=null;
-	private BigDecimal end=null;
-	private AtomicReference<BigDecimal> current=null;
+	private final BigDecimal start;
+	private final BigDecimal end;
+	private final AtomicReference<BigDecimal> current;
 
 	private static final BigDecimal ONE=new BigDecimal(1);
 
@@ -23,9 +23,9 @@ public class KeyStore extends Object {
 	 */
 	public KeyStore(BigDecimal s, BigDecimal e) {
 		super();
-		this.start=s;
-		this.current=new AtomicReference<BigDecimal>(s);
-		this.end=e;
+		start=s;
+		current=new AtomicReference<BigDecimal>(s);
+		end=e;
 	}
 
 	/** 

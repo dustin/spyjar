@@ -22,8 +22,8 @@ import java.util.concurrent.TimeUnit;
 public class RetryableExecutorCompletionService<V> 
 	implements CompletionService<V> {
 
-	private ExecutorService executor = null;
-	BlockingQueue<Future<V>> completionQueue = null;
+	private final ExecutorService executor;
+	final BlockingQueue<Future<V>> completionQueue;
 
 	public RetryableExecutorCompletionService(ExecutorService e) {
 		super();
@@ -84,7 +84,7 @@ public class RetryableExecutorCompletionService<V>
 
 	class TrackingCallable implements RetryableCallable<V> {
 
-		private RetryableCallable<V> callable=null;
+		private final RetryableCallable<V> callable;
 		private Future<V> future=null;
 
 		public TrackingCallable(RetryableCallable<V> c) {

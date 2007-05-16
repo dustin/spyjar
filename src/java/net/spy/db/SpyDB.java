@@ -24,19 +24,19 @@ import net.spy.util.SpyConfig;
 public class SpyDB extends SpyObject implements Closeable {
 
 	// The actual database connection from the PooledObject.
-	private Connection conn=null;
+	private Connection conn;
 
 	// Our configuration.
-	private SpyConfig conf = null;
+	private SpyConfig conf;
 
 	// Is this thing closed?
 	private boolean isClosed=false;
 
 	// The connection source.
-	private ConnectionSource source=null;
+	private ConnectionSource source;
 
 	// Exceptions that occur during initialization.
-	private DBInitException initializationException=null;
+	private DBInitException initializationException;
 
 	/** 
 	 * Initialization type for SpyDB initialized from a config.
@@ -48,7 +48,7 @@ public class SpyDB extends SpyObject implements Closeable {
 	 */
 	protected static final int INIT_FROM_CONN=2;
 
-	private int initType=0;
+	private final int initType;
 
 	/**
 	 * Create a SpyDB object based on the description found in the passed

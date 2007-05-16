@@ -31,7 +31,7 @@ import net.spy.SpyObject;
  */
 public class SQLRunner extends SpyObject {
 
-	private Connection connection=null;
+	private final Connection connection;
 	private int timeout=0;
 
 	/**

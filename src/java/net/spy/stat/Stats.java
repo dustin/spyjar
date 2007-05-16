@@ -17,7 +17,7 @@ public class Stats extends SpyObject {
 
 	private static Stats instance=null;
 
-	private ConcurrentMap<String, Stat> stats=null;
+	private final ConcurrentMap<String, Stat> stats;
 
 	protected Stats() {
 		super();

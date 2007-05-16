@@ -13,7 +13,7 @@ import net.spy.SpyObject;
  */
 public class DigestHex extends SpyObject {
 
-	private String digestAlg=null;
+	private final String digestAlg;
 
 	public DigestHex(String alg) {
 		super();

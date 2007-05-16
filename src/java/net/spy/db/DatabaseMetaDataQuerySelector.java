@@ -57,7 +57,7 @@ import net.spy.SpyObject;
 public class DatabaseMetaDataQuerySelector extends SpyObject
 	implements QuerySelector {
 
-	private SortedMap<String, String> nameMap=null;
+	private final SortedMap<String, String> nameMap;
 
 	/** 
 	 * Get an instance of DatabaseMetaDataQuerySelector.

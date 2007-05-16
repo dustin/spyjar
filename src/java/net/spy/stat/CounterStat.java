@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class CounterStat extends Stat {
 
-    private AtomicLong count=null;
+    private final AtomicLong count;
 
     /**
      * Get an instance of CounterStat.

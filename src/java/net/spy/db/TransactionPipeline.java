@@ -26,7 +26,7 @@ public class TransactionPipeline extends SpyObject {
 	private static final int MIN_TRANS_AGE=500;
 
 	// The thread pool.
-	private ScheduledExecutorService pool=null;
+	private ScheduledExecutorService pool;
 
 	/**
 	 * Get an instance of TransactionPipeline.

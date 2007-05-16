@@ -9,8 +9,8 @@ package net.spy.log;
  */
 public class LoggingOutputStream extends LineGettingOutputStream {
 
-	private Logger logger=null;
-	private Level level=null;
+	private final Logger logger;
+	private final Level level;
 
 	private static final String STDOUT_NAME="stdout";
 	private static final String STDERR_NAME="stderr";

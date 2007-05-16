@@ -12,8 +12,8 @@ public class Range<T extends Comparable<T>> extends Object
 
 	public enum MatchType { INCLUSIVE, EXCLUSIVE }
 
-	private T low=null;
-	private T high=null;
+	private final T low;
+	private final T high;
 
 	private MatchType lowMatch=MatchType.INCLUSIVE;
 	private MatchType highMatch=MatchType.INCLUSIVE;

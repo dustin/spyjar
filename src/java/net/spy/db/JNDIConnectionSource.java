@@ -21,14 +21,6 @@ import net.spy.util.SpyConfig;
  */
 public class JNDIConnectionSource extends SpyObject
 	implements ConnectionSource {
-
-	/**
-	 * Get an instance of JNDIConnectionSource.
-	 */
-	public JNDIConnectionSource() {
-		super();
-	}
-
 	/**
 	 * This will get a connection to the JNDI resource.
 	 *

@@ -12,7 +12,7 @@ public class Log4JLogger extends AbstractLogger {
 
 	// Can't really import this without confusion as there's another thing
 	// by this name in here.
-	private org.apache.log4j.Logger l4jLogger=null;
+	private final org.apache.log4j.Logger l4jLogger;
 
 	/**
 	 * Get an instance of Log4JLogger.

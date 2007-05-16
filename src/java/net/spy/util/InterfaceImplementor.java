@@ -38,8 +38,8 @@ import net.spy.SpyObject;
 public class InterfaceImplementor extends SpyObject {
 
 	// Functions that are already defined.
-	private HashSet<String> definedFunctions=null;
-	private Class<?> interfaceClass=null;
+	private final HashSet<String> definedFunctions;
+	private final Class<?> interfaceClass;
 	private Class<?> superClass=null;
 	private String outpackage=null;
 	private String outclass="BLAH";
@@ -70,7 +70,7 @@ public class InterfaceImplementor extends SpyObject {
 		// Go ahead and initialize this here.  That way we don't have to
 		// worry about it later.
 		definedFunctions=new HashSet<String>();
-		this.interfaceClass=c;
+		interfaceClass=c;
 	}
 
 	/** 

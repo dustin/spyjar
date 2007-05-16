@@ -14,9 +14,9 @@ import net.spy.SpyObject;
 
 public abstract class GenericPreparedStatementStub extends SpyObject {
 
-	private String query=null;
-	private Object[] args = null;
-	private int[] types = null;
+	private final String query;
+	private final Object[] args;
+	private final int[] types;
 
 	public GenericPreparedStatementStub(String q) {
 		super();
@@ -130,9 +130,7 @@ public abstract class GenericPreparedStatementStub extends SpyObject {
 	}
 
 	public void close() throws SQLException {
-		query=null;
-		args=null;
-		types=null;
+		// nothing
 	}
 
 }

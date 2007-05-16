@@ -17,9 +17,9 @@ import net.spy.SpyThread;
  */
 public class SyncThread<T> extends SpyThread {
 
-	private Callable<T> callable=null;
-	private CyclicBarrier barrier=null;
-	private CountDownLatch latch=null;
+	private final Callable<T> callable;
+	private final CyclicBarrier barrier;
+	private final CountDownLatch latch;
 	private Throwable throwable=null;
 	private T rv=null;
 

@@ -83,7 +83,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 
 	// Stores a mapping between a runnable and what thread is executing it so
 	// afterExecute can update the thread.  Stupid inconsistent API.
-	private Map<Runnable, WorkerThread> currentWorkers=
+	private final Map<Runnable, WorkerThread> currentWorkers=
 		new ConcurrentHashMap<Runnable, WorkerThread>();
 
 	private transient Logger logger=null;

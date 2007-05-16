@@ -19,18 +19,17 @@ public class CompositeExecutorException extends ExecutionException {
 
 	private static final int MAX_EXCEPTIONS = 10;
 
-	private Collection<ExecutionException> exceptions=null;
+	private final Collection<ExecutionException> exceptions
+		=new RingBuffer<ExecutionException>(MAX_EXCEPTIONS);
 
 	public CompositeExecutorException(ExecutionException e) {
 		super("Too many failures");
-		exceptions=new RingBuffer<ExecutionException>(MAX_EXCEPTIONS);
 		exceptions.add(e);
 	}
 
 	public CompositeExecutorException(
 			Collection<? extends ExecutionException> e) {
 		super("Too many failures");
-		exceptions=new RingBuffer<ExecutionException>(MAX_EXCEPTIONS);
 		exceptions.addAll(e);
 	}
 

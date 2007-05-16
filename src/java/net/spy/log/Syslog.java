@@ -49,7 +49,7 @@ public class Syslog extends SpyObject {
 
 	private static final int PACKET_SIZE=514;
 
-	private InetAddress addr=null;
+	private final InetAddress addr;
 
 	/**
 	 * Log to a particular log host.

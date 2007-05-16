@@ -22,14 +22,14 @@ public class NetStringDecoder extends SpyObject {
 	// Maximum length of the string
 	private static final int MAX_LEN=65535;
 
-	private String encoding=null;
+	private final String encoding;
 
 	/**
 	 * Get an instance of NetStringDecoder.
 	 */
 	public NetStringDecoder(String enc) {
 		super();
-		this.encoding=enc;
+		encoding=enc;
 	}
 
 	/** 

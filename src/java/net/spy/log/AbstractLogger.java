@@ -10,7 +10,7 @@ package net.spy.log;
  */
 public abstract class AbstractLogger implements Logger {
 
-	private String name=null;
+	private final String name;
 
 	/** 
 	 * Instantiate the abstract logger.
@@ -20,7 +20,7 @@ public abstract class AbstractLogger implements Logger {
 		if(nm == null) {
 			throw new NullPointerException("Logger name may not be null.");
 		}
-		this.name=nm;
+		name=nm;
 	}
 
 	/** 

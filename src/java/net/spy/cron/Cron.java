@@ -17,8 +17,8 @@ import net.spy.concurrent.ThreadPool;
  */
 public final class Cron extends SpyThread {
 
-	private JobQueue<?> jobQueue=null;
-	private boolean stillRunning=true;
+	private final JobQueue<?> jobQueue;
+	private volatile boolean stillRunning=true;
 	private ThreadPool threads=null;
 
 	// How long we can go idle.

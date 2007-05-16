@@ -21,9 +21,9 @@ import net.spy.SpyObject;
  */
 public class MemStorageImpl<T> extends SpyObject implements Storage<T> {
 
-	private Collection<T> allObjects=null;
-	private Map<String, Map<Object, T>> singleCache=null;
-	private Map<String, Map<Object, List<T>>> multiCache=null;
+	private Collection<T> allObjects;
+	private final Map<String, Map<Object, T>> singleCache;
+	private final Map<String, Map<Object, List<T>>> multiCache;
 
 	/**
 	 * Get an instance of HashCacheEntry.
@@ -89,8 +89,9 @@ public class MemStorageImpl<T> extends SpyObject implements Storage<T> {
 
 	private void internalCacheInstance(T i) throws Exception {
 		CacheKeyFinder ckf=CacheKeyFinder.getInstance();
-		Map<CacheKey,CacheKeyFinder.Accessor> m=ckf.getCacheKeys(i.getClass());
-		for(Map.Entry<CacheKey, CacheKeyFinder.Accessor> me : m.entrySet()) {
+		Map<CacheKey,CacheKeyFinder.Accessor<?>> m=
+			ckf.getCacheKeys(i.getClass());
+		for(Map.Entry<CacheKey, CacheKeyFinder.Accessor<?>> me : m.entrySet()) {
 			storeEntry(me.getKey(), me.getValue().get(i), i);
 		}
 	}

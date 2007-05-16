@@ -18,7 +18,7 @@ public class ScheduledExecutorCompletionService<V>
 	extends RetryableExecutorCompletionService<V>
 	implements ScheduledCompletionService<V> {
 
-	private ScheduledExecutorService executor=null;
+	private final ScheduledExecutorService executor;
 
 	public ScheduledExecutorCompletionService(ScheduledExecutorService ex) {
 		super(ex);

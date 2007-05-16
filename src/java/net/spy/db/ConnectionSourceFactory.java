@@ -16,7 +16,7 @@ public class ConnectionSourceFactory extends SpyObject {
 
 	private static ConnectionSourceFactory instance=null;
 
-	private ConcurrentMap<String, ConnectionSource> sources=null;
+	private final ConcurrentMap<String, ConnectionSource> sources;
 
 	/**
 	 * Get an instance of ConnectionSourceFactory.

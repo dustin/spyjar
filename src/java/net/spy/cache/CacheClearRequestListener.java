@@ -16,11 +16,11 @@ import net.spy.SpyThread;
  */
 public class CacheClearRequestListener extends SpyThread {
 
-	private MulticastSocket s=null;
-	private InetAddress group=null;
-	private int port=-1;
+	private final MulticastSocket s;
+	private final InetAddress group;
+	private final int port;
 	private int requests=0;
-	private boolean running=true;
+	private volatile boolean running=true;
 
 	/**
 	 * Get an instance of CacheClearRequestListener.

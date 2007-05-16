@@ -20,8 +20,8 @@ public class CacheKeyFinder extends SpyObject {
 
 	private static CacheKeyFinder instance=null;
 
-	private ConcurrentMap<Class<?>, Map<CacheKey, Accessor>> memo=
-		new ConcurrentHashMap<Class<?>, Map<CacheKey, Accessor>>();
+	private final ConcurrentMap<Class<?>, Map<CacheKey, Accessor<?>>> memo=
+		new ConcurrentHashMap<Class<?>, Map<CacheKey, Accessor<?>>>();
 
 	protected CacheKeyFinder() {
 		super();
@@ -50,13 +50,13 @@ public class CacheKeyFinder extends SpyObject {
 	 * @param c the class to search
 	 * @return the cache keys for the given class
 	 */
-	public Map<CacheKey, Accessor> getCacheKeys(Class<?> c) {
-		Map<CacheKey, Accessor> rv=memo.get(c);
+	public Map<CacheKey, Accessor<?>> getCacheKeys(Class<?> c) {
+		Map<CacheKey, Accessor<?>> rv=memo.get(c);
 		if(rv == null) {
 			synchronized(c) {
 				rv=memo.get(c);
 				if(rv == null) {
-					rv=new HashMap<CacheKey, Accessor>();
+					rv=new HashMap<CacheKey, Accessor<?>>();
 					lookupCacheKeys(rv, c);
 				}
 			}
@@ -64,7 +64,7 @@ public class CacheKeyFinder extends SpyObject {
 		return rv;
 	}
 
-	private void lookupCacheKeys(Map<CacheKey, Accessor> rv, Class<?> c) {
+	private void lookupCacheKeys(Map<CacheKey, Accessor<?>> rv, Class<?> c) {
 		// Get the recursion out of the way first
 		Class<?> sup=c.getSuperclass();
 		if(sup != null) {
@@ -92,9 +92,9 @@ public class CacheKeyFinder extends SpyObject {
 	/**
 	 * Class to access an object from within another object.
 	 */
-	public static abstract class Accessor {
-		private AccessibleObject ao=null;
-		protected Accessor(AccessibleObject o) {
+	public static abstract class Accessor<T extends AccessibleObject> {
+		protected final T ao;
+		protected Accessor(T o) {
 			ao=o;
 		}
 		/**
@@ -118,28 +118,23 @@ public class CacheKeyFinder extends SpyObject {
 		protected abstract Object realGet(Object o) throws Exception;
 	}
 
-	private static class MethodAccessor extends Accessor {
-		private Method method=null;
+	private static class MethodAccessor extends Accessor<Method> {
 		public MethodAccessor(Method m) {
 			super(m);
-			method=m;
 		}
 		@Override
 		protected Object realGet(Object o) throws Exception {
-			Object rv=method.invoke(o, new Object[0]);
-			return rv;
+			return ao.invoke(o, new Object[0]);
 		}
 	}
 
-	private static class FieldAccessor extends Accessor {
-		private Field field=null;
+	private static class FieldAccessor extends Accessor<Field> {
 		public FieldAccessor(Field f) {
 			super(f);
-			field=f;
 		}
 		@Override
 		public Object realGet(Object o) throws Exception {
-			return field.get(o);
+			return ao.get(o);
 		}
 	}
 }

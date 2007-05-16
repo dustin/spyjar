@@ -53,7 +53,7 @@ public class ObjectPoolConnectionSource extends SpyObject
 	// This is the object pool from which connections will be retrieved
 	private static ObjectPool pool=null;
 
-	private Map<Connection, PooledObject> objects=null;
+	private final Map<Connection, PooledObject> objects;
 
 	// The name of the pool referenced by this instance.
 	private String poolName=null;

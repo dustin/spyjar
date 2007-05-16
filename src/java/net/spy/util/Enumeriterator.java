@@ -12,7 +12,7 @@ import java.util.Iterator;
  */
 public class Enumeriterator<T> extends Object implements Iterator<T> {
 
-	private Enumeration<T> e=null;
+	private final Enumeration<T> e;
 
 	/**
 	 * Get an instance of Enumeriterator.

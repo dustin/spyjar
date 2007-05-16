@@ -18,8 +18,8 @@ import net.spy.SpyObject;
 public abstract class AbstractSPNode<T extends SPNode<T>>
 	extends SpyObject implements SPNode<T> {
 
-	private SortedSet<SPVertex<T>> links=null;
-	private Map<SPNode<T>, SPVertex<T>> nextHops=null;
+	private final SortedSet<SPVertex<T>> links;
+	private final Map<SPNode<T>, SPVertex<T>> nextHops;
 
 	/**
 	 * Get an instance of AbstractSPNode holding its links in the given
@@ -28,7 +28,7 @@ public abstract class AbstractSPNode<T extends SPNode<T>>
 	 */
 	protected AbstractSPNode(SortedSet<SPVertex<T>> l) {
 		super();
-		this.links=l;
+		links=l;
 		nextHops=new WeakHashMap<SPNode<T>, SPVertex<T>>();
 	}
 

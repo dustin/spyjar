@@ -14,7 +14,7 @@ public class TimeIncrement extends Object {
 
 	private int fieldIncrement=0;
 	private int incAmount=0;
-	private Calendar calendar=null;
+	private final Calendar calendar;
 
 	/**
 	 * Get a new TimeIncrement object.

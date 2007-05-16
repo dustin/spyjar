@@ -13,19 +13,19 @@ import java.util.concurrent.atomic.AtomicLong;
 public abstract class AbstractCachable
 	extends AbstractCacheListener implements Cachable {
 
-	private Object key=null;
-	private Object value=null;
-	private long cacheTime=0;
-	private AtomicInteger accesses=new AtomicInteger(0);
-	private AtomicLong lastAccess=new AtomicLong(0);
+	private final Object key;
+	private final Object value;
+	private final long cacheTime;
+	private final AtomicInteger accesses=new AtomicInteger(0);
+	private final AtomicLong lastAccess=new AtomicLong(0);
 
 	/**
 	 * Get an instance of AbstractCachable.
 	 */
 	public AbstractCachable(Object k, Object v) {
 		super();
-		this.key=k;
-		this.value=v;
+		key=k;
+		value=v;
 		cacheTime=System.currentTimeMillis();
 	}
 

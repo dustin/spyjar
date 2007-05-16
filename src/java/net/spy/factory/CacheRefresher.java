@@ -14,7 +14,7 @@ import net.spy.SpyObject;
 public class CacheRefresher extends SpyObject {
 
 	private static CacheRefresher instance=null;
-	private Timer timer=null;
+	private final Timer timer;
 
 	/**
 	 * Constructor for subclasses of CacheRefresher.

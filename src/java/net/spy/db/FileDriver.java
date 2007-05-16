@@ -48,8 +48,8 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 	}
 	
-	private Map<String, Map<ParameterizedQuery, Object>> queryMap=null;
-	private Map<String, Map<ParameterizedQuery, Object>> updateMap=null;
+	private final Map<String, Map<ParameterizedQuery, Object>> queryMap;
+	private final Map<String, Map<ParameterizedQuery, Object>> updateMap;
 
 	public FileDriver() {
 		super();

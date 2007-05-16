@@ -20,7 +20,7 @@ public class ToStringComparator extends Object implements Comparator<Object> {
 	 */
 	public static final int NULLS_LAST=1;
 
-	private int nullOrder=NULLS_LAST;
+	private final int nullOrder;
 
 	/**
 	 * Get an instance of ToStringComparator sorting nulls last.

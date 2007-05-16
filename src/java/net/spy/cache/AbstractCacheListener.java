@@ -11,13 +11,6 @@ import net.spy.SpyObject;
  */
 public class AbstractCacheListener extends SpyObject implements CacheListener {
 
-	/**
-	 * Get an instance of AbstractCacheListener.
-	 */
-	public AbstractCacheListener() {
-		super();
-	}
-
 	/** 
 	 * Receive notification of having been cached.
 	 */

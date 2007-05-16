@@ -27,10 +27,10 @@ public class TTL extends TimerTask {
 	private static final int DEFAULT_REPORT_INTERVAL=300000;
 	private static final int DEFAULT_N_REPORTS=10;
 
-	private long ttl=0;
-	private long startTime=0;
-	private Expired e=null;
-	private Object extraInfo=null;
+	private final long ttl;
+	private final Expired e;
+	private long startTime;
+	private Object extraInfo;
 
 	private boolean isClosed=false;
 	private boolean fired=false;
@@ -55,10 +55,10 @@ public class TTL extends TimerTask {
 	 * @param info Extra info that will be toString()ed in the log
 	 */
 	public TTL(long theTTL, Object info) {
-		this.ttl=theTTL;
-		this.extraInfo=info;
-		this.reset();
-		this.e=new Expired();
+		ttl=theTTL;
+		extraInfo=info;
+		reset();
+		e=new Expired();
 	}
 
 	/** 

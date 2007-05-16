@@ -16,18 +16,18 @@ public class MainJob extends Job implements ThreadPoolRunnable {
 
 	// The classname and the args to run and the classloader in which to find
 	// the class.
-	private ClassLoader classLoader=null;
-	private String classname=null;
-	private String[] args=null;
+	private final ClassLoader classLoader;
+	private final String classname;
+	private final String[] args;
 
 	/**
 	 * Get a new ``at style'' MainJob.
 	 */
 	public MainJob(ClassLoader cl, String cName, String a[], Date startDate) {
 		super("main:" + cName, startDate);
-		this.classname=cName;
-		this.args=a;
-		this.classLoader=cl;
+		classname=cName;
+		args=a;
+		classLoader=cl;
 	}
 
 	/**
@@ -36,9 +36,9 @@ public class MainJob extends Job implements ThreadPoolRunnable {
 	public MainJob(ClassLoader cl, String cName, String a[],
 		Date startDate, TimeIncrement ti) {
 		super("main:" + cName, startDate, ti);
-		this.classname=cName;
-		this.args=a;
-		this.classLoader=cl;
+		classname=cName;
+		args=a;
+		classLoader=cl;
 	}
 
 	/**

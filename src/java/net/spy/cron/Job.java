@@ -18,7 +18,7 @@ public abstract class Job extends SpyObject implements Runnable {
 	// How to increment the time value in the case of recurring jobs.
 	private TimeIncrement increment=null;
 	// Whether the job is currently running or not
-	private boolean isrunning=false;
+	private volatile boolean isrunning=false;
 	// The name of ths thing
 	private String name=null;
 

@@ -17,7 +17,7 @@ public final class TTLMonitor extends SpyObject {
 
 	private static TTLMonitor instance=null;
 
-	private Timer timer=null;
+	private final Timer timer;
 
 	/**
 	 * Get an instance of TTLMonitor.

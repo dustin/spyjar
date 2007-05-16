@@ -20,7 +20,7 @@ import net.spy.SpyObject;
  */
 public class Mapper<F, T> extends SpyObject {
 
-	private ExecutorService executor=null;
+	private final ExecutorService executor;
 
 	/**
 	 * Construct a Mapper backed by an in-place executor.
@@ -96,8 +96,8 @@ public class Mapper<F, T> extends SpyObject {
 	private static class TransformingCollection<F,T>
 		extends AbstractCollection<Callable<T>> {
 
-		Collection<? extends F> backingCollection=null;
-		Transformer<F, T> transformer=null;
+		final Collection<? extends F> backingCollection;
+		final Transformer<F, T> transformer;
 
 		public TransformingCollection(Transformer<F,T> trans,
 				Collection<? extends F> in) {
@@ -117,7 +117,8 @@ public class Mapper<F, T> extends SpyObject {
 
 		class Titerator implements Iterator<Callable<T>> {
 
-			Iterator<? extends F> backingIterator=backingCollection.iterator();
+			final Iterator<? extends F> backingIterator=
+				backingCollection.iterator();
 
 			public boolean hasNext() {
 				return backingIterator.hasNext();

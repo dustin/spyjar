@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 public class RingBuffer<T> extends AbstractCollection<T>
 	implements Serializable {
 
-	T[] buf=null;
+	final T[] buf;
 	int start=0;
 	int end=0;
 	private boolean wrapped=false;

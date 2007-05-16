@@ -14,14 +14,14 @@ import java.io.OutputStream;
  */
 public class NetStringEncoder extends Object {
 
-	private String encoding=null;
+	private final String encoding;
 
 	/**
 	 * Get an instance of NetStringEncoder.
 	 */
 	public NetStringEncoder(String enc) {
 		super();
-		this.encoding=enc;
+		encoding=enc;
 	}
 
 	/** 

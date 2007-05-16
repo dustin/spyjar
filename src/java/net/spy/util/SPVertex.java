@@ -15,8 +15,8 @@ public class SPVertex<N extends SPNode<N>> extends Object
 	implements Comparable<SPVertex<N>> {
 
 	// A weak reference to the next spnode
-	private WeakReference<N> to=null;
-	private int cost=0;
+	private final WeakReference<N> to;
+	private final int cost;
 
 	public static final int DEFAULT_COST=10;
 

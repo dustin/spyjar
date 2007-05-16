@@ -28,7 +28,7 @@ import net.spy.util.TimeStampedHashMap;
  */
 public class SpyCache extends SpyObject {
 
-	TimeStampedHashMap<String, Cachable> cacheStore=null;
+	final TimeStampedHashMap<String, Cachable> cacheStore;
 	private SpyCacheCleaner cacheCleaner=null;
 
 	CacheDelegate delegate=null;
@@ -44,11 +44,6 @@ public class SpyCache extends SpyObject {
 	 */
 	protected SpyCache() {
 		super();
-
-		init();
-	}
-
-	private void init() {
 		cacheStore=new TimeStampedHashMap<String, Cachable>();
 		delegate=new DummyDelegate();
 	}
@@ -351,7 +346,7 @@ public class SpyCache extends SpyObject {
 	} // Cleaner class
 
 	static class SpyCacheItem extends AbstractCachable {
-		private long exptime=0;
+		private final long exptime;
 
 		public SpyCacheItem(Object key, Object value, long cacheTime) {
 			super(key, value);

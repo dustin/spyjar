@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class LRUCache<K,V> extends LinkedHashMap<K,V> {
 
-	private int maxSize=0;
+	private final int maxSize;
 
 	/**
 	 * Get an instance of LRUCache.

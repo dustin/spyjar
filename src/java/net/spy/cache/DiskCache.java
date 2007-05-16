@@ -34,8 +34,8 @@ import net.spy.util.SpyUtil;
 public class DiskCache extends AbstractMap<Serializable, Serializable> {
 
 	// Base directory for hashing
-	String basedir = null;
-	private LRUCache<Serializable, SoftReference<Serializable>> lruCache=null;
+	final String basedir;
+	private final LRUCache<Serializable, SoftReference<Serializable>> lruCache;
 
 	private static final int DEFAULT_LRU_CACHE_SIZE=100;
 
@@ -257,14 +257,14 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 	private static class I extends
 		Object implements Iterator<Entry<Serializable, Serializable>> {
 
-		private Iterator<Map.Entry<Serializable, Serializable>> i=null;
+		private final Iterator<Map.Entry<Serializable, Serializable>> i;
 		private E current=null;
 		private boolean begun=false;
 
 		// Instatiate the iterator over the default iterator implementation
 		public I(Iterator<Map.Entry<Serializable, Serializable>> it) {
 			super();
-			this.i=it;
+			i=it;
 		}
 
 		/** 
@@ -302,13 +302,13 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 	private static class E extends Object
 		implements Map.Entry<Serializable, Serializable> {
 
-		File path=null;
-		Serializable k=null;
+		final File path;
+		final Serializable k;
 
 		public E(Serializable key, File p) {
 			super();
-			this.k=key;
-			this.path=p;
+			k=key;
+			path=p;
 		}
 
 		/** 

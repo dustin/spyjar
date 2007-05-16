@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadFactory;
 public class TrackingScheduledExecutor extends ScheduledThreadPoolExecutor {
 
 	// Stolen from ThreadPool
-	private Map<Runnable, WorkerThread> currentWorkers=
+	private final Map<Runnable, WorkerThread> currentWorkers=
 		new ConcurrentHashMap<Runnable, WorkerThread>();
 
 	/**

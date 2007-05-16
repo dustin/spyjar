@@ -12,7 +12,7 @@ import java.io.InputStream;
  */
 public class Base64InputStream extends ByteConverionInputStream {
 
-	private Base64 base64=null;
+	private final Base64 base64;
 	// Properly initialized, this will be zero
 	private int currentOut=9;
 	private byte[] outbuffer=null;

@@ -13,11 +13,11 @@ import java.io.OutputStream;
  */
 public class Base64OutputStream extends FilterOutputStream {
 
-	private Base64 base64=null;
+	private final Base64 base64;
 	private int currentByte=0;
 	private int currentOutput=0;
-	private byte[] buffer=null;
-	private byte[] crlf=null;
+	private final byte[] buffer;
+	private final byte[] crlf;
 
 	/**
 	 * Get a new Base64OutputStream encoding the given OutputStream.

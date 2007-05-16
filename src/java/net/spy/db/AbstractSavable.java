@@ -17,7 +17,7 @@ public abstract class AbstractSavable extends SpyObject
 	private boolean asIsNew=false;
 	private boolean asIsModified=false;
 
-	private Exception createdHere=null;
+	private final Exception createdHere;
 
 	/**
 	 * Get an instance of AbstractSavable.

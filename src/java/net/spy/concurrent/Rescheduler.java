@@ -29,7 +29,7 @@ import net.spy.concurrent.SynchronizationObject.Predicate;
  */
 public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 
-	private ScheduledExecutorService executor;
+	private final ScheduledExecutorService executor;
 
 	/**
 	 * Get an instance of Rescheduler with the given backing
@@ -301,13 +301,13 @@ public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 
 	static class FutureFuture<T> implements Future<T> {
 
-		RetryableCallable<T> callable=null;
-		Object defaultObj=new Object();
-		Object cancelObj=new Object();
+		final RetryableCallable<T> callable;
+		final Object defaultObj=new Object();
+		final Object cancelObj=new Object();
 		CompositeExecutorException exceptions=null;
-		private SynchronizationObject<Future<T>> futureSync=
+		private final SynchronizationObject<Future<T>> futureSync=
 			new SynchronizationObject<Future<T>>(null);
-		private SynchronizationObject<Object> sync=
+		private final SynchronizationObject<Object> sync=
 			new SynchronizationObject<Object>(defaultObj);
 
 		public FutureFuture(RetryableCallable<T> c) {
@@ -400,7 +400,7 @@ public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 	static class ScheduledFutureFuture<T> extends FutureFuture<T>
 		implements ScheduledFuture<T> {
 
-		private long when=0;
+		private final long when;
 
 		public ScheduledFutureFuture(RetryableCallable<T> c, long delay) {
 			super(c);

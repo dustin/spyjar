@@ -55,7 +55,7 @@ import net.spy.util.SpyUtil;
  */
 public class FileJobQueue extends JobQueue<MainJob> {
 
-	private ClassLoader classLoader=null;
+	private ClassLoader classLoader;
 
 	/**
 	 * Get a new FileJobQueue based on what's in the given file.

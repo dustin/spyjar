@@ -18,8 +18,8 @@ public class SimpleCache extends SpyObject {
 
 	private static SimpleCache instance=null;
 
-	private ConcurrentMap<String, Object> storage=null;
-	private Timer timer=null;
+	private final ConcurrentMap<String, Object> storage;
+	private final Timer timer;
 
 	/**
 	 * Get an instance of SimpleCache.
@@ -110,8 +110,8 @@ public class SimpleCache extends SpyObject {
 
 	// timer that fires to clear stuff
 	private static class ClearTimer extends TimerTask {
-		private String key=null;
-		private Object value=null;
+		private final String key;
+		private final Object value;
 		public ClearTimer(String k, Object v) {
 			super();
 			key=k;

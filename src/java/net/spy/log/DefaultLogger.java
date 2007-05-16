@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class DefaultLogger extends AbstractLogger {
 
-	private SimpleDateFormat df=null;
+	private final SimpleDateFormat df;
 
 	/**
 	 * Get an instance of DefaultLogger.

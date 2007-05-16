@@ -71,7 +71,7 @@ public class GetPK extends SpyObject {
 
 	private static GetPK instance=null;
 
-	private ConcurrentMap<String, KeyStore> caches=null;
+	private final ConcurrentMap<String, KeyStore> caches;
 
 	/** 
 	 * Constructor for an extensible Singleton.

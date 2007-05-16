@@ -11,7 +11,7 @@ public class SunLogger extends AbstractLogger {
 
 	// Can't really import this without confusion as there's another thing
 	// by this name in here.
-	private java.util.logging.Logger sunLogger=null;
+	private final java.util.logging.Logger sunLogger;
 
 	/**
 	 * Get an instance of SunLogger.

@@ -10,7 +10,7 @@ package net.spy.util;
  */
 public class IdentityEqualifier extends Object {
 
-	private Object object=null;
+	private final Object object;
 
 	/** 
 	 * Get an IdentityEqualifier wrapping the given object.

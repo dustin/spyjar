@@ -18,7 +18,7 @@ import net.spy.log.Logger;
  */
 public class ObjectDump extends SpyObject {
 
-	private Logger logger=null;
+	private final Logger logger;
 
 	/**
 	 * Get an instance of ObjectDump.
