@@ -1,6 +1,3 @@
-//
-// arch-tag: 7BDC050C-1110-11D9-91E7-000A957659CC
-
 package net.spy.pool;
 
 import java.util.ArrayList;

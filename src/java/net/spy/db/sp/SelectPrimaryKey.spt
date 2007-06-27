@@ -1,8 +1,6 @@
 #
 # Copyright (c) 2003  SPY Internetworking <dustin@spy.net>
 #
-# arch-tag: BDDA2004-1110-11D9-9704-000A957659CC
-#
 
 @package
 net.spy.db.sp

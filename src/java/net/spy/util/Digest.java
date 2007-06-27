@@ -1,6 +1,4 @@
 // Copyright (c) 2001  Beyond.com <dustin@beyond.com>
-//
-// arch-tag: 82074898-1110-11D9-9C0E-000A957659CC
 
 package net.spy.util;
 

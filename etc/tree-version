@@ -1,5 +1,4 @@
 #!/bin/sh
-# arch-tag: D7E26A48-110F-11D9-9A90-000A957659CC
 
 # Start with the latest patch
 base=`tla logs -f | tail -1`

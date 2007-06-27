@@ -1,6 +1,4 @@
 // Copyright (c) 2007  Dustin Sallings <dustin@spy.net>
-//
-// arch-tag: D3EA6695-3731-45AC-B556-E8E9968352AC
 package net.spy.concurrent;
 
 import java.util.concurrent.Callable;

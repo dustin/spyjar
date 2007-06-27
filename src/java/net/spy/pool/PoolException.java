@@ -1,6 +1,3 @@
-//
-// arch-tag: 7CAF605E-1110-11D9-A9DF-000A957659CC
-
 package net.spy.pool;
 
 /**

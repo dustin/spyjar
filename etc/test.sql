@@ -1,5 +1,4 @@
 -- Test schema
--- arch-tag: F97AD100-110F-11D9-9E58-000A957659CC
 
 drop table testtable;
 drop sequence testtable_id_seq;

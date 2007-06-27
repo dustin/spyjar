@@ -1,7 +1,5 @@
 // Copyright (c) 2005  Scott Lamb <slamb@slamb.org>
 // Copyright (c) 2005  Dustin Sallings <dustin@spy.net>
-//
-// arch-tag: 9F734ECE-788F-4AF9-8662-FB2245C69A44
 
 package net.spy.db;
 

@@ -1,6 +1,4 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// arch-tag: 639281E0-1110-11D9-A286-000A957659CC
 
 package net.spy.cron;
 

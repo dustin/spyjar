@@ -1,4 +1,3 @@
 #!/bin/sh
-# arch-tag: D6702B8B-110F-11D9-8B27-000A957659CC
 
 tla changelog --no-files | sed 1,4d

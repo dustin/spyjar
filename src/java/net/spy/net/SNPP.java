@@ -1,8 +1,6 @@
 // SNPP implementation
 //
 // Copyright (c) 1999 Dustin Sallings
-//
-// arch-tag: 78144148-1110-11D9-8C3B-000A957659CC
 
 package net.spy.net;
 

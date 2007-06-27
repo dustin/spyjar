@@ -1,6 +1,3 @@
-//
-// arch-tag: 7DB3627A-1110-11D9-B445-000A957659CC
-
 package net.spy.pool;
 
 import net.spy.net.SNPP;

@@ -1,8 +1,6 @@
 /*
  * Copyright (c) 2002 Scott Lamb <slamb@slamb.org>
  * This code is released under the MIT license; see the file LICENSE.
- *
- * arch-tag: 5DFF88CC-1110-11D9-92B5-000A957659CC
  */
 
 package net.spy.ant;

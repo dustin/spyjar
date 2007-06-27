@@ -1,6 +1,4 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
-//
-// arch-tag: B77F8D06-1110-11D9-A98E-000A957659CC
 
 package net.spy.db.savables;
 

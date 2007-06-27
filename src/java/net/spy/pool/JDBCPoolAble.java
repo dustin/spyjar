@@ -1,6 +1,3 @@
-//
-// arch-tag: 7A180BBA-1110-11D9-BDD4-000A957659CC
-
 package net.spy.pool;
 
 import java.sql.Connection;

@@ -1,6 +1,4 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// arch-tag: A44CCEEC-1110-11D9-B51F-000A957659CC
 
 package %PACKAGE%;
 

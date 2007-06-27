@@ -1,6 +1,3 @@
-//
-// arch-tag: 7B7EE941-1110-11D9-984C-000A957659CC
-
 package net.spy.pool;
 
 import java.util.Date;

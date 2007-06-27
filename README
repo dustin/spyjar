@@ -117,6 +117,3 @@ JVM version specific runtime requirements.
 - LDIF processor: This class will read and write records in LDIF format
 - Thread pool: Assists with running parallel tasks, allows names and priority
 - UUDecode: allows for UUDecoding data streams, good for file transfers
-
---
-arch-tag: A004ACD2-110F-11D9-B0C5-000A957659CC

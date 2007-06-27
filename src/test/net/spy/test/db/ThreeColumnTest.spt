@@ -1,8 +1,6 @@
 #
 # Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 #
-# arch-tag: 3382B3CC-1110-11D9-8C86-000A957659CC
-#
 
 @package
 net.spy.test.db

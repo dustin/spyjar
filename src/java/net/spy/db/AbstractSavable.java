@@ -1,6 +1,4 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
-//
-// arch-tag: 646B9A43-1110-11D9-8E01-000A957659CC
 
 package net.spy.db;
 

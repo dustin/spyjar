@@ -1,6 +1,3 @@
-//
-// arch-tag: 7D5DEAA3-1110-11D9-9CD8-000A957659CC
-
 package net.spy.pool;
 
 import net.spy.SpyObject;

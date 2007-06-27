@@ -1,5 +1,4 @@
 // Copyright (c) 2006  Dustin Sallings <dustin@spy.net>
-// arch-tag: ABCA8432-B592-4692-8B10-0511F8B8E50E
 
 package net.spy.concurrent;
 

@@ -165,5 +165,3 @@
     </xsl:attribute>  
   </xsl:template>	
 </xsl:stylesheet>
-
-<!-- arch-tag: 3425CE68-175D-11D9-808C-000A957659CC -->

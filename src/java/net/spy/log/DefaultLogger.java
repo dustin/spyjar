@@ -1,6 +1,4 @@
 // Copyright (c) 2002  SPY internetworking <dustin@spy.net>
-//
-// arch-tag: 7296FF66-1110-11D9-8D65-000A957659CC
 
 package net.spy.log;
 

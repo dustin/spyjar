@@ -1,6 +1,4 @@
 // Copyright (c) 2007 Dustin Sallings <dustin@spy.net>
-//
-// arch-tag: A3CAB5EA-F957-40CB-A85D-448FC6BC1577
 package net.spy.concurrent;
 
 import java.io.IOException;
