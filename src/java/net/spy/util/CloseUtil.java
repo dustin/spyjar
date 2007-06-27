@@ -10,7 +10,11 @@ import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
 
 /**
- * Object closer.
+ * CloseUtil exists to provide a safe means to close anything closeable.
+ * This prevents exceptions from being thrown from within finally blocks while
+ * still providing logging of exceptions that occur during close.  Exceptions
+ * during the close will be logged using the spy logging infrastructure, but
+ * will not be propagated up the stack.
  */
 public final class CloseUtil {
 
