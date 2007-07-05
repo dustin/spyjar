@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -32,7 +33,7 @@ public class ReschedulerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		schedInline=new Rescheduler(new InlineScheduledExecutorService());
+		schedInline=new Rescheduler(Executors.newSingleThreadScheduledExecutor());
 		schedPooled=new Rescheduler(new ScheduledThreadPoolExecutor(3));
 	}
 
@@ -46,7 +47,7 @@ public class ReschedulerTest extends TestCase {
 		assertTrue(schedPooled.awaitTermination(
 				Long.MAX_VALUE, TimeUnit.MILLISECONDS));
 		// Note:  This is always true because the inline scheduler never says no
-		assertFalse(schedInline.isShutdown());
+		assertTrue(schedInline.isShutdown());
 		assertTrue(schedPooled.isShutdown());
 	}
 
@@ -55,6 +56,9 @@ public class ReschedulerTest extends TestCase {
 		TestRunnable tr=new TestRunnable();
 		assertEquals(0, tr.runs);
 		schedInline.execute(tr);
+		while(tr.runs < 1) {
+			Thread.yield();
+		}
 		assertEquals(1, tr.runs);
 	}
 
@@ -411,7 +415,7 @@ public class ReschedulerTest extends TestCase {
 	//
 
 	static class TestRunnable implements Runnable {
-		int runs=0;
+		volatile int runs=0;
 		public void run() {
 			runs++;
 		}
