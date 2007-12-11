@@ -67,7 +67,7 @@ public class SpyCache extends SpyObject {
 		return(instance);
 	}
 
-	/** 
+	/**
 	 * Shut down the cache.
 	 */
 	public static synchronized void shutdown() {
@@ -77,10 +77,10 @@ public class SpyCache extends SpyObject {
 		instance=null;
 	}
 
-	/** 
+	/**
 	 * Set the delegate for this SpyCache.
-	 * 
-	 * @param del 
+	 *
+	 * @param del
 	 */
 	public void setDelegate(CacheDelegate del) {
 		if(del == null) {
@@ -89,9 +89,9 @@ public class SpyCache extends SpyObject {
 		delegate=del;
 	}
 
-	/** 
+	/**
 	 * Store a Cachable object in the cache.
-	 * 
+	 *
 	 * @param key the key for storing this object
 	 * @param value the object to store
 	 */
@@ -140,7 +140,7 @@ public class SpyCache extends SpyObject {
 				ret=i.getCachedObject();
 				// If the stored object is a reference, dereference it.
 				if((ret!=null) && (ret instanceof Reference)) {
-					Reference<?> ref=(Reference)ret;
+					Reference<?> ref=(Reference<?>)ret;
 					ret=ref.get();
 				} // Object was a reference
 			} // Found object in cache
@@ -296,7 +296,7 @@ public class SpyCache extends SpyObject {
 			}
 		}
 
-		/** 
+		/**
 		 * Loop until there's no need to loop any more.
 		 */
 		@Override
@@ -373,7 +373,7 @@ public class SpyCache extends SpyObject {
 			// the object has expired
 			Object v=getCachedObject();
 			if(v instanceof Reference) {
-				Reference<?> rvalue=(Reference)v;
+				Reference<?> rvalue=(Reference<?>)v;
 				if(rvalue.get()==null) {
 					ret=false;
 				}

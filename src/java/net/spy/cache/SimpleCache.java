@@ -54,14 +54,14 @@ public class SimpleCache extends SpyObject {
 	 * Get an object from the cache.
 	 * If the stored object is a reference, it'll be dereferenced before
 	 * returned.
-	 * 
+	 *
 	 * @param key the cache key
 	 * @return the cached object
 	 */
 	public Object get(String key) {
 		Object rv=storage.get(key);
 		if(rv != null && rv instanceof Reference) {
-			Reference<?> ref=(Reference)rv;
+			Reference<?> ref=(Reference<?>)rv;
 			rv=ref.get();
 			if(rv == null) {
 				storage.remove(key, ref);
@@ -72,7 +72,7 @@ public class SimpleCache extends SpyObject {
 
 	/**
 	 * Store an object in the cache.
-	 * 
+	 *
 	 * @param key the cache key
 	 * @param timeout how long until it's deleted
 	 * @param value the value to cache
@@ -87,7 +87,7 @@ public class SimpleCache extends SpyObject {
 
 	/**
 	 * Remove an object from the cache.
-	 * 
+	 *
 	 * @param key the key of the object to remove
 	 * @return the previous object under this key (null if there wasn't one)
 	 */
@@ -98,7 +98,7 @@ public class SimpleCache extends SpyObject {
 	/**
 	 * Conditionally remove an object from the cache.  The object will only
 	 * be removed if the value is equal to the specified value.
-	 * 
+	 *
 	 * @param key the key
 	 * @param value the value
 	 * @return true if a value was removed
