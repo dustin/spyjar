@@ -4,9 +4,9 @@ package net.spy.util;
 
 import java.util.concurrent.Callable;
 
-import net.spy.test.SyncThread;
-
 import junit.framework.TestCase;
+
+import net.spy.test.SyncThread;
 
 /**
  * Test the promise implementation.
@@ -48,7 +48,7 @@ public class PromiseTest extends TestCase {
 		try {
 			Object o=p.get();
 			fail("Broken promise gave me a value:  " + o);
-		} catch(BrokenPromiseException e) {
+		} catch(RuntimeException e) {
 			// pass
 		}
 		assertTrue("Got: " + String.valueOf(p),
@@ -58,7 +58,7 @@ public class PromiseTest extends TestCase {
 		try {
 			Object o=p.get();
 			fail("Broken promise gave me a value the second time:  " + o);
-		} catch(BrokenPromiseException e) {
+		} catch(RuntimeException e) {
 			// pass
 		}
 	}
@@ -70,12 +70,12 @@ public class PromiseTest extends TestCase {
 	}
 
 	public void testBrokenPromiseException() {
-		BrokenPromiseException e=new BrokenPromiseException("test");
+		RuntimeException e=new RuntimeException("test");
 		assertEquals("test", e.getMessage());
 		assertNull(e.getCause());
 
 		Exception e2=new Exception();
-		e=new BrokenPromiseException("test", e2);
+		e=new RuntimeException("test", e2);
 		assertEquals("test", e.getMessage());
 		assertSame(e2, e.getCause());
 	}
@@ -94,7 +94,7 @@ public class PromiseTest extends TestCase {
 		}
 
 		@Override
-		protected Integer execute() throws BrokenPromiseException {
+		protected Integer execute() {
 			return new Integer(myInt++);
 		}
 
@@ -106,8 +106,8 @@ public class PromiseTest extends TestCase {
 		}
 
 		@Override
-		protected Object execute() throws BrokenPromiseException {
-			throw new BrokenPromiseException("Fail");
+		protected Object execute() {
+			throw new RuntimeException("Fail");
 		}
 	}
 
@@ -117,7 +117,7 @@ public class PromiseTest extends TestCase {
 		}
 
 		@Override
-		protected Object execute() throws BrokenPromiseException {
+		protected Object execute() {
 			return(null);
 		}
 	}

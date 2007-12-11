@@ -9,7 +9,7 @@ public abstract class Promise<T> extends Object {
 
 	private T rv=null;
 	private volatile boolean hasRun=false;
-	private BrokenPromiseException bpe=null;
+	private RuntimeException bpe=null;
 
 	/**
 	 * Get an instance of Promise.
@@ -23,16 +23,16 @@ public abstract class Promise<T> extends Object {
 	 *
 	 * @return the Object we were promised.
 	 *
-	 * @exception BrokenPromiseException if there's a problem getting what
-	 * we were promised.
+	 * @exception RuntimeException if there's a problem getting what
+	 *            we were promised.
 	 */
-	public final T get() throws BrokenPromiseException {
+	public final T get() {
 		if(hasRun == false) {
 			synchronized(this) {
 				if(hasRun == false) {
 					try {
 						rv=execute();
-					} catch(BrokenPromiseException e) {
+					} catch(RuntimeException e) {
 						this.bpe=e;
 						throw e;
 					} finally {
@@ -77,6 +77,6 @@ public abstract class Promise<T> extends Object {
 	/**
 	 * Do the actual work required to get the Object we're promised.
 	 */
-	protected abstract T execute() throws BrokenPromiseException;
+	protected abstract T execute();
 
 }
