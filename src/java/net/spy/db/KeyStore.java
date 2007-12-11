@@ -26,7 +26,7 @@ public class KeyStore extends Object {
 		end=e;
 	}
 
-	/** 
+	/**
 	 * String me.
 	 */
 	@Override
@@ -34,9 +34,9 @@ public class KeyStore extends Object {
 		return("KeyStore from " + start + " to " + end);
 	}
 
-	/** 
+	/**
 	 * Get the next key.
-	 * 
+	 *
 	 * @return the next available key
 	 * @throws OverDrawnException if there are no keys left in this store
 	 */

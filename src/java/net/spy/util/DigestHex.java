@@ -36,7 +36,7 @@ public class DigestHex extends SpyObject {
 
 	/**
 	 * Get the hex digest of the given string.
-	 * 
+	 *
 	 * @param in a string
 	 * @return the hex digest of this string
 	 */

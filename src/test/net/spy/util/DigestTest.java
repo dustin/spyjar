@@ -11,7 +11,7 @@ import junit.framework.TestCase;
  */
 public class DigestTest extends TestCase {
 
-	/** 
+	/**
 	 * A basic test of the password generator.  Ensure the password
 	 * generator won't generate the same password if called several times.
 	 */
@@ -26,7 +26,7 @@ public class DigestTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test the password hashing.  Do a couple rounds of passwords and make
 	 * sure the hashing consistently works.
 	 */
@@ -41,7 +41,7 @@ public class DigestTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test the password hashing.  Do a couple rounds of passwords and make
 	 * sure the hashing consistently works.
 	 */
@@ -56,7 +56,7 @@ public class DigestTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test salt-free hashes.
 	 */
 	public void testSaltFree() throws Exception {

@@ -24,12 +24,12 @@ import org.jmock.core.stub.StubSequence;
  * Test the primary key implementation.
  */
 public class PKTest extends TestCase {
-	
+
 	@Override
 	protected void tearDown() {
 		GetPK.setInstance(null);
 	}
-	
+
 	/**
 	 * Test the singleton operation.
 	 */
@@ -40,7 +40,7 @@ public class PKTest extends TestCase {
 		assertNotSame(ref, GetPK.getInstance());
 	}
 
-	/** 
+	/**
 	 * Test basic primary key functionality.
 	 */
 	public void testPrimaryKeyByConf() throws Exception {
@@ -66,7 +66,7 @@ public class PKTest extends TestCase {
 		mockSource.verifyConnections();
 	}
 
-	/** 
+	/**
 	 * Test a PK with a missing key (no update).
 	 */
 	public void testPrimaryKeyMissingKey() throws Exception {

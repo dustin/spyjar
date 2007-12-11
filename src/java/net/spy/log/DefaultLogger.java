@@ -23,7 +23,7 @@ public class DefaultLogger extends AbstractLogger {
 		df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	}
 
-	/** 
+	/**
 	 * False.
 	 */
 	@Override
@@ -31,7 +31,7 @@ public class DefaultLogger extends AbstractLogger {
 		return(false);
 	}
 
-	/** 
+	/**
 	 * True.
 	 */
 	@Override
@@ -39,7 +39,7 @@ public class DefaultLogger extends AbstractLogger {
 		return(true);
 	}
 
-	/** 
+	/**
 	 * @see AbstractLogger
 	 */
 	@Override

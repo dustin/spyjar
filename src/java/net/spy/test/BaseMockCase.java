@@ -17,7 +17,7 @@ public abstract class BaseMockCase extends MockObjectTestCase {
      */
     protected InvocationMatcher any() {
         return new InvocationMatcher() {
-    
+
             public boolean matches(Invocation i) { return true; }
             public void invoked(Invocation i) {
                 // do nothing
@@ -31,5 +31,5 @@ public abstract class BaseMockCase extends MockObjectTestCase {
             }
         };
     }
-   
+
 }

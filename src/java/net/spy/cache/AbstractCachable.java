@@ -27,37 +27,37 @@ public abstract class AbstractCachable
 		cacheTime=System.currentTimeMillis();
 	}
 
-	/** 
+	/**
 	 * Get the time at which this thing was cached.
 	 */
 	public long getCacheTime() {
 		return(cacheTime);
 	}
 
-	/** 
+	/**
 	 * Get the cache key.
 	 */
 	public Object getCacheKey() {
 		return(key);
 	}
 
-	/** 
+	/**
 	 * Get the object that was cached.
 	 */
 	public Object getCachedObject() {
 		return(value);
 	}
 
-	/** 
+	/**
 	 * Get the timestamp of the last access of this object.
 	 */
 	public long getLastAccessTime() {
 		return(lastAccess.get());
 	}
 
-	/** 
+	/**
 	 * Mark a new access.
-	 * 
+	 *
 	 * @param t the time at which the access occurred
 	 */
 	public void setAccessTime(long t) {
@@ -69,7 +69,7 @@ public abstract class AbstractCachable
 		accesses.incrementAndGet();
 	}
 
-	/** 
+	/**
 	 * Get the number of times this object has been accessed.
 	 */
 	public int getAccessCount() {
@@ -85,7 +85,7 @@ public abstract class AbstractCachable
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Override cachedEvent to also send the message to the cached object
 	 * if it wants it.
 	 */
@@ -99,18 +99,18 @@ public abstract class AbstractCachable
 		}
 	}
 
-	/** 
+	/**
 	 * Override uncachedEvent to also send the message to the cached object
 	 * if it wants it.
-	 * 
-	 * @param k 
+	 *
+	 * @param k
 	 */
 	@Override
 	public void uncachedEvent(Object k) {
 		super.uncachedEvent(k);
 		// If we're holding a CacheListener, send the message to it.
 		CacheListener o=getContainedObjectAsListener();
-		if(o!=null) { 
+		if(o!=null) {
 			o.uncachedEvent(k);
 		}
 	}

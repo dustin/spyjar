@@ -22,7 +22,7 @@ public class QuerySelectorFactory extends SpyObject {
 	private static final String DEFAULT_SELECTOR=
 		"net.spy.db.DatabaseMetaDataQuerySelector";
 
-	/** 
+	/**
 	 * Get the QuerySelector instance.
 	 */
 	public static QuerySelector getQuerySelector() {

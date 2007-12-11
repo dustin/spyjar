@@ -22,7 +22,7 @@ import net.spy.concurrent.SynchronizationObject.Predicate;
 /**
  * ScheduledExecutorService wrapper that allows RetryableCallable objects to
  * be retried upon failure.
- * 
+ *
  * Note that while this does back an existing ScheduledExecutorService, any
  * Callables sent directly into that service will not be eligible for retry.
  */
@@ -33,7 +33,7 @@ public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 	/**
 	 * Get an instance of Rescheduler with the given backing
 	 * ScheduledExecutorService.
-	 * 
+	 *
 	 * @param x the ScheduledExecutorService that will be responsible execution
 	 */
 	public Rescheduler(ScheduledExecutorService x) {
@@ -247,7 +247,7 @@ public class Rescheduler extends SpyObject implements ScheduledExecutorService {
 	}
 
 	public void shutdown() {
-		executor.shutdown(); 
+		executor.shutdown();
 	}
 
 	public boolean isShutdown() {

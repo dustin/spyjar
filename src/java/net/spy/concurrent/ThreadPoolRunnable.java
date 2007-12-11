@@ -13,7 +13,7 @@ package net.spy.concurrent;
  */
 public interface ThreadPoolRunnable extends Runnable {
 
-	/** 
+	/**
 	 * Subclasses must override toString() to produce an informative debug
 	 * string.  It's a good idea to have this also include the class name
 	 * to be a bit more informative as the class name will not be displayed

@@ -42,7 +42,7 @@ public class Stats extends SpyObject {
 
 	/**
 	 * Get a stat by name.
-	 * 
+	 *
 	 * @param name the name of the stat
 	 * @param kind the kind of stat object to get
 	 * @return the stat instance
@@ -73,7 +73,7 @@ public class Stats extends SpyObject {
 
 	/**
 	 * Get a counter stat by name (convenience).
-	 * 
+	 *
 	 * @param name name of the stat
 	 * @return the stat
 	 */
@@ -83,7 +83,7 @@ public class Stats extends SpyObject {
 
 	/**
 	 * Get a computing stat by name (convenience).
-	 * 
+	 *
 	 * @param name name of the stat
 	 * @return the stat
 	 */
@@ -93,7 +93,7 @@ public class Stats extends SpyObject {
 
 	/**
 	 * Get the stat with the given name.
-	 * 
+	 *
 	 * @param name the name of the stat
 	 * @return the Stat, or null if there's no stat with that name
 	 */

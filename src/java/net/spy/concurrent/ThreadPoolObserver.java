@@ -9,14 +9,14 @@ import net.spy.SpyObject;
  */
 public class ThreadPoolObserver extends SpyObject {
 
-	/** 
+	/**
 	 * Get an instance of ThreadPoolObserver.
 	 */
 	public ThreadPoolObserver() {
 		super();
 	}
 
-	/** 
+	/**
 	 * This method will be called to indicate the completion of a job.
 	 *
 	 * <p>
@@ -29,19 +29,19 @@ public class ThreadPoolObserver extends SpyObject {
 	 * will prevent multiple threads from recycling.
 	 *
 	 * </p>
-	 * 
+	 *
 	 * @param r the job that finished
 	 */
 	protected void jobComplete(Runnable r) {
 		// Nothing.
 	}
 
-	/** 
+	/**
 	 * Send notification of the completion of a job.
 	 *
 	 * This is called by the worker thread to announce the completion of
 	 * the provided job.
-	 * 
+	 *
 	 * @param r the job that finished
 	 */
 	final void completedJob(Runnable r) {

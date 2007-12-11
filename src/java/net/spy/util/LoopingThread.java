@@ -9,7 +9,7 @@ import net.spy.SpyThread;
  */
 public abstract class LoopingThread extends SpyThread {
 
-	/** 
+	/**
 	 * Default number of milliseconds to spend on each loop.
 	 */
 	public static final int DEFAULT_MS_PER_LOOP=5000;
@@ -24,14 +24,14 @@ public abstract class LoopingThread extends SpyThread {
 		super();
 	}
 
-	/** 
+	/**
 	 * Get a LoopingThread with a specified name.
 	 */
 	protected LoopingThread(String name) {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Get a looping thread belonging to a specific group and having the
 	 * specified name.
 	 */
@@ -39,27 +39,27 @@ public abstract class LoopingThread extends SpyThread {
 		super(tg, name);
 	}
 
-	/** 
+	/**
 	 * Set the number of milliseconds to sleep during each loop.
 	 *
 	 * Default is 5000 (five seconds).
-	 * 
+	 *
 	 * @param to number of milliseconds to delay between loops
 	 */
 	public void setMsPerLoop(int to) {
 		this.msPerLoop = to;
 	}
 
-	/** 
+	/**
 	 * Get the number of milliseconds to sleep during each loop.
-	 * 
+	 *
 	 * @return the number of milliseconds to wait during a loop.
 	 */
 	public int getMsPerLoop() {
 		return(msPerLoop);
 	}
 
-	/** 
+	/**
 	 * Request the looping should end.
 	 */
 	public synchronized void requestStop() {
@@ -68,13 +68,13 @@ public abstract class LoopingThread extends SpyThread {
 		notifyAll();
 	}
 
-	/** 
+	/**
 	 * This is the stuff that should happen during each execution of the
 	 * run loop.
 	 */
 	protected abstract void runLoop();
 
-	/** 
+	/**
 	 * Method to pause between loops.
 	 *
 	 * This is implemented via wait() so a notify() will cause this object
@@ -90,16 +90,16 @@ public abstract class LoopingThread extends SpyThread {
 		}
 	}
 
-	/** 
+	/**
 	 * This method is invoked when the delay is interrupted.
-	 * 
+	 *
 	 * @param e the interrupted exception
 	 */
 	protected void delayInterrupted(InterruptedException e) {
 		getLogger().warn("Somebody interrupted my sleep", e);
 	}
 
-	/** 
+	/**
 	 * The run loop itself.
 	 */
 	@Override
@@ -117,14 +117,14 @@ public abstract class LoopingThread extends SpyThread {
 		shuttingDown();
 	}
 
-	/** 
+	/**
 	 * Hook method invoked when the thread is starting up.
 	 */
 	protected void startingUp() {
 		// hook goes here
 	}
 
-	/** 
+	/**
 	 * Hook method invoked when the thread is shutting down.
 	 */
 	protected void shuttingDown() {

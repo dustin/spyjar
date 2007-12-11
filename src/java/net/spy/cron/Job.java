@@ -84,7 +84,7 @@ public abstract class Job extends SpyObject implements Runnable {
 		if(nextStart==null) {
 			return(false);
 		}
-		
+
 		long now=System.currentTimeMillis();
 
 		// If the time is current or has passed, and the job is not
@@ -119,9 +119,9 @@ public abstract class Job extends SpyObject implements Runnable {
 		return(nextStart==null);
 	}
 
-	/** 
+	/**
 	 * Get the current TimeIncrement object incrementing the time on this job.
-	 * 
+	 *
 	 * @return the TimeIncrement
 	 */
 	protected TimeIncrement getTimeIncrement() {
@@ -135,7 +135,7 @@ public abstract class Job extends SpyObject implements Runnable {
 		isrunning=true;
 	}
 
-	/** 
+	/**
 	 * Find the next time this Job should be run and adjust the start date
 	 * accordingly.
 	 *
@@ -155,7 +155,7 @@ public abstract class Job extends SpyObject implements Runnable {
 		}
 	}
 
-	/** 
+	/**
 	 * Stop this job from running.
 	 */
 	protected void stopRunning() {

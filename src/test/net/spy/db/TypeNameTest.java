@@ -12,7 +12,7 @@ import junit.framework.TestCase;
  */
 public class TypeNameTest extends TestCase {
 
-	/** 
+	/**
 	 * Test all type names.
 	 */
 	public void testTypeNames() throws Exception {

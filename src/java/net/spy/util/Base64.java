@@ -25,7 +25,7 @@ public class Base64 extends Object {
 		super();
 	}
 
-	/** 
+	/**
 	 * Get the singleton base64 instance.
 	 */
 	public static Base64 getInstance() {

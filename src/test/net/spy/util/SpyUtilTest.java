@@ -30,7 +30,7 @@ public class SpyUtilTest extends TestCase {
         super(name);
     }
 
-	/** 
+	/**
 	 * Test the basics of split.
 	 */
 	public void testSplit() {
@@ -45,7 +45,7 @@ public class SpyUtilTest extends TestCase {
 		assertEquals("abc", a2[0]);
 	}
 
-	/** 
+	/**
 	 * Test the basics of join.
 	 */
 	public void testJoin() {
@@ -63,7 +63,7 @@ public class SpyUtilTest extends TestCase {
 		assertEquals("a,b,c", en);
 	}
 
-	/** 
+	/**
 	 * Test the byte array to hex string thing.
 	 */
 	public void testByteAToHexString() {
@@ -72,7 +72,7 @@ public class SpyUtilTest extends TestCase {
 		assertEquals("000102030405060708090a0b0c0d0e0f10", s);
 	}
 
-	/** 
+	/**
 	 * Test the boolean wrapper methods.
 	 */
 	public void testBooleanWrappers() {
@@ -84,7 +84,7 @@ public class SpyUtilTest extends TestCase {
 		assertSame(Boolean.FALSE, Boolean.valueOf(false));
 	}
 
-	/** 
+	/**
 	 * Test the reader to string conversion.
 	 */
 	public void testReaderAsString() throws Exception {
@@ -99,7 +99,7 @@ public class SpyUtilTest extends TestCase {
 		assertEquals(originalString, readString);
 	}
 
-	/** 
+	/**
 	 * Test the shuffle method.
 	 */
 	public void testShuffle() throws Exception {
@@ -119,7 +119,7 @@ public class SpyUtilTest extends TestCase {
 		assertTrue("Result after shuffling is too similar.", match < 10);
 	}
 
-	/** 
+	/**
 	 * Test the Enumeriterator implementation.
 	 */
 	public void testEnumeriterator() throws Exception {
@@ -139,7 +139,7 @@ public class SpyUtilTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test the deHTMLer.
 	 */
 	public void testDeHTML() throws Exception {
@@ -147,7 +147,7 @@ public class SpyUtilTest extends TestCase {
 		assertEquals("blah", SpyUtil.deHTML("<tag thing=\"<a>\">blah</tag>"));
 	}
 
-	/** 
+	/**
 	 * Test the run class.
 	 */
 	public void testRunClass() throws Exception {
@@ -168,7 +168,7 @@ public class SpyUtilTest extends TestCase {
 		SpyUtil.runClass("net.spy.util.SpyUtilTest", args);
 	}
 
-	/** 
+	/**
 	 * Test the type name gen.
 	 */
 	public void testTypeNameGen() throws Exception {
@@ -179,7 +179,7 @@ public class SpyUtilTest extends TestCase {
 		f.delete();
 	}
 
-	/** 
+	/**
 	 * Test the interface implementor.
 	 */
 	public void testInterfaceImplementor() throws Exception {
@@ -193,7 +193,7 @@ public class SpyUtilTest extends TestCase {
 		SpyUtil.rmDashR(new File(tmpDir));
 	}
 
-	/** 
+	/**
 	 * Test the proxy interface implementor.
 	 */
 	public void testProxyInterfaceImplementor() throws Exception {
@@ -233,7 +233,7 @@ public class SpyUtilTest extends TestCase {
 		generateSPT(path, false);
 	}
 
-	/** 
+	/**
 	 * SPGen test.
 	 */
 	public void testSPGen() throws Exception {
@@ -271,7 +271,7 @@ public class SpyUtilTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test for runclass.
 	 */
 	public static void main(String args[]) throws Throwable {

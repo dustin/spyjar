@@ -36,12 +36,12 @@ public class SpyDB extends SpyObject implements Closeable {
 	// Exceptions that occur during initialization.
 	private DBInitException initializationException;
 
-	/** 
+	/**
 	 * Initialization type for SpyDB initialized from a config.
 	 */
 	protected static final int INIT_FROM_CONFIG=1;
 
-	/** 
+	/**
 	 * Initialization type for SpyDB initialized from a Connection.
 	 */
 	protected static final int INIT_FROM_CONN=2;
@@ -53,7 +53,7 @@ public class SpyDB extends SpyObject implements Closeable {
 	 * in SpyConfig object.
 	 *
 	 * <p>
-	 * 
+	 *
 	 * The configuration may vary greatly depending on the connector.  The
 	 * only configuration option for SpyDB itself is
 	 * <i>dbConnectionSource</i> which specifies the name of the class that
@@ -87,9 +87,9 @@ public class SpyDB extends SpyObject implements Closeable {
 		init();
 	}
 
-	/** 
+	/**
 	 * Get the type of initialization that created this object.
-	 * 
+	 *
 	 * @return either INIT_FROM_CONFIG or INIT_FROM_CONN
 	 */
 	public int getInitType() {
@@ -260,9 +260,9 @@ public class SpyDB extends SpyObject implements Closeable {
 		return(isClosed);
 	}
 
-	/** 
+	/**
 	 * Get the source of connections.
-	 * 
+	 *
 	 * @return a ConnectionSource instance, or null if this SpyDB instance
 	 * 			was created from a config
 	 */
@@ -270,9 +270,9 @@ public class SpyDB extends SpyObject implements Closeable {
 		return(source);
 	}
 
-	/** 
+	/**
 	 * Get the configuration from which this SpyDB was instatiated.
-	 * 
+	 *
 	 * @return the config, or null if the SpyDB was created from a
 	 * 			connection
 	 */

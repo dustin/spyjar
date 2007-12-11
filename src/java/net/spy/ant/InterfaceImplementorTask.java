@@ -95,7 +95,7 @@ public class InterfaceImplementorTask extends Task {
 		}
 	}
 
-	/** 
+	/**
 	 * Perform the transformation.
 	 */
 	@Override

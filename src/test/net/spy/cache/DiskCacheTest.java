@@ -55,7 +55,7 @@ public class DiskCacheTest extends TestCase {
 		return(tmpdir);
 	}
 
-	/** 
+	/**
 	 * Get the cache.
 	 */
 	@Override
@@ -63,7 +63,7 @@ public class DiskCacheTest extends TestCase {
 		cache=new DiskCache(getTmpDir());
 	}
 
-	/** 
+	/**
 	 * Get rid of the cache.
 	 */
 	@Override
@@ -73,14 +73,14 @@ public class DiskCacheTest extends TestCase {
 		tmpdir=null;
 	}
 
-	/** 
+	/**
 	 * Check getBaseDir.
 	 */
 	public void testGetBaseDir() {
 		assertEquals(getTmpDir(), cache.getBaseDir());
 	}
 
-	/** 
+	/**
 	 * Test the basic functionality used for testing.
 	 */
 	public void testRmDashRf() throws IOException {
@@ -101,7 +101,7 @@ public class DiskCacheTest extends TestCase {
 		return(pairs);
 	}
 
-	/** 
+	/**
 	 * Test basic functionality of the disk cache.
 	 */
 	@SuppressWarnings("unchecked")
@@ -117,7 +117,7 @@ public class DiskCacheTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test storing keys that aren't strings.
 	 */
 	public void testNonStringThings() {
@@ -130,7 +130,7 @@ public class DiskCacheTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test invalid storage.
 	 */
 	public void testInvalidStore() {
@@ -142,7 +142,7 @@ public class DiskCacheTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test basic functionality of the disk cache.
 	 */
 	@SuppressWarnings("unchecked")
@@ -156,7 +156,7 @@ public class DiskCacheTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test cache walking.
 	 */
 	@SuppressWarnings("unchecked")
@@ -207,7 +207,7 @@ public class DiskCacheTest extends TestCase {
 			pairs.size(), cache.size());
 	}
 
-	/** 
+	/**
 	 * Test cache walking.
 	 */
 	@SuppressWarnings("unchecked")

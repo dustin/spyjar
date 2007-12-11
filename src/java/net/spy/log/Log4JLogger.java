@@ -22,7 +22,7 @@ public class Log4JLogger extends AbstractLogger {
 		l4jLogger=org.apache.log4j.Logger.getLogger(name);
 	}
 
-	/** 
+	/**
 	 * True if the underlying logger would allow debug messages through.
 	 */
 	@Override
@@ -30,7 +30,7 @@ public class Log4JLogger extends AbstractLogger {
 		return(l4jLogger.isDebugEnabled());
 	}
 
-	/** 
+	/**
 	 * True if the underlying logger would allow info messages through.
 	 */
 	@Override
@@ -38,9 +38,9 @@ public class Log4JLogger extends AbstractLogger {
 		return(l4jLogger.isInfoEnabled());
 	}
 
-	/** 
+	/**
 	 * Wrapper around log4j.
-	 * 
+	 *
 	 * @param level net.spy.log.AbstractLogger level.
 	 * @param message object message
 	 * @param e optional throwable
@@ -70,7 +70,7 @@ public class Log4JLogger extends AbstractLogger {
 				pLevel=org.apache.log4j.Level.FATAL;
 				l4jLogger.log("net.spy.log.AbstractLogger", pLevel,
 					"Unhandled log level:  " + level
-						+ " for the following message", null);	
+						+ " for the following message", null);
 		}
 
 		l4jLogger.log("net.spy.log.AbstractLogger", pLevel, message, e);

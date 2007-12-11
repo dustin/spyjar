@@ -74,7 +74,7 @@ public class FileDBTest extends TestCase {
 			getPath("threecol.txt"));
 		fd.registerUpdate(url, dt, new Object[]{new Integer(11)}, 11);
 		fd.registerUpdate(url, dt, new Object[]{new Integer(13)}, 13);
-		
+
 		fd.registerUpdate(url2, dt, new Object[]{new Integer(26)}, 26);
 
 		fd.registerUpdate(url, new ClobTest(conf), new Object[]{"test"}, 1);
@@ -133,7 +133,7 @@ public class FileDBTest extends TestCase {
 			conn.close();
 		}
 	}
-	
+
 	public void testMissingSPT() throws Exception {
 		// This same query is run succesfully later with the other config
 		DeleteTest dt=new DeleteTest(conf);
@@ -170,15 +170,15 @@ public class FileDBTest extends TestCase {
 		// Try it again at 11
 		dt.setSomeColumn(11);
 		assertEquals(11, dt.executeUpdate());
-		
+
 		// try the other config
 		dt.close();
-		
+
 		dt=new DeleteTest(conf2);
 		dt.setSomeColumn(26);
 		assertEquals(26, dt.executeUpdate());
 	}
-	
+
 	public void testBigSPTUpdate() throws Exception {
 		java.sql.Date d=new java.sql.Date(System.currentTimeMillis());
 		Time t=new Time(System.currentTimeMillis());
@@ -189,7 +189,7 @@ public class FileDBTest extends TestCase {
 			new Integer(13), new Long("123"), new BigDecimal("6.8790"),
 			new BigDecimal("76.6470"), new Integer(6), new Integer(2),
 			"other", "string", t, ts}, 187);
-		
+
 		it.setParam1(true);
 		it.setParam2(d);
 		it.setParam3(1.23);
@@ -204,7 +204,7 @@ public class FileDBTest extends TestCase {
 		it.setParam12("string");
 		it.setParam13(t);
 		it.setParam14(ts);
-		
+
 		assertEquals(187, it.executeUpdate());
 	}
 
@@ -239,7 +239,7 @@ public class FileDBTest extends TestCase {
 		rs.close();
 		dtt.close();
 	}
-	
+
 	private void assertThreeColumnOne(ResultSet rs) throws Exception {
 		assertTrue(rs.next());
 		assertEquals(1, rs.getInt("first"));
@@ -255,7 +255,7 @@ public class FileDBTest extends TestCase {
 		assertEquals("nine", rs.getString("third"));
 		assertFalse(rs.next());
 	}
-	
+
 	/**
 	 * Validate queries with null parameters.
 	 */
@@ -264,11 +264,11 @@ public class FileDBTest extends TestCase {
 		ttt.setFirst((Integer)null);
 		ttt.setSecond(3);
 		ttt.setThird(null);
-		
+
 		ResultSet rs=ttt.executeQuery();
 		assertThreeColumnOne(rs);
 		rs.close();
-		
+
 		ttt.close();
 	}
 
@@ -308,7 +308,7 @@ public class FileDBTest extends TestCase {
 
 		ttt.close();
 	}
-	
+
 	/**
 	 * Test the SPT result set implementation.
 	 */
@@ -320,7 +320,7 @@ public class FileDBTest extends TestCase {
 		ttt.setSecond(2);
 		ttt.setThird("string");
 		ThreeColumnTest.Result rs=ttt.getResult();
-		
+
 		assertTrue(rs.next());
 		assertEquals(1, rs.getFirst());
 		assertEquals(2, rs.getSecond());
@@ -348,13 +348,13 @@ public class FileDBTest extends TestCase {
 		assertThreeColumnOne(rs);
 		assertTrue(rs instanceof CachedResultSet);
 		assertEquals(1, ((CachedResultSet)rs).numCopies());
-		
+
 		// Run it again
 		ResultSet rs2=ttt.executeQuery();
 		assertFalse(rs == rs2);
 		assertThreeColumnOne(rs2);
 		assertTrue(rs2 instanceof CachedResultSet);
-		assertEquals(2, ((CachedResultSet)rs2).numCopies());	
+		assertEquals(2, ((CachedResultSet)rs2).numCopies());
 		ttt.close();
 	}
 

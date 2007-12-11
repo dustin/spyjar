@@ -23,21 +23,21 @@ public class RangeTest extends TestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Get the test suite.
 	 */
 	public static Test suite() {
 		return new TestSuite(RangeTest.class);
 	}
 
-	/** 
+	/**
 	 * Run the test.
 	 */
 	public static void main(String args[]) {
 		junit.textui.TestRunner.run(suite());
 	}
 
-	/** 
+	/**
 	 * Test the Comparable implementation (sorting).
 	 */
 	@SuppressWarnings("unchecked")

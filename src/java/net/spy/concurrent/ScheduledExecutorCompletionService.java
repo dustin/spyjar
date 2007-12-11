@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Completion service that allows completion tracking on scheduled items as
- * well as 
+ * well as
  *
  * @param <V>
  */

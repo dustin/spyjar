@@ -59,7 +59,7 @@ public class ShortestPath<N extends SPNode<N>> extends ArrayList<N> {
 		add(current);
 	}
 
-	/** 
+	/**
 	 * Get the cost of this path.
 	 */
 	public int getCost() {

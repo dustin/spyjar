@@ -32,7 +32,7 @@ public class DBTTL extends TTL {
 		return("DBTTL:  " + getTTL());
 	}
 
-	/** 
+	/**
 	 * Report DB specific message.
 	 */
 	@Override

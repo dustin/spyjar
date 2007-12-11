@@ -21,7 +21,7 @@ public class SunLogger extends AbstractLogger {
 		sunLogger=java.util.logging.Logger.getLogger(name);
 	}
 
-	/** 
+	/**
 	 * True if the underlying logger would allow Level.FINE through.
 	 */
 	@Override
@@ -29,7 +29,7 @@ public class SunLogger extends AbstractLogger {
 		return(sunLogger.isLoggable(java.util.logging.Level.FINE));
 	}
 
-	/** 
+	/**
 	 * True if the underlying logger would allow Level.INFO through.
 	 */
 	@Override
@@ -37,9 +37,9 @@ public class SunLogger extends AbstractLogger {
 		return(sunLogger.isLoggable(java.util.logging.Level.INFO));
 	}
 
-	/** 
+	/**
 	 * Wrapper around sun logger.
-	 * 
+	 *
 	 * @param level net.spy.log.AbstractLogger level.
 	 * @param message object message
 	 * @param e optional throwable

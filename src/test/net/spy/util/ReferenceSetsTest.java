@@ -20,7 +20,7 @@ public class ReferenceSetsTest extends TestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Test the basic functionality of the weak hash set.
 	 * -- this test is disabled, as it doesn't seem to work reliably on my
 	 * -- core duo.  I wouldn't necessarily expect it to.
@@ -90,7 +90,7 @@ public class ReferenceSetsTest extends TestCase {
 		basicTestFor(new SoftHashSet<String>());
 	}
 
-	/** 
+	/**
 	 * Verify equality (lookup, etc...) works.
 	 */
 	public void testEquality() {
@@ -121,7 +121,7 @@ public class ReferenceSetsTest extends TestCase {
 		assertTrue(rhs.isEmpty());
 	}
 
-	/** 
+	/**
 	 * Test refset removal.
 	 */
 	public void testRemoval() {
@@ -148,7 +148,7 @@ public class ReferenceSetsTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test the iterators.
 	 */
 	public void testIterators() {
@@ -161,7 +161,7 @@ public class ReferenceSetsTest extends TestCase {
 		runIteratorTest(new WeakHashSet<String>(s));
 	}
 
-	/** 
+	/**
 	 * Constructor tests.
 	 */
 	public void testConstructors() {

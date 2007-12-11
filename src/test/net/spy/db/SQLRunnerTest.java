@@ -67,21 +67,21 @@ public class SQLRunnerTest extends MockObjectTestCase {
 		f.close();
 	}
 
-	/** 
+	/**
 	 * Test a successful script execution with autocommit on.
 	 */
 	public void testSuccessfulScriptWithAutocommit() throws Exception {
 		runSuccessfulTest(true);
 	}
 
-	/** 
+	/**
 	 * Test a successful script with autocommit off.
 	 */
 	public void testSuccessfulScriptWithoutAutocommit() throws Exception {
 		runSuccessfulTest(false);
 	}
 
-	/** 
+	/**
 	 * Test invocations over a plain unhappy Connection.
 	 */
 	public void testFailingEarlyFailingOften() throws Exception {
@@ -118,7 +118,7 @@ public class SQLRunnerTest extends MockObjectTestCase {
 		return((Statement)badMock.proxy());
 	}
 
-	/** 
+	/**
 	 * Test a single failing query.
 	 */
 	public void testFailingQuery() throws Exception {
@@ -151,7 +151,7 @@ public class SQLRunnerTest extends MockObjectTestCase {
 		f.close();
 	}
 
-	/** 
+	/**
 	 * Test a single failing query with the errok flag.  The whole script will
 	 * be considered a success here, but an individual query will fail to
 	 * complete.

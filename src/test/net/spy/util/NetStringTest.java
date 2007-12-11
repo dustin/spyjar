@@ -36,7 +36,7 @@ public class NetStringTest extends TestCase {
 		junit.textui.TestRunner.run(suite());
 	}
 
-	/** 
+	/**
 	 * Test the encoder.
 	 */
 	public void testEncoder() throws IOException {
@@ -67,7 +67,7 @@ public class NetStringTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test the decoder.
 	 */
 	public void testDecoder() throws IOException {
@@ -110,7 +110,7 @@ public class NetStringTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test the decoder with bad input.
 	 */
 	public void testBrokenDecoder() throws IOException {

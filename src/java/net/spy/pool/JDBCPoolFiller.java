@@ -16,7 +16,7 @@ public class JDBCPoolFiller extends PoolFiller {
 	private Properties dbProps=null;
 	private long maxAge=0;
 
-	/** 
+	/**
 	 * Instantiate the JDBCPoolFiller.
 	 */
 	public JDBCPoolFiller(String name, SpyConfig conf) throws PoolException {

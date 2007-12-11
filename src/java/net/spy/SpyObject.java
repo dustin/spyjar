@@ -19,9 +19,9 @@ public class SpyObject extends Object {
 		super();
 	}
 
-	/** 
+	/**
 	 * Get a Logger instance for this class.
-	 * 
+	 *
 	 * @return an appropriate logger instance.
 	 */
 	protected Logger getLogger() {

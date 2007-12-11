@@ -43,9 +43,9 @@ public class CachedResultSetStub extends GenericResultSetStub {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * How many copies have been made of this result set?
-	 * 
+	 *
 	 * @return the number of copies
 	 */
 	public int numCopies() {

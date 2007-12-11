@@ -487,6 +487,6 @@ public class ReschedulerTest extends TestCase {
 			}
 			return rv;
 		}
-		
+
 	}
 }

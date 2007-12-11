@@ -20,9 +20,9 @@ public class TypeNameGen extends Object {
 		super();
 	}
 
-	/** 
+	/**
 	 * Write the TypeNames class to the given PrintStream.
-	 * 
+	 *
 	 * @param ps the printstream to which to write the source
 	 * @throws IOException if there's a problem writing
 	 */
@@ -59,9 +59,9 @@ public class TypeNameGen extends Object {
 		ps.println("}");
 	}
 
-	/** 
+	/**
 	 * Write out the TypeNames implementation.
-	 * 
+	 *
 	 * @param args (0) = path to which to write the TypeNames
 	 * @throws IOException if there's a problem writing the file
 	 */

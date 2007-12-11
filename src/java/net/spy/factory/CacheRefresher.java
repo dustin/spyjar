@@ -61,7 +61,7 @@ public class CacheRefresher extends SpyObject {
 		gf.setNextRefresh(null);
 	}
 
-	/** 
+	/**
 	 * Request a recache of the given factory to get data as of the given date
 	 * after the given delay.
 	 *

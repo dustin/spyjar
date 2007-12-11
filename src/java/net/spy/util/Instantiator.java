@@ -18,7 +18,7 @@ public class Instantiator<C> extends SpyObject {
 	 * Default constructor to allow subclasses to figure out how they want to
 	 * build their instance.  It's expected that the instance will be set after
 	 * this invocation.
-	 * 
+	 *
 	 * @see #setInstance(Object)
 	 */
 	protected Instantiator() throws Exception {
@@ -28,7 +28,7 @@ public class Instantiator<C> extends SpyObject {
 	/**
 	 * Create an instantiator for the given class name.
 	 * @param className the name of the class to instantiate
-	 * 
+	 *
 	 * @throws Exception if the instance can't be instantiated
 	 */
 	public Instantiator(String className) throws Exception {
@@ -41,7 +41,7 @@ public class Instantiator<C> extends SpyObject {
 	 * loader.
 	 * @param className the name of the class to load
 	 * @param cl the class loader to use to instantiate the class
-	 * 
+	 *
 	 * @throws Exception if the instance can't be instantiated
 	 */
 	public Instantiator(String className, ClassLoader cl) throws Exception {
@@ -51,7 +51,7 @@ public class Instantiator<C> extends SpyObject {
 
 	/**
 	 * Set the instance.  This may only be invoked once.
-	 * 
+	 *
 	 * @param i the instance
 	 */
 	protected void setInstance(C i) {
@@ -62,7 +62,7 @@ public class Instantiator<C> extends SpyObject {
 
 	/**
 	 * Create an instance of the given class (expected to be a C).
-	 * 
+	 *
 	 * @param className the name of the class
 	 * @return the new instance
 	 * @throws Exception if the class can't be instantiated
@@ -78,7 +78,7 @@ public class Instantiator<C> extends SpyObject {
 
 	/**
 	 * Create an instance of the given class (expected to be a C).
-	 * 
+	 *
 	 * @param className the name of the class
 	 * @return the new instance
 	 * @throws Exception if the class can't be instantiated

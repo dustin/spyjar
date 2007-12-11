@@ -21,21 +21,21 @@ public class LRUTest extends TestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Get this test suite.
 	 */
 	public static Test suite() {
 		return new TestSuite(LRUTest.class);
 	}
 
-	/** 
+	/**
 	 * Run this test.
 	 */
 	public static void main(String args[]) {
 		junit.textui.TestRunner.run(suite());
 	}
 
-	/** 
+	/**
 	 * Perform basic LRU testing.
 	 */
 	public void testBasicLRU() {
@@ -62,7 +62,7 @@ public class LRUTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Perform reference LRU testing.
 	 */
 	public void testReferenceLRU() {
@@ -90,7 +90,7 @@ public class LRUTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test cache listener.
 	 */
 	@SuppressWarnings("unchecked")

@@ -18,7 +18,7 @@ public class CacheTest extends TestCase {
 
 	private SpyCache cache=null;
 
-	/** 
+	/**
 	 * Get the cache.
 	 */
 	@Override
@@ -26,7 +26,7 @@ public class CacheTest extends TestCase {
 		cache=SpyCache.getInstance();
 	}
 
-	/** 
+	/**
 	 * Get rid of the cache.
 	 */
 	@Override
@@ -34,7 +34,7 @@ public class CacheTest extends TestCase {
 		SpyCache.shutdown();
 	}
 
-	/** 
+	/**
 	 * Test singleton methods.
 	 */
 	public void testSingleton() {
@@ -146,7 +146,7 @@ public class CacheTest extends TestCase {
 			cached++;
 			String.valueOf(value);
 		}
-		public void uncachedObject(String key, Cachable value) {		
+		public void uncachedObject(String key, Cachable value) {
 			uncached++;
 		}
 	}

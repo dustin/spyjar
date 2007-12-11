@@ -18,7 +18,7 @@ public class SaveContext extends Hashtable<String, Object> {
 		super();
 	}
 
-	/** 
+	/**
 	 * Get the session ID for this context.  The session ID is not guaranteed
 	 * to be globally unique, just unique enough for local correlation in logs.
 	 */

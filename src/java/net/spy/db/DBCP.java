@@ -45,10 +45,10 @@ public abstract class DBCP extends DBSP {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Optional parameters are not currently supported for DBCP objects.
 	 * This method will always throw a SQLException when called.
-	 * 
+	 *
 	 * @param name name of the parameter
 	 * @param type type of the parameter
 	 * @throws SQLException Optional Parameters are not supported
@@ -58,10 +58,10 @@ public abstract class DBCP extends DBSP {
 		throw new SQLException("Optional Parameters Not Supported on DBCP");
 	}
 
-	/** 
+	/**
 	 * Get the CallableStatement for fetching output args.
 	 * TODO get the get* methods implemented
-	 * 
+	 *
 	 * @return The CallableStatement for getting the RC's from.
 	 */
 	public CallableStatement getCallableStatement() {

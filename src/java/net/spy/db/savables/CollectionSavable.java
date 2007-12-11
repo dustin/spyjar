@@ -26,7 +26,7 @@ public class CollectionSavable extends AbstractSavable {
 		collection=c;
 	}
 
-	/** 
+	/**
 	 * Get the collection.
 	 */
 	@Override
@@ -34,7 +34,7 @@ public class CollectionSavable extends AbstractSavable {
 		return(collection);
 	}
 
-	/** 
+	/**
 	 * NOOP.
 	 */
 	public void save(Connection conn, SaveContext context)

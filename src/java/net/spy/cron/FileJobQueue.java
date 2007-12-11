@@ -74,7 +74,7 @@ public class FileJobQueue extends JobQueue<MainJob> {
 		}
 	}
 
-	/** 
+	/**
 	 * Get a FileJobQueue from a file using the current classloader.
 	 * @param f the file
 	 */
@@ -83,9 +83,9 @@ public class FileJobQueue extends JobQueue<MainJob> {
 		classLoader=getClass().getClassLoader();
 	}
 
-	/** 
+	/**
 	 * Get a new FileJobQueue from a Reader.
-	 * 
+	 *
 	 * @param cl the classloader
 	 * @param r the reader
 	 * @throws IOException if there's a problem reading the jobs
@@ -97,7 +97,7 @@ public class FileJobQueue extends JobQueue<MainJob> {
 		initQueue(r);
 	}
 
-	/** 
+	/**
 	 * Get a FileJobQueue from a reader using the current classloader.
 	 * @param r the reader
 	 */
@@ -290,14 +290,14 @@ public class FileJobQueue extends JobQueue<MainJob> {
 			this.fields=flds;
 		}
 
-		/** 
+		/**
 		 * Get the format this thing is holding.
 		 */
 		SimpleDateFormat getFormat() {
 			return(format);
 		}
-		
-		/** 
+
+		/**
 		 * Get the java.util.Calendar fields that should be preserved.
 		 */
 		int[] getFields() {

@@ -39,7 +39,7 @@ public class ObjectDump extends SpyObject {
         }
     }
 
-	/** 
+	/**
 	 * Report that the given object is being examined.
 	 *
 	 * @param path the path to the object
@@ -49,9 +49,9 @@ public class ObjectDump extends SpyObject {
 		logger.info("Examining %s - %s - %s", path, o.getClass(), o);
 	}
 
-	/** 
+	/**
 	 * Report a primitive was found.
-	 * 
+	 *
 	 * @param path the path to the primitive
 	 * @param v the value of the primitive
 	 */
@@ -59,18 +59,18 @@ public class ObjectDump extends SpyObject {
 		logger.info("Primitive value for %s is %s", path, v);
 	}
 
-	/** 
+	/**
 	 * Report a path's value is null.
-	 * 
+	 *
 	 * @param path the path
 	 */
 	protected void reportNull(String path) {
 		logger.info(path + " is null");
 	}
 
-	/** 
+	/**
 	 * Report a duplicate object at the given path.
-	 * 
+	 *
 	 * @param path the path of the duplicate
 	 * @param prevPath the first seen path of this object
 	 * @param o the object itself
@@ -80,9 +80,9 @@ public class ObjectDump extends SpyObject {
 				o.getClass(), path, prevPath);
 	}
 
-	/** 
+	/**
 	 * Report an exception traversing an object.
-	 * 
+	 *
 	 * @param path the path of the object
 	 * @param o the object
 	 * @param e the exception that occurred
@@ -128,7 +128,7 @@ public class ObjectDump extends SpyObject {
         }
     }
 
-    /** 
+    /**
      * Dump the given object.
      */
     public void dumpObject(Object o) {

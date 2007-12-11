@@ -24,19 +24,19 @@ public final class Cron extends SpyThread {
 	// Time we last saw a valid job
 	private long validJobFound=0;
 
-	/** 
+	/**
 	 * Get a new Cron instance operating on the given queue.
-	 * 
+	 *
 	 * @param jq the job queue to watch
 	 */
 	public Cron(JobQueue<?> jq) {
 		this("Cron", jq);
 	}
 
-	/** 
+	/**
 	 * Get a new Cron instance with a name, JobQueue and the default thread
 	 * pool.
-	 * 
+	 *
 	 * @param name name of the cron instance
 	 * @param jq the queue to watch
 	 */
@@ -68,7 +68,7 @@ public final class Cron extends SpyThread {
 		start();
 	}
 
-	/** 
+	/**
 	 * String me.
 	 */
 	@Override
@@ -90,7 +90,7 @@ public final class Cron extends SpyThread {
 		return(jobQueue);
 	}
 
-	/** 
+	/**
 	 * Shut down the queue.
 	 */
 	public void shutdown() {
@@ -105,14 +105,14 @@ public final class Cron extends SpyThread {
 		}
 	}
 
-	/** 
+	/**
 	 * True if this Cron instance is still running.
 	 */
 	public boolean isRunning() {
 		return(this.stillRunning);
 	}
 
-	/** 
+	/**
 	 * Do the run thing.
 	 */
 	@Override
@@ -183,17 +183,17 @@ public final class Cron extends SpyThread {
 		getLogger().info("shut down at");
 	}
 
-	/** 
+	/**
 	 * Set the maximum amount of time the cron thread will continue running
 	 * with no jobs.
-	 * 
+	 *
 	 * @param to maximum amount of time in milliseconds
 	 */
 	public void setMaxIdleTime(long to) {
 		this.maxIdleTime=to;
 	}
 
-	/** 
+	/**
 	 * Run a Cron instance against a FileJobQueue.
 	 */
 	public static void main(String args[]) throws Exception {

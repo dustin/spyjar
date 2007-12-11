@@ -71,7 +71,7 @@ public class GetPK extends SpyObject {
 
 	private final ConcurrentMap<String, KeyStore> caches;
 
-	/** 
+	/**
 	 * Constructor for an extensible Singleton.
 	 */
 	protected GetPK() {
@@ -79,9 +79,9 @@ public class GetPK extends SpyObject {
 		caches=new ConcurrentHashMap<String, KeyStore>();
 	}
 
-	/** 
+	/**
 	 * Get the instance of GetPK.
-	 * 
+	 *
 	 * @return the instance
 	 */
 	public static synchronized GetPK getInstance() {
@@ -99,9 +99,9 @@ public class GetPK extends SpyObject {
 		instance=to;
 	}
 
-	/** 
+	/**
 	 * Get a primary key from the database described in the given config.
-	 * 
+	 *
 	 * @param conf the configuration
 	 * @param table the table for which the key is needed
 	 * @return the key
@@ -151,7 +151,7 @@ public class GetPK extends SpyObject {
 	}
 
 	// Get the key (usually from the cache)
-	private BigDecimal getPrimaryKey(SpyDB db, String table, String key) 
+	private BigDecimal getPrimaryKey(SpyDB db, String table, String key)
 		throws SQLException {
 
 		BigDecimal rv=null;
@@ -184,7 +184,7 @@ public class GetPK extends SpyObject {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Get the DBSP required for updating the primary key table.
 	 *
 	 * <p>
@@ -203,7 +203,7 @@ public class GetPK extends SpyObject {
 	 * (this is the default).
 	 *
 	 * </p>
-	 * 
+	 *
 	 * @param conn the connection to use (already in a transaction)
 	 * @return the required DBSP
 	 * @throws SQLException if there's a problem getting the DBSP
@@ -212,7 +212,7 @@ public class GetPK extends SpyObject {
 		return(new UpdatePrimaryKey(conn));
 	}
 
-	/** 
+	/**
 	 * Get the DBSP required for selecting primary key information back out
 	 * of the primary key table.
 	 *
@@ -240,7 +240,7 @@ public class GetPK extends SpyObject {
 	 * (this is the default).
 	 *
 	 * <p>
-	 * 
+	 *
 	 * @param conn the connection to use (already in a transaction)
 	 * @return the required DBSP
 	 * @throws SQLException if there's a problem getting the DBSP

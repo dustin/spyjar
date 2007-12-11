@@ -28,7 +28,7 @@ public class SavableHashSet extends HashSet<Savable> implements Savable {
         super();
     }
 
-	/** 
+	/**
 	 * Get an instance of SavableHashSet populated with the given
 	 * Collection of objects.
 	 */
@@ -36,14 +36,14 @@ public class SavableHashSet extends HashSet<Savable> implements Savable {
 		super(col);
 	}
 
-	/** 
+	/**
 	 * Get an instance of SavableHashSet with the given initial capacity.
 	 */
 	public SavableHashSet(int initCap) {
 		super(initCap);
 	}
 
-	/** 
+	/**
 	 * Get an instance of SavableHashSet with the given initial capacity
 	 * and load factors.
 	 */
@@ -53,21 +53,21 @@ public class SavableHashSet extends HashSet<Savable> implements Savable {
 
 	// Savable implementation
 
-	/** 
+	/**
 	 * @return false
 	 */
 	public boolean isNew() {
 		return(false);
 	}
 
-	/** 
+	/**
 	 * @return false
 	 */
 	public boolean isModified() {
 		return(false);
 	}
 
-	/** 
+	/**
 	 * Do nothing.
 	 */
 	public void save(Connection conn, SaveContext context)
@@ -76,14 +76,14 @@ public class SavableHashSet extends HashSet<Savable> implements Savable {
 		// Ignored
 	}
 
-	/** 
+	/**
 	 * @return null
 	 */
 	public Collection<Savable> getPreSavables(SaveContext context) {
 		return(null);
 	}
 
-	/** 
+	/**
 	 * @return this
 	 */
 	public Collection<Savable> getPostSavables(SaveContext context) {

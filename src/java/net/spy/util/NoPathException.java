@@ -3,7 +3,7 @@
 package net.spy.util;
 
 /**
- * 
+ *
  */
 public class NoPathException extends Exception {
 

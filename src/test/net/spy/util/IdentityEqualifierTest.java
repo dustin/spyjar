@@ -25,14 +25,14 @@ public class IdentityEqualifierTest extends TestCase {
 		return new TestSuite(IdentityEqualifierTest.class);
 	}
 
-	/** 
+	/**
 	 * Run this test.
 	 */
 	public static void main(String args[]) {
 		junit.textui.TestRunner.run(suite());
 	}
 
-	/** 
+	/**
 	 * Test basic identity equalifier functionality.
 	 */
 	public void testIdentityEqualifier() {

@@ -36,7 +36,7 @@ public class RingBufferTest extends TestCase {
 		String.valueOf(rb);
 	}
 
-	/** 
+	/**
 	 * Basic RingBuffer test.
 	 */
 	public void testRingBuffer() {

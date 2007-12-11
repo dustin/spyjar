@@ -72,28 +72,28 @@ public class SPGenTask extends MatchingTask {
 		this.destDir = to;
 	}
 
-	/** 
+	/**
 	 * Set the superclass for the generated class.
 	 */
 	public void setSuperclass(String sc) {
 		this.superclass=sc;
 	}
 
-	/** 
+	/**
 	 * Set the DBCP superclass for the generated class.
 	 */
 	public void setDbcpSuperclass(String sc) {
 		this.dbcpSuperclass=sc;
 	}
 
-	/** 
+	/**
 	 * Set the DBSP superclass for the generated class.
 	 */
 	public void setDbspSuperclass(String sc) {
 		this.dbspSuperclass=sc;
 	}
 
-	/** 
+	/**
 	 * True if we want verbose transformations.
 	 */
 	public void setVerbose(boolean to) {

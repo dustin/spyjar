@@ -37,13 +37,13 @@ public abstract class GenFactoryImpl<T> extends SpyObject
 		cacheTime=time;
 	}
 
-	/** 
+	/**
 	 * Get the cache for this factory.
 	 *
 	 * If the cache does not exist, getNewCacheEntry() will be called to get an
 	 * uninitialized CacheEntry instance, and getInstances() will be called to
 	 * get a collection of instances to populate the cache.
-	 * 
+	 *
 	 * @return a CacheEntry
 	 */
 	protected Storage<T> getCache() {
@@ -74,7 +74,7 @@ public abstract class GenFactoryImpl<T> extends SpyObject
 
 	/**
 	 * Store or update an individual object in the cache.
-	 * 
+	 *
 	 * @param i the object to store
 	 * @throws Exception if the cache cannot be updated with this instance
 	 */
@@ -82,16 +82,16 @@ public abstract class GenFactoryImpl<T> extends SpyObject
 		getCache().cacheInstance(i);
 	}
 
-	/** 
+	/**
 	 * Get the collection of all Instance objects to be cached.
 	 */
 	protected abstract Collection<T> getInstances();
 
-	/** 
+	/**
 	 * This method is called whenever getObject(String,Object) would return
 	 * null.  The result of this object will be used instead.  Alternatively,
 	 * one may throw a RuntimeException indicating a failure.
-	 * 
+	 *
 	 * @param cacheName the name of the cache that was accessed
 	 * @param key the key under that cache that was accessed
 	 * @return null
@@ -158,7 +158,7 @@ public abstract class GenFactoryImpl<T> extends SpyObject
 	}
 
 	/**
-	 * Set the TimerTask for the update 
+	 * Set the TimerTask for the update
 	 */
 	void setNextRefresh(TimerTask next) {
 		nextRefresh = next;

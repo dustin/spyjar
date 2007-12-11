@@ -30,19 +30,19 @@ public interface Savable {
 	void save(Connection conn, SaveContext context)
 		throws SaveException, SQLException;
 
-	/** 
+	/**
 	 * Get a Collection of all of the SavableNodes this SavableNode is
 	 * holding that will need to be saved before this Savable.
-	 * 
+	 *
 	 * @param context SaveContext being used in this Saver session
 	 * @return a collection of objects this SavableNode depends on
 	 */
 	Collection<? extends Savable> getPreSavables(SaveContext context);
 
-	/** 
+	/**
 	 * Get a Collection of all of the SavableNodes this SavableNode is
 	 * holding that will need to be saved after this Savable.
-	 * 
+	 *
 	 * @param context SaveContext being used in this Saver session
 	 * @return a collection of objects this SavableNode depends on
 	 */

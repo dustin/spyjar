@@ -29,7 +29,7 @@ public class TimeIncrement extends Object {
 		calendar=c;
 	}
 
-	/** 
+	/**
 	 * String me.
 	 */
 	@Override

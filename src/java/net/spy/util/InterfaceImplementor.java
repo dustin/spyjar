@@ -71,14 +71,14 @@ public class InterfaceImplementor extends SpyObject {
 		interfaceClass=c;
 	}
 
-	/** 
+	/**
 	 * Get the interface we're implementing.
 	 */
 	protected Class<?> getInterface() {
 		return(interfaceClass);
 	}
 
-	/** 
+	/**
 	 * Get the parent class of the generated class.
 	 */
 	protected Class<?> getSuperclass() {
@@ -175,9 +175,9 @@ public class InterfaceImplementor extends SpyObject {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Get the method signature.
-	 * 
+	 *
 	 * @param method method needing the signature
 	 * @return the method signature, as a String
 	 */
@@ -185,9 +185,9 @@ public class InterfaceImplementor extends SpyObject {
 		return(getSignature(method, true));
 	}
 
-	/** 
+	/**
 	 * Get a String representing this method signature.
-	 * 
+	 *
 	 * @param method the name of the method
 	 * @param needExceptions true if exceptions are needed as part of the
 	 * 		signature string
@@ -229,7 +229,7 @@ public class InterfaceImplementor extends SpyObject {
 		return(ret.trim());
 	}
 
-	/** 
+	/**
 	 * Get the relative javadoc signature for this method.
 	 */
 	protected String getDocLink(Method method) {
@@ -298,7 +298,7 @@ public class InterfaceImplementor extends SpyObject {
 		return(ret);
 	}
 
-	/** 
+	/**
 	 * Get the relative javadoc signature for this Constructor.
 	 */
 	protected String getDocLink(Constructor<?> con) {
@@ -317,12 +317,12 @@ public class InterfaceImplementor extends SpyObject {
 		return(ret);
 	}
 
-	/** 
+	/**
 	 * Implement the given method.
 	 *
 	 * Subclasses may override this to provide a different method
 	 * implementation
-	 * 
+	 *
 	 * @param method the method to be implemented.
 	 * @return the text required to implement this method
 	 */
@@ -387,7 +387,7 @@ public class InterfaceImplementor extends SpyObject {
 		return(ret);
 	}
 
-	/** 
+	/**
 	 * Anything that should appear before the automatically generated
 	 * constructors.
 	 */
@@ -395,7 +395,7 @@ public class InterfaceImplementor extends SpyObject {
 		return(null);
 	}
 
-	/** 
+	/**
 	 * Anything that should appear before the automatically generated
 	 * methods.
 	 */
@@ -425,7 +425,7 @@ public class InterfaceImplementor extends SpyObject {
 		if(superClass!=null) {
 			ret+="extends " + superClass.getName() + " ";
 		}
-		
+
 		ret+="implements " + interfaceClass.getName() + " {\n\n";
 
 		// Do any pre-constructor stuff
@@ -462,16 +462,16 @@ public class InterfaceImplementor extends SpyObject {
 		return(ret);
 	}
 
-	/** 
+	/**
 	 * If true, build the default constructors.
 	 */
 	protected boolean buildConstructors() {
 		return(true);
 	}
 
-	/** 
+	/**
 	 * Write this implementation out to a given file.
-	 * 
+	 *
 	 * @param outdir the base directory to write the file
 	 * @throws IOException if there's a problem writing the file
 	 */

@@ -9,7 +9,7 @@ package net.spy.db;
  */
 public interface TransactionListener {
 
-	/** 
+	/**
 	 * Method called when the transaction is over.
 	 */
 	void transactionCommited();

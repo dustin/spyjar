@@ -57,7 +57,7 @@ public class DatabaseMetaDataQuerySelector extends SpyObject
 
 	private final SortedMap<String, String> nameMap;
 
-	/** 
+	/**
 	 * Get an instance of DatabaseMetaDataQuerySelector.
 	 * This should really only be called from QuerySelectorFactory
 	 */
@@ -67,7 +67,7 @@ public class DatabaseMetaDataQuerySelector extends SpyObject
 		initNameMap();
 	}
 
-	/** 
+	/**
 	 * Initialize the prefix to name map.
 	 */
 	protected void initNameMap() {
@@ -80,9 +80,9 @@ public class DatabaseMetaDataQuerySelector extends SpyObject
 		registerNameMapping("INFORMIX-OnLine", "informix");
 	}
 
-	/** 
+	/**
 	 * Register a prefix -&gt; name mapping.
-	 * 
+	 *
 	 * @param prefix the prefix to match for a name
 	 * @param name the name
 	 */
@@ -90,7 +90,7 @@ public class DatabaseMetaDataQuerySelector extends SpyObject
 		nameMap.put(prefix, name);
 	}
 
-	/** 
+	/**
 	 * @see QuerySelector
 	 */
 	public String getQuery(Connection conn, Map<String, String> queryMap)
@@ -98,9 +98,9 @@ public class DatabaseMetaDataQuerySelector extends SpyObject
 		return(getQuery(conn.getMetaData().getDatabaseProductName(), queryMap));
 	}
 
-	/** 
+	/**
 	 * Attempt to get a query in the given map by a name.
-	 * 
+	 *
 	 * @param name the name against which to search
 	 * @param queryMap the map containing the queries
 	 * @return the query, or null if one cannot be found

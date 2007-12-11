@@ -46,7 +46,7 @@ public class FileDriver extends SpyObject implements Driver {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private final Map<String, Map<ParameterizedQuery, Object>> queryMap;
 	private final Map<String, Map<ParameterizedQuery, Object>> updateMap;
 
@@ -55,7 +55,7 @@ public class FileDriver extends SpyObject implements Driver {
 		queryMap=new HashMap<String, Map<ParameterizedQuery, Object>>();
 		updateMap=new HashMap<String, Map<ParameterizedQuery, Object>>();
 	}
-	
+
 	private Map<ParameterizedQuery, Object> getMap(String key,
 			Map<String, Map<ParameterizedQuery, Object>> m) {
 		Map<ParameterizedQuery, Object> rv=m.get(key);
@@ -65,7 +65,7 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 		return(rv);
 	}
-	
+
 	/**
 	 * Register a query to URL mapping.
 	 * @param url JDBC URL to which this query applies
@@ -76,7 +76,7 @@ public class FileDriver extends SpyObject implements Driver {
 		registerQuery(url, s, new Object[0], f);
 	}
 
-	/** 
+	/**
 	 * Register a ResultSet URL to a parameterized query.
 	 * @param url JDBC URL to which this query applies
 	 * @param s the query string
@@ -88,7 +88,7 @@ public class FileDriver extends SpyObject implements Driver {
 		getMap(url, queryMap).put(pq, f);
 	}
 
-	/** 
+	/**
 	 * Register the query(-ies) from the given DBSQL and args to a URL.
 	 * @param url JDBC URL to which this query applies
 	 * @param db the DBSQL instance.
@@ -101,11 +101,11 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 	}
 
-	/** 
+	/**
 	 * Register an update action.
 	 * @param url JDBC URL to which this query applies
 	 * @param s the query
-	 * @param args the args 
+	 * @param args the args
 	 * @param action the action to be performed upon this update
 	 */
 	public void registerUpdate(String url, String s, Object args[], Updater action) {
@@ -113,7 +113,7 @@ public class FileDriver extends SpyObject implements Driver {
 		getMap(url, updateMap).put(pq, action);
 	}
 
-	/** 
+	/**
 	 * Register the update(s) from the given DBSQL and args to an updater.
 	 * @param url JDBC URL to which this query applies
 	 * @param db the DBSQL instance
@@ -126,7 +126,7 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 	}
 
-	/** 
+	/**
 	 * Register the update(s) from the given DBSQL and args to return an int.
 	 * @param url JDBC URL to which this query applies
 	 * @param db the DBSQL instance
@@ -137,11 +137,11 @@ public class FileDriver extends SpyObject implements Driver {
 		registerUpdate(url, db, args, new IntUpdater(rv));
 	}
 
-	/** 
+	/**
 	 * Register a simple update that returns an int.
 	 * @param url JDBC URL to which this query applies
 	 * @param s the query
-	 * @param args the args 
+	 * @param args the args
 	 * @param rv the value that should be returned from this update
 	 */
 	public void registerUpdate(String url, String s, Object args[], int rv) {
@@ -165,11 +165,11 @@ public class FileDriver extends SpyObject implements Driver {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Get the Updater for the specified query
 	 * @param url JDBC URL to which this query applies
 	 * @param pq the query
-	 * 
+	 *
 	 * @return the Updater
 	 * @throws SQLException if there isn't an update managed for this query
 	 */
@@ -215,11 +215,11 @@ public class FileDriver extends SpyObject implements Driver {
 		return false;
 	}
 
-	/** 
+	/**
 	 * Interface for registering updates.
 	 */
 	public static interface Updater {
-		/** 
+		/**
 		 * Perform the update and return a value.
 		 */
 		int doUpdate() throws SQLException;
@@ -306,17 +306,17 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 	}
 
-	/** 
+	/**
 	 * Parameter matching interface for fuzzy matches on query parameters.
 	 */
 	public static interface ParamMatcher {
-		/** 
+		/**
 		 * Return true if this parameter matches the given object.
 		 */
 		boolean matches(Object o);
 	}
 
-	/** 
+	/**
 	 * Parameter matching instance that matches any parameter.
 	 */
 	public static class AnyParamMatcher implements ParamMatcher {
@@ -325,7 +325,7 @@ public class FileDriver extends SpyObject implements Driver {
 		}
 	}
 
-	/** 
+	/**
 	 * Parameter matching instance that matches objects by class.
 	 */
 	public static class ClassParamMatcher implements ParamMatcher {
@@ -341,7 +341,7 @@ public class FileDriver extends SpyObject implements Driver {
 
 	private static final class FileConnection extends SpyObject
 		implements Connection {
-		
+
 		private String url=null;
 		private boolean closed = false;
 		private boolean autoCommit = false;
@@ -515,7 +515,7 @@ public class FileDriver extends SpyObject implements Driver {
 	private static final class FilePreparedStatement
 		extends GenericPreparedStatementStub
 		implements PreparedStatement {
-		
+
 		private String url=null;
 		private int maxRows = Integer.MAX_VALUE;
 
@@ -531,8 +531,8 @@ public class FileDriver extends SpyObject implements Driver {
 				getApplicableArgs()));
 			ResultSet rs=new FileResultSet(f, maxRows);
 			return(rs);
-		}	
-		
+		}
+
 		public int executeUpdate() throws SQLException {
 			FileDriver fd=(FileDriver)DriverManager.getDriver(
 				URL_PREFIX + "blah");
@@ -540,7 +540,7 @@ public class FileDriver extends SpyObject implements Driver {
 				url, new ParameterizedQuery(getQuery(), getApplicableArgs()));
 			return(u.doUpdate());
 		}
-		
+
 		public void setByte(int arg0, byte arg1) throws SQLException {
 			throw new SQLException("Not supported.");
 
@@ -789,10 +789,10 @@ public class FileDriver extends SpyObject implements Driver {
 
 	private static final class FileDriverMetaData extends SpyObject
 		implements DatabaseMetaData {
-		
+
 		private Connection conn=null;
 		private String url=null;
-		
+
 		public FileDriverMetaData(Connection c, String u) {
 			super();
 			conn=c;
@@ -1481,6 +1481,6 @@ public class FileDriver extends SpyObject implements Driver {
 		public boolean supportsStatementPooling() throws SQLException {
 			return false;
 		}
-		
+
 	}
 }

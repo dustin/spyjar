@@ -18,7 +18,7 @@ public class ObjectDumpTest extends TestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Test an object dump.
 	 * This test primarily exists to exercise ObjectDump, not necessarily
 	 * validate any of its values.
@@ -32,7 +32,7 @@ public class ObjectDumpTest extends TestCase {
 		od.dumpObject(m);
 	}
 
-	/** 
+	/**
 	 * Test a null object will throw an NPE.
 	 */
 	public void testNullObjectDump() throws Exception {

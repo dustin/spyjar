@@ -24,7 +24,7 @@ public class ShortestPathTest extends TestCase {
 	private StringNode nodeF=null;
 	private StringNode nodeG=null;
 
-	/** 
+	/**
 	 * Create the collection of nodes.
 	 */
 	@Override
@@ -133,7 +133,7 @@ public class ShortestPathTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test a basic SP find.
 	 */
 	public void testSPFind() {
@@ -243,7 +243,7 @@ public class ShortestPathTest extends TestCase {
 		assertEquals(0, nodeG.getNextHops().size());
 	}
 
-	/** 
+	/**
 	 * Do a couple of quick ShortestPath tests.
 	 */
 	public void testShortestPath() throws NoPathException {
@@ -316,7 +316,7 @@ public class ShortestPathTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Verify garbage collection can clean up the instances.
 	 */
 	public void testCleanup() {
@@ -352,7 +352,7 @@ public class ShortestPathTest extends TestCase {
 		assertNull("Node E is still around", eref.get());
 	}
 
-	/** 
+	/**
 	 * Validate a large graph with a lot of links may be created.
 	 */
 	public void testBigGraph() {

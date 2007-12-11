@@ -30,9 +30,9 @@ public class NetStringDecoder extends SpyObject {
 		encoding=enc;
 	}
 
-	/** 
+	/**
 	 * Pull a netstring from the given InputStream and decode it.
-	 * 
+	 *
 	 * @param is a stream containing a netstring
 	 * @return the String representing the netstring at the beginning of
 	 * 			this stream

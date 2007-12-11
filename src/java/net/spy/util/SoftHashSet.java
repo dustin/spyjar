@@ -18,25 +18,25 @@ public class SoftHashSet<T extends Object> extends ReferenceSet<T> {
 		super();
 	}
 
-	/** 
+	/**
 	 * Create a SoftHashSet with the given capacity.
-	 * 
+	 *
 	 * @param n the capacity
 	 */
 	public SoftHashSet(int n) {
 		super(n);
 	}
 
-	/** 
+	/**
 	 * Get a SoftHashSet with the contents from the given Collection.
-	 * 
+	 *
 	 * @param c the collection
 	 */
 	public SoftHashSet(Collection<T> c) {
 		super(c);
 	}
 
-	/** 
+	/**
 	 * Return a soft reference.
 	 */
 	@Override

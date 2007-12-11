@@ -18,21 +18,21 @@ public class BitArrayTest extends TestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Get this test.
 	 */
 	public static Test suite() {
 		return new TestSuite(BitArrayTest.class);
 	}
 
-	/** 
+	/**
 	 * Run this test.
 	 */
 	public static void main(String args[]) {
 		junit.textui.TestRunner.run(suite());
 	}
 
-	/** 
+	/**
 	 * Test simple adds.
 	 */
 	public void testSimple() {
@@ -53,7 +53,7 @@ public class BitArrayTest extends TestCase {
 			bitArray.toString());
 	}
 
-	/** 
+	/**
 	 * Test integer adds.
 	 */
 	public void testIntAdd() {
@@ -68,7 +68,7 @@ public class BitArrayTest extends TestCase {
 			"110101111101011", bitArray.toString());
 	}
 
-	/** 
+	/**
 	 * Test that we can get MSB bits.
 	 */
 	public void testGetMSBBits() {
@@ -108,7 +108,7 @@ public class BitArrayTest extends TestCase {
 
 	}
 
-	/** 
+	/**
 	 * Test that we can get LSB bits.
 	 */
 	public void testGetLSBBits() {
@@ -142,7 +142,7 @@ public class BitArrayTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test that we can get arbitrary bits.
 	 */
 	public void testGetArbitraryBits() {
@@ -153,7 +153,7 @@ public class BitArrayTest extends TestCase {
 			2, bitArray.getBits(2, 3));
 	}
 
-	/** 
+	/**
 	 * Test the string constructor.
 	 */
 	public void testStringConstructor() {

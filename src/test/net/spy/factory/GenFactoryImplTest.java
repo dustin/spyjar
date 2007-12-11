@@ -31,7 +31,7 @@ public class GenFactoryImplTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test the factory thingy.
 	 */
 	public void testFactory() throws Exception {
@@ -87,7 +87,7 @@ public class GenFactoryImplTest extends TestCase {
 		assertEquals(2, tf.numRuns);
 	}
 
-	/** 
+	/**
 	 * Test the factory thingy with delayed recaches.
 	 */
 	public void testFactoryDelayedRecache() throws Exception {
@@ -107,7 +107,7 @@ public class GenFactoryImplTest extends TestCase {
 		checkSecondPass();
 	}
 
-	/** 
+	/**
 	 * Test the factory thingy with double-delayed recaches.
 	 */
 	public void testFactoryDoubleDelayedRecache() throws Exception {

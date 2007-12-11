@@ -9,7 +9,7 @@ import junit.framework.TestCase;
  */
 public class ThreadTests extends TestCase {
 
-	/** 
+	/**
 	 * Test the basics of SpyThread.
 	 */
 	public void testBasicThread() {

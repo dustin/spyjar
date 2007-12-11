@@ -25,7 +25,7 @@ public class SyncThread<T> extends SpyThread {
 	/**
 	 * Get a SyncThread that will call the given callable when the given
 	 * barrier allows it past.
-	 * 
+	 *
 	 * @param b the barrier
 	 * @param c the callable
 	 */
@@ -55,7 +55,7 @@ public class SyncThread<T> extends SpyThread {
 
 	/**
 	 * Get the result from the invocation.
-	 * 
+	 *
 	 * @return the result
 	 * @throws Throwable if an error occurred when evaluating the callable
 	 */
@@ -95,7 +95,7 @@ public class SyncThread<T> extends SpyThread {
 	/**
 	 * Get the distinct result count for the given callable at the given
 	 * concurrency.
-	 * 
+	 *
 	 * @param <T> the type of the callable
 	 * @param num the concurrency
 	 * @param callable the callable to invoke

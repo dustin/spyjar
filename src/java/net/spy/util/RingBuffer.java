@@ -37,10 +37,10 @@ public class RingBuffer<T> extends AbstractCollection<T>
 		Arrays.fill(buf, null);
 	}
 
-	/** 
+	/**
 	 * Get a RingBuffer at a particular size filled from the given
 	 * Collection.
-	 * 
+	 *
 	 * @param s the maximum number of objects to be held in the ring
 	 * @param fill a Collection whose elements will be used to fill the buffer
 	 */
@@ -79,9 +79,9 @@ public class RingBuffer<T> extends AbstractCollection<T>
 		return (true);
 	}
 
-	/** 
+	/**
 	 * Check to see if the ring buffer has wrapped.
-	 * 
+	 *
 	 * @return true if the ring buffer has wrapped
 	 */
 	public boolean hasWrapped() {
@@ -128,9 +128,9 @@ public class RingBuffer<T> extends AbstractCollection<T>
 		return(buf.length);
 	}
 
-	/** 
+	/**
 	 * Get the iterator for this ring buffer.
-	 * 
+	 *
 	 * @return an iterator
 	 */
 	@Override

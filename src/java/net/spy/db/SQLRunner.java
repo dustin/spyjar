@@ -40,16 +40,16 @@ public class SQLRunner extends SpyObject {
 		this.connection=conn;
 	}
 
-	/** 
+	/**
 	 * Set the query timeout (in seconds).
 	 */
 	public void setTimeout(int to) {
 		this.timeout=to;
 	}
 
-	/** 
+	/**
 	 * Run the given script as a transaction.
-	 * 
+	 *
 	 * @param is the stream containing the script
 	 * @throws SQLException if there's a SQL problem with this script
 	 * @throws IOException if there's a problem reading the script
@@ -58,9 +58,9 @@ public class SQLRunner extends SpyObject {
 		runScript(is, false, false);
 	}
 
-	/** 
+	/**
 	 * Run the given script.
-	 * 
+	 *
 	 * @param is the stream containing the script
 	 * @param autocommit if true, commit after each statement
 	 * @param errok if true, ignore SQL exceptions on each statement

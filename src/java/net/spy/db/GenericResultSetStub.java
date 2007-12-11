@@ -56,13 +56,13 @@ public abstract class GenericResultSetStub extends SpyObject
 		initResults(rs);
 	}
 
-	/** 
+	/**
 	 * Get an instance of a GenericResultSetStub with no initialization.
 	 *
 	 * The subclass is expected to do whatever is necessary, and then call
 	 * setResults(List) and setMetaData(ResultSetMetaData) to make
 	 * everything happy.
-	 * 
+	 *
 	 * @throws SQLException (never)
 	 */
 	protected GenericResultSetStub() throws SQLException {
@@ -100,16 +100,16 @@ public abstract class GenericResultSetStub extends SpyObject
 		setResults(r);
 	} // initresults
 
-	/** 
+	/**
 	 * Reset the results to the beginning.
 	 */
 	protected void resetResults() {
 		this.resultIter=null;
 	}
 
-	/** 
+	/**
 	 * Set the results for this ResultSet to use.
-	 * 
+	 *
 	 * @param to results list to use
 	 */
 	protected void setResults(List<Object[]> to) {
@@ -117,9 +117,9 @@ public abstract class GenericResultSetStub extends SpyObject
 		resetResults();
 	}
 
-	/** 
+	/**
 	 * Set the ResultSetMetaData used for this ResultSet.
-	 * 
+	 *
 	 * @param rsmd the ResultSetMetaData
 	 * @throws SQLException if there's a problem examining the signature
 	 */
@@ -137,10 +137,10 @@ public abstract class GenericResultSetStub extends SpyObject
 		}
 	}
 
-	/** 
+	/**
 	 * Get the Object at the given result column for the current result
 	 * row.
-	 * 
+	 *
 	 * @param index the numeric index of the column
 	 * @return whatever Object is found at that column (may be null)
 	 * @throws SQLException if there is not a current ResultSet row, or the
@@ -206,9 +206,9 @@ public abstract class GenericResultSetStub extends SpyObject
 
 	// OK, begin disgustingly long stream of interface implementation
 
-	/** 
+	/**
 	 * Seek to the next row in this ResultSet.
-	 * 
+	 *
 	 * @return true if there was another row.
 	 * @throws SQLException if there's a problem seeking...or something
 	 */
@@ -228,20 +228,20 @@ public abstract class GenericResultSetStub extends SpyObject
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Close the ResultSet.
 	 *
 	 * This currently does nothing.
-	 * 
+	 *
 	 * @throws SQLException (never)
 	 */
 	public void close() throws SQLException {
 		// Nothing.
 	}
 
-	/** 
+	/**
 	 * Check to see if the last column fetched was null.
-	 * 
+	 *
 	 * @return true if it was null
 	 * @throws SQLException (never)
 	 */
@@ -249,9 +249,9 @@ public abstract class GenericResultSetStub extends SpyObject
 		return(wasNull);
 	}
 
-	/** 
+	/**
 	 * Get the given column as a string.
-	 * 
+	 *
 	 * @param index the index of the column
 	 * @return the String value of the column, or null
 	 * @throws SQLException if misused
@@ -264,9 +264,9 @@ public abstract class GenericResultSetStub extends SpyObject
 		return(o.toString());
 	}
 
-	/** 
+	/**
 	 * Get the given value as a boolean.
-	 * 
+	 *
 	 * @param index the index of the column
 	 * @return the boolean value of the column
 	 * @throws SQLException if there's a problem getting the value

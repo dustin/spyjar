@@ -48,7 +48,7 @@ public class ProgressStats extends Object {
 		lastTime=getTime();
 	}
 
-	/** 
+	/**
 	 * Mark this iteration as complete.
 	 */
 	public void stop() {
@@ -63,7 +63,7 @@ public class ProgressStats extends Object {
 		avg = ((avg * df) + v) / (df + 1);
 	}
 
-	/** 
+	/**
 	 * Get the running average of the number of seconds spent processing.
 	 * @return ((avg * df) + v) / (df + 1)
 	 */
@@ -71,7 +71,7 @@ public class ProgressStats extends Object {
 		return(avg);
 	}
 
-	/** 
+	/**
 	 * Get the overall average.
 	 */
 	public double getOverallAverage() {
@@ -79,7 +79,7 @@ public class ProgressStats extends Object {
 		return(avgProcessTime);
 	}
 
-	/** 
+	/**
 	 * Get the estimated number of seconds remaining with the given average
 	 * time per unit.
 	 */
@@ -88,7 +88,7 @@ public class ProgressStats extends Object {
 		return(estimate);
 	}
 
-	/** 
+	/**
 	 * Get the estimated number of seconds remaining with the current
 	 * average.
 	 */
@@ -96,14 +96,14 @@ public class ProgressStats extends Object {
 		return(getEstimatedTimeRemaining(getRunningAverage()));
 	}
 
-	/** 
+	/**
 	 * Get the number of milliseconds spent processing the last item.
 	 */
 	public long getLastProcessTime() {
 		return(lastProcessTime);
 	}
 
-	/** 
+	/**
 	 * Get a string representation fo the processing statistics.
 	 *
 	 * <p>
@@ -140,7 +140,7 @@ public class ProgressStats extends Object {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Get a string representation of the processing statistics using the
 	 * default format.
 	 */
@@ -148,9 +148,9 @@ public class ProgressStats extends Object {
 		return(getStats(DEFAULT_FORMAT));
 	}
 
-	/** 
+	/**
 	 * String me.
-	 * 
+	 *
 	 * @return getStats()
 	 */
 	@Override

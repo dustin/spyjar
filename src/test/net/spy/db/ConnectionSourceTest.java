@@ -47,7 +47,7 @@ public class ConnectionSourceTest extends TestCase {
 			csf.getConnectionSource(makeConfig(s)));
 	}
 
-	/** 
+	/**
 	 * Test the defined connection source types.
 	 */
 	public void testDefinedSources() throws Exception {
@@ -56,7 +56,7 @@ public class ConnectionSourceTest extends TestCase {
 		checkGoodSource("net.spy.db.ObjectPoolConnectionSource");
 	}
 
-	/** 
+	/**
 	 * Validate a bad source won't work.
 	 */
 	public void testBadSource() throws Exception {

@@ -20,7 +20,7 @@ public class TrackingScheduledExecutor extends ScheduledThreadPoolExecutor {
 
 	/**
 	 * Get a TrackingScheduledExecutor.
-	 * 
+	 *
 	 * @param maxThreads core pool size
 	 * @param reject the rejected execution handler
 	 * @param tg the thread group in which the threads should be created
@@ -39,7 +39,7 @@ public class TrackingScheduledExecutor extends ScheduledThreadPoolExecutor {
 
 	/**
 	 * Get a TrackingScheduledExecutor.
-	 * 
+	 *
 	 * @param maxThreads core pool size
 	 * @param tg the thread group in which the threads should be created
 	 * @param name the name of of the threads

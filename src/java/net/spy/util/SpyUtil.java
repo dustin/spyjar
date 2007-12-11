@@ -74,9 +74,9 @@ public class SpyUtil {
 		return(ret);
 	}
 
-	/** 
+	/**
 	 * Load the contents of the given reader as a String.
-	 * 
+	 *
 	 * @param r a reader
 	 * @return a String with the contents of the reader
 	 */
@@ -123,10 +123,10 @@ public class SpyUtil {
 		return(join(new Enumeriterator<T>(e), on));
 	}
 
-	/** 
+	/**
 	 * Join an Iterator of Objects on a join string.  Each object's
 	 * toString() method will be used for stringification.
-	 * 
+	 *
 	 * @param i the iterator of Objects
 	 * @param on the join string
 	 * @return a new String with all of the elements joined
@@ -143,10 +143,10 @@ public class SpyUtil {
 		return(sb.toString());
 	}
 
-	/** 
+	/**
 	 * Join a Collection of Objects on a join string.  Each object's
 	 * toString() method will be used for stringification.
-	 * 
+	 *
 	 * @param c the collection
 	 * @param on the join string
 	 * @return a String with all the elements joined
@@ -219,12 +219,12 @@ public class SpyUtil {
 
 	}
 
-	/** 
+	/**
 	 * Returns a Boolean with a value represented by the specified String.
 	 * The Boolean returned represents the value true if the string
 	 * argument is not null  and is equal, ignoring case, to the string
 	 * "true".
-	 * 
+	 *
 	 * @param s the string
 	 * @return the Boolean instance
 	 */
@@ -238,9 +238,9 @@ public class SpyUtil {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Remove HTML tags from a string.
-	 * 
+	 *
 	 * @param contents the string whose HTML tags need removed.
 	 * @return the deHTMLed string
 	 */
@@ -266,7 +266,7 @@ public class SpyUtil {
 		return(sb.toString());
 	}
 
-	/** 
+	/**
 	 * Recursively remove a path.
 	 */
 	public static void rmDashR(File tmp) {

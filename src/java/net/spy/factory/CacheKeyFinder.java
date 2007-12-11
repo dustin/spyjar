@@ -45,7 +45,7 @@ public class CacheKeyFinder extends SpyObject {
 
 	/**
 	 * Get the cache keys for the given class.
-	 * 
+	 *
 	 * @param c the class to search
 	 * @return the cache keys for the given class
 	 */
@@ -98,7 +98,7 @@ public class CacheKeyFinder extends SpyObject {
 		}
 		/**
 		 * Get the value from the given object.
-		 * 
+		 *
 		 * @param o the object
 		 * @return the value
 		 * @throws Exception if an exception is thrown while accessing

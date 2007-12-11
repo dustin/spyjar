@@ -16,7 +16,7 @@ public class TimeStampedHashTest extends TestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Test the basic hashtable operations.
 	 */
 	public void testOperations() throws Exception {

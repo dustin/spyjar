@@ -30,16 +30,16 @@ public abstract class AbstractSPNode<T extends SPNode<T>>
 		nextHops=new WeakHashMap<SPNode<T>, SPVertex<T>>();
 	}
 
-	/** 
+	/**
 	 * Get an instance of AbstractSPNode.
 	 */
 	protected AbstractSPNode() {
 		this(new TreeSet<SPVertex<T>>());
 	}
 
-	/** 
+	/**
 	 * Link this SPNode to the given SPNode at the given cost.
-	 * 
+	 *
 	 * @param n SPNode to which to link
 	 * @param cost cost of this link
 	 */
@@ -47,51 +47,51 @@ public abstract class AbstractSPNode<T extends SPNode<T>>
 		links.add(new SPVertex<T>(n, cost));
 	}
 
-	/** 
+	/**
 	 * Link this SPNode to the given SPNode at the default cost.
-	 * 
+	 *
 	 * @param n the node to which to link
 	 */
 	protected void linkTo(T n) {
 		linkTo(n, SPVertex.DEFAULT_COST);
 	}
 
-	/** 
-	 * @see SPNode 
+	/**
+	 * @see SPNode
 	 */
 	public SortedSet<SPVertex<T>> getConnections() {
 		return( Collections.unmodifiableSortedSet(links));
 	}
 
-	/** 
+	/**
 	 * @see SPNode
 	 */
 	public Map<SPNode<T>, SPVertex<T>> getNextHops() {
 		return(Collections.unmodifiableMap(nextHops));
 	}
 
-	/** 
+	/**
 	 * @see SPNode
 	 */
 	public void clearNextHops() {
 		nextHops.clear();
 	}
 
-	/** 
+	/**
 	 * @see SPNode
 	 */
 	public SPVertex<T> getNextHop(SPNode<T> n) {
 		return(nextHops.get(n));
 	}
 
-	/** 
+	/**
 	 * @see SPNode
 	 */
 	public void addNextHop(SPNode<T> n, SPVertex<T> v) {
 		nextHops.put(n, v);
 	}
 
-	/** 
+	/**
 	 * @see Object
 	 */
 	@SuppressWarnings("unchecked")
@@ -110,7 +110,7 @@ public abstract class AbstractSPNode<T extends SPNode<T>>
 		return (rv);
 	}
 
-	/** 
+	/**
 	 * Must override hashCode along with compareTo();
 	 */
 	@Override

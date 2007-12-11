@@ -46,9 +46,9 @@ public class URLWatcher extends SpyObject {
 		items=new ConcurrentHashMap<URL, FutureURL>();
 	}
 
-	/** 
+	/**
 	 * Get the static instance of URLWatcher.
-	 * 
+	 *
 	 * @return the URLWatcher
 	 */
 	public static synchronized URLWatcher getInstance() {
@@ -68,7 +68,7 @@ public class URLWatcher extends SpyObject {
 		instance=uw;
 	}
 
-	/** 
+	/**
 	 * String me.
 	 */
 	@Override
@@ -88,9 +88,9 @@ public class URLWatcher extends SpyObject {
 		return(rv == null ? null : rv.urlItem);
 	}
 
-	/** 
+	/**
 	 * Find out if this URLWatcher is watching a given URL.
-	 * 
+	 *
 	 * @param u the URL to test
 	 * @return true if the URL is already being watched
 	 */
@@ -99,13 +99,13 @@ public class URLWatcher extends SpyObject {
 		return(ui != null);
 	}
 
-	/** 
+	/**
 	 * Start watching the given URL.
-	 * 
+	 *
 	 * @param u The item to watch
-	 * @throws TimeoutException 
-	 * @throws ExecutionException 
-	 * @throws InterruptedException 
+	 * @throws TimeoutException
+	 * @throws ExecutionException
+	 * @throws InterruptedException
 	 */
 	public void startWatching(URLItem u) {
 		if(!isWatching(u.getURL())) {
@@ -122,7 +122,7 @@ public class URLWatcher extends SpyObject {
 		}
 	}
 
-	/** 
+	/**
 	 * Instruct the URLWatcher to stop URLWatching.
 	 */
 	public void shutdown() {
@@ -144,9 +144,9 @@ public class URLWatcher extends SpyObject {
 		return new URLItem(u);
 	}
 
-	/** 
+	/**
 	 * Get the content (as a String) for a given URL.
-	 * 
+	 *
 	 * @param u The URL whose content we want
 	 * @return The String contents, or null if none could be retreived
 	 * @throws IOException if there was a problem updating the URL

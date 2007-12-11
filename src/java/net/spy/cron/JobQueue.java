@@ -24,9 +24,9 @@ public class JobQueue<T extends Job> extends ArrayList<T> {
 		super();
 	}
 
-	/** 
+	/**
 	 * Get the logger for this instance.
-	 * 
+	 *
 	 * @return the appropriate logger for this object
 	 */
 	protected Logger getLogger() {

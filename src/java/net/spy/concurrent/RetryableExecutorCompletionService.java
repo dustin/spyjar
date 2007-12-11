@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @param <V>
  */
-public class RetryableExecutorCompletionService<V> 
+public class RetryableExecutorCompletionService<V>
 	implements CompletionService<V> {
 
 	private final ExecutorService executor;

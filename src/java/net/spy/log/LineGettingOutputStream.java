@@ -39,10 +39,10 @@ public abstract class LineGettingOutputStream extends OutputStream {
 			processChunk(msgS);
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Deal with a chunk of data.
-	 * 
+	 *
 	 * @param chunk the chunk of data to process
 	 * @throws IOException if there's a problem processing it
 	 */

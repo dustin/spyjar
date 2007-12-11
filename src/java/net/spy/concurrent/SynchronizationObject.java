@@ -10,7 +10,7 @@ import net.spy.SpyObject;
 /**
  * Object that will wait until a predicate determines that the value has been
  * set to a particular value.
- * 
+ *
  * Note that the predicate is not guaranteed to see every value change.  It is
  * quite likely that changes will be missed when the value is changing rapidly.
  */
@@ -54,11 +54,11 @@ public class SynchronizationObject<T> extends SpyObject {
 	/**
 	 * Wait for the given predicate to become true in respect to the
 	 * contained object.
-	 * 
+	 *
 	 * @param p the predicate
 	 * @param timeout how long to wait for this condition to become true
 	 * @param timeunit the time unit for the timeout
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 * @throws TimeoutException if a timeout occurs before the condition
 	 *         becomes true
 	 */
@@ -88,10 +88,10 @@ public class SynchronizationObject<T> extends SpyObject {
 
 	/**
 	 * Wait for the contained object to become non-null.
-	 * 
+	 *
 	 * @param timeout how long to wait for this condition to become true
 	 * @param timeunit the time unit for the timeout
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 * @throws TimeoutException if a timeout occurs before the condition
 	 *         becomes true
 	 */
@@ -104,20 +104,20 @@ public class SynchronizationObject<T> extends SpyObject {
 
 	/**
 	 * Wait for the contained object to become equal to the provided value.
-	 * 
+	 *
 	 * If the provided value is null, then this also waits for the contained
 	 * object to become null.
-	 * 
+	 *
 	 * @param val the value to wait for
 	 * @param timeout how long to wait for this condition to become true
 	 * @param timeunit the time unit for the timeout
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 * @throws TimeoutException if a timeout occurs before the condition
 	 *         becomes true
 	 */
 	public void waitUntilEquals(final T val, long timeout, TimeUnit timeunit)
 		throws InterruptedException, TimeoutException {
-		
+
 		waitUntilTrue(new Predicate<T>() {
 			public boolean evaluate(T o) {
 				return val == null ? o == null : val.equals(o);
@@ -133,7 +133,7 @@ public class SynchronizationObject<T> extends SpyObject {
 		/**
 		 * Evaluate with the current object to determine whether the condition
 		 * is true.
-		 * 
+		 *
 		 * @param o the current object
 		 * @return whether the condition is met
 		 */

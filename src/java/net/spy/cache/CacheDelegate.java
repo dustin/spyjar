@@ -7,12 +7,12 @@ package net.spy.cache;
  */
 public interface CacheDelegate {
 
-	/** 
+	/**
 	 * Called whenever an object is added to the cache.
 	 */
 	void cachedObject(String key, Cachable value);
 
-	/** 
+	/**
 	 * Called whenever an object is removed from the cache.
 	 */
 	void uncachedObject(String key, Cachable value);

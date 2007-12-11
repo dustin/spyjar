@@ -47,10 +47,10 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 		this(base, DEFAULT_LRU_CACHE_SIZE);
 	}
 
-	/** 
+	/**
 	 * Get a DiskCache using the given directory with a backing LRU cache
 	 * of the specified size.
-	 * 
+	 *
 	 * @param base the base directory for the disk cache
 	 * @param lruCacheSize the size of the LRU cache holding recently accessed
 	 *		objects
@@ -62,7 +62,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 			SoftReference<Serializable>>(lruCacheSize);
 	}
 
-	/** 
+	/**
 	 * Get the base directory which this cache is watching.
 	 */
 	public String getBaseDir() {
@@ -242,7 +242,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 			}
 		}
 
-		/** 
+		/**
 		 * Get an iterator.
 		 */
 		@Override
@@ -266,7 +266,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 			i=it;
 		}
 
-		/** 
+		/**
 		 * Get the next object.
 		 */
 		public E next() {
@@ -275,14 +275,14 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 			return(current);
 		}
 
-		/** 
+		/**
 		 * True if there's another entry.
 		 */
 		public boolean hasNext() {
 			return(i.hasNext());
 		}
 
-		/** 
+		/**
 		 * Remove the given object.
 		 */
 		public void remove() {
@@ -310,7 +310,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 			path=p;
 		}
 
-		/** 
+		/**
 		 * True if two objects are equal.
 		 */
 		@Override
@@ -325,21 +325,21 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 			return(rv);
 		}
 
-		/** 
+		/**
 		 * Get the path to the file.
 		 */
 		public File getPath() {
 			return(path);
 		}
 
-		/** 
+		/**
 		 * Get the key.
 		 */
 		public Serializable getKey() {
 			return(k);
 		}
 
-		/** 
+		/**
 		 * Get the hash code.
 		 */
 		@Override
@@ -347,7 +347,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 			return(k.hashCode());
 		}
 
-		/** 
+		/**
 		 * Get the value.
 		 */
 		public Serializable getValue() {
@@ -373,7 +373,7 @@ public class DiskCache extends AbstractMap<Serializable, Serializable> {
 			return(rv);
 		}
 
-		/** 
+		/**
 		 * Not implemented.
 		 */
 		public Serializable setValue(Serializable o) {

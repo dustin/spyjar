@@ -28,7 +28,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 		super(c);
 	}
 
-	/** 
+	/**
 	 * Don't create the default constructors.
 	 */
 	@Override
@@ -36,7 +36,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 		return(false);
 	}
 
-	/** 
+	/**
 	 * Create the instance variables and constructor for the proxy.
 	 */
 	@Override
@@ -59,7 +59,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 		return(ret);
 	}
 
-	/** 
+	/**
 	 * Before the generated methods, include methods for accessing and
 	 * setting the proxied object.
 	 */
@@ -86,10 +86,10 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Implement this method as a proxy wrapper around the contained
 	 * object.
-	 * 
+	 *
 	 * @param method the method to implement
 	 */
 	@Override
@@ -133,7 +133,7 @@ public class ProxyInterfaceImplementor extends InterfaceImplementor {
 			+ "\t[-outputdir outputDir] [-superclass className]");
 	}
 
-	/** 
+	/**
 	 * Create a proxy class for the specified interface.
 	 */
 	public static void main(String args[]) throws Exception {

@@ -30,9 +30,9 @@ public class TimeStampedHashMap<K, V> extends HashMap<K, V> {
 		lastGet=now;
 	}
 
-	/** 
+	/**
 	 * Get an object from the map.
-	 * 
+	 *
 	 * @param key the object to get
 	 * @return the object, or null if it's missing
 	 */
@@ -48,9 +48,9 @@ public class TimeStampedHashMap<K, V> extends HashMap<K, V> {
 		return(o);
 	}
 
-	/** 
+	/**
 	 * Put an object into the map.
-	 * 
+	 *
 	 * @param key the key to store
 	 * @param value the value to store
 	 * @return the object that got displaced for this store, or null

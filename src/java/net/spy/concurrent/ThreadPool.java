@@ -36,7 +36,7 @@ import net.spy.log.LoggerFactory;
  *     tp.addTask(new MyRunnableClass());
  * }
  * tp.waitForCompletion();
- * 
+ *
  * </pre>
  *
  * </p>
@@ -50,7 +50,7 @@ import net.spy.log.LoggerFactory;
  * time (one minute by default) and then begin its main loop verifying the
  * number of idle threads satisfies the configuration.
  * </p>
- * 
+ *
  * <p>
  * If the number of idle threads is too low, it will create as many as is
  * required to have the appropriate number of idle threads as long as the
@@ -88,7 +88,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 
 	/**
 	 * Get an instance of ThreadPool.
-	 * 
+	 *
 	 * @param name the name of this pool
 	 * @param n the core size of this pool
 	 * @param max the maximum size of this pool
@@ -119,7 +119,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 
 	/**
 	 * Get an instance of ThreadPool.
-	 * 
+	 *
 	 * @param name name of the pool
 	 * @param n core pool size
 	 * @param max max pool size
@@ -131,7 +131,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 
 	/**
 	 * Get an instance of ThreadPool.
-	 * 
+	 *
 	 * @param name name of the pool
 	 * @param n core pool size
 	 * @param max max pool size
@@ -159,7 +159,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 		this(name, DEFAULT_NUM_THREADS, Thread.NORM_PRIORITY);
 	}
 
-	/** 
+	/**
 	 * Start the ThreadPool.
 	 */
 	public synchronized void start() {
@@ -175,19 +175,19 @@ public class ThreadPool extends ThreadPoolExecutor {
 		return(logger);
 	}
 
-	/** 
+	/**
 	 * Find out how many threads are idle.
 	 *
 	 * This is a snapshot, it is subject to change between the time that
 	 * the number is calculated and the time that the value is returned.
-	 * 
+	 *
 	 * @return the number of threads not currently running a task
 	 */
 	public int getIdleThreadCount() {
 		return(getPoolSize() - getActiveCount());
 	}
 
-	/** 
+	/**
 	 * String me.
 	 */
 	@Override
@@ -196,7 +196,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 				+ " of a maximum " + DEFAULT_LIST_LIMIT + " tasks queud");
 	}
 
-	/** 
+	/**
 	 * Get the minimum number of threads that may exist in the thread pool
 	 * at any moment.
 	 */
@@ -204,7 +204,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 		return(getCorePoolSize());
 	}
 
-	/** 
+	/**
 	 * Get the priority that will be used for any new threads within this
 	 * thread group.
 	 */
@@ -213,7 +213,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 		return(t.priority);
 	}
 
-	/** 
+	/**
 	 * Set the priority to be used for any new threads within this threaad
 	 * group.
 	 */
@@ -222,7 +222,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 		t.setPriority(p);
 	}
 
-	/** 
+	/**
 	 * Get the monitor that receives notifications when a worker thread
 	 * finishes a job.
 	 */
@@ -230,7 +230,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 		return(monitor);
 	}
 
-	/** 
+	/**
 	 * Set the observer who will receive notification whenever a task is
 	 * completed.
 	 */
@@ -271,14 +271,14 @@ public class ThreadPool extends ThreadPoolExecutor {
 		execute(r);
 	}
 
-	/** 
+	/**
 	 * Add a task for one of the threads to execute.
 	 *
 	 * This method will add a new task to the queue, but only wait a
 	 * certain amount of time for the task to get picked up.  If the task
 	 * is not picked up for execution by <i>timeout</i> milliseconds, the
 	 * task will not be executed.
-	 * 
+	 *
 	 * @param r the task to execute
 	 * @param timeout the number of milliseconds to wait for it to start
 	 *
@@ -304,7 +304,7 @@ public class ThreadPool extends ThreadPoolExecutor {
 		return wasDone;
 	}
 
-	/** 
+	/**
 	 * Shut down all of the threads after all jobs are complete, and wait
 	 * for all tasks to complete.
 	 *

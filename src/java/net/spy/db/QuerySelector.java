@@ -11,14 +11,14 @@ import java.util.Map;
  */
 public interface QuerySelector {
 
-	/** 
+	/**
 	 * Name of the default query in the map.
 	 */
 	static final String DEFAULT_QUERY="-default-";
 
-	/** 
+	/**
 	 * Get the query for the given connection.
-	 * 
+	 *
 	 * @param conn the connection that wants the query
 	 * @param queryMap the Map of queries by name
 	 * @return the query (as a String), null if a suitable query can't be found

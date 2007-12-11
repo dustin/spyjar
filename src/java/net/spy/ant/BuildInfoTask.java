@@ -61,35 +61,35 @@ public class BuildInfoTask extends Task {
 		super();
 	}
 
-	/** 
+	/**
 	 * Set the name of the package that will have the buildinfo file.
 	 */
 	public void setPackage(String to) {
 		this.pkg=to;
 	}
 
-	/** 
+	/**
 	 * Set the path to the build properties.
 	 */
 	public void setBuildprops(String to) {
 		this.buildProps=to;
 	}
 
-	/** 
+	/**
 	 * Set the path to the change log.
 	 */
 	public void setChangelog(String to) {
 		this.changelog=to;
 	}
 
-	/** 
+	/**
 	 * Set the destination directory (top level generated code directory).
 	 */
 	public void setDestdir(String to) {
 		this.destdir=to;
 	}
 
-	/** 
+	/**
 	 * Create the BuildInfo class.
 	 */
 	@Override

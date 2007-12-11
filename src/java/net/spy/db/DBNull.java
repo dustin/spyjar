@@ -22,7 +22,7 @@ public class DBNull extends Object {
 	public int getType() {
 		return type;
 	}
-	
+
 	/**
 	 * Get the hashcode for this object.
 	 */
@@ -30,7 +30,7 @@ public class DBNull extends Object {
 	public int hashCode() {
 		return(type);
 	}
-	
+
 	/**
 	 *  String me.
 	 */
@@ -38,7 +38,7 @@ public class DBNull extends Object {
 	public String toString() {
 		return("{DBNull type=" + TypeNames.getTypeName(type) + "}");
 	}
-	
+
 	/**
 	 * True if o is a DBNull of the same type.
 	 */

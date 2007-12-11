@@ -16,7 +16,7 @@ public class DBInitException extends SQLException {
 		super();
 	}
 
-	/** 
+	/**
 	 * Get an instance of DBInitException with a message.
 	 */
 	public DBInitException(String msg) {

@@ -33,7 +33,7 @@ public class Base64OutputStream extends FilterOutputStream {
 	 * Writes len bytes from the specified byte array starting at offset off
 	 * to this output stream.  See the documentation for FilterOutputStream
 	 * for more details.
-	 * 
+	 *
 	 * @see FilterOutputStream
 	 */
 	@Override

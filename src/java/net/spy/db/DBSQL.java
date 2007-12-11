@@ -31,16 +31,16 @@ public abstract class DBSQL extends DBSP {
 		super(conn);
 	}
 
-	/** 
+	/**
 	 * Set the Map of registered queries.
-	 * 
+	 *
 	 * @param to the Map of registered queries.
 	 */
 	protected void setRegisteredQueryMap(Map<String, String> to) {
 		registeredQueries=to;
 	}
 
-	/** 
+	/**
 	 * Get the registered queries.
 	 * @return an unmodifiable Map showing the registered queries.
 	 */
@@ -63,7 +63,7 @@ public abstract class DBSQL extends DBSP {
 		applyArgs(getArguments());
 	}
 
-	/** 
+	/**
 	 * Generate (and set) a new cursor name.
 	 */
 	protected void generateCursorName() throws SQLException {

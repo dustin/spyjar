@@ -25,15 +25,15 @@ public abstract class GenericPreparedStatementStub extends SpyObject {
 		args=new Object[ntokens];
 		types=new int[ntokens];
 	}
-	
+
 	protected String getQuery() {
 		return(query);
 	}
-	
+
 	protected Object[] getArgs() {
 		return(args);
 	}
-	
+
 	/**
 	 * Get the args as can be applied to a database.
 	 * @return the arguments, with DBNulls replaced with null
@@ -49,15 +49,15 @@ public abstract class GenericPreparedStatementStub extends SpyObject {
 		}
 		return(rv);
 	}
-	
+
 	protected int[] getTypes() {
 		return(types);
 	}
-	
+
 	private void setArg(int index, Object what, int type) throws SQLException {
 		// Our base is 0, JDBC base is 1
 		index--;
-	
+
 		if(index<0) {
 			throw new SQLException("Illegal index, they start at 1, G");
 		}
@@ -65,7 +65,7 @@ public abstract class GenericPreparedStatementStub extends SpyObject {
 			throw new SQLException("Illegal index, this statement takes a "
 				+ "maximum of " + args.length + " arguments.");
 		}
-	
+
 		// Set the vars
 		args[index]=what;
 		types[index]=type;
@@ -120,7 +120,7 @@ public abstract class GenericPreparedStatementStub extends SpyObject {
 	public void setTime(int a0, Time a1) throws SQLException {
 		setArg(a0, a1, Types.TIME);
 	}
-	
+
 	/**
 	 * Set a timetamp value.
 	 */

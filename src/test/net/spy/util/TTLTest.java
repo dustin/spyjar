@@ -29,7 +29,7 @@ public class TTLTest extends TestCase {
 		mon.shutdown();
 	}
 
-	/** 
+	/**
 	 * Test the basic TTL monitor stuff.
 	 */
 	public void testBasicTTL() throws Exception {
@@ -89,7 +89,7 @@ public class TTLTest extends TestCase {
 		assertFalse(testTTL2.isClosed());
 	}
 
-	/** 
+	/**
 	 * Test DBTTL as well.
 	 */
 	public void testDBTTL() throws Exception {
@@ -102,7 +102,7 @@ public class TTLTest extends TestCase {
 		Thread.sleep(250);
 	}
 
-	/** 
+	/**
 	 * TTL Test with a missing message.
 	 */
 	public void testWithMissingMessages() throws Exception {
@@ -111,7 +111,7 @@ public class TTLTest extends TestCase {
 		Thread.sleep(250);
 	}
 
-	/** 
+	/**
 	 * Test missing message lookup.
 	 */
 	public void testMissingMessages() throws Exception {

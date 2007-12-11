@@ -18,23 +18,23 @@ public abstract class Stat extends SpyObject {
         super();
     }
 
-    /** 
+    /**
      * Get the name of this stat.
      */
     public String getName() {
         return(name);
     }
 
-    /** 
+    /**
      * Set the name of this stat.
-     * 
-     * @param to 
+     *
+     * @param to
      */
     public void setName(String to) {
         this.name=to;
     }
 
-    /** 
+    /**
      * getName()=getStat()
      */
     @Override
@@ -42,7 +42,7 @@ public abstract class Stat extends SpyObject {
         return getName() + "=" + getStat();
     }
 
-    /** 
+    /**
      * Get the current value of this stat as a String.
      */
     public abstract String getStat();

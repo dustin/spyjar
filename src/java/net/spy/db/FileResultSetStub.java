@@ -68,7 +68,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 	private static interface Parser {
 		Object parseString(String s) throws Exception;
 	}
-	
+
 	static abstract class PreParser implements Parser {
 		public final Object parseString(String s) throws Exception {
 			Object rv=null;
@@ -78,7 +78,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			}
 			return(rv);
 		}
-		
+
 		private String cleanString(String s) {
 			String rv=null;
 			if(!s.equals("\\N")) {
@@ -108,7 +108,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			}
 			return(rv);
 		}
-		
+
 		protected abstract Object subParse(String s) throws Exception;
 	}
 
@@ -118,7 +118,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			return(new BigDecimal(s));
 		}
 	}
-	
+
 	static final class StringParser extends PreParser {
 		@Override
 		public Object subParse(String s) {
@@ -240,7 +240,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 			}
 			return(instance);
 		}
-		
+
 		public Parser getParser(int type) throws SQLException {
 			Parser rv=parsers.get(new Integer(type));
 			if(rv == null) {
@@ -306,7 +306,7 @@ public class FileResultSetStub extends GenericResultSetStub {
 				}
 				i++;
 			}
-			
+
 			return(rv);
 		}
 

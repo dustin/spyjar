@@ -28,7 +28,7 @@ public class SpyConfigTest extends TestCase {
 			+ "/etc/test.conf");
 	}
 
-	/** 
+	/**
 	 * Test reading a non-existent file.
 	 */
 	public void testReadingNonExistent() throws Exception {
@@ -43,7 +43,7 @@ public class SpyConfigTest extends TestCase {
 		assertFalse(conf.loadConfig(a));
 	}
 
-	/** 
+	/**
 	 * Test loading a real config.
 	 */
 	public void testLoadingConfig() throws Exception {
@@ -64,7 +64,7 @@ public class SpyConfigTest extends TestCase {
 		assertEquals(5, conf3.size());
 	}
 
-	/** 
+	/**
 	 * Test the orput stuff.
 	 */
 	public void testOrPut() throws Exception {
@@ -79,7 +79,7 @@ public class SpyConfigTest extends TestCase {
 		assertEquals("yep", conf.get("testEntry"));
 	}
 
-	/** 
+	/**
 	 * Test conf getting with defaults.
 	 */
 	public void testDefs() throws Exception {

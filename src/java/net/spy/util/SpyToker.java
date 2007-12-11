@@ -17,16 +17,16 @@ import java.util.Map;
  */
 public class SpyToker extends Object {
 
-	/** 
+	/**
 	 * Construct a SpyToker.
 	 */
 	public SpyToker() {
 		super();
 	}
 
-	/** 
+	/**
 	 * Tokenize a String, return the tokenized results.
-	 * 
+	 *
 	 * @param input the input string
 	 * @param m the map of tokens (without percents)
 	 * @return the tokenized string

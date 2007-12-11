@@ -17,7 +17,7 @@ public class ThreadPoolTest extends TestCase {
 	// Thread IDs (inner classes can't have static fields)
 	static int ids=0;
 
-	/** 
+	/**
 	 * Test the constructors.
 	 */
 	public void testConstructors() {
@@ -40,7 +40,7 @@ public class ThreadPoolTest extends TestCase {
 		tp.shutdown();
 	}
 
-	/** 
+	/**
 	 * Test the basics of the thread pool.
 	 */
 	public void testBasicThreadPool() throws Exception {

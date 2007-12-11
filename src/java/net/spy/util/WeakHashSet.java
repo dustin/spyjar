@@ -24,9 +24,9 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 		map=new WeakHashMap<T, Object>();
 	}
 
-	/** 
+	/**
 	 * Create a WeakHashSet with the given capacity.
-	 * 
+	 *
 	 * @param n the capacity
 	 */
 	public WeakHashSet(int n) {
@@ -34,9 +34,9 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 		map=new WeakHashMap<T, Object>(n);
 	}
 
-	/** 
+	/**
 	 * Get a WeakHashSet with the contents from the given Collection.
-	 * 
+	 *
 	 * @param c the collection
 	 */
 	public WeakHashSet(Collection<T> c) {
@@ -48,7 +48,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 		addAll(c);
 	}
 
-	/** 
+	/**
 	 * Get the Iterator for the backing Map.
 	 */
 	@Override
@@ -56,7 +56,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 		return(map.keySet().iterator());
 	}
 
-	/** 
+	/**
 	 * Get the number of keys currently contained in this Set.
 	 */
 	@Override
@@ -64,7 +64,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 		return(map.size());
 	}
 
-	/** 
+	/**
 	 * True if this set contains no elements.
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 		return(map.isEmpty());
 	}
 
-	/** 
+	/**
 	 * True if this Set contains the given Object.
 	 */
 	@Override
@@ -80,9 +80,9 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 		return(map.containsKey(o));
 	}
 
-	/** 
+	/**
 	 * Add this object to this Set if it's not already present.
-	 * 
+	 *
 	 * @param o the object to add
 	 * @return true if this object was just added, false if it already existed
 	 */
@@ -92,9 +92,9 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 		return(old == null);
 	}
 
-	/** 
+	/**
 	 * Remove the given object from this Set.
-	 * 
+	 *
 	 * @param o Object to be removed
 	 * @return true if the Set did contain this object (but now doesn't)
 	 */
@@ -104,7 +104,7 @@ public class WeakHashSet<T extends Object> extends AbstractSet<T> {
 		return(old==PRESENT);
 	}
 
-	/** 
+	/**
 	 * Remove all entries from this Set.
 	 */
 	@Override

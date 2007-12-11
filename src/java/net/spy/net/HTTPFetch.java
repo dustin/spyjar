@@ -35,18 +35,18 @@ public class HTTPFetch extends Object {
 	private long lastModified=0;
 	private Map<String, List<String>> responseHeaders=null;
 
-	/** 
+	/**
 	 * Get an HTTPFetch instance for the given URL.
-	 * 
+	 *
 	 * @param u the URL to fetch
 	 */
 	public HTTPFetch(URL u) {
 		this(u, null);
 	}
 
-	/** 
+	/**
 	 * Get an HTTPFetch instance for the given URL and headers.
-	 * 
+	 *
 	 * @param u URL to fetch
 	 * @param head Map containing the headers to fetch
 	 */
@@ -56,7 +56,7 @@ public class HTTPFetch extends Object {
 		headers=head;
 	}
 
-	/** 
+	/**
 	 * Get the response headers from the request (will force a content fetch).
 	 */
 	public Map<String, List<String>> getResponseHeaders() throws IOException {
@@ -64,14 +64,14 @@ public class HTTPFetch extends Object {
 		return(responseHeaders);
 	}
 
-	/** 
+	/**
 	 * Set the ifModifiedSince value for the request.
 	 */
 	public void setIfModifiedSince(long to) {
 		ifModifiedSince=to;
 	}
 
-	/** 
+	/**
 	 * Get the HTTP status from this request.
 	 */
 	public int getStatus() throws IOException {
@@ -79,7 +79,7 @@ public class HTTPFetch extends Object {
 		return(status);
 	}
 
-	/** 
+	/**
 	 * Get the last modified date of this response.
 	 */
 	public long getLastModified() throws IOException {

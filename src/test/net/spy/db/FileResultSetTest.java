@@ -96,7 +96,7 @@ public class FileResultSetTest extends TestCase {
 		String path = "file://" + System.getProperty("basedir")
 			+ "/src/test/net/spy/test/db/resulttest.txt";
 		FileResultSet rs = new FileResultSet(new URL(path), Integer.MAX_VALUE);
-		
+
 		try {
 			String s=rs.getString("col_two");
 			fail("Shouldn't be able to get a column before rs.next(), got " + s);
@@ -146,7 +146,7 @@ public class FileResultSetTest extends TestCase {
 		assertColumn(rs, false, "col_six", 6);
 		assertTrue(rs.wasNull());
 		assertColumn(rs, true, "col_seven", 7);
-		
+
 		assertFalse(rs.next());
 	}
 

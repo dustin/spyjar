@@ -61,7 +61,7 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 		return(hc);
 	}
 
-	/** 
+	/**
 	 * Equal if two objects have the same hash code, same query, and same
 	 * parameters.
 	 */
@@ -87,7 +87,7 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 	}
 
 	// Implemented
-	public ResultSet executeQuery() 
+	public ResultSet executeQuery()
 		throws SQLException {
 
 		int hc=hashCode();
@@ -102,9 +102,9 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 		return(crsret);
 	}
 
-	/** 
+	/**
 	 * Set the query timeout.
-	 * 
+	 *
 	 * @param to the maximum number of seconds
 	 * @throws SQLException if the number is not greater than or equal to 0
 	 */
@@ -115,9 +115,9 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 		timeout=to;
 	}
 
-	/** 
+	/**
 	 * Set the max rows for the query return.
-	 * 
+	 *
 	 * @param to the maximum number of rows to return
 	 * @throws SQLException if the value is not greater than or equal to 0
 	 */
@@ -200,11 +200,11 @@ public class CachePreparedStatementStub extends GenericPreparedStatementStub {
 	}
 
 	// Implemented (sorta)
-	public int executeUpdate() 
+	public int executeUpdate()
 		throws SQLException {
 		throw new SQLException("Illegal?  This operation makes no sense!");
 	}
-	
+
 	@Override
 	public void close() throws SQLException {
 		super.close();

@@ -114,7 +114,7 @@ public class ScheduledExecutorCompletionServiceTest extends TestCase {
 		}
 	}
 
-	static class TestRetryableCallable 
+	static class TestRetryableCallable
 		extends TestCallable implements RetryableCallable<Object> {
 		int failures=0;
 		int maxFailures=0;

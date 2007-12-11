@@ -22,7 +22,7 @@ public class ObjectPoolTest extends TestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Basic object pool test.
 	 */
 	@SuppressWarnings("unchecked")

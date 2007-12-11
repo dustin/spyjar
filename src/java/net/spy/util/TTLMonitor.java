@@ -26,7 +26,7 @@ public final class TTLMonitor extends SpyObject {
 		timer=new Timer(true);
 	}
 
-	/** 
+	/**
 	 * Shutdown the monitor.
 	 */
 	public synchronized void shutdown() {
@@ -34,9 +34,9 @@ public final class TTLMonitor extends SpyObject {
 		instance=null;
 	}
 
-	/** 
+	/**
 	 * Get the singleton instance of the TTLMonitor.
-	 * 
+	 *
 	 * @return the TTLMonitor instance.
 	 */
 	public static synchronized TTLMonitor getTTLMonitor() {

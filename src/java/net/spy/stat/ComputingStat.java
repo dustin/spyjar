@@ -6,7 +6,7 @@ import static java.lang.Double.NaN;
 
 /**
  * Stat implementation that keeps averages and standard deviation and stuff.
- * 
+ *
  * Basically stole from Scott Lamb's Axomol library.
  */
 public class ComputingStat extends Stat {
@@ -17,11 +17,11 @@ public class ComputingStat extends Stat {
 
     public ComputingStat() {
         super();
-    }   
+    }
 
     /**
      * Clear the stats that have been accumulated so far.
-     */ 
+     */
     public synchronized void clear() {
         n=0;
         mean = variance = min = max = decayAvg = NaN;
@@ -30,7 +30,7 @@ public class ComputingStat extends Stat {
 
     /**
      * Add the given value to the current stat.
-     *  
+     *
      * @param value the value
      */
     public synchronized void add(double value) {
@@ -51,11 +51,11 @@ public class ComputingStat extends Stat {
             }
         }
         sum += value;
-    }   
+    }
 
     /**
      * Compute the standard deviation of the current series.
-     * 
+     *
      * @return the stddev or NaN if there aren't enough samples yet
      */
     public synchronized double getStddev() {
@@ -67,7 +67,7 @@ public class ComputingStat extends Stat {
 
     /**
      * Get the decaying average of this series.
-     * 
+     *
      * @return the decaying average, or NaN if there aren't enough samples yet
      */
     public synchronized double getDecayAvg() {

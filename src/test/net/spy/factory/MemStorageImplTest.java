@@ -58,7 +58,7 @@ public class MemStorageImplTest extends TestCase {
 		assertEquals(0, cache.getObjects("blah", 19).size());
 		assertEquals(0, cache.getObjects("ak", 19).size());
 	}
-	
+
 	public void testFailingCache() throws Exception {
 		try {
 			Storage<Fob> c=new MemStorageImpl<Fob>(

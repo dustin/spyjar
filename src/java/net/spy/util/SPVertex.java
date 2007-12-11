@@ -33,7 +33,7 @@ public class SPVertex<N extends SPNode<N>> extends Object
 		this.cost=theCost;
 	}
 
-	/** 
+	/**
 	 * String me.
 	 */
 	@Override
@@ -41,31 +41,31 @@ public class SPVertex<N extends SPNode<N>> extends Object
 		return("{SPVertex cost=" + cost + " dest=" + to.get() + "}");
 	}
 
-	/** 
+	/**
 	 * Get an instance of SPVertex linking the two nodes with the default
 	 * cost.
-	 * 
+	 *
 	 * @param destination the destination node
 	 */
 	public SPVertex(N destination) {
 		this(destination, DEFAULT_COST);
 	}
 
-	/** 
+	/**
 	 * Get the destination node.
 	 */
 	public N getTo() {
 		return(to.get());
 	}
 
-	/** 
+	/**
 	 * Get the cost of this vertex.
 	 */
 	public int getCost() {
 		return(cost);
 	}
 
-	/** 
+	/**
 	 * Compare this vertex to another vertex.
 	 *
 	 * Weight will be considered first.  If vertices are at the same

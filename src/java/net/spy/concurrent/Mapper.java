@@ -90,7 +90,7 @@ public class Mapper<F, T> extends SpyObject {
 			assert !isShutdown : "I'm already shutdown";
 			command.run();
 		}
-		
+
 	}
 
 	private static class TransformingCollection<F,T>
@@ -135,7 +135,7 @@ public class Mapper<F, T> extends SpyObject {
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
-			
+
 		}
 	}
 }

@@ -44,7 +44,7 @@ public class SaverTest extends MockObjectTestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Set up the tests.
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class SaverTest extends MockObjectTestCase {
 				BrokenConnectionSource.class.getName());
 	}
 
-	/** 
+	/**
 	 * Shut down the tests.
 	 */
 	@Override
@@ -88,7 +88,7 @@ public class SaverTest extends MockObjectTestCase {
 		isoSource.verifyConnections();
 	}
 
-	/** 
+	/**
 	 * Test a basic run with a success.
 	 */
 	public void testSuccessfulConnection() throws Exception {
@@ -101,7 +101,7 @@ public class SaverTest extends MockObjectTestCase {
 		verifyAllConnections();
 	}
 
-	/** 
+	/**
 	 * Test a basic run with a rollback.
 	 */
 	public void testFailingConnection() throws Exception {
@@ -114,7 +114,7 @@ public class SaverTest extends MockObjectTestCase {
 		verifyAllConnections();
 	}
 
-	/** 
+	/**
 	 * Test an empty saver.
 	 */
 	public void testEmptySaver() throws Exception {
@@ -140,7 +140,7 @@ public class SaverTest extends MockObjectTestCase {
 		verifyAllConnections();
 	}
 
-	/** 
+	/**
 	 * Test an empty saver with a context.
 	 */
 	@SuppressWarnings("unchecked")
@@ -167,7 +167,7 @@ public class SaverTest extends MockObjectTestCase {
 		verifyAllConnections();
 	}
 
-	/** 
+	/**
 	 * Test an empty saver with an isolation level (and context).
 	 */
 	@SuppressWarnings("unchecked")
@@ -225,14 +225,14 @@ public class SaverTest extends MockObjectTestCase {
 		verifyAllConnections();
 	}
 
-	/** 
+	/**
 	 * Test an empty saver that fails.
 	 */
 	public void testEmptyFailingSaverWithSaveException() throws Exception {
 		failingSaverTest(new SaveException("Testing a failure"));
 	}
 
-	/** 
+	/**
 	 * Test an empty saver that fails with a SQLException.
 	 */
 	public void testEmptyFailingSaverWithSQLException() throws Exception {
@@ -246,7 +246,7 @@ public class SaverTest extends MockObjectTestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test a complex sequence of savables.
 	 */
 	@SuppressWarnings("unchecked")
@@ -307,7 +307,7 @@ public class SaverTest extends MockObjectTestCase {
 		verifyAllConnections();
 	}
 
-	/** 
+	/**
 	 * Test an object getting resaved.
 	 */
 	public void testResavable() throws Exception {
@@ -329,7 +329,7 @@ public class SaverTest extends MockObjectTestCase {
 		assertTrue(s1.saved);
 	}
 
-	/** 
+	/**
 	 * Test a save with an invalid savable.
 	 */
 	@SuppressWarnings("unchecked")
@@ -350,7 +350,7 @@ public class SaverTest extends MockObjectTestCase {
 		verifyAllConnections();
 	}
 
-	/** 
+	/**
 	 * Test a save with a null object.
 	 */
 	@SuppressWarnings("unchecked")
@@ -372,7 +372,7 @@ public class SaverTest extends MockObjectTestCase {
 		verifyAllConnections();
 	}
 
-	/** 
+	/**
 	 * Test a save with a broken connection source.
 	 */
 	public void testBrokenConnSrc() throws Exception {
@@ -389,7 +389,7 @@ public class SaverTest extends MockObjectTestCase {
 		verifyAllConnections();
 	}
 
-	/** 
+	/**
 	 * Validate the right thing happens when we try too complicated of an
 	 * object graph.
 	 */
@@ -415,7 +415,7 @@ public class SaverTest extends MockObjectTestCase {
 		verifyAllConnections();
 	}
 
-	/** 
+	/**
 	 * Test the CollectionSavable implementation.
 	 */
 	@SuppressWarnings("unchecked")
@@ -451,7 +451,7 @@ public class SaverTest extends MockObjectTestCase {
 		assertAllSaved(shm.values());
 	}
 
-	/** 
+	/**
 	 * Test the savable HashMap implementation.
 	 */
 	@SuppressWarnings("unchecked")
@@ -483,7 +483,7 @@ public class SaverTest extends MockObjectTestCase {
 		assertAllSaved(shs);
 	}
 
-	/** 
+	/**
 	 * Test the savable HashSet implementation.
 	 */
 	public void testSavableHashSet() throws Exception {
@@ -504,7 +504,7 @@ public class SaverTest extends MockObjectTestCase {
 		populateSetAndTest(new SavableHashSet(2, 0.5f));
 	}
 
-	/** 
+	/**
 	 * A connection source for mock connections.
 	 */
 	public static class SuccessConnectionSource extends MockConnectionSource {

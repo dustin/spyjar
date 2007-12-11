@@ -9,7 +9,7 @@ import net.spy.SpyObject;
  */
 public class AbstractCacheListener extends SpyObject implements CacheListener {
 
-	/** 
+	/**
 	 * Receive notification of having been cached.
 	 */
 	public void cachedEvent(Object k) {
@@ -17,7 +17,7 @@ public class AbstractCacheListener extends SpyObject implements CacheListener {
 				getClass().getName(), k);
 	}
 
-	/** 
+	/**
 	 * Receive notification of having been uncached.
 	 */
 	public void uncachedEvent(Object k) {

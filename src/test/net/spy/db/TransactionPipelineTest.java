@@ -128,7 +128,7 @@ public class TransactionPipelineTest extends MockObjectTestCase {
 
 	}
 
-	/** 
+	/**
 	 * A connection source for mock connections.
 	 */
 	public static class SuccessConnectionSource extends MockConnectionSource {

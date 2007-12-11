@@ -25,9 +25,9 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 		contents=new HashSet<Reference<T>>();
 	}
 
-	/** 
+	/**
 	 * Create a ReferenceSet with the given capacity.
-	 * 
+	 *
 	 * @param n the initial capacity
 	 */
 	public ReferenceSet(int n) {
@@ -35,9 +35,9 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 		contents=new HashSet<Reference<T>>(n);
 	}
 
-	/** 
+	/**
 	 * Get a ReferenceSet with the contents from the given Collection.
-	 * 
+	 *
 	 * @param c the collection
 	 */
 	public ReferenceSet(Collection<T> c) {
@@ -55,16 +55,16 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 		}
 	}
 
-	/** 
+	/**
 	 * Add an object to the Set.
-	 * 
+	 *
 	 * @param o the object
 	 * @return true if the object did not already exist
 	 */
 	@Override
 	public boolean add(T o) {
 		boolean rv=false;
-		
+
 		if(!contains(o)) {
 			contents.add(getReference(o));
 			rv=true;
@@ -73,7 +73,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 		return (rv);
 	}
 
-	/** 
+	/**
 	 * Get the current size of the Set.  This is not an entirely cheap
 	 * operation, as it walks the entire iterator to make sure all entries
 	 * are still valid references.
@@ -88,7 +88,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Get an iterator.
 	 *
 	 * This iterator does not support removing entries due to limitations
@@ -100,7 +100,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 		return(new ReferenceIterator<T>(contents.iterator()));
 	}
 
-	/** 
+	/**
 	 * Obtain the desired type of reference to the given object.
 	 *
 	 *  <p>
@@ -111,7 +111,7 @@ public abstract class ReferenceSet<T extends Object> extends AbstractSet<T> {
 	 * not a reference.  If the reference has disappeared, equals() should
 	 * return false, and hashCode should return 0.
 	 * </p>
-	 * 
+	 *
 	 * @param o an object
 	 * @return a reference to that object
 	 */

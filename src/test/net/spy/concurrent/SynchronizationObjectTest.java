@@ -62,7 +62,7 @@ public class SynchronizationObjectTest extends TestCase {
 			@Override
 			public void run() {
 				t.interrupt();
-			}	
+			}
 		}, 100);
 		try {
 			so.waitUntilEquals(19L, Long.MAX_VALUE-1, TimeUnit.MILLISECONDS);
@@ -133,6 +133,6 @@ public class SynchronizationObjectTest extends TestCase {
 			}
 			return ++updatesSeen == expectedUpdates;
 		}
-		
+
 	}
 }

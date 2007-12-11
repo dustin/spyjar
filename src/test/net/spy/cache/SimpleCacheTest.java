@@ -18,7 +18,7 @@ public class SimpleCacheTest extends TestCase {
 	private int val=0;
 	private SimpleCache cache=null;
 
-	/** 
+	/**
 	 * Get the cache.
 	 */
 	@Override
@@ -26,7 +26,7 @@ public class SimpleCacheTest extends TestCase {
 		cache=SimpleCache.getInstance();
 	}
 
-	/** 
+	/**
 	 * Get rid of the cache.
 	 */
 	@Override
@@ -34,7 +34,7 @@ public class SimpleCacheTest extends TestCase {
 		SimpleCache.setInstance(null);
 	}
 
-	/** 
+	/**
 	 * Test singleton methods.
 	 */
 	public void testSingleton() throws Throwable {

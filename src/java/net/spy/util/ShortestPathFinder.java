@@ -107,9 +107,9 @@ public class ShortestPathFinder extends Object {
 		super();
 	}
 
-	/** 
+	/**
 	 * Calculate all the paths for all the nodes in the given collection.
-	 * 
+	 *
 	 * @param nodes the nodes to calculate
 	 */
 	public void calculatePaths(Collection<? extends SPNode<?>> nodes) {
@@ -119,9 +119,9 @@ public class ShortestPathFinder extends Object {
 	}
 
 
-	/** 
+	/**
 	 * Calculate all of the paths for a single node.
-	 * 
+	 *
 	 * @param node the node from which to calculate paths
 	 */
 	public void calculatePaths(SPNode<?> node) {

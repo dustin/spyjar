@@ -9,11 +9,11 @@ import java.util.Comparator;
  */
 public class ToStringComparator extends Object implements Comparator<Object> {
 
-	/** 
+	/**
 	 * For sort order with nulls first.
 	 */
 	public static final int NULLS_FIRST=-1;
-	/** 
+	/**
 	 * For sort order with nulls last.
 	 */
 	public static final int NULLS_LAST=1;
@@ -27,9 +27,9 @@ public class ToStringComparator extends Object implements Comparator<Object> {
 		this(NULLS_LAST);
 	}
 
-	/** 
+	/**
 	 * Get a ToStringComparator with the provided null order.
-	 * 
+	 *
 	 * @param no how nulls are ordered
 	 */
 	public ToStringComparator(int no) {
@@ -37,7 +37,7 @@ public class ToStringComparator extends Object implements Comparator<Object> {
 		nullOrder=no;
 	}
 
-	/** 
+	/**
 	 * Perform the comparison.
 	 */
 	public int compare(Object o1, Object o2) {

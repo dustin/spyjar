@@ -93,14 +93,14 @@ public class SPGen extends SpyObject {
 		}
 	}
 
-	/** 
+	/**
 	 * Set the verbosity flag.
 	 */
 	public void setVerbose(boolean to) {
 		this.verbose=to;
 	}
 
-	/** 
+	/**
 	 * Set the superclass of the generated java class.
 	 */
 	public void setSuperclass(String sc) {
@@ -108,7 +108,7 @@ public class SPGen extends SpyObject {
 			this.superclass=sc;
 		}
 	}
-	
+
 	/**
 	 * Add an interface to the implements line.
 	 * @param intf the fully qualified name of the interface to implement
@@ -125,7 +125,7 @@ public class SPGen extends SpyObject {
 		interfaces.addAll(set);
 	}
 
-	/** 
+	/**
 	 * Set the DBCP superclass of the generated java class.
 	 */
 	public void setDbcpSuperclass(String sc) {
@@ -134,7 +134,7 @@ public class SPGen extends SpyObject {
 		}
 	}
 
-	/** 
+	/**
 	 * Set the DBSP superclass of the generated java class.
 	 */
 	public void setDbspSuperclass(String sc) {
@@ -224,9 +224,9 @@ public class SPGen extends SpyObject {
 		}
 	}
 
-	/** 
+	/**
 	 * Return true if this is a valid JDBC type.
-	 * 
+	 *
 	 * @param name the name of the field to test
 	 * @return true if the field is valid
 	 */
@@ -234,9 +234,9 @@ public class SPGen extends SpyObject {
 		return(types.contains(name));
 	}
 
-	/** 
+	/**
 	 * Perform the actual generation.
-	 * 
+	 *
 	 * @throws Exception if there's a problem parsing or writing
 	 */
 	public void generate() throws Exception {
@@ -493,7 +493,7 @@ public class SPGen extends SpyObject {
 		if(cachetime > 0) {
 			NumberFormat nf=NumberFormat.getNumberInstance();
 			out.println(" *  <li>The results of this call will be cached for "
-				+ formatCacheTime() 
+				+ formatCacheTime()
 				+ " (" + nf.format(cachetime) + " seconds) by default.</li>");
 		} else {
 			out.println(" *  <li>The results of this call will not "
@@ -904,7 +904,7 @@ public class SPGen extends SpyObject {
 		if(superinterface == null) {
 			superinterface="net.spy.db.DBSPLike";
 		}
-		
+
 		// if the user over-rode (like your mom) the superclass, use it!!
 		if (userSuperclass!=null) {
 			if(isInterface) {
@@ -1129,7 +1129,7 @@ public class SPGen extends SpyObject {
 				paramDescr="";
 			}
 		}
-		
+
 		// Need to alias NUMERIC to DECIMAL, since I can't otherwise tell them
 		// apart.
 		private String getParamTypeAlias(String pt) {
@@ -1145,7 +1145,7 @@ public class SPGen extends SpyObject {
 			return("{Parameter " + name + "}");
 		}
 
-		/** 
+		/**
 		 * Get the hash code of the name of this parameter.
 		 */
 		@Override
@@ -1153,7 +1153,7 @@ public class SPGen extends SpyObject {
 			return(name.hashCode());
 		}
 
-		/** 
+		/**
 		 * True if the given objet is an instance of Parameter with the
 		 * same name.
 		 */

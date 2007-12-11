@@ -43,9 +43,9 @@ public final class LoggerFactory extends Object {
         }
 	}
 
-	/** 
+	/**
 	 * Get a logger by class.
-	 * 
+	 *
 	 * @param clazz the class for which we want the logger.
 	 * @return a Logger instance
 	 */
@@ -53,9 +53,9 @@ public final class LoggerFactory extends Object {
 		return(getLogger(clazz.getName()));
 	}
 
-	/** 
+	/**
 	 * Get a logger by name.
-	 * 
+	 *
 	 * @param name the name for which we want the logger
 	 * @return a Logger instance
 	 */

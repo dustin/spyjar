@@ -18,7 +18,7 @@ public class URLWatcherTest extends TestCase {
 
 	private URLWatcher uw=null;
 
-	/** 
+	/**
 	 * Get the URLWatcher.
 	 */
 	@Override
@@ -26,7 +26,7 @@ public class URLWatcherTest extends TestCase {
 		uw=new TestURLWatcher();
 	}
 
-	/** 
+	/**
 	 * Get rid of the URLWatcher.
 	 */
 	@Override
@@ -48,7 +48,7 @@ public class URLWatcherTest extends TestCase {
 		assertTrue(uw.toString().endsWith("0 pages monitored"));
 	}
 
-	/** 
+	/**
 	 * Test basic URL watching functionality.
 	 */
 	public void testBasicURLWatching()
@@ -65,7 +65,7 @@ public class URLWatcherTest extends TestCase {
 		assertEquals(c1 + "!=" + c2, c1, c2);
 	}
 
-	/** 
+	/**
 	 * Test a URLWatcher with a manual URL setting.
 	 */
 	public void testManualURLWatching()
@@ -96,7 +96,7 @@ public class URLWatcherTest extends TestCase {
 		assertTrue("Expected different results on third run", (!s2.equals(s3)));
 	}
 
-	/** 
+	/**
 	 * Test with several URLs.
 	 */
 	public void testLotsOfURLs() throws IOException, InterruptedException {
@@ -112,7 +112,7 @@ public class URLWatcherTest extends TestCase {
 			"http://bleu.west.spy.net/~dustin/projects/spyjar.xtp"};
 
 		HashMap<URL, String> content=new HashMap<URL, String>();
-		
+
 		for(int i=0; i<urls.length; i++) {
 			URL u=new URL(urls[i]);
 			String s=uw.getContent(u);
@@ -156,7 +156,7 @@ public class URLWatcherTest extends TestCase {
 		protected HTTPFetch getFetcher(Map<String, List<String>> headers) {
 			return new TestHTTPFetch(getURL(), headers);
 		}
-		
+
 	}
 
 	static class TestHTTPFetch extends HTTPFetch {
@@ -189,7 +189,7 @@ public class URLWatcherTest extends TestCase {
 		public int getStatus() throws IOException {
 			return 200;
 		}
-		
+
 	}
 
 	static class TestURLWatcher extends URLWatcher {
@@ -198,6 +198,6 @@ public class URLWatcherTest extends TestCase {
 		protected URLItem getNewURLItem(URL u) {
 			return new TestURLItem(u);
 		}
-		
+
 	}
 }

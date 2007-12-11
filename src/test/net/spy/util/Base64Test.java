@@ -32,7 +32,7 @@ public class Base64Test extends TestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Get the test suite.
 	 */
 	public static Test suite() {
@@ -55,7 +55,7 @@ public class Base64Test extends TestCase {
 				+ "0123456789!@#0^&*();:<>,. []{}");
 	}
 
-	/** 
+	/**
 	 * Test the singleton semantics.
 	 */
 	public void testSingleton() {
@@ -68,7 +68,7 @@ public class Base64Test extends TestCase {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Test base64 encoding of strings.
 	 */
 	@SuppressWarnings("unchecked")
@@ -85,7 +85,7 @@ public class Base64Test extends TestCase {
 		return(new String(b64.decode(s), CHARSET));
 	}
 
-	/** 
+	/**
 	 * Test base64 decodes.
 	 */
 	@SuppressWarnings("unchecked")
@@ -97,7 +97,7 @@ public class Base64Test extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test the isValidBase64Char implementation.
 	 */
 	@SuppressWarnings("unchecked")
@@ -124,7 +124,7 @@ public class Base64Test extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test output stream implementation.
 	 */
 	@SuppressWarnings("unchecked")
@@ -151,7 +151,7 @@ public class Base64Test extends TestCase {
 		bos.close();
 	}
 
-	/** 
+	/**
 	 * Test input stream implementation.
 	 */
 	@SuppressWarnings("unchecked")
@@ -180,7 +180,7 @@ public class Base64Test extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test that streaming base64 yields the same result as whole chunk
 	 * encoding.
 	 */
@@ -211,7 +211,7 @@ public class Base64Test extends TestCase {
 		assertEquals(encoded2.trim(), encoded1.trim());
 	}
 
-	/** 
+	/**
 	 * Test that streaming base64 in yields the same result as whole chunk
 	 * decoding.
 	 */
@@ -242,7 +242,7 @@ public class Base64Test extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test object serialization and compression and all that into base64.
 	 * This particular case failed in the field.
 	 */

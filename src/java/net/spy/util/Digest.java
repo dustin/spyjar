@@ -44,10 +44,10 @@ public class Digest extends SpyObject {
 		return hashAlg;
 	}
 
-	/** 
+	/**
 	 * If set to true, hashes will be prefixed with the type of hash used.
 	 * (i.e. {SHA}, {SSHA}, etc...).
-	 * 
+	 *
 	 * @param doit whether or not to prefix the hash
 	 */
 	public void prefixHash(boolean doit) {
@@ -117,9 +117,9 @@ public class Digest extends SpyObject {
 		return md;
 	}
 
-	/** 
+	/**
 	 * Get the hash for a given string (with no salt).
-	 * 
+	 *
 	 * @param s the thing to hash
 	 * @return the hash
 	 */

@@ -18,7 +18,7 @@ public interface RetryableCallable<V> extends Callable<V> {
 
 	/**
 	 * Get the number of milliseconds we should wait until the next retry.
-	 * 
+	 *
 	 * @return ms to wait if positive, else stop retrying
 	 */
 	long getRetryDelay();
@@ -34,7 +34,7 @@ public interface RetryableCallable<V> extends Callable<V> {
 
 	/**
 	 * Invoked when the execution of a retryable is complete.
-	 * 
+	 *
 	 * @param successful if true, the execution was successful
 	 * @param result if this execution wasn't successful, the result will be
 	 *   a CompositeExecutorException itemizing the result

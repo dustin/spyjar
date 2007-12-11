@@ -20,25 +20,25 @@ public class Enumeriterator<T> extends Object implements Iterator<T> {
 		this.e=src;
 	}
 
-	/** 
+	/**
 	 * Determine whether this Iterator has more elements.
-	 * 
+	 *
 	 * @return true if another call to next() will return an object
 	 */
 	public boolean hasNext() {
 		return(e.hasMoreElements());
 	}
 
-	/** 
+	/**
 	 * Get the next object.
-	 * 
+	 *
 	 * @return the next Object
 	 */
 	public T next() {
 		return(e.nextElement());
 	}
 
-	/** 
+	/**
 	 * NOT IMPLEMENTED.
 	 */
 	public void remove() {

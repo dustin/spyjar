@@ -47,7 +47,7 @@ public class TTL extends TimerTask {
 		this(theTTL, null);
 	}
 
-	/** 
+	/**
 	 * Get an instance of TTL with the given ttl and extra object.
 	 * @param theTTL Number of milliseconds until the TTL fires
 	 * @param info Extra info that will be toString()ed in the log
@@ -59,7 +59,7 @@ public class TTL extends TimerTask {
 		e=new Expired();
 	}
 
-	/** 
+	/**
 	 * Get the logger for this TTL.
 	 */
 	protected Logger getLogger() {
@@ -69,7 +69,7 @@ public class TTL extends TimerTask {
 		return(logger);
 	}
 
-	/** 
+	/**
 	 *  Resets the counter by setting the time that the TTL started to
 	 *  <i>right now</i>.
 	 */
@@ -85,7 +85,7 @@ public class TTL extends TimerTask {
 		return("TTL:  " + ttl + "@" + System.identityHashCode(this));
 	}
 
-	/** 
+	/**
 	 * Get the number of milliseconds this TTL object is expected to be in
 	 * use.
 	 */
@@ -93,7 +93,7 @@ public class TTL extends TimerTask {
 		return(ttl);
 	}
 
-	/** 
+	/**
 	 * Set the minimum interval at which doReport() should be called when
 	 * TTLMonitor sees this object as expired.
 	 */
@@ -101,14 +101,14 @@ public class TTL extends TimerTask {
 		this.reportInterval=ms;
 	}
 
-	/** 
+	/**
 	 * Get the report interval.
 	 */
 	public int getReportInterval() {
 		return(reportInterval);
 	}
 
-	/** 
+	/**
 	 * Set the maximum number of reports this TTL should issue before
 	 * automatically closing.
 	 */
@@ -116,7 +116,7 @@ public class TTL extends TimerTask {
 		maxNReports=to;
 	}
 
-	/** 
+	/**
 	 * True if the TTL object has reported.
 	 */
 	public synchronized boolean hasReported() {
@@ -153,16 +153,16 @@ public class TTL extends TimerTask {
 		return(isClosed);
 	}
 
-	/** 
+	/**
 	 * Ask a TTL if it's expired.
-	 * 
+	 *
 	 * @return true if the TTL is expired
 	 */
 	public synchronized boolean isExpired() {
 		return(fired);
 	}
 
-	/** 
+	/**
 	 * Report a TTL expiration with the given format.
 	 *
 	 * <ul>
@@ -170,7 +170,7 @@ public class TTL extends TimerTask {
 	 *  <li> 1 - Time the TTL was expected to be running.</li>
 	 *  <li> 2 - Extra info passed in (may be null).</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param msg message format string to print when the TTL expires
 	 */
 	protected void reportWithFormat(String msg) {
@@ -183,9 +183,9 @@ public class TTL extends TimerTask {
 		getLogger().warn(toLog, e);
 	}
 
-	/** 
+	/**
 	 * Get the message format string from the named bundle.
-	 * 
+	 *
 	 * @param bundleName the name of the bundle from which to get the messages
 	 * @param msgNoArg the key in the bundle to use when there's no extra info
 	 * @param msgWithArg the key in the bundle to use when there's extra info
@@ -221,7 +221,7 @@ public class TTL extends TimerTask {
 		return (rv);
 	}
 
-	/** 
+	/**
 	 * Called when an object's TTL has expired without closing.
 	 */
 	protected void doReport() {

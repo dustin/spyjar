@@ -13,7 +13,7 @@ import net.spy.util.SpyConfig;
 
 import org.jmock.Mock;
 
-/** 
+/**
  * Base class for mock connection sources.
  */
 public abstract class MockConnectionSource extends Object
@@ -42,7 +42,7 @@ public abstract class MockConnectionSource extends Object
 		return(mocks.values());
 	}
 
-	/** 
+	/**
 	 * This method will be called with the connection source to set up the
 	 * expectations of the source.
 	 */
@@ -67,7 +67,7 @@ public abstract class MockConnectionSource extends Object
 		}
 	}
 
-	/** 
+	/**
 	 * Verify all of the connections that were handed out.
 	 */
 	public void verifyConnections() throws Exception {

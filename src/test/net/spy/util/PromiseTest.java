@@ -13,7 +13,7 @@ import junit.framework.TestCase;
  */
 public class PromiseTest extends TestCase {
 
-	/** 
+	/**
 	 * Test a promise that returns an int.
 	 */
 	public void testIntPromise() throws Exception {

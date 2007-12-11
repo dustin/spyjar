@@ -762,14 +762,14 @@ public abstract class DBSP extends SpyCacheDB implements DBSPLike {
 		throws SQLException {
 		setArg(which, new Integer(a1), Types.SMALLINT);
 	}
-	
+
 	/**
 	 * Set a parameter to the tinyint value b of the type byte.
 	 */
 	public void set(String which, byte b) throws SQLException {
 		setArg(which, new Integer(b), Types.TINYINT);
 	}
-	
+
 	/**
 	 * Set a parameter to a tinyint value.
 	 */

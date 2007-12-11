@@ -30,46 +30,46 @@ public abstract class AbstractSavable extends SpyObject
 		asIsNew=true;
 	}
 
-	/** 
+	/**
 	 * Indicate whether this object is new.
 	 */
 	public boolean isNew() {
 		return(asIsNew);
 	}
 
-	/** 
+	/**
 	 * Indicate whether this object has been modified.
 	 */
 	public boolean isModified() {
 		return(asIsModified);
 	}
 
-	/** 
+	/**
 	 * Set the ``new'' flag for this object.
-	 * 
+	 *
 	 * @param to the new value of the new flag
 	 */
 	protected void setNew(boolean to) {
 		asIsNew=to;
 	}
 
-	/** 
+	/**
 	 * Set the ``modified'' flag for this object.
-	 * 
+	 *
 	 * @param to the new value for the modified flag
 	 */
 	protected void setModified(boolean to) {
 		asIsModified=to;
 	}
 
-	/** 
+	/**
 	 * Mark this AbstractSavable as modified.
 	 */
 	public void modify() {
 		setModified(true);
 	}
 
-	/** 
+	/**
 	 * Get the objects that need to be saved before this object.
 	 * The default implementation returns null, indicating that there are
 	 * no prerequisite objects.
@@ -78,7 +78,7 @@ public abstract class AbstractSavable extends SpyObject
 		return(null);
 	}
 
-	/** 
+	/**
 	 * Get the dependent objects for this Savable. The default
 	 * implementation returns null, indicating that there are no dependent
 	 * objects.
@@ -95,7 +95,7 @@ public abstract class AbstractSavable extends SpyObject
 		setModified(false);
 	}
 
-	/** 
+	/**
 	 * If this object is still <q>dirty</q> during finalization, log it.
 	 */
 	@Override

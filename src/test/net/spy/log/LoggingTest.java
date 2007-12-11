@@ -20,7 +20,7 @@ public class LoggingTest extends TestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Set up logging.
 	 */
 	@Override
@@ -28,7 +28,7 @@ public class LoggingTest extends TestCase {
 		logger=LoggerFactory.getLogger(getClass());
 	}
 
-	/** 
+	/**
 	 * Make sure logging is enabled.
 	 */
 	public void testDebugLogging() {
@@ -36,7 +36,7 @@ public class LoggingTest extends TestCase {
 		logger.debug("debug message");
 	}
 
-	/** 
+	/**
 	 * Make sure info is enabled, and test it.
 	 */
 	public void testInfoLogging() {
@@ -44,7 +44,7 @@ public class LoggingTest extends TestCase {
 		logger.info("info message");
 	}
 
-	/** 
+	/**
 	 * Test other log stuff.
 	 */
 	public void testOtherLogging() {
@@ -58,7 +58,7 @@ public class LoggingTest extends TestCase {
 		assertEquals(getClass().getName(), logger.getName());
 	}
 
-	/** 
+	/**
 	 * Make sure we're using log4j.
 	 */
 	public void testLog4j() {
@@ -66,7 +66,7 @@ public class LoggingTest extends TestCase {
 		assertEquals("net.spy.log.Log4JLogger", l.getClass().getName());
 	}
 
-	/** 
+	/**
 	 * Test the sun logger.
 	 */
 	public void testSunLogger() {
@@ -84,7 +84,7 @@ public class LoggingTest extends TestCase {
 			new Exception());
 	}
 
-	/** 
+	/**
 	 * Test the default logger.
 	 */
 	public void testMyLogger() {
@@ -109,7 +109,7 @@ public class LoggingTest extends TestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test stringing levels.
 	 */
 	public void testLevelStrings() {
@@ -125,7 +125,7 @@ public class LoggingTest extends TestCase {
 		assertEquals("FATAL", Level.FATAL.name());
 	}
 
-	/** 
+	/**
 	 * Test syslog.  This test just pretty much makes coverage and stuff.
 	 */
 	public void testSyslog() throws Exception {
@@ -133,10 +133,10 @@ public class LoggingTest extends TestCase {
 		syslog.log(Syslog.LOCAL0, Syslog.DEBUG, "Test via syslog");
 	}
 
-	/** 
+	/**
 	 * Test the logging output streams.
-	 * 
-	 * @throws Exception 
+	 *
+	 * @throws Exception
 	 */
 	public void testLoggingStreams() throws Exception {
 		PrintStream outSave=System.out;

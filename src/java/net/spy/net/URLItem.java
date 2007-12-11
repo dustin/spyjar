@@ -82,7 +82,7 @@ public class URLItem extends SpyObject implements Runnable {
 		lastHeaders=headers;
 	}
 
-	/** 
+	/**
 	 * Get the content from the last fetch.
 	 */
 	public String getContent() throws IOException {
@@ -107,25 +107,25 @@ public class URLItem extends SpyObject implements Runnable {
 		return content.get();
 	}
 
-	/** 
+	/**
 	 * Find out when the last request was.
-	 * 
+	 *
 	 * @return the timestamp of the last request.
 	 */
 	public long getLastRequest() {
 		return(lastRequest);
 	}
 
-	/** 
+	/**
 	 * Get the URL this thing is watching.
-	 * 
+	 *
 	 * @return the URL
 	 */
 	public URL getURL() {
 		return(url);
 	}
 
-	/** 
+	/**
 	 * Set the maximum number of milliseconds this URL will remain in the
 	 * container if nothing requests it.
 	 */
@@ -133,7 +133,7 @@ public class URLItem extends SpyObject implements Runnable {
 		this.maxIdleTime=to;
 	}
 
-	/** 
+	/**
 	 * Get the maximum number of milliseconds this URL will remain in the
 	 * container if nothing requests it.
 	 */

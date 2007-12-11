@@ -12,7 +12,7 @@ class WorkerThread extends LoopingThread implements RunnableRunner {
 
 	private Runnable theRunnable=null;
 
-	/** 
+	/**
 	 * Get the runnable.
 	 */
 	WorkerThread(ThreadGroup tg, String name) {
@@ -23,7 +23,7 @@ class WorkerThread extends LoopingThread implements RunnableRunner {
 		start();
 	}
 
-	/** 
+	/**
 	 * String me.
 	 */
 	@Override
@@ -45,7 +45,7 @@ class WorkerThread extends LoopingThread implements RunnableRunner {
 		return(sb.toString());
 	}
 
-	/** 
+	/**
 	 * Implementation of RunnableRunner that gets the job done in the pool.
 	 */
 	public synchronized void run(Runnable r) {
@@ -58,7 +58,7 @@ class WorkerThread extends LoopingThread implements RunnableRunner {
 		notify();
 	}
 
-	/** 
+	/**
 	 * Run the task.
 	 */
 	@Override
@@ -71,7 +71,7 @@ class WorkerThread extends LoopingThread implements RunnableRunner {
 			} finally {
 				theRunnable=null;
 			}
-		} // Has a runnable 
+		} // Has a runnable
 	} // runLoop()
 }
 

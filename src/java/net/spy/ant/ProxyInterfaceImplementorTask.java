@@ -18,7 +18,7 @@ public class ProxyInterfaceImplementorTask extends InterfaceImplementorTask {
 		super();
 	}
 
-	/** 
+	/**
 	 * Perform the generation.
 	 */
 	@Override

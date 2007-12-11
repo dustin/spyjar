@@ -43,53 +43,53 @@ public class Range<T extends Comparable<T>> extends Object
 		}
 	}
 
-	/** 
+	/**
 	 * Get the low match type.
 	 */
 	public MatchType getLowMatch() {
 		return(lowMatch);
 	}
 
-	/** 
+	/**
 	 * Set the low match type.
-	 * 
+	 *
 	 * @param lm either INCLUSIVE or EXCLUSIVE
 	 */
 	public void setLowMatch(MatchType lm) {
 		lowMatch=lm;
 	}
 
-	/** 
+	/**
 	 * Get the high match type.
 	 */
 	public MatchType getHighMatch() {
 		return(highMatch);
 	}
 
-	/** 
+	/**
 	 * Set the high match type.
-	 * 
+	 *
 	 * @param hm either INCLUSIVE or EXCLUSIVE
 	 */
 	public void setHighMatch(MatchType hm) {
 		this.highMatch=hm;
 	}
 
-	/** 
+	/**
 	 * Get the low object.
 	 */
 	public Comparable<T> getLow() {
 		return(low);
 	}
 
-	/** 
+	/**
 	 * Get the high object.
 	 */
 	public Comparable<T> getHigh() {
 		return(high);
 	}
 
-	/** 
+	/**
 	 * Describe this object in Set notation.
 	 */
 	@Override
@@ -117,7 +117,7 @@ public class Range<T extends Comparable<T>> extends Object
 		return(sb.toString());
 	}
 
-	/** 
+	/**
 	 * True if the given object lies within this range.
 	 */
 	public boolean contains(T c) {
@@ -161,8 +161,8 @@ public class Range<T extends Comparable<T>> extends Object
 		return(rv);
 	}
 
-	/** 
-	 * @see Comparable 
+	/**
+	 * @see Comparable
 	 */
 	public int compareTo(Range<T> r) {
 		int rv=compareLow(this, r);
@@ -172,7 +172,7 @@ public class Range<T extends Comparable<T>> extends Object
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * True if the given object is a Range object that represents the same
 	 * range.
 	 */
@@ -187,7 +187,7 @@ public class Range<T extends Comparable<T>> extends Object
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Get a predictable hash code.
 	 * @return the low object's hash code if it's available, else the high
 	 * 	object's hash code

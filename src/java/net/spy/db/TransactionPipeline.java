@@ -39,14 +39,14 @@ public class TransactionPipeline extends SpyObject {
 		pool=new TrackingScheduledExecutor(DEFAULT_POOL_SIZE, tg, n);
 	}
 
-	/** 
+	/**
 	 * Get a transaction pipeline with no specific name.
 	 */
 	public TransactionPipeline() {
 		this(null, null);
 	}
 
-	/** 
+	/**
 	 * Shut down the pipeline.
 	 */
 	public synchronized void shutdown() {
@@ -55,9 +55,9 @@ public class TransactionPipeline extends SpyObject {
 		pool = null;
 	}
 
-	/** 
+	/**
 	 * Add a transaction to the pipeline.
-	 * 
+	 *
 	 * @param s the savable
 	 * @param conf the configuration
 	 * @param context a context for the save
@@ -68,9 +68,9 @@ public class TransactionPipeline extends SpyObject {
 				TimeUnit.MILLISECONDS);
 	}
 
-	/** 
+	/**
 	 * Add a transaction to the pipeline without a context.
-	 * 
+	 *
 	 * @param s the savable
 	 * @param conf the configuration
 	 */
@@ -99,7 +99,7 @@ public class TransactionPipeline extends SpyObject {
 			context=ctx;
 		}
 
-		/** 
+		/**
 		 * Run the transaction.
 		 */
 		public void run() {

@@ -24,128 +24,128 @@ public class SNPP extends SpyObject {
 	private static final int STATUS_TYPE_LENGTH=1;
 	private static final int STATUS_LENGTH=3;
 
-	/** 
+	/**
 	 * SNPP default port.
 	 */
 	public static final int SNPP_PORT=444;
 
-	/** 
+	/**
 	 * Response code indicating a line of multiline help.
 	 */
 	public static final int MULTILINE_HELP=214;
 
-	/** 
+	/**
 	 * Response code indicating single line help.
 	 */
 	public static final int SINGLELINE_HELP=218;
 
-	/** 
+	/**
 	 * Response code to acknowldege a quit command.
 	 */
 	public static final int QUIT_ACK=221;
 
-	/** 
+	/**
 	 * Response code inicating a successful transaction.
 	 */
 	public static final int OK=250;
 
-	/** 
+	/**
 	 * Response code indicating a fatal error which will be followed by a
 	 * terminated connection.
 	 */
 	public static final int FATAL_ERROR=421;
 
-	/** 
+	/**
 	 * Response code indicating that a command was issued that was not
 	 * implemented.
 	 */
 	public static final int COMMAND_NOT_IMPLEMENTED=500;
 
-	/** 
+	/**
 	 * Response code indicating a command was implemented in duplicate.
 	 */
 	public static final int DUPLICATE_COMMAND_ENTRY=503;
 
-	/** 
+	/**
 	 * Response code indicating a command failed (invalid pager ID, illegal
 	 * parameter, etc...).
 	 */
 	public static final int ADMIN_FAILURE=550;
-	/** 
+	/**
 	 * Response code indicating a command failed (system problem).
 	 */
 	public static final int SYSTEM_FAILURE=554;
 
-	/** 
+	/**
 	 * Response code indicating too many of something was entered (i.e. too
 	 * many pager IDs).
 	 */
 	public static final int MAX_ENTRIES_EXCEEDED=552;
 
-	/** 
+	/**
 	 * Response code indicating DATA command was accepted and input should
 	 * begin.
 	 */
 	public static final int DATA_OK=354;
 
-	/** 
+	/**
 	 * Response code indicating a message was delivered and is awaiting a reply
 	 * ACK.
 	 */
 	public static final int MSG_AWAITING_ACK=860;
 
-	/** 
+	/**
 	 * Response code indicating a message was delivered and is awaiting a
 	 * reply.
 	 */
 	public static final int MSG_AWAITING_REPLY=861;
 
-	/** 
+	/**
 	 * Response code indicating a message has been delivered.
 	 */
 	public static final int MSG_DELIVERED=880;
 
-	/** 
+	/**
 	 * Response code indicating a response to a message is available.
 	 */
 	public static final int RESPONSE=889;
 
-	/** 
+	/**
 	 * Response code indicating a message was queued for delivery.
 	 */
 	public static final int MSG_QUEUED=960;
 
-	/** 
+	/**
 	 * Message type indicating success.
 	 */
 	public static final int MTYPE_SUCCESS=2;
 
-	/** 
+	/**
 	 * Message type indicating DATA was accepted and server is ready for input.
 	 */
 	public static final int MTYPE_DATA_SUCCESS=3;
 
-	/** 
+	/**
 	 * Message type indicating a permanent failure.
 	 */
 	public static final int MTYPE_PERM_FAILURE=4;
 
-	/** 
+	/**
 	 * Message type indicating a temporary failure.
 	 */
 	public static final int MTYPE_TEMP_FAILURE=5;
 
-	/** 
+	/**
 	 * Message type indicating an unsuccesful two-way specific transaction.
 	 */
 	public static final int MTYPE_UNSUCCESSFUL_2WAY=7;
 
-	/** 
+	/**
 	 * Message type indicating a successful two-way transaction.
 	 */
 	public static final int MTYPE_SUCCESS_2WAY=8;
 
-	/** 
+	/**
 	 * Successful queued transaction.
 	 */
 	public static final int MTYPE_SUCCESS_QUEUED=9;
@@ -236,7 +236,7 @@ public class SNPP extends SpyObject {
 		return(currentStatus);
 	}
 
-	/** 
+	/**
 	 * Current status type received from SNPP server.
 	 */
 	public int getCurrentStatusType() {

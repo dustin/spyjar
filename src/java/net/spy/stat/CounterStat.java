@@ -19,30 +19,30 @@ public class CounterStat extends Stat {
         count=new AtomicLong();
     }
 
-    /** 
+    /**
      * Increment the counter.
      */
     public void increment() {
         count.incrementAndGet();
     }
 
-    /** 
+    /**
      * Increment the counter a specific amount.
-     * 
+     *
      * @param howmuch how much to increment the counter
      */
     public void increment(long howmuch) {
         count.addAndGet(howmuch);
     }
 
-    /** 
+    /**
      * Get the current count for this counter.
      */
     public long getCount() {
         return(count.longValue());
     }
 
-    /** 
+    /**
      * Get the count as a string.
      */
     @Override
@@ -50,7 +50,7 @@ public class CounterStat extends Stat {
         return(String.valueOf(count));
     }
 
-    /** 
+    /**
      * Set the absolute value of this counter.
      */
     public void setValue(long to) {

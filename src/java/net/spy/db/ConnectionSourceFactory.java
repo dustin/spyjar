@@ -25,7 +25,7 @@ public class ConnectionSourceFactory extends SpyObject {
 		sources=new ConcurrentHashMap<String, ConnectionSource>();
 	}
 
-	/** 
+	/**
 	 * Get the singleton ConnectionSourceFactory instance.
 	 */
 	public static synchronized ConnectionSourceFactory getInstance() {
@@ -42,7 +42,7 @@ public class ConnectionSourceFactory extends SpyObject {
 		instance=to;
 	}
 
-	/** 
+	/**
 	 * Get a connection source by name.
 	 * @param conf configuration specifying how to get the source
 	 * @return the connection source

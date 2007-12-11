@@ -7,7 +7,7 @@ package net.spy.util;
  */
 public interface RunnableRunner {
 
-	/** 
+	/**
 	 * Run the supplied Runnable.
 	 */
 	void run(Runnable r);

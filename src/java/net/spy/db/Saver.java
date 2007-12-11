@@ -48,7 +48,7 @@ public class Saver extends SpyObject {
 		listedObjects=new HashSet<IdentityEqualifier>();
 	}
 
-	/** 
+	/**
 	 * Save this Savabale and everything it contains at the default isolation
 	 * level.
 	 */

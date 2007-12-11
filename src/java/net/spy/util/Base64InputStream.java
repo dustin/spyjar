@@ -54,7 +54,7 @@ public class Base64InputStream extends ByteConverionInputStream {
 				if(base64.isValidBase64Char( (char)input) ) {
 					tmp[bytesread]=(byte)input;
 				} else {
-					// Skip this byte 
+					// Skip this byte
 					bytesread--;
 				} // Deal with the read character
 			} // Got input

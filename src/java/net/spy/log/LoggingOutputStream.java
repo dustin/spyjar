@@ -29,17 +29,17 @@ public class LoggingOutputStream extends LineGettingOutputStream {
 		this.level=lv;
 	}
 
-	/** 
+	/**
 	 * Send the stuff to the logger.
-	 * 
-	 * @param chunk 
+	 *
+	 * @param chunk
 	 */
 	@Override
 	protected void processChunk(String chunk) {
 		logger.log(level, chunk);
 	}
 
-	/** 
+	/**
 	 * Redefine stdout and stderr using new logging streams.
 	 */
 	public static void redefineOutputs() {

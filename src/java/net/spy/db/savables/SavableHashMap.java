@@ -30,7 +30,7 @@ public class SavableHashMap<K, V extends Savable> extends HashMap<K, V>
         super();
     }
 
-	/** 
+	/**
 	 * Get an instance of SavableHashMap populated with the given
 	 * Map of objects.
 	 */
@@ -38,14 +38,14 @@ public class SavableHashMap<K, V extends Savable> extends HashMap<K, V>
 		super(map);
 	}
 
-	/** 
+	/**
 	 * Get an instance of SavableHashMap with the given initial capacity.
 	 */
 	public SavableHashMap(int initCap) {
 		super(initCap);
 	}
 
-	/** 
+	/**
 	 * Get an instance of SavableHashMap with the given initial capacity
 	 * and load factors.
 	 */
@@ -55,21 +55,21 @@ public class SavableHashMap<K, V extends Savable> extends HashMap<K, V>
 
 	// Savable implementation
 
-	/** 
+	/**
 	 * @return false
 	 */
 	public boolean isNew() {
 		return(false);
 	}
 
-	/** 
+	/**
 	 * @return false
 	 */
 	public boolean isModified() {
 		return(false);
 	}
 
-	/** 
+	/**
 	 * Do nothing.
 	 */
 	public void save(Connection conn, SaveContext context)
@@ -78,14 +78,14 @@ public class SavableHashMap<K, V extends Savable> extends HashMap<K, V>
 		// Ignored
 	}
 
-	/** 
+	/**
 	 * @return null
 	 */
 	public Collection<? extends Savable> getPreSavables(SaveContext context) {
 		return(null);
 	}
 
-	/** 
+	/**
 	 * @return values()
 	 */
 	public Collection<? extends Savable> getPostSavables(SaveContext context) {

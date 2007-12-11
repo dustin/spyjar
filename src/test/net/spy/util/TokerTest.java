@@ -31,7 +31,7 @@ public class TokerTest extends TestCase {
 		vars.put("t2", "test2");
 	}
 
-	/** 
+	/**
 	 * Test basic tokenization.
 	 */
 	public void testBasicTokenizer() {
@@ -45,7 +45,7 @@ public class TokerTest extends TestCase {
 		assertEquals("%", toker.tokenizeString("%", vars));
 	}
 
-	/** 
+	/**
 	 * Test tokenizing files.
 	 */
 	public void testFileTokenizer() throws Exception {

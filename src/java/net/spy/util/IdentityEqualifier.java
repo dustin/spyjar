@@ -10,7 +10,7 @@ public class IdentityEqualifier extends Object {
 
 	private final Object object;
 
-	/** 
+	/**
 	 * Get an IdentityEqualifier wrapping the given object.
 	 */
 	public IdentityEqualifier(Object o) {
@@ -18,16 +18,16 @@ public class IdentityEqualifier extends Object {
 		this.object=o;
 	}
 
-	/** 
+	/**
 	 * Get the object this IdentityEqualifier is wrapping.
-	 * 
+	 *
 	 * @return the object
 	 */
 	public Object get() {
 		return(object);
 	}
 
-	/** 
+	/**
 	 * True if this object has the same identity as the given object.
 	 */
 	@Override
@@ -47,9 +47,9 @@ public class IdentityEqualifier extends Object {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * The hashcode of this object.
-	 * 
+	 *
 	 * @return System.identityHashCode for this object.
 	 */
 	@Override

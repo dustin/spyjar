@@ -146,7 +146,7 @@ public class SPTTest extends MockObjectTestCase {
 			queries.get("oracle"));
 	}
 
-	/** 
+	/**
 	 * Test query selection within SPTs.
 	 */
 	public void testQuerySelectionDefaultByDriver() throws Exception {
@@ -156,7 +156,7 @@ public class SPTTest extends MockObjectTestCase {
 		runQuerySelectorTest(conf);
 	}
 
-	/** 
+	/**
 	 * Test query selection within SPTs (by driver name).
 	 */
 	public void testQuerySelectionDefault() throws Exception {
@@ -167,7 +167,7 @@ public class SPTTest extends MockObjectTestCase {
 		runQuerySelectorTest(conf);
 	}
 
-	/** 
+	/**
 	 * Test a non-existent query source (should select default).
 	 */
 	public void testQuerySelectionNonExistent() throws Exception {
@@ -178,7 +178,7 @@ public class SPTTest extends MockObjectTestCase {
 		runQuerySelectorTest(conf);
 	}
 
-	/** 
+	/**
 	 * Test an existing query selector by driver name for a driver whose query
 	 * we don't have.
 	 */
@@ -190,7 +190,7 @@ public class SPTTest extends MockObjectTestCase {
 		runQuerySelectorTest(conf);
 	}
 
-	/** 
+	/**
 	 * Test a default query with a name close to another one.
 	 */
 	public void testQuerySelectionCloseToKnownDriver() throws Exception {
@@ -201,7 +201,7 @@ public class SPTTest extends MockObjectTestCase {
 		runQuerySelectorTest(conf);
 	}
 
-	/** 
+	/**
 	 * Test the primary key selection spt.
 	 */
 	public void testSelectPrimaryKey() throws Exception {
@@ -216,7 +216,7 @@ public class SPTTest extends MockObjectTestCase {
 		spk2.setTableName("test");
 	}
 
-	/** 
+	/**
 	 * Test the primary key update spt.
 	 */
 	public void testUpdatePrimaryKey() throws Exception {
@@ -254,10 +254,10 @@ public class SPTTest extends MockObjectTestCase {
 		}
 	}
 
-	/** 
+	/**
 	 * Test coercion routines.
-	 * 
-	 * @throws Exception 
+	 *
+	 * @throws Exception
 	 */
 	public void testCoercion() throws Exception {
 		Mock cMock=mock(Connection.class);

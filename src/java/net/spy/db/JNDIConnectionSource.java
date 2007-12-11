@@ -36,7 +36,7 @@ public class JNDIConnectionSource extends SpyObject
 	 * @param conf  The configuration to use for getting the database
 	 * source
 	 * @return A connection to the JNDI datasource
-	 * @throws SQLException  
+	 * @throws SQLException
 	 * @see ConnectionSource
 	 */
 	public Connection getConnection(SpyConfig conf) throws SQLException {

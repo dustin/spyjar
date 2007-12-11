@@ -23,7 +23,7 @@ public class BitArray extends Object {
 		bitList=new ArrayList<Integer>(size);
 	}
 
-	/** 
+	/**
 	 * Get an intance of BitArray.
 	 */
 	public BitArray() {
@@ -31,12 +31,12 @@ public class BitArray extends Object {
 		bitList=new ArrayList<Integer>();
 	}
 
-	/** 
+	/**
 	 * Get a BitArray by parsing a string.
 	 *
 	 * The string must only contain the characters 0 (zero), 1 (one), and
 	 * whitespace.
-	 * 
+	 *
 	 * @param bitString the string containing zeros and ones
 	 */
 	public BitArray(String bitString) {
@@ -60,9 +60,9 @@ public class BitArray extends Object {
 		} // All characters
 	}
 
-	/** 
+	/**
 	 * Add a bit.
-	 * 
+	 *
 	 * @param value if true, add a one bit.
 	 */
 	public void add(boolean value) {
@@ -73,9 +73,9 @@ public class BitArray extends Object {
 		}
 	}
 
-	/** 
+	/**
 	 * Add a set of bits from an integer.
-	 * 
+	 *
 	 * @param bitSet the integer containing the bits
 	 * @param numBits the number of bits to add.
 	 */
@@ -94,27 +94,27 @@ public class BitArray extends Object {
 		bitList.addAll(bitsToAdd);
 	}
 
-	/** 
+	/**
 	 * Remove a give number of bits from the MSB side.
-	 * 
+	 *
 	 * @param howMany bits to remove
 	 */
 	public void removeMSBBits(int howMany) {
 		removeBits(0, howMany);
 	}
 
-	/** 
+	/**
 	 * Remove a give number of bits from the LSB side.
-	 * 
+	 *
 	 * @param howMany bits to remove
 	 */
 	public void removeLSBBits(int howMany) {
 		removeBits(bitList.size()-howMany, howMany);
 	}
 
-	/** 
+	/**
 	 * Remove a specific number of bits from a specific location.
-	 * 
+	 *
 	 * @param from starting point
 	 * @param howMany number of bits to remove.
 	 */
@@ -122,9 +122,9 @@ public class BitArray extends Object {
 		bitList.subList(from, from+howMany).clear();
 	}
 
-	/** 
+	/**
 	 * Get a given number of bits from a given offset.
-	 * 
+	 *
 	 * @param from starting offset (from MSB side).
 	 * @param number number of bits to retrieve
 	 *
@@ -152,9 +152,9 @@ public class BitArray extends Object {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Get a given number of the most significant bits.
-	 * 
+	 *
 	 * @param numBits number of bits to get
 	 * @return an int representing the bits requested
 	 *
@@ -165,9 +165,9 @@ public class BitArray extends Object {
 		return(getBits(0, numBits));
 	}
 
-	/** 
+	/**
 	 * Get a given number of the least significant bits.
-	 * 
+	 *
 	 * @param numBits number of bits to get
 	 * @return an int representing the bits requested
 	 *
@@ -178,14 +178,14 @@ public class BitArray extends Object {
 		return(getBits((bitList.size()-numBits), numBits));
 	}
 
-	/** 
+	/**
 	 * Get the number of bits remaining in the bit set.
 	 */
 	public int size() {
 		return(bitList.size());
 	}
 
-	/** 
+	/**
 	 * String me.
 	 */
 	@Override

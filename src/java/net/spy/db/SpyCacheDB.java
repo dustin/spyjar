@@ -43,7 +43,7 @@ public class SpyCacheDB extends SpyDB {
 	 *
 	 * @param query Query to execute
 	 * @param lifetime How long (in seconds) the results can live
-	 * 
+	 *
 	 * @exception SQLException when bad stuff happens
 	 */
 	public ResultSet executeQuery(String query, long lifetime)

@@ -18,14 +18,14 @@ public class ToStringComparatorTest extends TestCase {
 		super(name);
 	}
 
-	/** 
+	/**
 	 * Get the test suite.
 	 */
 	public static Test suite() {
 		return new TestSuite(ToStringComparatorTest.class);
 	}
 
-	/** 
+	/**
 	 * Test the toString comparator.
 	 */
 	public void testToStringComparator() {

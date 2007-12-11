@@ -22,9 +22,9 @@ public class NetStringEncoder extends Object {
 		encoding=enc;
 	}
 
-	/** 
+	/**
 	 * Encode a String as a netstring to the given output stream.
-	 * 
+	 *
 	 * @param s the string
 	 * @param os the stream
 	 * @throws IOException if there's a problem writing to the string
