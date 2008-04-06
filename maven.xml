@@ -9,8 +9,8 @@
 	<preGoal name="java:compile">
 		<attainGoal name="spyjar:core"/>
 
-		<attainGoal name="hg:versions"/>
-		<attainGoal name="hg:changelog"/>
+		<attainGoal name="git:versions"/>
+		<attainGoal name="git:changelog"/>
 
 		<attainGoal name="spyjar:buildprops"/>
 		<attainGoal name="spyjar:buildinfo"/>
@@ -125,9 +125,9 @@
 			<entry key="java.version" value="${java.version}"/>
 			<entry key="os.name" value="${os.name}"/>
 			<entry key="os.version" value="${os.version}"/>
-			<entry key="hg.long.version" value="${hg.long.version}"/>
-			<entry key="tree.version" value="${hg.long.version}"/>
-			<entry key="hg.short.version" value="${hg.short.version}"/>
+			<entry key="git.long.version" value="${git.long.version}"/>
+			<entry key="tree.version" value="${git.long.version}"/>
+			<entry key="git.short.version" value="${git.short.version}"/>
 		</propertyfile>
 		<property file="${spy.buildinfo.prop.out}"/>
 	</goal>
