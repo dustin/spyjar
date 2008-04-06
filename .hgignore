@@ -1,5 +1,0 @@
-.arch-ids/.*
-\{arch\}/.*
-^target/
-^cobertura.ser
-^velocity.log
