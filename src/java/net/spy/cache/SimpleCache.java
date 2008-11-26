@@ -17,16 +17,15 @@ public class SimpleCache extends SpyObject {
 
 	private static SimpleCache instance=null;
 
-	private final ConcurrentMap<String, Object> storage;
-	private final Timer timer;
+	private final ConcurrentMap<String, Object> storage=
+		new ConcurrentHashMap<String, Object>();
+	private final Timer timer=new Timer("SimpleCacheTimer", true);
 
 	/**
 	 * Get an instance of SimpleCache.
 	 */
 	protected SimpleCache() {
 		super();
-		storage=new ConcurrentHashMap<String, Object>();
-		timer=new Timer("SimpleCacheTimer", true);
 	}
 
 	/**
